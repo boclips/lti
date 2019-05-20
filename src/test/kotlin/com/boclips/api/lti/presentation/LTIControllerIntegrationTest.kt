@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 class LTIControllerIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
     fun `endpoint responds with Hello, World!`() {
-        val responseEntity = restTemplate.getForEntity("/v1", String::class.java)
+        val responseEntity = restTemplate.postForEntity("/v1", null, String::class.java)
         assertThat(responseEntity.body).isEqualTo("Hello, World!")
     }
 }
