@@ -6,7 +6,11 @@ import org.springframework.stereotype.Service
 
 @Service
 class PreconfiguredConsumerLtiKeySecretService(val ltiProperties: LtiProperties) : LtiKeySecretService {
-    override fun getSecretForKey(key: String?): String {
-        return ltiProperties.consumer.secret
+    override fun getSecretForKey(key: String?): String? {
+        return if (key.equals(ltiProperties.consumer.key)) {
+            ltiProperties.consumer.secret
+        } else {
+            null
+        }
     }
 }
