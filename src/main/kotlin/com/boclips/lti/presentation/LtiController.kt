@@ -1,6 +1,5 @@
 package com.boclips.lti.presentation
 
-import com.boclips.lti.configuration.LtiContext
 import com.boclips.lti.configuration.properties.LtiProperties
 import org.imsglobal.aspect.Lti
 import org.imsglobal.lti.launch.LtiVerificationResult
