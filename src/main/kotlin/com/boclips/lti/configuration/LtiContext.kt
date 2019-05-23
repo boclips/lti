@@ -1,4 +1,4 @@
-package com.boclips.api.lti.configuration
+package com.boclips.lti.configuration
 
 import org.imsglobal.aspect.LtiKeySecretService
 import org.imsglobal.aspect.LtiLaunchVerifier

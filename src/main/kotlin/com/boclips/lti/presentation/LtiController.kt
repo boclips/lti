@@ -1,6 +1,6 @@
-package com.boclips.api.lti.presentation
+package com.boclips.lti.presentation
 
-import com.boclips.api.lti.configuration.LtiContext
+import com.boclips.lti.configuration.LtiContext
 import org.imsglobal.aspect.Lti
 import org.imsglobal.lti.launch.LtiVerificationResult
 import org.springframework.http.HttpHeaders

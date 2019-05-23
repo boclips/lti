@@ -1,4 +1,4 @@
-package com.boclips.api.lti.testsupport
+package com.boclips.lti.testsupport
 
 import org.apache.http.impl.client.HttpClientBuilder
 import org.imsglobal.lti.launch.LtiOauthSigner
