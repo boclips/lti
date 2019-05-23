@@ -1,6 +1,7 @@
 package com.boclips.lti.presentation
 
 import com.boclips.lti.configuration.properties.LtiProperties
+import com.boclips.lti.domain.service.IsLaunchRequestValid
 import org.imsglobal.aspect.Lti
 import org.imsglobal.lti.launch.LtiVerificationResult
 import org.springframework.http.HttpHeaders
@@ -14,12 +15,15 @@ import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/v1/lti")
-class LtiController(val ltiProperties: LtiProperties) {
+class LtiController(
+        val isLaunchRequestValid: IsLaunchRequestValid,
+        val ltiProperties: LtiProperties
+) {
     @Lti
     @PostMapping("", "/")
     fun handleLtiLaunchRequest(request: HttpServletRequest, result: LtiVerificationResult): ResponseEntity<Unit> {
         val responseHeaders = HttpHeaders()
-        if (result.success) {
+        if (isLaunchRequestValid(result)) {
             // TODO Establish a user session
             responseHeaders.location = URI(ltiProperties.landingPage)
         } else {
