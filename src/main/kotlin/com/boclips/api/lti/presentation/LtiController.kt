@@ -20,6 +20,7 @@ class LtiController {
     fun handleLtiLaunchRequest(request: HttpServletRequest, result: LtiVerificationResult): ResponseEntity<Unit> {
         val responseHeaders = HttpHeaders()
         if (result.success) {
+            // TODO Establish a user session
             responseHeaders.location = URI(LtiContext.LANDING_PAGE)
         } else {
             responseHeaders.location = URI(LtiContext.ERROR_PAGE)
