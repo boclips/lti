@@ -1,0 +1,7 @@
+boclips:
+  lti:
+    consumer:
+      key: 'test-consumer-key'
+      secret: 'test-consumer-secret'
+    landingPage: 'http://localhost/landing-page'
+    errorPage: 'http://localhost/error-page'

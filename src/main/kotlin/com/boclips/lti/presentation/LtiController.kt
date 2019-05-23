@@ -1,6 +1,7 @@
 package com.boclips.lti.presentation
 
 import com.boclips.lti.configuration.LtiContext
+import com.boclips.lti.configuration.properties.LtiProperties
 import org.imsglobal.aspect.Lti
 import org.imsglobal.lti.launch.LtiVerificationResult
 import org.springframework.http.HttpHeaders
@@ -14,16 +15,16 @@ import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/v1/lti")
-class LtiController {
+class LtiController(val ltiProperties: LtiProperties) {
     @Lti
     @PostMapping("", "/")
     fun handleLtiLaunchRequest(request: HttpServletRequest, result: LtiVerificationResult): ResponseEntity<Unit> {
         val responseHeaders = HttpHeaders()
         if (result.success) {
             // TODO Establish a user session
-            responseHeaders.location = URI(LtiContext.LANDING_PAGE)
+            responseHeaders.location = URI(ltiProperties.landingPage)
         } else {
-            responseHeaders.location = URI(LtiContext.ERROR_PAGE)
+            responseHeaders.location = URI(ltiProperties.errorPage)
         }
         return ResponseEntity(responseHeaders, HttpStatus.SEE_OTHER)
     }

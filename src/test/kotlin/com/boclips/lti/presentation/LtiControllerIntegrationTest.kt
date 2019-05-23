@@ -1,6 +1,5 @@
 package com.boclips.lti.presentation
 
-import com.boclips.lti.configuration.LtiContext
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -18,14 +17,14 @@ class LtiControllerIntegrationTest : AbstractSpringIntegrationTest() {
         val unsignedParameters = mapOf(
                 "lti_message_type" to "basic-lti-launch-request",
                 "lti_version" to "LTI-1p0",
-                "oauth_consumer_key" to LtiContext.CONSUMER_KEY,
+                "oauth_consumer_key" to ltiProperties.consumer.key,
                 "resource_link_id" to "test-resource-link-id"
         )
 
         val signedParameters = ltiOauthSigner.signParameters(
                 unsignedParameters,
-                LtiContext.CONSUMER_KEY,
-                LtiContext.CONSUMER_SECRET,
+                ltiProperties.consumer.key,
+                ltiProperties.consumer.secret,
                 "$serviceBaseUrl/v1/lti",
                 "POST"
         )
@@ -35,7 +34,7 @@ class LtiControllerIntegrationTest : AbstractSpringIntegrationTest() {
 
         val responseEntity = restTemplate.exchange("/v1/lti", HttpMethod.POST, entity, Void::class.java)
         assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.SEE_OTHER)
-        assertThat(responseEntity.headers.location).isEqualTo(URI(LtiContext.LANDING_PAGE))
+        assertThat(responseEntity.headers.location).isEqualTo(URI(ltiProperties.landingPage))
     }
 
     @Test
@@ -48,6 +47,6 @@ class LtiControllerIntegrationTest : AbstractSpringIntegrationTest() {
 
         val responseEntity = restTemplate.exchange("/v1/lti", HttpMethod.POST, entity, Void::class.java)
         assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.SEE_OTHER)
-        assertThat(responseEntity.headers.location).isEqualTo(URI(LtiContext.ERROR_PAGE))
+        assertThat(responseEntity.headers.location).isEqualTo(URI(ltiProperties.errorPage))
     }
 }

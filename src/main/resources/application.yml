@@ -1,0 +1,7 @@
+boclips:
+  lti:
+    consumer:
+      key:
+      secret:
+    landingPage:
+    errorPage:
