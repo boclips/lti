@@ -12,14 +12,14 @@ class LtiControllerIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
     fun `endpoint redirects user to landing page if it receives a minimal correct request`() {
         val entity = prepareLaunchRequest(
-                mapOf(
-                        "lti_message_type" to "basic-lti-launch-request",
-                        "lti_version" to "LTI-1p0",
-                        "oauth_consumer_key" to ltiProperties.consumer.key,
-                        "resource_link_id" to "test-resource-link-id"
-                ),
-                ltiProperties.consumer.key,
-                ltiProperties.consumer.secret
+            mapOf(
+                "lti_message_type" to "basic-lti-launch-request",
+                "lti_version" to "LTI-1p0",
+                "oauth_consumer_key" to ltiProperties.consumer.key,
+                "resource_link_id" to "test-resource-link-id"
+            ),
+            ltiProperties.consumer.key,
+            ltiProperties.consumer.secret
         )
 
         val responseEntity = restTemplate.exchange("/v1/lti", HttpMethod.POST, entity, Void::class.java)
@@ -31,13 +31,13 @@ class LtiControllerIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
     fun `endpoint redirects user to error page if request misses resource_link_id`() {
         val entity = prepareLaunchRequest(
-                mapOf(
-                        "lti_message_type" to "basic-lti-launch-request",
-                        "lti_version" to "LTI-1p0",
-                        "oauth_consumer_key" to ltiProperties.consumer.key
-                ),
-                ltiProperties.consumer.key,
-                ltiProperties.consumer.secret
+            mapOf(
+                "lti_message_type" to "basic-lti-launch-request",
+                "lti_version" to "LTI-1p0",
+                "oauth_consumer_key" to ltiProperties.consumer.key
+            ),
+            ltiProperties.consumer.key,
+            ltiProperties.consumer.secret
         )
 
         val responseEntity = restTemplate.exchange("/v1/lti", HttpMethod.POST, entity, Void::class.java)
@@ -63,11 +63,11 @@ class LtiControllerIntegrationTest : AbstractSpringIntegrationTest() {
         headers.contentType = MediaType.APPLICATION_FORM_URLENCODED
 
         val signedParameters = ltiOauthSigner.signParameters(
-                parameters,
-                key,
-                secret,
-                "$serviceBaseUrl/v1/lti",
-                "POST"
+            parameters,
+            key,
+            secret,
+            "$serviceBaseUrl/v1/lti",
+            "POST"
         )
 
         val requestParameters = LinkedMultiValueMap<String, String>(signedParameters.mapValues { listOf(it.value) })

@@ -38,16 +38,16 @@ abstract class AbstractSpringIntegrationTest {
     fun setUp() {
         serviceBaseUrl = "http://localhost:$appPort"
         restTemplate = restTemplateBuilder
-                .rootUri(serviceBaseUrl)
-                .requestFactory { ltiTestsRequestFactory() }
-                .build()
+            .rootUri(serviceBaseUrl)
+            .requestFactory { ltiTestsRequestFactory() }
+            .build()
         ltiOauthSigner = LtiOauthSigner()
     }
 
     private fun ltiTestsRequestFactory(): ClientHttpRequestFactory {
         val nonRedirectingHttpClient = HttpClientBuilder.create()
-                .setRedirectStrategy(DoNotFollowRedirectStrategy)
-                .build()
+            .setRedirectStrategy(DoNotFollowRedirectStrategy)
+            .build()
 
         val factory = HttpComponentsClientHttpRequestFactory()
         factory.httpClient = nonRedirectingHttpClient
