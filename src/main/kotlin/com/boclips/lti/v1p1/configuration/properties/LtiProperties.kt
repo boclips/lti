@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
 import org.springframework.validation.annotation.Validated
 import javax.validation.Valid
+import javax.validation.constraints.NotBlank
 
 @Component
 @Validated
@@ -12,8 +13,12 @@ import javax.validation.Valid
 class LtiProperties {
     @Valid
     val consumer: LtiConsumer = LtiConsumer()
+
     @URL
+    @NotBlank
     lateinit var landingPage: String
+
     @URL
+    @NotBlank
     lateinit var errorPage: String
 }
