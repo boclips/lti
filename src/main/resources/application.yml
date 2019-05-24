@@ -1,7 +1,8 @@
 boclips:
   lti:
-    consumer:
-      key:
-      secret:
-    landingPage:
-    errorPage:
+    v1p1:
+      consumer:
+        key:
+        secret:
+      landingPage:
+      errorPage:

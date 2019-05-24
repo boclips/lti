@@ -8,7 +8,7 @@ import javax.validation.Valid
 
 @Component
 @Validated
-@ConfigurationProperties(prefix = "boclips.lti")
+@ConfigurationProperties(prefix = "boclips.lti.v1p1")
 class LtiProperties {
     @Valid
     val consumer: LtiConsumer = LtiConsumer()
