@@ -1,4 +1,4 @@
-package com.boclips.lti.testsupport
+package com.boclips.lti.v1p1.testsupport
 
 import org.apache.http.HttpRequest
 import org.apache.http.HttpResponse

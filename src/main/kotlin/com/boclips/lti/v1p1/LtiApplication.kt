@@ -1,4 +1,4 @@
-package com.boclips.lti
+package com.boclips.lti.v1p1
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

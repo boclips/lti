@@ -1,6 +1,6 @@
-package com.boclips.lti.domain.service
+package com.boclips.lti.v1p1.domain.service
 
-import com.boclips.lti.configuration.properties.LtiProperties
+import com.boclips.lti.v1p1.configuration.properties.LtiProperties
 import org.imsglobal.aspect.LtiKeySecretService
 import org.springframework.stereotype.Service
 

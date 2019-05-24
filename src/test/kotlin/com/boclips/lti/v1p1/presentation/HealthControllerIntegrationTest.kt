@@ -1,6 +1,6 @@
-package com.boclips.lti.presentation
+package com.boclips.lti.v1p1.presentation
 
-import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
+import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus

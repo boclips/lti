@@ -1,4 +1,4 @@
-package com.boclips.lti.configuration.properties
+package com.boclips.lti.v1p1.configuration.properties
 
 import org.hibernate.validator.constraints.URL
 import org.springframework.boot.context.properties.ConfigurationProperties

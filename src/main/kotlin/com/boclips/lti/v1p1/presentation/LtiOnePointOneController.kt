@@ -1,7 +1,7 @@
-package com.boclips.lti.presentation
+package com.boclips.lti.v1p1.presentation
 
-import com.boclips.lti.configuration.properties.LtiProperties
-import com.boclips.lti.domain.service.IsLaunchRequestValid
+import com.boclips.lti.v1p1.configuration.properties.LtiProperties
+import com.boclips.lti.v1p1.domain.service.IsLaunchRequestValid
 import org.imsglobal.aspect.Lti
 import org.imsglobal.lti.launch.LtiVerificationResult
 import org.springframework.http.HttpHeaders
@@ -14,10 +14,10 @@ import java.net.URI
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@RequestMapping("/v1/lti")
-class LtiController(
-        val isLaunchRequestValid: IsLaunchRequestValid,
-        val ltiProperties: LtiProperties
+@RequestMapping("/lti/v1p1")
+class LtiOnePointOneController(
+    val isLaunchRequestValid: IsLaunchRequestValid,
+    val ltiProperties: LtiProperties
 ) {
     @Lti
     @PostMapping("", "/")

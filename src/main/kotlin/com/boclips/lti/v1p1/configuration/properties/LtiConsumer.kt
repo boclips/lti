@@ -1,4 +1,4 @@
-package com.boclips.lti.configuration.properties
+package com.boclips.lti.v1p1.configuration.properties
 
 import javax.validation.constraints.NotBlank
 

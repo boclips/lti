@@ -1,6 +1,6 @@
-package com.boclips.lti.presentation
+package com.boclips.lti.v1p1.presentation
 
-import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
+import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.http.*
@@ -8,7 +8,7 @@ import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 import java.net.URI
 
-class LtiControllerIntegrationTest : AbstractSpringIntegrationTest() {
+class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
     fun `endpoint redirects user to landing page if it receives a minimal correct request`() {
         val entity = prepareLaunchRequest(
@@ -22,7 +22,7 @@ class LtiControllerIntegrationTest : AbstractSpringIntegrationTest() {
             ltiProperties.consumer.secret
         )
 
-        val responseEntity = restTemplate.exchange("/v1/lti", HttpMethod.POST, entity, Void::class.java)
+        val responseEntity = restTemplate.exchange("/lti/v1p1", HttpMethod.POST, entity, Void::class.java)
 
         assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.SEE_OTHER)
         assertThat(responseEntity.headers.location).isEqualTo(URI(ltiProperties.landingPage))
@@ -40,7 +40,7 @@ class LtiControllerIntegrationTest : AbstractSpringIntegrationTest() {
             ltiProperties.consumer.secret
         )
 
-        val responseEntity = restTemplate.exchange("/v1/lti", HttpMethod.POST, entity, Void::class.java)
+        val responseEntity = restTemplate.exchange("/lti/v1p1", HttpMethod.POST, entity, Void::class.java)
 
         assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.SEE_OTHER)
         assertThat(responseEntity.headers.location).isEqualTo(URI(ltiProperties.errorPage))
@@ -52,7 +52,7 @@ class LtiControllerIntegrationTest : AbstractSpringIntegrationTest() {
         headers.contentType = MediaType.APPLICATION_FORM_URLENCODED
         val entity = HttpEntity<MultiValueMap<String, String>>(LinkedMultiValueMap<String, String>(), headers)
 
-        val responseEntity = restTemplate.exchange("/v1/lti", HttpMethod.POST, entity, Void::class.java)
+        val responseEntity = restTemplate.exchange("/lti/v1p1", HttpMethod.POST, entity, Void::class.java)
 
         assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.SEE_OTHER)
         assertThat(responseEntity.headers.location).isEqualTo(URI(ltiProperties.errorPage))
@@ -66,7 +66,7 @@ class LtiControllerIntegrationTest : AbstractSpringIntegrationTest() {
             parameters,
             key,
             secret,
-            "$serviceBaseUrl/v1/lti",
+            "$serviceBaseUrl/lti/v1p1",
             "POST"
         )
 

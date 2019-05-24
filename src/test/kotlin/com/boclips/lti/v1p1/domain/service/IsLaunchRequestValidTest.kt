@@ -1,4 +1,4 @@
-package com.boclips.lti.domain.service
+package com.boclips.lti.v1p1.domain.service
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock

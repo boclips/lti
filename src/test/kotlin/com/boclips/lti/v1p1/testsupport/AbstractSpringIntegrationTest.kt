@@ -1,6 +1,6 @@
-package com.boclips.lti.testsupport
+package com.boclips.lti.v1p1.testsupport
 
-import com.boclips.lti.configuration.properties.LtiProperties
+import com.boclips.lti.v1p1.configuration.properties.LtiProperties
 import org.apache.http.impl.client.HttpClientBuilder
 import org.imsglobal.lti.launch.LtiOauthSigner
 import org.junit.jupiter.api.BeforeEach

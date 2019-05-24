@@ -1,4 +1,4 @@
-package com.boclips.lti.domain.service
+package com.boclips.lti.v1p1.domain.service
 
 import org.imsglobal.lti.launch.LtiVerificationResult
 import org.springframework.stereotype.Service
