@@ -96,3 +96,9 @@ dependencyCheck {
 		assemblyEnabled = false
 	}
 }
+
+task bootRunLocal(type: org.springframework.boot.gradle.tasks.run.BootRun) {
+  main 'com.boclips.lti.LtiApplicationKt'
+  classpath = sourceSets.main.runtimeClasspath
+  systemProperty 'spring.profiles.active', 'local'
+}

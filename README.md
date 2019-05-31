@@ -12,6 +12,12 @@ Support for an arbitrary number of Tool Consumers and more elaborate content wil
 
 ## Development
 
+Running the app locally with the `local` Spring profile activated:
+
+```
+$ ./gradlew bootRunLocal
+```
+
 Running tests:
 
 ```
