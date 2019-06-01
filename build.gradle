@@ -16,7 +16,7 @@ buildscript {
 }
 
 plugins {
-	id 'org.owasp.dependencycheck' version '4.0.2'
+	id 'org.owasp.dependencycheck' version '5.0.0-M3.1'
 }
 
 ext {
@@ -86,7 +86,7 @@ dependencyManagement {
 }
 
 dependencyCheck {
-	failBuildOnCVSS = 8 // Fail on high severity or greater
+	failBuildOnCVSS = 7 // Fail on high severity or greater
 
 	data {
 		directory='./dependency-check-cache'
@@ -95,6 +95,8 @@ dependencyCheck {
 	analyzers {
 		assemblyEnabled = false
 	}
+
+  suppressionFile = './dependency-check-suppressions.xml'
 }
 
 task bootRunLocal(type: org.springframework.boot.gradle.tasks.run.BootRun) {
