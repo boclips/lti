@@ -1,6 +1,6 @@
 app: lti
 port: 5000
-scale: Small
+scale: Large
 bootTime: Slow
 healthPath: /actuator/health
 environments:
