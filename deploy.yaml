@@ -1,5 +1,5 @@
 app: lti
-port: 8080
+port: 5000
 scale: Small
 bootTime: Slow
 healthPath: /actuator/health
