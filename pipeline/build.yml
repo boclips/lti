@@ -5,7 +5,7 @@ image_resource:
   type: docker-image
   source:
     repository: java
-    tag: 'latest'
+    tag: '8'
 
 inputs:
 - name: source
