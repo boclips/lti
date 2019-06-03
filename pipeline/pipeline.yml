@@ -6,6 +6,7 @@ groups:
 
 jobs:
 - name: build
+  serial: true
   plan:
   - get: once-per-weekday
     trigger: true
@@ -15,13 +16,13 @@ jobs:
     params:
       bump: minor
     resource: version-lti
+  - task: build
+    file: source/pipeline/build.yml
   - put: image
     resource: image-lti
     params:
       build: dist
       additional_tags: version/version
-  - task: build
-    file: source/pipeline/build.yml
 
 resources:
 - name: source
