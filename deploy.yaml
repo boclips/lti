@@ -1,0 +1,22 @@
+app: lti
+port: 5000
+scale: Small
+bootTime: Slow
+healthPath: /actuator/health
+environments:
+  production:
+    replicas: 2
+    urls:
+      - lti.boclips.com
+  staging:
+    replicas: 2
+    urls:
+      - lti.staging-boclips.com
+  testing:
+    replicas: 1
+    urls:
+      - lti.testing-boclips.com
+  local:
+    replicas: 1
+    urls:
+      - lti.local-boclips.com
