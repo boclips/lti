@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.model
 
 class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() {
-
     @Test
     fun `endpoint redirects user to landing page if it receives a minimal correct request`() {
         mvc.perform(
@@ -23,7 +22,7 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
                 .params(validLtiLaunchRequestPayload)
         )
             .andExpect(status().isSeeOther)
-            .andExpect(header().string("Location", ltiProperties.landingPage))
+            .andExpect(header().string("Location", "/lti/v1p1/video/$videoResource"))
     }
 
     @Test
@@ -55,17 +54,19 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
                 .params(validLtiLaunchRequestPayload)
         ).andReturn().request.session
 
-        mvc.perform(get("/lti/v1p1/video").session(session as MockHttpSession))
+        mvc.perform(get("/lti/v1p1/video/$videoResource").session(session as MockHttpSession))
             .andExpect(status().isOk)
             .andExpect(view().name("video"))
-            .andExpect(model().attribute("resource-link-id", "test-resource-link-id"))
+            .andExpect(model().attribute("videoId", videoResource))
     }
 
     @Test
     fun `accessing a video without a session should result in unauthorised response`() {
-        mvc.perform(get("/lti/v1p1/video"))
+        mvc.perform(get("/lti/v1p1/video/$videoResource"))
             .andExpect(status().isUnauthorized)
     }
+
+    val videoResource = "test-video-resource"
 
     lateinit var validLtiLaunchRequestPayload: LinkedMultiValueMap<String, String>
 
@@ -76,7 +77,7 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
                 "lti_message_type" to "basic-lti-launch-request",
                 "lti_version" to "LTI-1p0",
                 "oauth_consumer_key" to ltiProperties.consumer.key,
-                "resource_link_id" to "test-resource-link-id"
+                "resource_link_id" to videoResource
             ),
             ltiProperties.consumer.key,
             ltiProperties.consumer.secret

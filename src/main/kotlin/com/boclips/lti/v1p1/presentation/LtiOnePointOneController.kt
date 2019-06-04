@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.servlet.ModelAndView
@@ -28,19 +29,18 @@ class LtiOnePointOneController(
     fun handleLtiLaunchRequest(request: HttpServletRequest, result: LtiVerificationResult, session: HttpSession): ResponseEntity<Unit> {
         val responseHeaders = HttpHeaders()
         if (isLaunchRequestValid(result)) {
-            session.setAttribute("resource-link-id", result.ltiLaunchResult.resourceLinkId)
-            responseHeaders.location = URI(ltiProperties.landingPage)
+            responseHeaders.location = URI("${request.requestURI}/video/${result.ltiLaunchResult.resourceLinkId}")
         } else {
             responseHeaders.location = URI(ltiProperties.errorPage)
         }
         return ResponseEntity(responseHeaders, HttpStatus.SEE_OTHER)
     }
 
-    @GetMapping("/video")
-    fun getVideo(session: HttpSession): ModelAndView {
+    @GetMapping("/video/{videoId}")
+    fun getVideo(session: HttpSession, @PathVariable("videoId") videoId: String): ModelAndView {
         if (session.isNew) {
             throw UnauthorizedException("Accessing videos requires a valid session")
         }
-        return ModelAndView("video", mapOf("resource-link-id" to session.getAttribute("resource-link-id")))
+        return ModelAndView("video", mapOf("videoId" to videoId))
     }
 }
