@@ -8,6 +8,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.util.LinkedMultiValueMap
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
+import java.util.Locale
+import org.springframework.mock.web.MockHttpSession
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 
 class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() {
 
@@ -41,6 +46,26 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
         )
             .andExpect(status().isSeeOther)
             .andExpect(header().string("Location", ltiProperties.errorPage))
+    }
+
+    @Test
+    fun `valid launch request establishes an LTI session`() {
+        val session = mvc.perform(
+            post("/lti/v1p1")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .params(validLtiLaunchRequestPayload)
+        ).andReturn().request.session
+
+        mvc.perform(get("/lti/v1p1/video").session(session as MockHttpSession))
+            .andExpect(status().isOk)
+            .andExpect(content().string("lti is amazing and I've got a session Is LTI happy: it is very happy indeed"))
+//            .andExpect(view().name("play_video"))
+    }
+
+    @Test
+    fun `accessing a video without a session should result in unauthorised response`() {
+        mvc.perform(get("/lti/v1p1/video"))
+            .andExpect(status().isUnauthorized)
     }
 
     lateinit var validLtiLaunchRequestPayload: LinkedMultiValueMap<String, String>
