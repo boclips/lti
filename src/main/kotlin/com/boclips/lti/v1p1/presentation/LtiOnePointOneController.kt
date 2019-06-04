@@ -1,5 +1,6 @@
 package com.boclips.lti.v1p1.presentation
 
+import com.boclips.lti.v1p1.application.exceptions.UnauthorizedException
 import com.boclips.lti.v1p1.configuration.properties.LtiProperties
 import com.boclips.lti.v1p1.domain.service.IsLaunchRequestValid
 import org.imsglobal.aspect.Lti
@@ -35,10 +36,10 @@ class LtiOnePointOneController(
     }
 
     @GetMapping("/video")
-    fun getVideo(session: HttpSession): ResponseEntity<String> {
+    fun getVideo(session: HttpSession): String {
         if (session.isNew) {
-            return ResponseEntity(HttpStatus.UNAUTHORIZED)
+            throw UnauthorizedException("Accessing videos requires a valid session")
         }
-        return ResponseEntity("lti is amazing and I've got a session Is LTI happy: ${session.getAttribute("lti-is-happy-now")}", HttpStatus.OK)
+        return "lti is amazing and I've got a session Is LTI happy: ${session.getAttribute("lti-is-happy-now")}"
     }
 }
