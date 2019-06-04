@@ -9,10 +9,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
-import java.util.Locale
 import org.springframework.mock.web.MockHttpSession
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.model
 
 class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() {
 
@@ -58,8 +57,8 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
 
         mvc.perform(get("/lti/v1p1/video").session(session as MockHttpSession))
             .andExpect(status().isOk)
-            .andExpect(content().string("lti is amazing and I've got a session Is LTI happy: it is very happy indeed"))
-//            .andExpect(view().name("play_video"))
+            .andExpect(view().name("video"))
+            .andExpect(model().attribute("resource-link-id", "test-resource-link-id"))
     }
 
     @Test
