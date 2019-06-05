@@ -57,7 +57,7 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
         mvc.perform(get("/lti/v1p1/video/$videoResource").session(session as MockHttpSession))
             .andExpect(status().isOk)
             .andExpect(view().name("video"))
-            .andExpect(model().attribute("videoId", videoResource))
+            .andExpect(model().attribute("videoUrl", "${apiProperties.url}/v1/videos/$videoResource"))
     }
 
     @Test

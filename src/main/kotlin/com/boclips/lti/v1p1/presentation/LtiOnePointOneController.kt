@@ -1,6 +1,7 @@
 package com.boclips.lti.v1p1.presentation
 
 import com.boclips.lti.v1p1.application.exceptions.UnauthorizedException
+import com.boclips.lti.v1p1.application.service.VideoUrlFor
 import com.boclips.lti.v1p1.configuration.properties.LtiProperties
 import com.boclips.lti.v1p1.domain.service.IsLaunchRequestValid
 import org.imsglobal.aspect.Lti
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpSession
 @RequestMapping("/lti/v1p1")
 class LtiOnePointOneController(
     val isLaunchRequestValid: IsLaunchRequestValid,
+    val videoUrlFor: VideoUrlFor,
     val ltiProperties: LtiProperties
 ) {
     @Lti
@@ -41,6 +43,8 @@ class LtiOnePointOneController(
         if (session.isNew) {
             throw UnauthorizedException("Accessing videos requires a valid session")
         }
-        return ModelAndView("video", mapOf("videoId" to videoId))
+        return ModelAndView("video", mapOf(
+            "videoUrl" to videoUrlFor(videoId)
+        ))
     }
 }

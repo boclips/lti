@@ -1,4 +1,7 @@
 boclips:
+  api:
+    url: 'https://api.testing-boclips.com'
+
   lti:
     v1p1:
       errorPage: 'https://testing-boclips.com/error'

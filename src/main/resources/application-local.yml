@@ -2,6 +2,9 @@ server:
   port: 8080
 
 boclips:
+  api:
+    url: 'https://api.staging-boclips.com'
+
   lti:
     v1p1:
       consumer:
