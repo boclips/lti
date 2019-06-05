@@ -7,5 +7,4 @@ boclips:
       consumer:
         key: 'local-development-key'
         secret: 'local-development-secret'
-      landingPage: 'https://www.boclips.com'
       errorPage: 'https://www.boclips.com/error'

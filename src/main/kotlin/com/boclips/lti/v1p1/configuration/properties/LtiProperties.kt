@@ -16,9 +16,5 @@ class LtiProperties {
 
     @URL
     @NotBlank
-    lateinit var landingPage: String
-
-    @URL
-    @NotBlank
     lateinit var errorPage: String
 }

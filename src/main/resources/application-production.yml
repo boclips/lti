@@ -1,5 +1,4 @@
 boclips:
   lti:
     v1p1:
-      landingPage: 'https://www.boclips.com'
       errorPage: 'https://www.boclips.com/error'
