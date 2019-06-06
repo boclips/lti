@@ -4,6 +4,7 @@ import com.boclips.lti.v1p1.application.exceptions.UnauthorizedException
 import com.boclips.lti.v1p1.application.service.VideoUrlFor
 import com.boclips.lti.v1p1.configuration.properties.LtiProperties
 import com.boclips.lti.v1p1.domain.service.IsLaunchRequestValid
+import mu.KLogging
 import org.imsglobal.aspect.Lti
 import org.imsglobal.lti.launch.LtiVerificationResult
 import org.springframework.http.HttpHeaders
@@ -26,9 +27,13 @@ class LtiOnePointOneController(
     val videoUrlFor: VideoUrlFor,
     val ltiProperties: LtiProperties
 ) {
+    companion object : KLogging()
+
     @Lti
     @PostMapping("", "/")
     fun handleLtiLaunchRequest(request: HttpServletRequest, result: LtiVerificationResult, session: HttpSession): ResponseEntity<Unit> {
+        logger.info { "Received request: ${request.method} ${request.requestURL}" }
+
         val responseHeaders = HttpHeaders()
         if (isLaunchRequestValid(result)) {
             responseHeaders.location = URI("${request.requestURI}/video/${result.ltiLaunchResult.resourceLinkId}")
