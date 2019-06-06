@@ -10,7 +10,7 @@ class IsLaunchRequestValid {
 
     operator fun invoke(result: LtiVerificationResult): Boolean {
         if (!result.success) {
-            logger.info { "LTI launch verification failed: ${result.error}" }
+            logger.info { "LTI launch verification failed: ${result.error} because of ${result.message}" }
             return false
         }
         if (result.ltiLaunchResult.resourceLinkId?.isNotBlank() != true) {
