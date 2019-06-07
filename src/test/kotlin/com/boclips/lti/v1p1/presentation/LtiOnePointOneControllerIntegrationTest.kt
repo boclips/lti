@@ -4,14 +4,14 @@ import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.util.LinkedMultiValueMap
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
 import org.springframework.mock.web.MockHttpSession
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.model
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
+import org.springframework.util.LinkedMultiValueMap
 
 class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
@@ -34,6 +34,17 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
         )
             .andExpect(status().isSeeOther)
             .andExpect(header().string("Location", ltiProperties.errorPage))
+    }
+
+    @Test
+    fun `if request is invalid do not set a session`() {
+        val session = mvc.perform(
+            post("/lti/v1p1")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        ).andReturn().request.session
+
+        mvc.perform(get("/lti/v1p1/video/$videoResource").session(session as MockHttpSession))
+            .andExpect(status().isUnauthorized)
     }
 
     @Test

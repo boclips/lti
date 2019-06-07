@@ -29,13 +29,20 @@ class LtiOnePointOneController(
 ) {
     companion object : KLogging()
 
+    private val authenticationStateHolder = "isAuthenticated"
+
     @Lti
     @PostMapping("", "/")
-    fun handleLtiLaunchRequest(request: HttpServletRequest, result: LtiVerificationResult, session: HttpSession): ResponseEntity<Unit> {
+    fun handleLtiLaunchRequest(
+        request: HttpServletRequest,
+        result: LtiVerificationResult,
+        session: HttpSession
+    ): ResponseEntity<Unit> {
         logger.info { "Received request: ${request.method} ${request.requestURL}" }
 
         val responseHeaders = HttpHeaders()
         if (isLaunchRequestValid(result)) {
+            session.setAttribute(authenticationStateHolder, true)
             responseHeaders.location = URI("${request.requestURI}/video/${result.ltiLaunchResult.resourceLinkId}")
         } else {
             responseHeaders.location = URI(ltiProperties.errorPage)
@@ -45,11 +52,18 @@ class LtiOnePointOneController(
 
     @GetMapping("/video/{videoId}")
     fun getVideo(session: HttpSession, @PathVariable("videoId") videoId: String): ModelAndView {
-        if (session.isNew) {
+        val isAuthenticated: Boolean = session.getAttribute(authenticationStateHolder)?.let {
+            (it as Boolean)
+        } ?: false
+
+        if (!isAuthenticated) {
             throw UnauthorizedException("Accessing videos requires a valid session")
         }
-        return ModelAndView("video", mapOf(
-            "videoUrl" to videoUrlFor(videoId)
-        ))
+
+        return ModelAndView(
+            "video", mapOf(
+                "videoUrl" to videoUrlFor(videoId)
+            )
+        )
     }
 }
