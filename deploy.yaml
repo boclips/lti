@@ -1,7 +1,7 @@
 app: lti
 port: 8080
 scale: Large
-bootTime: Slow
+bootTime: Fast
 healthPath: /actuator/health
 environments:
   production:
