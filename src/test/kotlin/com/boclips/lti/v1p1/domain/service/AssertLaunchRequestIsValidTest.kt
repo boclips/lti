@@ -1,21 +1,24 @@
 package com.boclips.lti.v1p1.domain.service
 
+import com.boclips.lti.v1p1.domain.exception.LaunchRequestInvalidException
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.*
 import org.imsglobal.lti.launch.LtiLaunch
 import org.imsglobal.lti.launch.LtiVerificationResult
 import org.junit.jupiter.api.Test
 
-internal class IsLaunchRequestValidTest {
-    private val isLaunchRequestValid: IsLaunchRequestValid = IsLaunchRequestValid()
+internal class AssertLaunchRequestIsValidTest {
+    private val assertLaunchRequestIsValid: AssertLaunchRequestIsValid = AssertLaunchRequestIsValid()
 
     @Test
     fun `should return false when verification result is not successful`() {
         val result = mock<LtiVerificationResult> {
             on { success } doReturn false
         }
-        assertThat(isLaunchRequestValid(result)).isEqualTo(false)
+        assertThatThrownBy { assertLaunchRequestIsValid(result) }
+            .isInstanceOf(LaunchRequestInvalidException::class.java)
+            .hasMessageContaining("LTI launch verification failed")
     }
 
     @Test
@@ -28,11 +31,13 @@ internal class IsLaunchRequestValidTest {
             on { ltiLaunchResult } doReturn launch
         }
 
-        assertThat(isLaunchRequestValid(result)).isEqualTo(false)
+        assertThatThrownBy { assertLaunchRequestIsValid(result) }
+            .isInstanceOf(LaunchRequestInvalidException::class.java)
+            .hasMessageContaining("LTI resource link id was not provided")
     }
 
     @Test
-    fun `should return false when verification result is successful, but resource_link_id is empty`() {
+    fun `should throw exception when verification result is successful, but resource_link_id is empty`() {
         val launch = mock<LtiLaunch> {
             on { resourceLinkId } doReturn ""
         }
@@ -41,11 +46,13 @@ internal class IsLaunchRequestValidTest {
             on { ltiLaunchResult } doReturn launch
         }
 
-        assertThat(isLaunchRequestValid(result)).isEqualTo(false)
+        assertThatThrownBy { assertLaunchRequestIsValid(result) }
+            .isInstanceOf(LaunchRequestInvalidException::class.java)
+            .hasMessageContaining("LTI resource link id was not provided")
     }
 
     @Test
-    fun `should return true when verification result is successful and resource_link_id is non-empty`() {
+    fun `should not throw when verification result is successful and resource_link_id is non-empty`() {
         val launch = mock<LtiLaunch> {
             on { resourceLinkId } doReturn "a resource link identifier"
         }
@@ -54,6 +61,6 @@ internal class IsLaunchRequestValidTest {
             on { ltiLaunchResult } doReturn launch
         }
 
-        assertThat(isLaunchRequestValid(result)).isEqualTo(true)
+        assertThatCode { assertLaunchRequestIsValid(result) }.doesNotThrowAnyException()
     }
 }

@@ -2,8 +2,7 @@ package com.boclips.lti.v1p1.presentation
 
 import com.boclips.lti.v1p1.application.exceptions.UnauthorizedException
 import com.boclips.lti.v1p1.application.service.VideoUrlFor
-import com.boclips.lti.v1p1.configuration.properties.LtiProperties
-import com.boclips.lti.v1p1.domain.service.IsLaunchRequestValid
+import com.boclips.lti.v1p1.domain.service.AssertLaunchRequestIsValid
 import mu.KLogging
 import org.imsglobal.aspect.Lti
 import org.imsglobal.lti.launch.LtiVerificationResult
@@ -23,9 +22,8 @@ import javax.servlet.http.HttpSession
 @Controller
 @RequestMapping("/lti/v1p1")
 class LtiOnePointOneController(
-    val isLaunchRequestValid: IsLaunchRequestValid,
-    val videoUrlFor: VideoUrlFor,
-    val ltiProperties: LtiProperties
+    val assertLaunchRequestIsValid: AssertLaunchRequestIsValid,
+    val videoUrlFor: VideoUrlFor
 ) {
     companion object : KLogging()
 
@@ -40,13 +38,11 @@ class LtiOnePointOneController(
     ): ResponseEntity<Unit> {
         logger.info { "Received request: ${request.method} ${request.requestURL}" }
 
+        assertLaunchRequestIsValid(result)
+
         val responseHeaders = HttpHeaders()
-        if (isLaunchRequestValid(result)) {
-            session.setAttribute(authenticationStateHolder, true)
-            responseHeaders.location = URI("${request.requestURI}/video/${result.ltiLaunchResult.resourceLinkId}")
-        } else {
-            responseHeaders.location = URI(ltiProperties.errorPage)
-        }
+        session.setAttribute(authenticationStateHolder, true)
+        responseHeaders.location = URI("${request.requestURI}/video/${result.ltiLaunchResult.resourceLinkId}")
         return ResponseEntity(responseHeaders, HttpStatus.SEE_OTHER)
     }
 

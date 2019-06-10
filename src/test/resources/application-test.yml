@@ -7,4 +7,3 @@ boclips:
       consumer:
         key: 'test-consumer-key'
         secret: 'test-consumer-secret'
-      errorPage: 'http://localhost/error-page'

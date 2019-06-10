@@ -1,16 +1,18 @@
 package com.boclips.lti.v1p1.presentation
 
+import com.boclips.lti.v1p1.domain.exception.LaunchRequestInvalidException
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpSession
+import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.model
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.util.LinkedMultiValueMap
 
 class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() {
@@ -25,15 +27,45 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
             .andExpect(header().string("Location", "/lti/v1p1/video/$videoResource"))
     }
 
-    @Test
-    fun `endpoint redirects user to error page if request misses resource_link_id`() {
-        mvc.perform(
-            post("/lti/v1p1")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .params(validLtiLaunchRequestPayload.apply { remove("resource_link_id") })
-        )
-            .andExpect(status().isSeeOther)
-            .andExpect(header().string("Location", ltiProperties.errorPage))
+    @Nested
+    @DisplayName(value = "Invalid Requests")
+    inner class InvalidRequests {
+        @Test
+        fun `endpoint returns an error if request misses resource_link_id`() {
+            mvc.perform(
+                post("/lti/v1p1")
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .params(prepareLaunchRequest(
+                        mapOf(
+                            "lti_message_type" to "basic-lti-launch-request",
+                            "lti_version" to "LTI-1p0",
+                            "oauth_consumer_key" to ltiProperties.consumer.key
+                        ),
+                        ltiProperties.consumer.key,
+                        ltiProperties.consumer.secret
+                    ))
+            )
+                .andExpect(status().isBadRequest)
+                .andDo { result: MvcResult ->
+                    assertThat(result.resolvedException)
+                        .isInstanceOf(LaunchRequestInvalidException::class.java)
+                        .hasMessage("LTI resource link id was not provided")
+                }
+        }
+
+        @Test
+        fun `endpoint returns an error if it receives a blank request`() {
+            mvc.perform(
+                post("/lti/v1p1")
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            )
+                .andExpect(status().isBadRequest)
+                .andDo { result: MvcResult ->
+                    assertThat(result.resolvedException)
+                        .isInstanceOf(LaunchRequestInvalidException::class.java)
+                        .hasMessageContaining("LTI launch verification failed")
+                }
+        }
     }
 
     @Test
@@ -45,16 +77,6 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
 
         mvc.perform(get("/lti/v1p1/video/$videoResource").session(session as MockHttpSession))
             .andExpect(status().isUnauthorized)
-    }
-
-    @Test
-    fun `endpoint redirects the user to LTI error page if it receives a blank request`() {
-        mvc.perform(
-            post("/lti/v1p1")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-        )
-            .andExpect(status().isSeeOther)
-            .andExpect(header().string("Location", ltiProperties.errorPage))
     }
 
     @Test
