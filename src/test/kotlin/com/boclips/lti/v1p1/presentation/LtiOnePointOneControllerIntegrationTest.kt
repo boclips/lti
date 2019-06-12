@@ -19,12 +19,12 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
     @Test
     fun `endpoint redirects user to landing page if it receives a minimal correct request`() {
         mvc.perform(
-            post("/lti/v1p1")
+            post("/v1p1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .params(validLtiLaunchRequestPayload)
         )
             .andExpect(status().isSeeOther)
-            .andExpect(header().string("Location", "/lti/v1p1/video/$videoResource"))
+            .andExpect(header().string("Location", "/v1p1/videos/$videoResource"))
     }
 
     @Nested
@@ -33,7 +33,7 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
         @Test
         fun `endpoint returns an error if request misses resource_link_id`() {
             mvc.perform(
-                post("/lti/v1p1")
+                post("/v1p1")
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .params(prepareLaunchRequest(
                         mapOf(
@@ -56,7 +56,7 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
         @Test
         fun `endpoint returns an error if it receives a blank request`() {
             mvc.perform(
-                post("/lti/v1p1")
+                post("/v1p1")
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             )
                 .andExpect(status().isBadRequest)
@@ -71,23 +71,23 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
     @Test
     fun `if request is invalid do not set a session`() {
         val session = mvc.perform(
-            post("/lti/v1p1")
+            post("/v1p1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         ).andReturn().request.session
 
-        mvc.perform(get("/lti/v1p1/video/$videoResource").session(session as MockHttpSession))
+        mvc.perform(get("/v1p1/videos/$videoResource").session(session as MockHttpSession))
             .andExpect(status().isUnauthorized)
     }
 
     @Test
     fun `valid launch request establishes an LTI session`() {
         val session = mvc.perform(
-            post("/lti/v1p1")
+            post("/v1p1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .params(validLtiLaunchRequestPayload)
         ).andReturn().request.session
 
-        mvc.perform(get("/lti/v1p1/video/$videoResource").session(session as MockHttpSession))
+        mvc.perform(get("/v1p1/videos/$videoResource").session(session as MockHttpSession))
             .andExpect(status().isOk)
             .andExpect(view().name("video"))
             .andExpect(model().attribute("videoUrl", "${apiProperties.url}/v1/videos/$videoResource"))
@@ -95,7 +95,7 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
 
     @Test
     fun `accessing a video without a session should result in unauthorised response`() {
-        mvc.perform(get("/lti/v1p1/video/$videoResource"))
+        mvc.perform(get("/v1p1/videos/$videoResource"))
             .andExpect(status().isUnauthorized)
     }
 
@@ -127,7 +127,7 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
             parameters,
             key,
             secret,
-            "http://localhost/lti/v1p1",
+            "http://localhost/v1p1",
             "POST"
         )
 

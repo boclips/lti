@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpSession
 
 @Controller
-@RequestMapping("/lti/v1p1")
+@RequestMapping("/v1p1")
 class LtiOnePointOneController(
     val assertLaunchRequestIsValid: AssertLaunchRequestIsValid,
     val videoUrlFor: VideoUrlFor
@@ -42,11 +42,11 @@ class LtiOnePointOneController(
 
         val responseHeaders = HttpHeaders()
         session.setAttribute(authenticationStateHolder, true)
-        responseHeaders.location = URI("${request.requestURI}/video/${result.ltiLaunchResult.resourceLinkId}")
+        responseHeaders.location = URI("${request.requestURI}/videos/${result.ltiLaunchResult.resourceLinkId}")
         return ResponseEntity(responseHeaders, HttpStatus.SEE_OTHER)
     }
 
-    @GetMapping("/video/{videoId}")
+    @GetMapping("/videos/{videoId}")
     fun getVideo(session: HttpSession, @PathVariable("videoId") videoId: String): ModelAndView {
         val isAuthenticated: Boolean = session.getAttribute(authenticationStateHolder)?.let {
             (it as Boolean)
