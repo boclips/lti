@@ -19,7 +19,7 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
     @Test
     fun `endpoint redirects user to landing page if it receives a minimal correct request`() {
         mvc.perform(
-            post("/v1p1")
+            post("/v1p1/videos/$videoResource")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .params(validLtiLaunchRequestPayload)
         )
@@ -33,7 +33,7 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
         @Test
         fun `endpoint returns an error if request misses resource_link_id`() {
             mvc.perform(
-                post("/v1p1")
+                post("/v1p1/videos/$videoResource")
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .params(prepareLaunchRequest(
                         mapOf(
@@ -56,7 +56,7 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
         @Test
         fun `endpoint returns an error if it receives a blank request`() {
             mvc.perform(
-                post("/v1p1")
+                post("/v1p1/videos/$videoResource")
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             )
                 .andExpect(status().isBadRequest)
@@ -71,7 +71,7 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
     @Test
     fun `if request is invalid do not set a session`() {
         val session = mvc.perform(
-            post("/v1p1")
+            post("/v1p1/videos/$videoResource")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         ).andReturn().request.session
 
@@ -82,7 +82,7 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
     @Test
     fun `valid launch request establishes an LTI session`() {
         val session = mvc.perform(
-            post("/v1p1")
+            post("/v1p1/videos/$videoResource")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .params(validLtiLaunchRequestPayload)
         ).andReturn().request.session
@@ -127,7 +127,7 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
             parameters,
             key,
             secret,
-            "http://localhost/v1p1",
+            "http://localhost/v1p1/videos/$videoResource",
             "POST"
         )
 

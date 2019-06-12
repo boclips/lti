@@ -30,11 +30,12 @@ class LtiOnePointOneController(
     private val authenticationStateHolder = "isAuthenticated"
 
     @Lti
-    @PostMapping("", "/")
+    @PostMapping("/videos/{videoId}")
     fun handleLtiLaunchRequest(
         request: HttpServletRequest,
         result: LtiVerificationResult,
-        session: HttpSession
+        session: HttpSession,
+        @PathVariable("videoId") videoId: String
     ): ResponseEntity<Unit> {
         logger.info { "Received request: ${request.method} ${request.requestURL}" }
 
@@ -42,7 +43,7 @@ class LtiOnePointOneController(
 
         val responseHeaders = HttpHeaders()
         session.setAttribute(authenticationStateHolder, true)
-        responseHeaders.location = URI("${request.requestURI}/videos/${result.ltiLaunchResult.resourceLinkId}")
+        responseHeaders.location = URI("${request.requestURI}")
         return ResponseEntity(responseHeaders, HttpStatus.SEE_OTHER)
     }
 
