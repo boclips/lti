@@ -3,7 +3,8 @@ package com.boclips.lti.v1p1.domain.service
 import com.boclips.lti.v1p1.domain.exception.LaunchRequestInvalidException
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
-import org.assertj.core.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThatCode
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.imsglobal.lti.launch.LtiLaunch
 import org.imsglobal.lti.launch.LtiVerificationResult
 import org.junit.jupiter.api.Test

@@ -2,10 +2,8 @@ package com.boclips.lti.v1p1.domain.service
 
 import com.boclips.lti.v1p1.configuration.properties.LtiProperties
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.lang.IllegalArgumentException
 
 internal class PreconfiguredConsumerLtiKeySecretServiceTest {
     private val testKey = "test-key"

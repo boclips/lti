@@ -12,7 +12,10 @@ import org.springframework.mock.web.MockHttpSession
 import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.model
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
 import org.springframework.util.LinkedMultiValueMap
 
 class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() {
@@ -35,15 +38,17 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
             mvc.perform(
                 post("/v1p1/videos/$videoResource")
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .params(prepareLaunchRequest(
-                        mapOf(
-                            "lti_message_type" to "basic-lti-launch-request",
-                            "lti_version" to "LTI-1p0",
-                            "oauth_consumer_key" to ltiProperties.consumer.key
-                        ),
-                        ltiProperties.consumer.key,
-                        ltiProperties.consumer.secret
-                    ))
+                    .params(
+                        prepareLaunchRequest(
+                            mapOf(
+                                "lti_message_type" to "basic-lti-launch-request",
+                                "lti_version" to "LTI-1p0",
+                                "oauth_consumer_key" to ltiProperties.consumer.key
+                            ),
+                            ltiProperties.consumer.key,
+                            ltiProperties.consumer.secret
+                        )
+                    )
             )
                 .andExpect(status().isBadRequest)
                 .andDo { result: MvcResult ->
