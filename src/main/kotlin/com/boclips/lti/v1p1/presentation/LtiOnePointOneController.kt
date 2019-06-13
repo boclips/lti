@@ -1,7 +1,7 @@
 package com.boclips.lti.v1p1.presentation
 
-import com.boclips.lti.v1p1.application.exception.UnauthorizedException
 import com.boclips.lti.v1p1.application.service.VideoUrlFor
+import com.boclips.lti.v1p1.domain.service.AssertHasLtiSession
 import com.boclips.lti.v1p1.domain.service.AssertLaunchRequestIsValid
 import mu.KLogging
 import org.imsglobal.aspect.Lti
@@ -23,11 +23,12 @@ import javax.servlet.http.HttpSession
 @RequestMapping("/v1p1")
 class LtiOnePointOneController(
     val assertLaunchRequestIsValid: AssertLaunchRequestIsValid,
+    val assertHasLtiSession: AssertHasLtiSession,
     val videoUrlFor: VideoUrlFor
 ) {
-    companion object : KLogging()
-
-    private val authenticationStateHolder = "isAuthenticated"
+    companion object : KLogging() {
+        const val authenticationStateHolder = "isAuthenticated"
+    }
 
     @Lti
     @PostMapping("/videos/{videoId}")
@@ -43,19 +44,13 @@ class LtiOnePointOneController(
 
         val responseHeaders = HttpHeaders()
         session.setAttribute(authenticationStateHolder, true)
-        responseHeaders.location = URI("${request.requestURI}")
+        responseHeaders.location = URI(request.requestURI)
         return ResponseEntity(responseHeaders, HttpStatus.SEE_OTHER)
     }
 
     @GetMapping("/videos/{videoId}")
     fun getVideo(session: HttpSession, @PathVariable("videoId") videoId: String): ModelAndView {
-        val isAuthenticated: Boolean = session.getAttribute(authenticationStateHolder)?.let {
-            (it as Boolean)
-        } ?: false
-
-        if (!isAuthenticated) {
-            throw UnauthorizedException("Accessing videos requires a valid session")
-        }
+        assertHasLtiSession(session)
 
         return ModelAndView(
             "video", mapOf(
