@@ -1,6 +1,6 @@
 package com.boclips.lti.v1p1.presentation
 
-import com.boclips.lti.v1p1.application.exceptions.UnauthorizedException
+import com.boclips.lti.v1p1.application.exception.UnauthorizedException
 import com.boclips.lti.v1p1.application.service.VideoUrlFor
 import com.boclips.lti.v1p1.domain.service.AssertLaunchRequestIsValid
 import mu.KLogging
