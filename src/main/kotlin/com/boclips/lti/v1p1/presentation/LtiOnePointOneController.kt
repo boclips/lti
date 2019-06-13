@@ -3,11 +3,10 @@ package com.boclips.lti.v1p1.presentation
 import com.boclips.lti.v1p1.application.service.VideoUrlFor
 import com.boclips.lti.v1p1.domain.service.AssertHasLtiSession
 import com.boclips.lti.v1p1.domain.service.AssertLaunchRequestIsValid
+import com.boclips.lti.v1p1.domain.service.RedirectToRequestedResource
 import mu.KLogging
 import org.imsglobal.aspect.Lti
 import org.imsglobal.lti.launch.LtiVerificationResult
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.servlet.ModelAndView
-import java.net.URI
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpSession
 
@@ -24,6 +22,7 @@ import javax.servlet.http.HttpSession
 class LtiOnePointOneController(
     val assertLaunchRequestIsValid: AssertLaunchRequestIsValid,
     val assertHasLtiSession: AssertHasLtiSession,
+    val redirectToRequestedResource: RedirectToRequestedResource,
     val videoUrlFor: VideoUrlFor
 ) {
     companion object : KLogging() {
@@ -41,11 +40,8 @@ class LtiOnePointOneController(
         logger.info { "Received request: ${request.method} ${request.requestURL}" }
 
         assertLaunchRequestIsValid(result)
-
-        val responseHeaders = HttpHeaders()
         session.setAttribute(authenticationStateHolder, true)
-        responseHeaders.location = URI(request.requestURI)
-        return ResponseEntity(responseHeaders, HttpStatus.SEE_OTHER)
+        return redirectToRequestedResource(request)
     }
 
     @GetMapping("/videos/{videoId}")
