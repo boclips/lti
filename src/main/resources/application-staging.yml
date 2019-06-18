@@ -1,3 +1,6 @@
 boclips:
   api:
     url: 'https://api.staging-boclips.com'
+
+keycloak:
+  configurationFile: 'classpath:keycloak-staging.json'

@@ -2,6 +2,7 @@ package com.boclips.lti.v1p1.testsupport
 
 import com.boclips.lti.v1p1.configuration.properties.ApiProperties
 import com.boclips.lti.v1p1.configuration.properties.LtiProperties
+import com.boclips.videos.service.client.spring.MockVideoServiceClient
 import org.imsglobal.lti.launch.LtiOauthSigner
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc
 @ExtendWith(SpringExtension::class)
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-
+@MockVideoServiceClient
 @AutoConfigureMockMvc
 abstract class AbstractSpringIntegrationTest {
     @Autowired

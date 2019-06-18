@@ -1,0 +1,8 @@
+{
+  "realm": "boclips",
+  "bearer-only": true,
+  "auth-server-url": "https://login.staging-boclips.com/auth",
+  "ssl-required": "external",
+  "resource": "lti",
+  "confidential-port": 0
+}
