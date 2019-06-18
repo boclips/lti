@@ -16,7 +16,7 @@ buildscript {
 }
 
 plugins {
-	id 'org.owasp.dependencycheck' version '5.0.0-M3.1'
+	id 'org.owasp.dependencycheck' version '5.0.0'
 }
 
 ext {
