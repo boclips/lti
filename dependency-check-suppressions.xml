@@ -16,4 +16,13 @@
         <cpe>cpe:/a:apache:tomcat:9.0.16</cpe>
         <cve>CVE-2019-0232</cve>
     </suppress>
+    <suppress>
+      <notes><![CDATA[
+        File name: spring-security-*.jar in combination with Spring Framework 5.0.5.RELEASE
+
+        Affects Spring Framework 5.0.5.RELEASE only.
+        ]]></notes>
+      <gav regex="true">^org\.springframework\.security:spring-security-.*:.*$</gav>
+      <cve>CVE-2018-1258</cve>
+    </suppress>
 </suppressions>

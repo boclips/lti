@@ -103,6 +103,8 @@ dependencyCheck {
 	}
 
   suppressionFile = './dependency-check-suppressions.xml'
+
+  outputDirectory = 'security-report'
 }
 
 task bootRunLocal(type: org.springframework.boot.gradle.tasks.run.BootRun) {
