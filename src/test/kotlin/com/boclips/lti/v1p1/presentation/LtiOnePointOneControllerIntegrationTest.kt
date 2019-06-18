@@ -93,6 +93,7 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
         ).andReturn().request.session
 
         mvc.perform(get("/v1p1/videos/$videoResource").session(session as MockHttpSession))
+            .andExpect(header().doesNotExist("X-Frame-Options"))
             .andExpect(status().isOk)
             .andExpect(view().name("video"))
             .andExpect(model().attribute("videoUrl", "${apiProperties.url}/v1/videos/$videoResource"))

@@ -17,6 +17,9 @@ class SecurityConfig
 class LtiHttpSecurityConfigurer : HttpSecurityConfigurer {
     override fun configure(http: HttpSecurity) {
         http
+            .headers()
+            .frameOptions().disable()
+            .and()
             .authorizeRequests()
             .antMatchers(HttpMethod.GET, "/actuator/health").permitAll()
             .antMatchers(HttpMethod.POST, "/v1p1").permitAll()
