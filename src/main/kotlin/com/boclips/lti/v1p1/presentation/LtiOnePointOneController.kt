@@ -4,6 +4,8 @@ import com.boclips.lti.v1p1.application.service.VideoUrlFor
 import com.boclips.lti.v1p1.domain.service.AssertHasLtiSession
 import com.boclips.lti.v1p1.domain.service.AssertLaunchRequestIsValid
 import com.boclips.lti.v1p1.domain.service.RedirectToRequestedResource
+import com.boclips.lti.v1p1.presentation.model.VideoMetadata
+import com.boclips.videos.service.client.VideoServiceClient
 import mu.KLogging
 import org.imsglobal.aspect.Lti
 import org.imsglobal.lti.launch.LtiVerificationResult
@@ -23,7 +25,8 @@ class LtiOnePointOneController(
     val assertLaunchRequestIsValid: AssertLaunchRequestIsValid,
     val assertHasLtiSession: AssertHasLtiSession,
     val redirectToRequestedResource: RedirectToRequestedResource,
-    val videoUrlFor: VideoUrlFor
+    val videoUrlFor: VideoUrlFor,
+    val videoServiceClient: VideoServiceClient
 ) {
     companion object : KLogging() {
         const val authenticationStateHolder = "isAuthenticated"
@@ -59,9 +62,17 @@ class LtiOnePointOneController(
     }
 
     @GetMapping("/collections/{collectionId}")
-    fun getCollection(session: HttpSession, @PathVariable("collectionId") collectionId: String): String {
+    fun getCollection(session: HttpSession, @PathVariable("collectionId") collectionId: String): ModelAndView {
         assertHasLtiSession(session)
 
-        return "collection"
+        val collection = videoServiceClient.get(videoServiceClient.rawIdToCollectionId(collectionId))
+
+        return ModelAndView(
+            "collection", mapOf(
+                "videos" to collection.videos.map {
+                    VideoMetadata(it.value, "", "", "")
+                }
+            )
+        )
     }
 }

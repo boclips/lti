@@ -1,9 +1,12 @@
 package com.boclips.lti.v1p1.presentation
 
 import com.boclips.lti.v1p1.domain.exception.LaunchRequestInvalidException
+import com.boclips.lti.v1p1.presentation.model.VideoMetadata
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
+import com.boclips.videos.service.client.Collection
+import com.boclips.videos.service.client.SubjectId
 import org.assertj.core.api.Assertions.assertThat
-import org.hamcrest.CoreMatchers
+import org.hamcrest.CoreMatchers.endsWith
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -13,15 +16,13 @@ import org.springframework.mock.web.MockHttpSession
 import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.model
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
 import org.springframework.util.LinkedMultiValueMap
 
 class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIntegrationTest() {
-    val videoId = "3928cc3830a14af9902e133e"
-    override fun resourcePath() = "/v1p1/videos/$videoId"
-
     @Test
     fun `valid video launch establishes an LTI session and resource can be correctly retrieved`() {
         val session = mvc.perform(
@@ -33,17 +34,19 @@ class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIn
         mvc.perform(get(resourcePath()).session(session as MockHttpSession))
             .andExpect(header().doesNotExist("X-Frame-Options"))
             .andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.view().name("video"))
-            .andExpect(MockMvcResultMatchers.model().attribute("videoUrl", CoreMatchers.endsWith(videoId)))
+            .andExpect(view().name("video"))
+            .andExpect(model().attribute("videoUrl", endsWith(videoId)))
     }
+
+    val videoId = "3928cc3830a14af9902e133e"
+    override fun resourcePath() = "/v1p1/videos/$videoId"
 }
 
 class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIntegrationTest() {
-    val collectionId = "87064254edd642a8a4c2e22a"
-    override fun resourcePath() = "/v1p1/collections/$collectionId"
-
     @Test
     fun `valid collection launch establishes an LTI session and resource can be correctly retrieved`() {
+        populateCollection()
+
         val session = mvc.perform(
             post(resourcePath())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -53,7 +56,46 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
         mvc.perform(get(resourcePath()).session(session as MockHttpSession))
             .andExpect(header().doesNotExist("X-Frame-Options"))
             .andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.view().name("collection"))
+            .andExpect(view().name("collection"))
+            .andDo { result ->
+                result.modelAndView!!.model["videos"]!!.let {
+                    val videos = it as List<*>
+                    assertThat(
+                        videos
+                            .filterIsInstance(VideoMetadata::class.java)
+                            .map { videoMetadata -> videoMetadata.videoUrl.substringAfterLast("/") }
+                    )
+                        .containsExactly(firstVideoId, secondVideoId, thirdVideoId)
+                }
+            }
+    }
+
+    val firstVideoId = "3928cc3830a14af9902e133e"
+    val secondVideoId = "ca2fe51c2d9f47c8b0e49e01"
+    val thirdVideoId = "e608ca4427514e4d9f5f14d4"
+
+    val collectionId = "87064254edd642a8a4c2e22a"
+
+    override fun resourcePath() = "/v1p1/collections/$collectionId"
+
+    private fun populateCollection() {
+        videoServiceClient.apply {
+            val subjects = setOf(SubjectId("Math"))
+            val videos = listOf(
+                rawIdToVideoId(firstVideoId),
+                rawIdToVideoId(secondVideoId),
+                rawIdToVideoId(thirdVideoId)
+            )
+
+            addCollection(
+                Collection.builder()
+                    .collectionId(rawIdToCollectionId(collectionId))
+                    .title("first collection")
+                    .subjects(subjects)
+                    .videos(videos)
+                    .build()
+            )
+        }
     }
 }
 
