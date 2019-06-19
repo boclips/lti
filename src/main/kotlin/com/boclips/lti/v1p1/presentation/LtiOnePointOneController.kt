@@ -30,12 +30,15 @@ class LtiOnePointOneController(
     }
 
     @Lti
-    @PostMapping("/videos/{videoId}")
+    @PostMapping(
+        "/videos/{resourceId}",
+        "/collections/{resourceId}"
+    )
     fun handleLtiLaunchRequest(
         request: HttpServletRequest,
         result: LtiVerificationResult,
         session: HttpSession,
-        @PathVariable("videoId") videoId: String
+        @PathVariable("resourceId") resourceId: String
     ): ResponseEntity<Unit> {
         logger.info { "Received request: ${request.method} ${request.requestURL}" }
 
@@ -53,5 +56,12 @@ class LtiOnePointOneController(
                 "videoUrl" to videoUrlFor(videoId)
             )
         )
+    }
+
+    @GetMapping("/collections/{collectionId}")
+    fun getCollection(session: HttpSession, @PathVariable("collectionId") collectionId: String): String {
+        assertHasLtiSession(session)
+
+        return "collection"
     }
 }
