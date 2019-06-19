@@ -1,11 +1,11 @@
 package com.boclips.lti.v1p1.application.service
 
-import com.boclips.lti.v1p1.configuration.properties.ApiProperties
+import com.boclips.videos.service.client.VideoServiceClient
 import org.springframework.stereotype.Service
 
 @Service
-class VideoUrlFor(val apiProperties: ApiProperties) {
+class VideoUrlFor(val videoServiceClient: VideoServiceClient) {
     operator fun invoke(videoId: String): String {
-        return "${apiProperties.url}/v1/videos/$videoId"
+        return videoServiceClient.rawIdToVideoId(videoId).uri.toString()
     }
 }

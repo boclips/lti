@@ -3,6 +3,7 @@ package com.boclips.lti.v1p1.presentation
 import com.boclips.lti.v1p1.domain.exception.LaunchRequestInvalidException
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
+import org.hamcrest.CoreMatchers.endsWith
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -96,7 +97,7 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
             .andExpect(header().doesNotExist("X-Frame-Options"))
             .andExpect(status().isOk)
             .andExpect(view().name("video"))
-            .andExpect(model().attribute("videoUrl", "${apiProperties.url}/v1/videos/$videoResource"))
+            .andExpect(model().attribute("videoUrl", endsWith(videoResource)))
     }
 
     @Test
@@ -105,7 +106,7 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
             .andExpect(status().isUnauthorized)
     }
 
-    val videoResource = "test-video-resource"
+    val videoResource = "3928cc3830a14af9902e133e"
 
     lateinit var validLtiLaunchRequestPayload: LinkedMultiValueMap<String, String>
 

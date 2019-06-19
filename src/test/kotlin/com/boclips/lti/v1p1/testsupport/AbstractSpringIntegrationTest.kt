@@ -1,6 +1,5 @@
 package com.boclips.lti.v1p1.testsupport
 
-import com.boclips.lti.v1p1.configuration.properties.ApiProperties
 import com.boclips.lti.v1p1.configuration.properties.LtiProperties
 import com.boclips.videos.service.client.spring.MockVideoServiceClient
 import org.imsglobal.lti.launch.LtiOauthSigner
@@ -23,9 +22,6 @@ abstract class AbstractSpringIntegrationTest {
 
     @Autowired
     protected lateinit var ltiProperties: LtiProperties
-
-    @Autowired
-    protected lateinit var apiProperties: ApiProperties
 
     val ltiOauthSigner = LtiOauthSigner()
 }

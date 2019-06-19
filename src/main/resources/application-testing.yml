@@ -1,6 +1,2 @@
-boclips:
-  api:
-    url: 'https://api.testing-boclips.com'
-
 keycloak:
   configurationFile: 'classpath:keycloak-testing.json'
