@@ -38,7 +38,7 @@ class ApiVideoRepositoryTest {
   }
 
   @Test
-  fun `returns a requested collection`(@Mock video: Video) {
+  fun `returns a requested video`(@Mock video: Video) {
     whenever(videoServiceClient.get(videoId)).thenReturn(video)
 
     assertThat(videoRepository.get(videoId)).isEqualTo(video)
