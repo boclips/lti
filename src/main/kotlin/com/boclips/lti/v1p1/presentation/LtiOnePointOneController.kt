@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.servlet.ModelAndView
+import java.time.Duration
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpSession
 
@@ -70,7 +71,7 @@ class LtiOnePointOneController(
         return ModelAndView(
             "collection", mapOf(
                 "videos" to collection.videos.map {
-                    VideoMetadata(it.value, "", "", "")
+                    VideoMetadata(it.value, "", "", "", Duration.ZERO)
                 }
             )
         )
