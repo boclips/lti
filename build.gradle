@@ -78,7 +78,7 @@ dependencies {
 	compile("org.imsglobal:basiclti-util:1.1.2")
 
   compile('com.github.boclips:boclips-spring-security:0.93.0')
-  compile('com.github.boclips:videos:0.97.0')
+  compile('com.github.boclips:videos:0.107.0')
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile("org.junit.jupiter:junit-jupiter-api:$junitVersion")

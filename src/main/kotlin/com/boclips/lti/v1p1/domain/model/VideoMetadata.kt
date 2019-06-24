@@ -1,4 +1,4 @@
-package com.boclips.lti.v1p1.presentation.model
+package com.boclips.lti.v1p1.domain.model
 
 import java.time.Duration
 

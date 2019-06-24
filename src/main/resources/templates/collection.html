@@ -1,10 +1,21 @@
 <!DOCTYPE HTML>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Boclips</title>
 </head>
 <body>
-<h1>Hello, World!</h1>
-<p>You're on a collections page!</p>
+
+<section th:each="video : ${videos}">
+  <h3 th:text="${video.title}"></h3>
+  <p th:text="${video.duration}"></p>
+  <p th:text="${video.description}"></p>
+  <p>
+    <a href="" th:attr="href=${video.videoUrl}" th:text="${video.videoUrl}"></a>
+  </p>
+  <p>
+    <img src="" th:attr="src=${video.thumbnailUrl}" />
+  </p>
+</section>
+
 </body>
 </html>

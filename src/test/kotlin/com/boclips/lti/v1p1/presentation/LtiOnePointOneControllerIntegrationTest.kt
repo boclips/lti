@@ -1,10 +1,12 @@
 package com.boclips.lti.v1p1.presentation
 
 import com.boclips.lti.v1p1.domain.exception.LaunchRequestInvalidException
-import com.boclips.lti.v1p1.presentation.model.VideoMetadata
+import com.boclips.lti.v1p1.domain.model.VideoMetadata
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
+import com.boclips.lti.v1p1.testsupport.CreateVideoRequestFactory
 import com.boclips.videos.service.client.Collection
 import com.boclips.videos.service.client.SubjectId
+import com.boclips.videos.service.client.VideoId
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.CoreMatchers.endsWith
 import org.junit.jupiter.api.BeforeEach
@@ -65,14 +67,14 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
                             .filterIsInstance(VideoMetadata::class.java)
                             .map { videoMetadata -> videoMetadata.videoUrl.substringAfterLast("/") }
                     )
-                        .containsExactly(firstVideoId, secondVideoId, thirdVideoId)
+                        .containsExactly(firstVideoId.value, secondVideoId.value, thirdVideoId.value)
                 }
             }
     }
 
-    val firstVideoId = "3928cc3830a14af9902e133e"
-    val secondVideoId = "ca2fe51c2d9f47c8b0e49e01"
-    val thirdVideoId = "e608ca4427514e4d9f5f14d4"
+    lateinit var firstVideoId: VideoId
+    lateinit var secondVideoId: VideoId
+    lateinit var thirdVideoId: VideoId
 
     val collectionId = "87064254edd642a8a4c2e22a"
 
@@ -81,11 +83,12 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
     private fun populateCollection() {
         videoServiceClient.apply {
             val subjects = setOf(SubjectId("Math"))
-            val videos = listOf(
-                rawIdToVideoId(firstVideoId),
-                rawIdToVideoId(secondVideoId),
-                rawIdToVideoId(thirdVideoId)
-            )
+
+            firstVideoId = create(CreateVideoRequestFactory.create(contentProviderId = "firstContentProvider"))
+            secondVideoId = create(CreateVideoRequestFactory.create(contentProviderId = "secondContentProvider"))
+            thirdVideoId = create(CreateVideoRequestFactory.create(contentProviderId = "thirdContentProvider"))
+
+            val videos = listOf(firstVideoId, secondVideoId, thirdVideoId)
 
             addCollection(
                 Collection.builder()
@@ -203,6 +206,6 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
             "POST"
         )
 
-        return LinkedMultiValueMap<String, String>(signedParameters.mapValues { listOf(it.value) })
+        return LinkedMultiValueMap(signedParameters.mapValues { listOf(it.value) })
     }
 }

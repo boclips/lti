@@ -6,12 +6,14 @@ import com.boclips.videos.service.client.VideoId
 import com.boclips.videos.service.client.VideoServiceClient
 import com.boclips.videos.service.client.exceptions.VideoNotFoundException
 import org.springframework.http.HttpStatus
+import org.springframework.stereotype.Repository
 import org.springframework.web.client.HttpClientErrorException
 
+@Repository
 class ApiVideoRepository(private val videoServiceClient: VideoServiceClient) : VideoRepository {
     override fun get(videoId: VideoId): Video {
         try {
-            return videoServiceClient[videoId]
+            return videoServiceClient.get(videoId)
         }
         catch(e: HttpClientErrorException) {
             e.statusCode.let {
