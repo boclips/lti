@@ -59,6 +59,7 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
             .andExpect(header().doesNotExist("X-Frame-Options"))
             .andExpect(status().isOk)
             .andExpect(view().name("collection"))
+            .andExpect(model().attribute("collectionTitle", collectionTitle))
             .andDo { result ->
                 result.modelAndView!!.model["videos"]!!.let {
                     val videos = it as List<*>
@@ -77,6 +78,7 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
     lateinit var thirdVideoId: VideoId
 
     val collectionId = "87064254edd642a8a4c2e22a"
+    val collectionTitle = "first collection"
 
     override fun resourcePath() = "/v1p1/collections/$collectionId"
 
@@ -93,7 +95,7 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
             addCollection(
                 Collection.builder()
                     .collectionId(rawIdToCollectionId(collectionId))
-                    .title("first collection")
+                    .title(collectionTitle)
                     .subjects(subjects)
                     .videos(videos)
                     .build()
