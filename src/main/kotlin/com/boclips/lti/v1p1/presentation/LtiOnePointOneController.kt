@@ -70,6 +70,7 @@ class LtiOnePointOneController(
 
         return ModelAndView(
             "collection", mapOf(
+                "collectionTitle" to collection.title,
                 "videos" to collection.videos.mapNotNull { video -> toVideoMetadata(video) }
             )
         )

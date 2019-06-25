@@ -59,6 +59,16 @@ test {
 	useJUnitPlatform()
 }
 
+configurations {
+  developmentOnly
+  runtimeClasspath {
+    extendsFrom developmentOnly
+  }
+}
+dependencies {
+  developmentOnly("org.springframework.boot:spring-boot-devtools")
+}
+
 dependencies {
 	compile 'org.springframework.boot:spring-boot-starter'
 	compile 'org.springframework.boot:spring-boot-starter-web'
@@ -79,6 +89,8 @@ dependencies {
 
   compile('com.github.boclips:boclips-spring-security:0.93.0')
   compile('com.github.boclips:videos:0.122.0')
+
+  developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile("org.junit.jupiter:junit-jupiter-api:$junitVersion")
