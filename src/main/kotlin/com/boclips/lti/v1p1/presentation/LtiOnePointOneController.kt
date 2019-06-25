@@ -1,7 +1,7 @@
 package com.boclips.lti.v1p1.presentation
 
-import com.boclips.lti.v1p1.application.service.VideoUrlFor
 import com.boclips.lti.v1p1.domain.repository.CollectionRepository
+import com.boclips.lti.v1p1.domain.repository.VideoRepository
 import com.boclips.lti.v1p1.domain.service.AssertHasLtiSession
 import com.boclips.lti.v1p1.domain.service.AssertLaunchRequestIsValid
 import com.boclips.lti.v1p1.domain.service.RedirectToRequestedResource
@@ -25,7 +25,7 @@ class LtiOnePointOneController(
     private val assertLaunchRequestIsValid: AssertLaunchRequestIsValid,
     private val assertHasLtiSession: AssertHasLtiSession,
     private val redirectToRequestedResource: RedirectToRequestedResource,
-    private val videoUrlFor: VideoUrlFor,
+    private val videoRepository: VideoRepository,
     private val collectionRepository: CollectionRepository,
     private val toVideoMetadata: ToVideoMetadata
 ) {
@@ -57,7 +57,7 @@ class LtiOnePointOneController(
 
         return ModelAndView(
             "video", mapOf(
-                "videoUrl" to videoUrlFor(videoId)
+                "video" to videoRepository.get(videoId)
             )
         )
     }

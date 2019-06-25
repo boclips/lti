@@ -2,7 +2,6 @@ package com.boclips.lti.v1p1.infrastructure.repository
 
 import com.boclips.lti.v1p1.domain.repository.VideoRepository
 import com.boclips.videos.service.client.Video
-import com.boclips.videos.service.client.VideoId
 import com.boclips.videos.service.client.VideoServiceClient
 import com.boclips.videos.service.client.exceptions.VideoNotFoundException
 import org.springframework.http.HttpStatus
@@ -11,14 +10,15 @@ import org.springframework.web.client.HttpClientErrorException
 
 @Repository
 class ApiVideoRepository(private val videoServiceClient: VideoServiceClient) : VideoRepository {
-    override fun get(videoId: VideoId): Video {
+    override fun get(videoId: String): Video {
+        val videoIdUri = videoServiceClient.rawIdToVideoId(videoId)
         try {
-            return videoServiceClient.get(videoId)
+            return videoServiceClient.get(videoIdUri)
         }
         catch(e: HttpClientErrorException) {
             e.statusCode.let {
                 if (it == HttpStatus.NOT_FOUND) {
-                    throw VideoNotFoundException(videoId)
+                    throw VideoNotFoundException(videoIdUri)
                 } else {
                     throw e
                 }

@@ -22,7 +22,7 @@ class ApiVideoRepositoryTest {
   fun `throws VideoNotFoundException when given video is not found in the API`() {
     whenever(videoServiceClient.get(videoId)).thenThrow(HttpClientErrorException(HttpStatus.NOT_FOUND))
 
-    Assertions.assertThatThrownBy { videoRepository.get(videoId) }
+    Assertions.assertThatThrownBy { videoRepository.get(videoIdString) }
       .isInstanceOf(VideoNotFoundException::class.java)
       .hasMessageContaining(videoIdString)
   }
@@ -31,7 +31,7 @@ class ApiVideoRepositoryTest {
   fun `rethrows other HttpClientErrorException instances`() {
     whenever(videoServiceClient.get(videoId)).thenThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST))
 
-    Assertions.assertThatThrownBy { videoRepository.get(videoId) }
+    Assertions.assertThatThrownBy { videoRepository.get(videoIdString) }
       .isInstanceOf(HttpClientErrorException::class.java)
       .extracting("statusCode")
       .containsOnly(HttpStatus.BAD_REQUEST)
@@ -41,7 +41,7 @@ class ApiVideoRepositoryTest {
   fun `returns a requested video`(@Mock video: Video) {
     whenever(videoServiceClient.get(videoId)).thenReturn(video)
 
-    assertThat(videoRepository.get(videoId)).isEqualTo(video)
+    assertThat(videoRepository.get(videoIdString)).isEqualTo(video)
   }
 
   private val videoIdString = "87064254edd642a8a4c2e22a"
@@ -54,5 +54,7 @@ class ApiVideoRepositoryTest {
   fun setup(@Mock videoServiceClientMock: VideoServiceClient) {
     videoServiceClient = videoServiceClientMock
     videoRepository = ApiVideoRepository(videoServiceClient)
+
+    whenever(videoServiceClient.rawIdToVideoId(videoIdString)).thenReturn(videoId)
   }
 }

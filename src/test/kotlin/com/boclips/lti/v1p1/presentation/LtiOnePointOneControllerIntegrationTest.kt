@@ -6,9 +6,9 @@ import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.v1p1.testsupport.CreateVideoRequestFactory
 import com.boclips.videos.service.client.Collection
 import com.boclips.videos.service.client.SubjectId
+import com.boclips.videos.service.client.Video
 import com.boclips.videos.service.client.VideoId
 import org.assertj.core.api.Assertions.assertThat
-import org.hamcrest.CoreMatchers.endsWith
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.model
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
 import org.springframework.util.LinkedMultiValueMap
+import java.util.UUID
 
 class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIntegrationTest() {
     @Test
@@ -37,11 +38,21 @@ class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIn
             .andExpect(header().doesNotExist("X-Frame-Options"))
             .andExpect(status().isOk)
             .andExpect(view().name("video"))
-            .andExpect(model().attribute("videoUrl", endsWith(videoId)))
+            .andExpect(model().attribute("video", video))
     }
 
-    val videoId = "3928cc3830a14af9902e133e"
-    override fun resourcePath() = "/v1p1/videos/$videoId"
+    lateinit var videoIdString: String
+    lateinit var video: Video
+
+    override fun resourcePath() = "/v1p1/videos/$videoIdString"
+
+    override fun earlySetup() {
+        videoServiceClient.apply {
+            val videoId = create(CreateVideoRequestFactory.create(contentProviderId = UUID.randomUUID().toString()))
+            videoIdString = videoId.value
+            video = get(videoId)
+        }
+    }
 }
 
 class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIntegrationTest() {
@@ -105,8 +116,6 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
 }
 
 abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() {
-    abstract fun resourcePath(): String
-
     @Test
     fun `endpoint redirects user to landing page if it receives a minimal correct request`() {
         mvc.perform(
@@ -178,10 +187,15 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
             .andExpect(status().isUnauthorized)
     }
 
+    abstract fun resourcePath(): String
+    fun earlySetup() = Unit
+
     lateinit var validLtiLaunchRequestPayload: LinkedMultiValueMap<String, String>
 
     @BeforeEach
     fun setUp() {
+        earlySetup()
+
         validLtiLaunchRequestPayload = prepareLaunchRequest(
             mapOf(
                 "lti_message_type" to "basic-lti-launch-request",

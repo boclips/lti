@@ -9,7 +9,7 @@
 <div id="container"></div>
 <script th:inline="javascript">
   /*<![CDATA[*/
-  var videoUrl = [[${videoUrl}]];
+  var videoUrl = [[${video.videoId.uri.toString()}]];
   var container = document.querySelector('#container');
   var player = Boclips.PlayerFactory.get(container);
   player.loadVideo(videoUrl);
