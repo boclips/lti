@@ -12,15 +12,15 @@ import org.springframework.web.client.HttpClientErrorException
 class ApiCollectionRepository(
     private val videoServiceClient: VideoServiceClient
 ) : CollectionRepository {
-    override fun get(collectionIdString: String): Collection {
-        val collectionId = videoServiceClient.rawIdToCollectionId(collectionIdString)
+    override fun get(collectionId: String): Collection {
+        val collectionIdUri = videoServiceClient.rawIdToCollectionId(collectionId)
         try {
-            return videoServiceClient[collectionId]
+            return videoServiceClient.getDetailed(collectionIdUri)
         }
         catch(e: HttpClientErrorException) {
             e.statusCode.let {
                 if (it == HttpStatus.NOT_FOUND) {
-                    throw CollectionNotFoundException("Collection not found for id = $collectionIdString")
+                    throw CollectionNotFoundException("Collection not found for id = $collectionId")
                 } else {
                     throw e
                 }

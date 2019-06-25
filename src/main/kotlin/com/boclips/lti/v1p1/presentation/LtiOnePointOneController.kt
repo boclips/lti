@@ -4,8 +4,8 @@ import com.boclips.lti.v1p1.application.service.VideoUrlFor
 import com.boclips.lti.v1p1.domain.repository.CollectionRepository
 import com.boclips.lti.v1p1.domain.service.AssertHasLtiSession
 import com.boclips.lti.v1p1.domain.service.AssertLaunchRequestIsValid
-import com.boclips.lti.v1p1.domain.service.FindVideoMetadata
 import com.boclips.lti.v1p1.domain.service.RedirectToRequestedResource
+import com.boclips.lti.v1p1.domain.service.ToVideoMetadata
 import mu.KLogging
 import org.imsglobal.aspect.Lti
 import org.imsglobal.lti.launch.LtiVerificationResult
@@ -27,7 +27,7 @@ class LtiOnePointOneController(
     private val redirectToRequestedResource: RedirectToRequestedResource,
     private val videoUrlFor: VideoUrlFor,
     private val collectionRepository: CollectionRepository,
-    private val findVideoMetadata: FindVideoMetadata
+    private val toVideoMetadata: ToVideoMetadata
 ) {
     companion object : KLogging() {
         const val authenticationStateHolder = "isAuthenticated"
@@ -70,7 +70,7 @@ class LtiOnePointOneController(
 
         return ModelAndView(
             "collection", mapOf(
-                "videos" to collection.videos.mapNotNull { videoId -> findVideoMetadata(videoId) }
+                "videos" to collection.videos.mapNotNull { video -> toVideoMetadata(video) }
             )
         )
     }

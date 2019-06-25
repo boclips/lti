@@ -20,7 +20,7 @@ import java.net.URI
 class ApiCollectionRepositoryTest {
   @Test
   fun `throws CollectionNotFoundException when given collection is not found in the API`() {
-    whenever(videoServiceClient.get(collectionId)).thenThrow(HttpClientErrorException(HttpStatus.NOT_FOUND))
+    whenever(videoServiceClient.getDetailed(collectionId)).thenThrow(HttpClientErrorException(HttpStatus.NOT_FOUND))
 
     assertThatThrownBy { collectionRepository.get(collectionIdString) }
       .isInstanceOf(CollectionNotFoundException::class.java)
@@ -29,7 +29,7 @@ class ApiCollectionRepositoryTest {
 
   @Test
   fun `rethrows other HttpClientErrorException instances`() {
-    whenever(videoServiceClient.get(collectionId)).thenThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST))
+    whenever(videoServiceClient.getDetailed(collectionId)).thenThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST))
 
     assertThatThrownBy { collectionRepository.get(collectionIdString) }
       .isInstanceOf(HttpClientErrorException::class.java)
@@ -39,7 +39,7 @@ class ApiCollectionRepositoryTest {
 
   @Test
   fun `returns a requested collection`(@Mock collection: Collection) {
-    whenever(videoServiceClient.get(collectionId)).thenReturn(collection)
+    whenever(videoServiceClient.getDetailed(collectionId)).thenReturn(collection)
 
     assertThat(collectionRepository.get(collectionIdString)).isEqualTo(collection)
   }

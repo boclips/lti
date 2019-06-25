@@ -88,7 +88,7 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
             secondVideoId = create(CreateVideoRequestFactory.create(contentProviderId = "secondContentProvider"))
             thirdVideoId = create(CreateVideoRequestFactory.create(contentProviderId = "thirdContentProvider"))
 
-            val videos = listOf(firstVideoId, secondVideoId, thirdVideoId)
+            val videos = listOf(firstVideoId, secondVideoId, thirdVideoId).map(::get)
 
             addCollection(
                 Collection.builder()
