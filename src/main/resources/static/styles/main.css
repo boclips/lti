@@ -5,6 +5,9 @@ html {
   line-height: 1rem;
 }
 
+/*
+ * Collection page
+ */
 .collectionContainer {
   max-width: 91rem;
 
@@ -84,6 +87,41 @@ html {
   flex-basis: 67%;
 }
 
+/*
+ * Video page
+ */
+.videoContainer {
+  max-width: 100.8rem;
+
+  margin: 6rem auto auto;
+}
+
+.video__header {
+  margin-bottom: 2rem;
+}
+
+.video__title {
+  color: #434656;
+  font-size: 2.4rem;
+  font-weight: bold;
+  line-height: 2.2rem;
+
+  margin-bottom: 0.5rem;
+}
+
+.video__player {
+  margin-bottom: 2rem;
+}
+
+.video__description {
+  color: #434657;
+  font-size: 1.6rem;
+  line-height: 2.4rem;
+}
+
+/*
+ * Shared components
+ */
 .duration {
   margin: 0;
   color: #9698A3;
