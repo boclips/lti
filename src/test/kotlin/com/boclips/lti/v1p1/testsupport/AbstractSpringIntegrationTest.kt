@@ -1,6 +1,7 @@
 package com.boclips.lti.v1p1.testsupport
 
 import com.boclips.lti.v1p1.configuration.properties.LtiProperties
+import com.boclips.lti.v1p1.presentation.service.ToVideoMetadata
 import com.boclips.videos.service.client.internal.FakeClient
 import com.boclips.videos.service.client.spring.MockVideoServiceClient
 import org.imsglobal.lti.launch.LtiOauthSigner
@@ -26,6 +27,9 @@ abstract class AbstractSpringIntegrationTest {
 
     @Autowired
     protected lateinit var videoServiceClient: FakeClient
+
+    @Autowired
+    protected lateinit var toVideoMetadata: ToVideoMetadata
 
     val ltiOauthSigner = LtiOauthSigner()
 }

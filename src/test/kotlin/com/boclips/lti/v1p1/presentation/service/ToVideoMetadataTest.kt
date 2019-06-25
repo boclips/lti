@@ -1,4 +1,4 @@
-package com.boclips.lti.v1p1.domain.service
+package com.boclips.lti.v1p1.presentation.service
 
 import com.boclips.lti.v1p1.application.service.UriComponentsBuilderFactory
 import com.boclips.videos.service.client.Playback
@@ -37,24 +37,12 @@ class ToVideoMetadataTest {
         val metadata = toVideoMetadata(video)
 
         assertThat(metadata).isNotNull
-        assertThat(metadata?.videoUrl).isEqualTo("http://localhost/v1p1/videos/$videoIdString")
-        assertThat(metadata?.title).isEqualTo(video.title)
-        assertThat(metadata?.description).isEqualTo(video.description)
-        assertThat(metadata?.duration).isEqualTo(video.playback.duration)
-        assertThat(metadata?.thumbnailUrl).isEqualTo(video.playback.thumbnailUrl)
-    }
-
-    @Test
-    fun `does not return videos that don't have a playback`() {
-        val video = Video.builder()
-            .videoId(videoId)
-            .title("Test video")
-            .description("Elaborate description")
-            .build()
-
-        val metadata = toVideoMetadata(video)
-
-        assertThat(metadata).isNull()
+        assertThat(metadata.videoPageUrl).isEqualTo("http://localhost/v1p1/videos/$videoIdString")
+        assertThat(metadata.playbackUrl).isEqualTo(videoId.uri.toString())
+        assertThat(metadata.title).isEqualTo(video.title)
+        assertThat(metadata.description).isEqualTo(video.description)
+        assertThat(metadata.duration).isEqualTo("5m")
+        assertThat(metadata.thumbnailUrl).isEqualTo(video.playback.thumbnailUrl)
     }
 
     private val videoIdString = "87064254edd642a8a4c2e22a"
@@ -68,6 +56,7 @@ class ToVideoMetadataTest {
         @Mock uriComponentsBuilderFactory: UriComponentsBuilderFactory
     ) {
         this.uriComponentsBuilderFactory = uriComponentsBuilderFactory
-        toVideoMetadata = ToVideoMetadata(uriComponentsBuilderFactory)
+        toVideoMetadata =
+            ToVideoMetadata(uriComponentsBuilderFactory, FormatDuration())
     }
 }

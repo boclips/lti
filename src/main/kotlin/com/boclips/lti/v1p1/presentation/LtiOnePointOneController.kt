@@ -5,7 +5,7 @@ import com.boclips.lti.v1p1.domain.repository.VideoRepository
 import com.boclips.lti.v1p1.domain.service.AssertHasLtiSession
 import com.boclips.lti.v1p1.domain.service.AssertLaunchRequestIsValid
 import com.boclips.lti.v1p1.domain.service.RedirectToRequestedResource
-import com.boclips.lti.v1p1.domain.service.ToVideoMetadata
+import com.boclips.lti.v1p1.presentation.service.ToVideoMetadata
 import mu.KLogging
 import org.imsglobal.aspect.Lti
 import org.imsglobal.lti.launch.LtiVerificationResult
@@ -57,7 +57,9 @@ class LtiOnePointOneController(
 
         return ModelAndView(
             "video", mapOf(
-                "video" to videoRepository.get(videoId)
+                "video" to toVideoMetadata(
+                    videoRepository.get(videoId)
+                )
             )
         )
     }

@@ -12,7 +12,7 @@
   <h1 class="collectionContainer__title" th:text="${collectionTitle}"></h1>
 
   <section class="videoPreview" th:each="video : ${videos}">
-    <a href="" class="videoPreview__tileLink" th:attr="href=${video.videoUrl}">
+    <a href="" class="videoPreview__tileLink" th:attr="href=${video.videoPageUrl}">
       <div class="videoPreview__header">
         <h2 class="videoPreview__title" th:text="${video.title}"></h2>
         <section class="videoPreview__duration duration">

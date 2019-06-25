@@ -1,7 +1,7 @@
 package com.boclips.lti.v1p1.presentation
 
 import com.boclips.lti.v1p1.domain.exception.LaunchRequestInvalidException
-import com.boclips.lti.v1p1.domain.model.VideoMetadata
+import com.boclips.lti.v1p1.presentation.model.VideoMetadata
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.v1p1.testsupport.CreateVideoRequestFactory
 import com.boclips.videos.service.client.Collection
@@ -38,7 +38,7 @@ class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIn
             .andExpect(header().doesNotExist("X-Frame-Options"))
             .andExpect(status().isOk)
             .andExpect(view().name("video"))
-            .andExpect(model().attribute("video", video))
+            .andExpect(model().attribute("video", toVideoMetadata(video)))
     }
 
     lateinit var videoIdString: String
@@ -77,7 +77,7 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
                     assertThat(
                         videos
                             .filterIsInstance(VideoMetadata::class.java)
-                            .map { videoMetadata -> videoMetadata.videoUrl.substringAfterLast("/") }
+                            .map { videoMetadata -> videoMetadata.videoPageUrl.substringAfterLast("/") }
                     )
                         .containsExactly(firstVideoId.value, secondVideoId.value, thirdVideoId.value)
                 }
