@@ -120,6 +120,42 @@ html {
 }
 
 /*
+ * Errors
+ */
+.errorMessageContainer {
+  max-width: 94rem;
+
+  margin: 6rem auto auto;
+}
+
+.errorMessage__header {
+  display: flex;
+  justify-content: center;
+
+  margin-bottom: 2em;
+}
+
+.errorMessage__icon {
+  width: 3.2rem;
+  height: 3.2rem;
+}
+
+.errorMessage__message {
+  color: #434656;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 22px;
+  text-align: center;
+}
+
+.errorMessage__details {
+  color: #434657;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+}
+
+/*
  * Shared components
  */
 .duration {

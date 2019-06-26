@@ -1,9 +1,16 @@
 <!DOCTYPE HTML>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Error</title>
+
+  <link rel="stylesheet" href="/styles/normalize.css">
+  <link rel="stylesheet" href="/styles/fonts.css">
+  <link rel="stylesheet" href="/styles/main.css">
 </head>
 <body>
-<h1>You are not authorised to view this resource</h1>
+
+<div th:replace="fragments/error :: error (message = 'You are not authorised to view this resource', details = 'If your session has expired, try closing this page and accessing it again from your app')">
+</div>
+
 </body>
 </html>
