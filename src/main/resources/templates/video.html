@@ -11,6 +11,9 @@
   <link rel="stylesheet" href="https://unpkg.com/boclips-player/dist/boclips-player.css" type="text/css"/>
 </head>
 <body>
+
+<div th:replace="fragments/logo :: logo (logoUrl = ${customLogoUrl})"></div>
+
 <div class="videoContainer">
   <section class="video__header">
     <h1 class="video__title" th:text="${video.title}"></h1>
@@ -40,5 +43,6 @@
   player.loadVideo(videoUrl);
   /*]]>*/
 </script>
+
 </body>
 </html>

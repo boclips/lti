@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Error</title>
+
+  <link rel="stylesheet" href="/styles/normalize.css">
+  <link rel="stylesheet" href="/styles/fonts.css">
+  <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+
+<div class="logoContainer" th:if="${logoUrl != null}" th:fragment="logo (logoUrl)">
+  <div class="logoContainer__containerTile">
+    <figure class="logoContainer__logo">
+      <img src="" th:attr="src=${logoUrl}"/>
+    </figure>
+  </div>
+</div>
+
+</body>
+</html>

@@ -58,7 +58,7 @@ class LtiOnePointOneController(
 
         return ModelAndView(
             "video", mapOf(
-                "customLogo" to session.getAttribute(customLogoHolder),
+                "customLogoUrl" to session.getAttribute(customLogoHolder),
                 "video" to toVideoMetadata(
                     videoRepository.get(videoId)
                 )
@@ -74,7 +74,7 @@ class LtiOnePointOneController(
 
         return ModelAndView(
             "collection", mapOf(
-                "customLogo" to session.getAttribute(customLogoHolder),
+                "customLogoUrl" to session.getAttribute(customLogoHolder),
                 "collectionTitle" to collection.title,
                 "videos" to collection.videos.mapNotNull { video -> toVideoMetadata(video) }
             )

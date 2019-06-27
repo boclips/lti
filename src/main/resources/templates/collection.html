@@ -8,6 +8,8 @@
 </head>
 <body>
 
+<div th:replace="fragments/logo :: logo (logoUrl = ${customLogoUrl})"></div>
+
 <div class="collectionContainer">
   <h1 class="collectionContainer__title" th:text="${collectionTitle}"></h1>
 

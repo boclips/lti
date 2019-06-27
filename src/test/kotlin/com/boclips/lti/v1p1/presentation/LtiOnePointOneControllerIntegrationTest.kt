@@ -89,11 +89,11 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
 
         mvc.perform(get(resourcePath()).session(session as MockHttpSession))
             .andExpect(status().isOk)
-            .andExpect(model().attribute("customLogo", testLogoUri))
+            .andExpect(model().attribute("customLogoUrl", testLogoUri))
 
         mvc.perform(get("/v1p1/videos/${firstVideoId.value}").session(session))
             .andExpect(status().isOk)
-            .andExpect(model().attribute("customLogo", testLogoUri))
+            .andExpect(model().attribute("customLogoUrl", testLogoUri))
     }
 
     @BeforeEach
@@ -225,7 +225,7 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
 
         mvc.perform(get(resourcePath()).session(session as MockHttpSession))
             .andExpect(status().isOk)
-            .andExpect(model().attribute("customLogo", testLogoUri))
+            .andExpect(model().attribute("customLogoUrl", testLogoUri))
     }
 
     @Test
@@ -234,7 +234,7 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
 
         mvc.perform(get(resourcePath()).session(session as MockHttpSession))
             .andExpect(status().isOk)
-            .andExpect(model().attribute("customLogo", nullValue()))
+            .andExpect(model().attribute("customLogoUrl", nullValue()))
     }
 
     @Test
@@ -245,7 +245,7 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
 
         mvc.perform(get(resourcePath()).session(session as MockHttpSession))
             .andExpect(status().isOk)
-            .andExpect(model().attribute("customLogo", nullValue()))
+            .andExpect(model().attribute("customLogoUrl", nullValue()))
     }
 
     abstract fun resourcePath(): String
