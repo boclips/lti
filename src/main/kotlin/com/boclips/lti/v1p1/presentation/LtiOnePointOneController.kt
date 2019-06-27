@@ -4,6 +4,8 @@ import com.boclips.lti.v1p1.domain.repository.CollectionRepository
 import com.boclips.lti.v1p1.domain.repository.VideoRepository
 import com.boclips.lti.v1p1.domain.service.AssertHasLtiSession
 import com.boclips.lti.v1p1.domain.service.AssertLaunchRequestIsValid
+import com.boclips.lti.v1p1.domain.service.InitializeLtiSession
+import com.boclips.lti.v1p1.domain.service.InitializeLtiSession.Companion.customLogoHolder
 import com.boclips.lti.v1p1.domain.service.RedirectToRequestedResource
 import com.boclips.lti.v1p1.presentation.service.ToVideoMetadata
 import mu.KLogging
@@ -24,14 +26,13 @@ import javax.servlet.http.HttpSession
 class LtiOnePointOneController(
     private val assertLaunchRequestIsValid: AssertLaunchRequestIsValid,
     private val assertHasLtiSession: AssertHasLtiSession,
+    private val initializeLtiSession: InitializeLtiSession,
     private val redirectToRequestedResource: RedirectToRequestedResource,
     private val videoRepository: VideoRepository,
     private val collectionRepository: CollectionRepository,
     private val toVideoMetadata: ToVideoMetadata
 ) {
-    companion object : KLogging() {
-        const val authenticationStateHolder = "isAuthenticated"
-    }
+    companion object : KLogging()
 
     @Lti
     @PostMapping(
@@ -47,7 +48,7 @@ class LtiOnePointOneController(
         logger.info { "Received request: ${request.method} ${request.requestURL}" }
 
         assertLaunchRequestIsValid(result)
-        session.setAttribute(authenticationStateHolder, true)
+        initializeLtiSession(request, session)
         return redirectToRequestedResource(request)
     }
 
@@ -57,6 +58,7 @@ class LtiOnePointOneController(
 
         return ModelAndView(
             "video", mapOf(
+                "customLogo" to session.getAttribute(customLogoHolder),
                 "video" to toVideoMetadata(
                     videoRepository.get(videoId)
                 )
@@ -72,6 +74,7 @@ class LtiOnePointOneController(
 
         return ModelAndView(
             "collection", mapOf(
+                "customLogo" to session.getAttribute(customLogoHolder),
                 "collectionTitle" to collection.title,
                 "videos" to collection.videos.mapNotNull { video -> toVideoMetadata(video) }
             )

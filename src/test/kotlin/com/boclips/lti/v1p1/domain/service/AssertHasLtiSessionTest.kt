@@ -1,7 +1,7 @@
 package com.boclips.lti.v1p1.domain.service
 
 import com.boclips.lti.v1p1.application.exception.UnauthorizedException
-import com.boclips.lti.v1p1.presentation.LtiOnePointOneController.Companion.authenticationStateHolder
+import com.boclips.lti.v1p1.domain.service.InitializeLtiSession.Companion.authenticationStateHolder
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import org.assertj.core.api.Assertions.assertThatCode

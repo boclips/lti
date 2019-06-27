@@ -1,6 +1,7 @@
 package com.boclips.lti.v1p1.presentation
 
 import com.boclips.lti.v1p1.domain.exception.LaunchRequestInvalidException
+import com.boclips.lti.v1p1.domain.model.CustomLaunchParams
 import com.boclips.lti.v1p1.presentation.model.VideoMetadata
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.v1p1.testsupport.CreateVideoRequestFactory
@@ -9,6 +10,7 @@ import com.boclips.videos.service.client.SubjectId
 import com.boclips.videos.service.client.Video
 import com.boclips.videos.service.client.VideoId
 import org.assertj.core.api.Assertions.assertThat
+import org.hamcrest.CoreMatchers.nullValue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -24,15 +26,12 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
 import org.springframework.util.LinkedMultiValueMap
 import java.util.UUID
+import javax.servlet.http.HttpSession
 
 class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIntegrationTest() {
     @Test
     fun `valid video launch establishes an LTI session and resource can be correctly retrieved`() {
-        val session = mvc.perform(
-            post(resourcePath())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .params(validLtiLaunchRequestPayload)
-        ).andReturn().request.session
+        val session = executeLtiLaunch()
 
         mvc.perform(get(resourcePath()).session(session as MockHttpSession))
             .andExpect(header().doesNotExist("X-Frame-Options"))
@@ -60,13 +59,7 @@ class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIn
 class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIntegrationTest() {
     @Test
     fun `valid collection launch establishes an LTI session and resource can be correctly retrieved`() {
-        populateCollection()
-
-        val session = mvc.perform(
-            post(resourcePath())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .params(validLtiLaunchRequestPayload)
-        ).andReturn().request.session
+        val session = executeLtiLaunch()
 
         mvc.perform(get(resourcePath()).session(session as MockHttpSession))
             .andExpect(header().doesNotExist("X-Frame-Options"))
@@ -84,6 +77,29 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
                         .containsExactly(firstVideoId.value, secondVideoId.value, thirdVideoId.value)
                 }
             }
+    }
+
+    @Test
+    fun `preserves partner logo on response model for videos accessed from collection page`() {
+        val testLogoUri = "https://images.com/partner/custom/logo.png"
+
+        val session = executeLtiLaunch(mapOf(
+            CustomLaunchParams.LOGO to testLogoUri
+        ))
+
+        mvc.perform(get(resourcePath()).session(session as MockHttpSession))
+            .andExpect(status().isOk)
+            .andExpect(model().attribute("customLogo", testLogoUri))
+
+        mvc.perform(get("/v1p1/videos/${firstVideoId.value}").session(session))
+            .andExpect(status().isOk)
+            .andExpect(model().attribute("customLogo", testLogoUri))
+    }
+
+    @BeforeEach
+    fun setUpCollectionTest() {
+        videoServiceClient.clear()
+        populateCollection()
     }
 
     lateinit var firstVideoId: VideoId
@@ -125,7 +141,7 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
         mvc.perform(
             post(resourcePath())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .params(validLtiLaunchRequestPayload)
+                .params(validLaunchRequest())
         )
             .andExpect(status().isSeeOther)
             .andExpect(header().string("Location", resourcePath()))
@@ -193,14 +209,43 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
 
     @Test
     fun `returns a 404 response when requested resource is not found`() {
-        val session = mvc.perform(
-            post(resourcePath())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .params(validLtiLaunchRequestPayload)
-        ).andReturn().request.session
+        val session = executeLtiLaunch()
 
         mvc.perform(get(interpolateResourcePath(invalidResourceId)).session(session as MockHttpSession))
             .andExpect(status().isNotFound)
+    }
+
+    @Test
+    fun `adds partner logo to response model if it's provided in LTI launch and preserves it over subsequent access`() {
+        val testLogoUri = "https://images.com/partner/custom/logo.png"
+
+        val session = executeLtiLaunch(mapOf(
+            CustomLaunchParams.LOGO to testLogoUri
+        ))
+
+        mvc.perform(get(resourcePath()).session(session as MockHttpSession))
+            .andExpect(status().isOk)
+            .andExpect(model().attribute("customLogo", testLogoUri))
+    }
+
+    @Test
+    fun `does not set partner logo on response model if it's not provided in LTI launch`() {
+        val session = executeLtiLaunch()
+
+        mvc.perform(get(resourcePath()).session(session as MockHttpSession))
+            .andExpect(status().isOk)
+            .andExpect(model().attribute("customLogo", nullValue()))
+    }
+
+    @Test
+    fun `does not set partner logo on response model if empty value is provided in LTI launch`() {
+        val session = executeLtiLaunch(mapOf(
+            CustomLaunchParams.LOGO to ""
+        ))
+
+        mvc.perform(get(resourcePath()).session(session as MockHttpSession))
+            .andExpect(status().isOk)
+            .andExpect(model().attribute("customLogo", nullValue()))
     }
 
     abstract fun resourcePath(): String
@@ -209,19 +254,27 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
 
     val invalidResourceId = "000000000000000000000000"
 
-    lateinit var validLtiLaunchRequestPayload: LinkedMultiValueMap<String, String>
-
     @BeforeEach
     fun setUp() {
         earlySetup()
+    }
 
-        validLtiLaunchRequestPayload = prepareLaunchRequest(
+    protected fun executeLtiLaunch(customParameters: Map<String, String> = emptyMap()): HttpSession? {
+        return mvc.perform(
+            post(resourcePath())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .params(validLaunchRequest(customParameters))
+        ).andReturn().request.session
+    }
+
+    protected fun validLaunchRequest(customParameters: Map<String, String> = emptyMap()): LinkedMultiValueMap<String, String> {
+        return prepareLaunchRequest(
             mapOf(
                 "lti_message_type" to "basic-lti-launch-request",
                 "lti_version" to "LTI-1p0",
                 "oauth_consumer_key" to ltiProperties.consumer.key,
                 "resource_link_id" to "41B464BA-F406-485C-ACDF-C1E5EB474156"
-            ),
+            ) + customParameters,
             ltiProperties.consumer.key,
             ltiProperties.consumer.secret
         )
