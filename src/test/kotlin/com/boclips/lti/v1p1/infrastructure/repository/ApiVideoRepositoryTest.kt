@@ -1,9 +1,9 @@
 package com.boclips.lti.v1p1.infrastructure.repository
 
+import com.boclips.lti.v1p1.domain.exception.ResourceNotFoundException
 import com.boclips.videos.service.client.Video
 import com.boclips.videos.service.client.VideoId
 import com.boclips.videos.service.client.VideoServiceClient
-import com.boclips.videos.service.client.exceptions.VideoNotFoundException
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
@@ -23,7 +23,7 @@ class ApiVideoRepositoryTest {
     whenever(videoServiceClient.get(videoId)).thenThrow(HttpClientErrorException(HttpStatus.NOT_FOUND))
 
     Assertions.assertThatThrownBy { videoRepository.get(videoIdString) }
-      .isInstanceOf(VideoNotFoundException::class.java)
+      .isInstanceOf(ResourceNotFoundException::class.java)
       .hasMessageContaining(videoIdString)
   }
 

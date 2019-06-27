@@ -88,7 +88,7 @@ dependencies {
 	compile("org.imsglobal:basiclti-util:1.1.2")
 
   compile('com.github.boclips:boclips-spring-security:0.93.0')
-  compile('com.github.boclips:videos:0.122.0')
+  compile('com.github.boclips:videos:0.129.0')
 
   developmentOnly 'org.springframework.boot:spring-boot-devtools'
 

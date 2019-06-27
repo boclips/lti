@@ -1,6 +1,6 @@
 package com.boclips.lti.v1p1.infrastructure.repository
 
-import com.boclips.lti.v1p1.domain.exception.CollectionNotFoundException
+import com.boclips.lti.v1p1.domain.exception.ResourceNotFoundException
 import com.boclips.videos.service.client.Collection
 import com.boclips.videos.service.client.CollectionId
 import com.boclips.videos.service.client.VideoServiceClient
@@ -23,7 +23,7 @@ class ApiCollectionRepositoryTest {
     whenever(videoServiceClient.getDetailed(collectionId)).thenThrow(HttpClientErrorException(HttpStatus.NOT_FOUND))
 
     assertThatThrownBy { collectionRepository.get(collectionIdString) }
-      .isInstanceOf(CollectionNotFoundException::class.java)
+      .isInstanceOf(ResourceNotFoundException::class.java)
       .hasMessageContaining(collectionIdString)
   }
 

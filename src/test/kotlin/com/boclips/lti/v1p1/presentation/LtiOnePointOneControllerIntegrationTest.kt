@@ -44,7 +44,9 @@ class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIn
     lateinit var videoIdString: String
     lateinit var video: Video
 
-    override fun resourcePath() = "/v1p1/videos/$videoIdString"
+    override fun resourcePath() = interpolateResourcePath(videoIdString)
+
+    override fun interpolateResourcePath(resourceId: String) = "/v1p1/videos/$resourceId"
 
     override fun earlySetup() {
         videoServiceClient.apply {
@@ -92,6 +94,8 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
     val collectionTitle = "first collection"
 
     override fun resourcePath() = "/v1p1/collections/$collectionId"
+
+    override fun interpolateResourcePath(resourceId: String) = "/v1p1/collections/$resourceId"
 
     private fun populateCollection() {
         videoServiceClient.apply {
@@ -187,8 +191,23 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
             .andExpect(status().isUnauthorized)
     }
 
+    @Test
+    fun `returns a 404 response when requested resource is not found`() {
+        val session = mvc.perform(
+            post(resourcePath())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .params(validLtiLaunchRequestPayload)
+        ).andReturn().request.session
+
+        mvc.perform(get(interpolateResourcePath(invalidResourceId)).session(session as MockHttpSession))
+            .andExpect(status().isNotFound)
+    }
+
     abstract fun resourcePath(): String
+    abstract fun interpolateResourcePath(resourceId: String): String
     fun earlySetup() = Unit
+
+    val invalidResourceId = "000000000000000000000000"
 
     lateinit var validLtiLaunchRequestPayload: LinkedMultiValueMap<String, String>
 

@@ -1,6 +1,6 @@
 package com.boclips.lti.v1p1.infrastructure.repository
 
-import com.boclips.lti.v1p1.domain.exception.CollectionNotFoundException
+import com.boclips.lti.v1p1.domain.exception.ResourceNotFoundException
 import com.boclips.lti.v1p1.domain.repository.CollectionRepository
 import com.boclips.videos.service.client.Collection
 import com.boclips.videos.service.client.VideoServiceClient
@@ -20,7 +20,7 @@ class ApiCollectionRepository(
         catch(e: HttpClientErrorException) {
             e.statusCode.let {
                 if (it == HttpStatus.NOT_FOUND) {
-                    throw CollectionNotFoundException("Collection not found for id = $collectionId")
+                    throw ResourceNotFoundException(collectionIdUri.uri.toString())
                 } else {
                     throw e
                 }
