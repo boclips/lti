@@ -15,6 +15,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration
+import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
+import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpSession
 import org.springframework.test.web.servlet.MvcResult
@@ -28,6 +31,7 @@ import org.springframework.util.LinkedMultiValueMap
 import java.util.UUID
 import javax.servlet.http.HttpSession
 
+@EnableAutoConfiguration(exclude = [MongoAutoConfiguration::class, MongoDataAutoConfiguration::class])
 class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIntegrationTest() {
     @Test
     fun `valid video launch establishes an LTI session and resource can be correctly retrieved`() {
@@ -56,6 +60,7 @@ class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIn
     }
 }
 
+@EnableAutoConfiguration(exclude = [MongoAutoConfiguration::class, MongoDataAutoConfiguration::class])
 class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIntegrationTest() {
     @Test
     fun `valid collection launch establishes an LTI session and resource can be correctly retrieved`() {
