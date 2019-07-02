@@ -9,7 +9,7 @@ environments:
     urls:
       - lti.boclips.com
   staging:
-    replicas: 1
+    replicas: 2
     urls:
       - lti.staging-boclips.com
   testing:
