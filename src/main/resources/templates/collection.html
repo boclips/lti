@@ -3,6 +3,8 @@
 <head>
   <title>Boclips</title>
 
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
   <link rel="stylesheet" href="/styles/normalize.css">
   <link rel="stylesheet" href="/styles/fonts.css">
   <link rel="stylesheet" href="/styles/main.css">
@@ -16,21 +18,27 @@
 
   <section class="videoTile" th:each="video : ${videos}">
     <a href="" class="videoTile__link" th:attr="href=${video.videoPageUrl}">
-      <div class="videoTile__header">
-        <h2 class="videoTile__title" th:text="${video.title}"></h2>
-        <section class="videoTile__duration duration">
-          <svg viewBox="64 64 896 896" class="duration__icon" fill="currentColor" aria-hidden="true" focusable="false">
-            <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/>
-            <path d="M686.7 638.6L544.1 535.5V288c0-4.4-3.6-8-8-8H488c-4.4 0-8 3.6-8 8v275.4c0 2.6 1.2 5 3.3 6.5l165.4 120.6c3.6 2.6 8.6 1.8 11.2-1.7l28.6-39c2.6-3.7 1.8-8.7-1.8-11.2z"/>
-          </svg>
-          <span class="duration__label" th:text="${video.duration}"></span>
-        </section>
-      </div>
       <div class="videoTile__content">
-        <figure class="videoTile__thumbnail">
-          <img src="" th:attr="src=${video.thumbnailUrl}"/>
-        </figure>
-        <p class="videoTile__description" th:text="${video.description}"></p>
+        <div class="videoTile__headerBox">
+          <div class="videoTile__header">
+            <h2 class="videoTile__title" th:text="${video.title}"></h2>
+            <section class="videoTile__duration duration">
+              <svg viewBox="64 64 896 896" class="duration__icon" fill="currentColor" aria-hidden="true" focusable="false">
+                <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/>
+                <path d="M686.7 638.6L544.1 535.5V288c0-4.4-3.6-8-8-8H488c-4.4 0-8 3.6-8 8v275.4c0 2.6 1.2 5 3.3 6.5l165.4 120.6c3.6 2.6 8.6 1.8 11.2-1.7l28.6-39c2.6-3.7 1.8-8.7-1.8-11.2z"/>
+              </svg>
+              <span class="duration__label" th:text="${video.duration}"></span>
+            </section>
+          </div>
+        </div>
+        <div class="videoTile__thumbnailBox">
+          <figure class="videoTile__thumbnail">
+            <img src="" th:attr="src=${video.thumbnailUrl}"/>
+          </figure>
+        </div>
+        <div class="videoTile__descriptionBox">
+          <p class="videoTile__description" th:text="${video.description}"></p>
+        </div>
       </div>
     </a>
   </section>
