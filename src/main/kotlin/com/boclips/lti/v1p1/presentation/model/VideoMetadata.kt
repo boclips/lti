@@ -5,6 +5,7 @@ data class VideoMetadata (
     val playbackUrl: String,
     val title: String,
     val description: String,
+    val shortDescription: String,
     val thumbnailUrl: String,
     val duration: String
 )

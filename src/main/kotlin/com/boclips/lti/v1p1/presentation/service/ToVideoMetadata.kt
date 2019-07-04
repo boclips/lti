@@ -20,9 +20,18 @@ class ToVideoMetadata(
                 .toUriString(),
             video.videoId.uri.toString(),
             video.title,
-            video.description,
+            video.description ?: "",
+            formatShortDescription(video.description),
             video.playback.thumbnailUrl,
             formatDuration(video.playback.duration)
         )
+    }
+
+    private fun formatShortDescription(description: String?): String {
+        return when {
+            description == null -> ""
+            description.length > 100 -> "${description.substring(0, 100).trim()}..."
+            else -> description
+        }
     }
 }
