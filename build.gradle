@@ -80,6 +80,7 @@ dependencies {
   compile 'org.springframework.security.oauth:spring-security-oauth2:2.1.3.RELEASE'
 
   compile 'org.springframework.session:spring-session-data-mongodb'
+  compile 'org.springframework.retry:spring-retry'
 
 	compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	compile("org.jetbrains.kotlin:kotlin-reflect")
