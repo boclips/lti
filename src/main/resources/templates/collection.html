@@ -14,9 +14,9 @@
 <div th:replace="fragments/logo :: logo (logoUrl = ${customLogoUrl})"></div>
 
 <div class="collectionContainer">
-  <h1 class="collectionContainer__title" th:text="${collectionTitle}"></h1>
+  <h1 data-qa="collectionTitle" class="collectionContainer__title" th:text="${collectionTitle}"></h1>
 
-  <section class="videoTile" th:each="video : ${videos}">
+  <section data-qa="videoTile" class="videoTile" th:each="video : ${videos}">
     <a href="" class="videoTile__link" th:attr="href=${video.videoPageUrl}">
       <div class="videoTile__content">
         <div class="videoTile__headerBox">
