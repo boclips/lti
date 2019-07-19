@@ -17,7 +17,7 @@ class InitializeLtiSession {
         session.setAttribute(authenticationStateHolder, true)
 
         logger.info { "Launch parameters received:" }
-        request.parameterMap.entries.forEach { logger.info { "${it.key} = ${it.value.contentToString()}" } }
+        request.parameterMap.entries.forEach { logger.info { "${it.key} = ${it.value?.contentToString()}" } }
 
         val customLogo: String = request.getParameter(CustomLaunchParams.LOGO).orEmpty()
         if (customLogo.isNotBlank()) {
