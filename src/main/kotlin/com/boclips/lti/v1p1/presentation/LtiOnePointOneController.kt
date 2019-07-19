@@ -45,7 +45,7 @@ class LtiOnePointOneController(
         session: HttpSession,
         @PathVariable("resourceId") resourceId: String
     ): ResponseEntity<Unit> {
-        logger.info { "Received request: ${request.method} ${request.requestURL}" }
+        logger.info { "Received launch request: ${request.method} ${request.requestURL}" }
 
         assertLaunchRequestIsValid(result)
         initializeLtiSession(request, session)
