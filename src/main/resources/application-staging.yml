@@ -1,3 +1,9 @@
+boclips:
+  lti:
+    gateway:
+      services:
+        apiUrl: 'https://api.staging-boclips.com'
+
 keycloak:
   configurationFile: 'classpath:keycloak-staging.json'
 

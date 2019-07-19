@@ -1,9 +1,9 @@
 boclips:
-  api:
-    url: 'http://localhost/api'
-
   lti:
     v1p1:
       consumer:
         key: 'test-consumer-key'
         secret: 'test-consumer-secret'
+    gateway:
+      services:
+        apiUrl: 'http://localhost/api'

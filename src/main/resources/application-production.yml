@@ -1,3 +1,9 @@
+boclips:
+  lti:
+    gateway:
+      services:
+        apiUrl: 'https://api.boclips.com'
+
 keycloak:
   configurationFile: 'classpath:keycloak-production.json'
 
