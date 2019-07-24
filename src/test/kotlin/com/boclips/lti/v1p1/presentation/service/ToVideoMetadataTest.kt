@@ -1,6 +1,5 @@
 package com.boclips.lti.v1p1.presentation.service
 
-import com.boclips.lti.v1p1.application.service.GetLtiGatewayProxyPath
 import com.boclips.lti.v1p1.application.service.UriComponentsBuilderFactory
 import com.boclips.videos.service.client.Playback
 import com.boclips.videos.service.client.Video
@@ -40,7 +39,7 @@ class ToVideoMetadataTest {
 
         assertThat(metadata).isNotNull
         assertThat(metadata.videoPageUrl).isEqualTo("http://localhost/v1p1/videos/$videoIdString")
-        assertThat(metadata.playbackUrl).isEqualTo("http://localhost/api/v1/videos/$videoIdString")
+        assertThat(metadata.playbackUrl).isEqualTo(videoId.uri.toString())
         assertThat(metadata.title).isEqualTo(video.title)
         assertThat(metadata.description).isEqualTo(video.description)
         assertThat(metadata.shortDescription).isEqualTo("${video.description.substring(0, 100)}...")
@@ -94,7 +93,7 @@ class ToVideoMetadataTest {
     }
 
     private val videoIdString = "87064254edd642a8a4c2e22a"
-    private val videoId = VideoId(URI("https://video-service.com/v1/videos/$videoIdString"))
+    private val videoId = VideoId(URI("https://video-service.com/videos/$videoIdString"))
 
     private lateinit var uriComponentsBuilderFactory: UriComponentsBuilderFactory
     private lateinit var toVideoMetadata: ToVideoMetadata
@@ -105,6 +104,6 @@ class ToVideoMetadataTest {
     ) {
         this.uriComponentsBuilderFactory = uriComponentsBuilderFactory
         toVideoMetadata =
-            ToVideoMetadata(uriComponentsBuilderFactory, FormatDuration(), GetLtiGatewayProxyPath())
+            ToVideoMetadata(uriComponentsBuilderFactory, FormatDuration())
     }
 }
