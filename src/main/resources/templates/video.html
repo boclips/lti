@@ -40,8 +40,17 @@
 <script th:inline="javascript">
   /*<![CDATA[*/
   var videoUrl = [[${video.playbackUrl}]];
+  var playerAuthUrl = [[${video.playerAuthUrl}]];
   var container = document.querySelector('#container');
-  var player = Boclips.PlayerFactory.get(container);
+  var player = Boclips.PlayerFactory.get(container, {
+    api: {
+      tokenFactory: function() {
+        return fetch(playerAuthUrl).then(function(response) {
+          return response.text()
+        })
+      }
+    }
+  });
   player.loadVideo(videoUrl);
   /*]]>*/
 </script>

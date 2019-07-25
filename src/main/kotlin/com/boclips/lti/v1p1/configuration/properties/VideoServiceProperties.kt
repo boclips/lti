@@ -1,0 +1,12 @@
+package com.boclips.lti.v1p1.configuration.properties
+
+import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.stereotype.Component
+
+@Component
+@ConfigurationProperties(prefix = "video-service")
+class VideoServiceProperties {
+    lateinit var accessTokenUri: String
+    lateinit var clientId: String
+    lateinit var clientSecret: String
+}

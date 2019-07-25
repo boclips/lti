@@ -40,6 +40,7 @@ class ToVideoMetadataTest {
         assertThat(metadata).isNotNull
         assertThat(metadata.videoPageUrl).isEqualTo("http://localhost/v1p1/videos/$videoIdString")
         assertThat(metadata.playbackUrl).isEqualTo(videoId.uri.toString())
+        assertThat(metadata.playerAuthUrl).isEqualTo("http://localhost/auth/token")
         assertThat(metadata.title).isEqualTo(video.title)
         assertThat(metadata.description).isEqualTo(video.description)
         assertThat(metadata.shortDescription).isEqualTo("${video.description.substring(0, 100)}...")

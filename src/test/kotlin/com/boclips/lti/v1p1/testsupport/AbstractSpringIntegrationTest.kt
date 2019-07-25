@@ -1,5 +1,6 @@
 package com.boclips.lti.v1p1.testsupport
 
+import com.boclips.lti.v1p1.application.service.VideoServiceAccessTokenProviderTest
 import com.boclips.lti.v1p1.configuration.properties.LtiProperties
 import com.boclips.lti.v1p1.domain.repository.CollectionRepository
 import com.boclips.lti.v1p1.domain.repository.VideoRepository
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 
@@ -20,6 +22,13 @@ import org.springframework.test.web.servlet.MockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @MockVideoServiceClient
 @AutoConfigureMockMvc
+@TestPropertySource(
+    properties = [
+        "video-service.access-token-uri=http://localhost:${VideoServiceAccessTokenProviderTest.API_SERVER_PORT}/v1/token",
+        "video-service.client-id=test-client-id",
+        "video-service.client-secret=test-client-secret"
+    ]
+)
 abstract class AbstractSpringIntegrationTest {
     @Autowired
     lateinit var mvc: MockMvc

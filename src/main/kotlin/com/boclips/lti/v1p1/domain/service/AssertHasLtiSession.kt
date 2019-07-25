@@ -13,7 +13,7 @@ class AssertHasLtiSession {
         } ?: false
 
         if (!isAuthenticated) {
-            throw UnauthorizedException("Accessing videos requires a valid session")
+            throw UnauthorizedException("A valid session is required")
         }
     }
 }

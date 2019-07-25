@@ -14,16 +14,20 @@ class ToVideoMetadata(
     companion object : KLogging()
 
     operator fun invoke(video: Video): VideoMetadata {
+        val uriComponentsBuilder = uriComponentsBuilderFactory.getInstance()
         return VideoMetadata(
-            uriComponentsBuilderFactory.getInstance()
+            videoPageUrl = uriComponentsBuilder
                 .replacePath("/v1p1/videos/${video.videoId.value}")
                 .toUriString(),
-            video.videoId.uri.toString(),
-            video.title,
-            video.description ?: "",
-            formatShortDescription(video.description),
-            video.playback.thumbnailUrl,
-            formatDuration(video.playback.duration)
+            playbackUrl = video.videoId.uri.toString(),
+            playerAuthUrl = uriComponentsBuilder
+                .replacePath("/auth/token")
+                .toUriString(),
+            title = video.title,
+            description = video.description ?: "",
+            shortDescription = formatShortDescription(video.description),
+            thumbnailUrl = video.playback.thumbnailUrl,
+            duration = formatDuration(video.playback.duration)
         )
     }
 
