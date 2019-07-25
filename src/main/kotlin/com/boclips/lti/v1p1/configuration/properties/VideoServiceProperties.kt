@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 @Component
 @ConfigurationProperties(prefix = "video-service")
 class VideoServiceProperties {
-    lateinit var accessTokenUri: String
-    lateinit var clientId: String
-    lateinit var clientSecret: String
+    var accessTokenUri: String = ""
+    var clientId: String = ""
+    var clientSecret: String = ""
 }
