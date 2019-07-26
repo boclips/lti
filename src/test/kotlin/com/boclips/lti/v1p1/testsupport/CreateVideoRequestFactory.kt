@@ -21,6 +21,7 @@ object CreateVideoRequestFactory {
     ): CreateVideoRequest {
         return CreateVideoRequest.builder()
             .provider(contentProviderId)
+            .providerId(contentProviderId)
             .providerVideoId(contentProviderVideoId)
             .title(title)
             .description(description)

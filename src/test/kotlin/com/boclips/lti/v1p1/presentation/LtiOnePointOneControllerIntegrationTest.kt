@@ -53,9 +53,9 @@ class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIn
 
     override fun earlySetup() {
         videoServiceClient.apply {
-            val videoId = create(CreateVideoRequestFactory.create(contentProviderId = UUID.randomUUID().toString()))
+            val videoId = videoServiceClient.createVideo(CreateVideoRequestFactory.create(contentProviderId = UUID.randomUUID().toString()))
             videoIdString = videoId.value
-            video = get(videoId)
+            video = videoServiceClient.get(videoId)
         }
     }
 }
@@ -122,9 +122,9 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
         videoServiceClient.apply {
             val subjects = setOf(SubjectId("Math"))
 
-            firstVideoId = create(CreateVideoRequestFactory.create(contentProviderId = "firstContentProvider"))
-            secondVideoId = create(CreateVideoRequestFactory.create(contentProviderId = "secondContentProvider"))
-            thirdVideoId = create(CreateVideoRequestFactory.create(contentProviderId = "thirdContentProvider"))
+            firstVideoId = videoServiceClient.createVideo(CreateVideoRequestFactory.create(contentProviderId = "firstContentProvider"))
+            secondVideoId = videoServiceClient.createVideo(CreateVideoRequestFactory.create(contentProviderId = "secondContentProvider"))
+            thirdVideoId = videoServiceClient.createVideo(CreateVideoRequestFactory.create(contentProviderId = "thirdContentProvider"))
 
             val videos = listOf(firstVideoId, secondVideoId, thirdVideoId).map(::get)
 
