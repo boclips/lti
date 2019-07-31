@@ -45,4 +45,20 @@ class ApiCollectionRepository(
         logger.warn { "Error retrieving a collection from video service: $e" }
         throw e
     }
+
+    @Retryable(
+        maxAttempts = 3,
+        backoff = Backoff(
+            multiplier = 1.5
+        )
+    )
+    override fun getMyCollections(): List<Collection> {
+        return videoServiceClient.myCollections
+    }
+
+    @Recover
+    fun getMyCollectionsRecoveryMethod(e: Exception): List<Collection> {
+        logger.warn { "Error retrieving a my collections from video service: $e" }
+        throw e
+    }
 }

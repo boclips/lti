@@ -7,6 +7,7 @@ import com.boclips.lti.v1p1.domain.service.AssertLaunchRequestIsValid
 import com.boclips.lti.v1p1.domain.service.InitializeLtiSession
 import com.boclips.lti.v1p1.domain.service.InitializeLtiSession.Companion.customLogoHolder
 import com.boclips.lti.v1p1.domain.service.RedirectToRequestedResource
+import com.boclips.lti.v1p1.presentation.service.ToCollectionMetadata
 import com.boclips.lti.v1p1.presentation.service.ToVideoMetadata
 import mu.KLogging
 import org.imsglobal.aspect.Lti
@@ -30,25 +31,27 @@ class LtiOnePointOneController(
     private val redirectToRequestedResource: RedirectToRequestedResource,
     private val videoRepository: VideoRepository,
     private val collectionRepository: CollectionRepository,
-    private val toVideoMetadata: ToVideoMetadata
+    private val toVideoMetadata: ToVideoMetadata,
+    private val toCollectionMetadata: ToCollectionMetadata
 ) {
     companion object : KLogging()
 
     @Lti
     @PostMapping(
-        "/videos/{resourceId}",
-        "/collections/{resourceId}"
+        "/videos/*",
+        "/collections",
+        "/collections/*"
     )
     fun handleLtiLaunchRequest(
         request: HttpServletRequest,
         result: LtiVerificationResult,
-        session: HttpSession,
-        @PathVariable("resourceId") resourceId: String
+        session: HttpSession
     ): ResponseEntity<Unit> {
         logger.info { "Received launch request: ${request.method} ${request.requestURL}" }
 
         assertLaunchRequestIsValid(result)
         initializeLtiSession(request, session)
+
         return redirectToRequestedResource(request)
     }
 
@@ -77,6 +80,20 @@ class LtiOnePointOneController(
                 "customLogoUrl" to session.getAttribute(customLogoHolder),
                 "collectionTitle" to collection.title,
                 "videos" to collection.videos.mapNotNull { video -> toVideoMetadata(video) }
+            )
+        )
+    }
+
+    @GetMapping("/collections")
+    fun getUserCollections(session: HttpSession): ModelAndView {
+        assertHasLtiSession(session)
+
+        val userCollections = collectionRepository.getMyCollections()
+
+        return ModelAndView(
+            "userCollections", mapOf(
+                "customLogoUrl" to session.getAttribute(customLogoHolder),
+                "collections" to userCollections.map { collection -> toCollectionMetadata(collection) }
             )
         )
     }

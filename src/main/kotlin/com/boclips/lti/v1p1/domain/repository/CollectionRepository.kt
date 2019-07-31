@@ -4,4 +4,6 @@ import com.boclips.videos.service.client.Collection
 
 interface CollectionRepository {
     fun get(collectionId: String): Collection
+
+    fun getMyCollections(): List<Collection>
 }

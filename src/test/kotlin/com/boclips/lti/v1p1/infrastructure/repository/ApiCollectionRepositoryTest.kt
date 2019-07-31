@@ -25,7 +25,7 @@ import java.net.URI
 @EnableAutoConfiguration(exclude = [MongoAutoConfiguration::class, MongoDataAutoConfiguration::class])
 class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
     @Test
-    fun `does not retry 404 errors and throws a ResourceNotFoundException`(@Mock collection: Collection) {
+    fun `get does not retry 404 errors and throws a ResourceNotFoundException`(@Mock collection: Collection) {
         whenever(videoServiceClient.getDetailed(collectionId))
             .thenThrow(HttpClientErrorException(HttpStatus.NOT_FOUND))
             .thenReturn(collection)
@@ -36,7 +36,7 @@ class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
     }
 
     @Test
-    fun `rethrows other HttpClientErrorException instances`() {
+    fun `get rethrows other HttpClientErrorException instances`() {
         whenever(videoServiceClient.getDetailed(collectionId)).thenThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST))
 
         assertThatThrownBy { collectionRepository.get(collectionIdString) }
@@ -46,7 +46,7 @@ class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
     }
 
     @Test
-    fun `retries non-404 errors up to 3 times and returns requested collection`(@Mock collection: Collection) {
+    fun `get retries non-404 errors up to 3 times and returns requested collection`(@Mock collection: Collection) {
         whenever(videoServiceClient.getDetailed(collectionId))
             .thenThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST))
             .thenThrow(RuntimeException("Something's gone completely wrong"))
@@ -55,7 +55,50 @@ class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(collectionRepository.get(collectionIdString)).isEqualTo(collection)
     }
 
-    private val collectionIdString = "87064254edd642a8a4c2e22a"
+    @Test
+    fun `getMyCollections returns an empty list if no collections are found for specified owner`() {
+        whenever(videoServiceClient.myCollections)
+            .thenReturn(emptyList())
+
+        assertThat(collectionRepository.getMyCollections()).isEmpty()
+    }
+
+    @Test
+    fun `getMyCollections returns collections returned by video service client`(
+        @Mock firstCollection: Collection,
+        @Mock secondCollection: Collection
+    ) {
+        whenever(videoServiceClient.myCollections)
+            .thenReturn(listOf(firstCollection, secondCollection))
+
+        assertThat(collectionRepository.getMyCollections()).containsExactlyInAnyOrder(
+            firstCollection,
+            secondCollection
+        )
+    }
+
+    @Test
+    fun `getMyCollections rethrows other HttpClientErrorException instances`() {
+        whenever(videoServiceClient.myCollections)
+            .thenThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST))
+
+        assertThatThrownBy { collectionRepository.getMyCollections() }
+            .isInstanceOf(HttpClientErrorException::class.java)
+            .extracting("statusCode")
+            .containsOnly(HttpStatus.BAD_REQUEST)
+    }
+
+    @Test
+    fun `getMyCollections retries non-404 errors up to 3 times and returns found collections`(@Mock collection: Collection) {
+        whenever(videoServiceClient.myCollections)
+            .thenThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST))
+            .thenThrow(RuntimeException("Something's gone completely wrong"))
+            .thenReturn(listOf(collection))
+
+        assertThat(collectionRepository.getMyCollections()).containsOnly(collection)
+    }
+
+    private final val collectionIdString = "87064254edd642a8a4c2e22a"
     private val collectionId = CollectionId(URI("https://video-service.com/collections/$collectionIdString"))
 
     @MockBean(name = "videoServiceClient")

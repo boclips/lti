@@ -2,6 +2,7 @@ package com.boclips.lti.v1p1.presentation
 
 import com.boclips.lti.v1p1.domain.exception.LaunchRequestInvalidException
 import com.boclips.lti.v1p1.domain.model.CustomLaunchParams
+import com.boclips.lti.v1p1.presentation.model.CollectionMetadata
 import com.boclips.lti.v1p1.presentation.model.VideoMetadata
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.v1p1.testsupport.CreateVideoRequestFactory
@@ -44,16 +45,26 @@ class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIn
             .andExpect(model().attribute("video", toVideoMetadata(video)))
     }
 
+    @Test
+    fun `returns a 404 response when requested video is not found`() {
+        val session = executeLtiLaunch()
+
+        mvc.perform(get(interpolateResourcePath(invalidResourceId)).session(session as MockHttpSession))
+            .andExpect(status().isNotFound)
+    }
+
     lateinit var videoIdString: String
     lateinit var video: Video
 
     override fun resourcePath() = interpolateResourcePath(videoIdString)
 
-    override fun interpolateResourcePath(resourceId: String) = "/v1p1/videos/$resourceId"
+    override fun interpolateResourcePath(resourceId: String?) = "/v1p1/videos/$resourceId"
 
-    override fun earlySetup() {
+    @BeforeEach
+    fun createVideo() {
         videoServiceClient.apply {
-            val videoId = videoServiceClient.createVideo(CreateVideoRequestFactory.create(contentProviderId = UUID.randomUUID().toString()))
+            val videoId =
+                videoServiceClient.createVideo(CreateVideoRequestFactory.create(contentProviderId = UUID.randomUUID().toString()))
             videoIdString = videoId.value
             video = videoServiceClient.get(videoId)
         }
@@ -88,9 +99,11 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
     fun `preserves partner logo on response model for videos accessed from collection page`() {
         val testLogoUri = "https://images.com/partner/custom/logo.png"
 
-        val session = executeLtiLaunch(mapOf(
-            CustomLaunchParams.LOGO to testLogoUri
-        ))
+        val session = executeLtiLaunch(
+            mapOf(
+                CustomLaunchParams.LOGO to testLogoUri
+            )
+        )
 
         mvc.perform(get(resourcePath()).session(session as MockHttpSession))
             .andExpect(status().isOk)
@@ -101,10 +114,12 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
             .andExpect(model().attribute("customLogoUrl", testLogoUri))
     }
 
-    @BeforeEach
-    fun setUpCollectionTest() {
-        videoServiceClient.clear()
-        populateCollection()
+    @Test
+    fun `returns a 404 response when requested video is not found`() {
+        val session = executeLtiLaunch()
+
+        mvc.perform(get(interpolateResourcePath(invalidResourceId)).session(session as MockHttpSession))
+            .andExpect(status().isNotFound)
     }
 
     lateinit var firstVideoId: VideoId
@@ -114,17 +129,21 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
     val collectionId = "87064254edd642a8a4c2e22a"
     val collectionTitle = "first collection"
 
-    override fun resourcePath() = "/v1p1/collections/$collectionId"
+    override fun resourcePath() = interpolateResourcePath(collectionId)
 
-    override fun interpolateResourcePath(resourceId: String) = "/v1p1/collections/$resourceId"
+    override fun interpolateResourcePath(resourceId: String?) = "/v1p1/collections/$resourceId"
 
-    private fun populateCollection() {
+    @BeforeEach
+    fun populateCollection() {
         videoServiceClient.apply {
             val subjects = setOf(SubjectId("Math"))
 
-            firstVideoId = videoServiceClient.createVideo(CreateVideoRequestFactory.create(contentProviderId = "firstContentProvider"))
-            secondVideoId = videoServiceClient.createVideo(CreateVideoRequestFactory.create(contentProviderId = "secondContentProvider"))
-            thirdVideoId = videoServiceClient.createVideo(CreateVideoRequestFactory.create(contentProviderId = "thirdContentProvider"))
+            firstVideoId =
+                videoServiceClient.createVideo(CreateVideoRequestFactory.create(contentProviderId = "firstContentProvider"))
+            secondVideoId =
+                videoServiceClient.createVideo(CreateVideoRequestFactory.create(contentProviderId = "secondContentProvider"))
+            thirdVideoId =
+                videoServiceClient.createVideo(CreateVideoRequestFactory.create(contentProviderId = "thirdContentProvider"))
 
             val videos = listOf(firstVideoId, secondVideoId, thirdVideoId).map(::get)
 
@@ -134,6 +153,78 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
                     .title(collectionTitle)
                     .subjects(subjects)
                     .videos(videos)
+                    .build()
+            )
+        }
+    }
+}
+
+@EnableAutoConfiguration(exclude = [MongoAutoConfiguration::class, MongoDataAutoConfiguration::class])
+class UserCollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIntegrationTest() {
+    @Test
+    fun `valid user collections launch establishes an LTI session and user collections page can be correctly accessed`() {
+        val session = executeLtiLaunch()
+
+        mvc.perform(get(resourcePath()).session(session as MockHttpSession))
+            .andExpect(header().doesNotExist("X-Frame-Options"))
+            .andExpect(status().isOk)
+            .andExpect(view().name("userCollections"))
+            .andDo { result ->
+                result.modelAndView!!.model["collections"]!!.let {
+                    val collections = it as List<*>
+                    assertThat(
+                        collections
+                            .filterIsInstance(CollectionMetadata::class.java)
+                            .map { collectionMetadata -> collectionMetadata.collectionPageUrl.substringAfterLast("/") }
+                    )
+                        .containsExactly(firstCollectionId, secondCollectionId)
+                }
+            }
+    }
+
+    @Test
+    fun `preserves partner logo on response model for collections accessed from user collection page`() {
+        val testLogoUri = "https://images.com/partner/custom/logo.png"
+
+        val session = executeLtiLaunch(
+            mapOf(
+                CustomLaunchParams.LOGO to testLogoUri
+            )
+        )
+
+        mvc.perform(get(resourcePath()).session(session as MockHttpSession))
+            .andExpect(status().isOk)
+            .andExpect(model().attribute("customLogoUrl", testLogoUri))
+
+        mvc.perform(get("/v1p1/collections/$firstCollectionId").session(session))
+            .andExpect(status().isOk)
+            .andExpect(model().attribute("customLogoUrl", testLogoUri))
+    }
+
+    val firstCollectionId = "87064254edd642a8a4c2e22a"
+    val secondCollectionId = "d02f78473e1545c6aa4a508a"
+
+    override fun interpolateResourcePath(resourceId: String?) = "/v1p1/collections"
+
+    @BeforeEach
+    fun populateCollections() {
+        videoServiceClient.apply {
+            val subjects = setOf(SubjectId("Math"))
+
+            addCollection(
+                Collection.builder()
+                    .collectionId(rawIdToCollectionId(firstCollectionId))
+                    .title("First collection")
+                    .subjects(subjects)
+                    .videos(emptyList())
+                    .build()
+            )
+            addCollection(
+                Collection.builder()
+                    .collectionId(rawIdToCollectionId(secondCollectionId))
+                    .title("Second collection")
+                    .subjects(subjects)
+                    .videos(emptyList())
                     .build()
             )
         }
@@ -213,20 +304,14 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
     }
 
     @Test
-    fun `returns a 404 response when requested resource is not found`() {
-        val session = executeLtiLaunch()
-
-        mvc.perform(get(interpolateResourcePath(invalidResourceId)).session(session as MockHttpSession))
-            .andExpect(status().isNotFound)
-    }
-
-    @Test
     fun `adds partner logo to response model if it's provided in LTI launch and preserves it over subsequent access`() {
         val testLogoUri = "https://images.com/partner/custom/logo.png"
 
-        val session = executeLtiLaunch(mapOf(
-            CustomLaunchParams.LOGO to testLogoUri
-        ))
+        val session = executeLtiLaunch(
+            mapOf(
+                CustomLaunchParams.LOGO to testLogoUri
+            )
+        )
 
         mvc.perform(get(resourcePath()).session(session as MockHttpSession))
             .andExpect(status().isOk)
@@ -244,24 +329,25 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
 
     @Test
     fun `does not set partner logo on response model if empty value is provided in LTI launch`() {
-        val session = executeLtiLaunch(mapOf(
-            CustomLaunchParams.LOGO to ""
-        ))
+        val session = executeLtiLaunch(
+            mapOf(
+                CustomLaunchParams.LOGO to ""
+            )
+        )
 
         mvc.perform(get(resourcePath()).session(session as MockHttpSession))
             .andExpect(status().isOk)
             .andExpect(model().attribute("customLogoUrl", nullValue()))
     }
 
-    abstract fun resourcePath(): String
-    abstract fun interpolateResourcePath(resourceId: String): String
-    fun earlySetup() = Unit
+    fun resourcePath() = interpolateResourcePath()
+    abstract fun interpolateResourcePath(resourceId: String? = null): String
 
     val invalidResourceId = "000000000000000000000000"
 
     @BeforeEach
-    fun setUp() {
-        earlySetup()
+    fun clearVideoServiceClient() {
+        videoServiceClient.clear()
     }
 
     protected fun executeLtiLaunch(customParameters: Map<String, String> = emptyMap()): HttpSession? {
