@@ -13,13 +13,13 @@
 
 <div th:replace="fragments/logo :: logo (logoUrl = ${customLogoUrl})"></div>
 
-<ul>
-  <li th:each="collection : ${collections}">
-    <a href="" th:attr="href=${collection.collectionPageUrl}">
-      <span th:text="${collection.title}"/>
-    </a>
-  </li>
-</ul>
+<div class="userCollectionsContainer">
+  <section data-qa="collectionTile" class="collectionTile" th:each="collection : ${collections}">
+      <a href="" th:attr="href=${collection.collectionPageUrl}">
+        <span th:text="${collection.title}" />
+      </a>
+  </section>
+</div>
 
 </body>
 </html>

@@ -6,6 +6,20 @@ html {
 }
 
 /*
+ * User collections page
+ */
+.userCollectionsContainer {
+  max-width: 94rem;
+
+  margin: 6rem auto auto;
+}
+
+.collectionTile {
+  width: 35rem;
+  background-color: #e8efff;
+}
+
+/*
  * Collection page
  */
 .collectionContainer {
