@@ -7,6 +7,7 @@ import com.boclips.lti.v1p1.presentation.model.VideoMetadata
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.v1p1.testsupport.CreateVideoRequestFactory
 import com.boclips.videos.service.client.Collection
+import com.boclips.videos.service.client.Subject
 import com.boclips.videos.service.client.SubjectId
 import com.boclips.videos.service.client.Video
 import com.boclips.videos.service.client.VideoId
@@ -136,8 +137,6 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
     @BeforeEach
     fun populateCollection() {
         videoServiceClient.apply {
-            val subjects = setOf(SubjectId("Math"))
-
             firstVideoId =
                 videoServiceClient.createVideo(CreateVideoRequestFactory.create(contentProviderId = "firstContentProvider"))
             secondVideoId =
@@ -151,7 +150,7 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
                 Collection.builder()
                     .collectionId(rawIdToCollectionId(collectionId))
                     .title(collectionTitle)
-                    .subjects(subjects)
+                    .subjects(testSubjects())
                     .videos(videos)
                     .build()
             )
@@ -209,13 +208,11 @@ class UserCollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneCon
     @BeforeEach
     fun populateCollections() {
         videoServiceClient.apply {
-            val subjects = setOf(SubjectId("Math"))
-
             addCollection(
                 Collection.builder()
                     .collectionId(rawIdToCollectionId(firstCollectionId))
                     .title("First collection")
-                    .subjects(subjects)
+                    .subjects(testSubjects())
                     .videos(emptyList())
                     .build()
             )
@@ -223,7 +220,7 @@ class UserCollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneCon
                 Collection.builder()
                     .collectionId(rawIdToCollectionId(secondCollectionId))
                     .title("Second collection")
-                    .subjects(subjects)
+                    .subjects(testSubjects())
                     .videos(emptyList())
                     .build()
             )
@@ -387,4 +384,11 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
 
         return LinkedMultiValueMap(signedParameters.mapValues { listOf(it.value) })
     }
+
+    protected fun testSubjects() = setOf(
+        Subject.builder()
+            .id(SubjectId("Math"))
+            .name("Math")
+            .build()
+    )
 }

@@ -57,7 +57,7 @@ class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `getMyCollections returns an empty list if no collections are found for specified owner`() {
-        whenever(videoServiceClient.myCollections)
+        whenever(videoServiceClient.collectionsDetailed)
             .thenReturn(emptyList())
 
         assertThat(collectionRepository.getMyCollections()).isEmpty()
@@ -68,7 +68,7 @@ class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
         @Mock firstCollection: Collection,
         @Mock secondCollection: Collection
     ) {
-        whenever(videoServiceClient.myCollections)
+        whenever(videoServiceClient.collectionsDetailed)
             .thenReturn(listOf(firstCollection, secondCollection))
 
         assertThat(collectionRepository.getMyCollections()).containsExactlyInAnyOrder(
@@ -79,7 +79,7 @@ class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `getMyCollections rethrows other HttpClientErrorException instances`() {
-        whenever(videoServiceClient.myCollections)
+        whenever(videoServiceClient.collectionsDetailed)
             .thenThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST))
 
         assertThatThrownBy { collectionRepository.getMyCollections() }
@@ -90,7 +90,7 @@ class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `getMyCollections retries non-404 errors up to 3 times and returns found collections`(@Mock collection: Collection) {
-        whenever(videoServiceClient.myCollections)
+        whenever(videoServiceClient.collectionsDetailed)
             .thenThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST))
             .thenThrow(RuntimeException("Something's gone completely wrong"))
             .thenReturn(listOf(collection))

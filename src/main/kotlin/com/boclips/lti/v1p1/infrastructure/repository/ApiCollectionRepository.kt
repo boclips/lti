@@ -53,7 +53,7 @@ class ApiCollectionRepository(
         )
     )
     override fun getMyCollections(): List<Collection> {
-        return videoServiceClient.myCollections
+        return videoServiceClient.collectionsDetailed
     }
 
     @Recover

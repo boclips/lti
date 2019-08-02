@@ -13,7 +13,8 @@ class ToCollectionMetadata(private val uriComponentsBuilderFactory: UriComponent
             uriComponentsBuilderFactory.getInstance()
                 .replacePath(
                 "/v1p1/collections/${collection.collectionId.uri.toString().substringAfterLast("/")}")
-                .toUriString()
+                .toUriString(),
+            collection.videos.mapNotNull { it?.playback?.thumbnailUrl }
         )
     }
 }
