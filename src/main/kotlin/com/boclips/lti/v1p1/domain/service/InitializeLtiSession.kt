@@ -14,13 +14,18 @@ class InitializeLtiSession {
     }
 
     operator fun invoke(request: HttpServletRequest, session: HttpSession) {
+        markAsAuthenticated(session)
+        handleLogo(request, session)
+    }
+
+    private fun markAsAuthenticated(session: HttpSession) {
         session.setAttribute(authenticationStateHolder, true)
+    }
 
-        logger.info { "Launch parameters received:" }
-        request.parameterMap.entries.forEach { logger.info { "${it.key} = ${it.value?.contentToString()}" } }
-
+    private fun handleLogo(request: HttpServletRequest, session: HttpSession) {
         val customLogo: String = request.getParameter(CustomLaunchParams.LOGO).orEmpty()
         if (customLogo.isNotBlank()) {
+            logger.info { "custom_logo = $customLogo" }
             session.setAttribute(customLogoHolder, customLogo)
         }
     }
