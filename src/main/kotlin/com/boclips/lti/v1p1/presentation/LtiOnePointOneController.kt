@@ -7,6 +7,7 @@ import com.boclips.lti.v1p1.domain.service.AssertLaunchRequestIsValid
 import com.boclips.lti.v1p1.domain.service.InitializeLtiSession
 import com.boclips.lti.v1p1.domain.service.InitializeLtiSession.Companion.customLogoHolder
 import com.boclips.lti.v1p1.domain.service.RedirectToRequestedResource
+import com.boclips.lti.v1p1.presentation.service.SortByCollectionTitle
 import com.boclips.lti.v1p1.presentation.service.ToCollectionMetadata
 import com.boclips.lti.v1p1.presentation.service.ToVideoMetadata
 import mu.KLogging
@@ -32,7 +33,8 @@ class LtiOnePointOneController(
     private val videoRepository: VideoRepository,
     private val collectionRepository: CollectionRepository,
     private val toVideoMetadata: ToVideoMetadata,
-    private val toCollectionMetadata: ToCollectionMetadata
+    private val toCollectionMetadata: ToCollectionMetadata,
+    private val sortByCollectionTitle: SortByCollectionTitle
 ) {
     companion object : KLogging()
 
@@ -93,7 +95,9 @@ class LtiOnePointOneController(
         return ModelAndView(
             "userCollections", mapOf(
                 "customLogoUrl" to session.getAttribute(customLogoHolder),
-                "collections" to userCollections.map { collection -> toCollectionMetadata(collection) }
+                "collections" to sortByCollectionTitle(
+                    userCollections.map { collection -> toCollectionMetadata(collection) }
+                )
             )
         )
     }
