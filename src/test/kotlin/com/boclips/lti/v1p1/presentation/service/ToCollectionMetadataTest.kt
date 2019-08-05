@@ -18,39 +18,71 @@ import java.net.URI
 @ExtendWith(MockitoExtension::class)
 class ToCollectionMetadataTest {
     @Test
-    fun `returns metadata corresponding to provided collection`() {
+    fun `returns metadata corresponding to provided collection and limits thumbnails to 4 items`() {
+        val collectionId = 123
+        val collection: Collection = Collection.builder()
+            .collectionId(CollectionId(URI("http://localhost/v1/collections/$collectionId")))
+            .title("Superb collection!")
+            .videos(videos)
+            .subjects(emptySet())
+            .build()
+
         val collectionMetadata = toCollectionMetadata(collection)
 
         assertThat(collectionMetadata.title).isEqualTo(collection.title)
         assertThat(collectionMetadata.collectionPageUrl).isEqualTo("http://localhost/v1p1/collections/$collectionId")
-        assertThat(collectionMetadata.thumbnailUrls).containsExactly(firstVideoThumbnailUrl, secondVideoThumbnailUrl)
+        assertThat(collectionMetadata.videosCountLabel).isEqualTo("9 videos")
+        assertThat(collectionMetadata.thumbnailUrls).containsExactly(
+            videos.component1().playback.thumbnailUrl,
+            videos.component2().playback.thumbnailUrl,
+            videos.component3().playback.thumbnailUrl,
+            videos.component4().playback.thumbnailUrl
+        )
     }
 
-    private val firstVideoThumbnailUrl = "http://thumbnails.com/first"
-    private val firstVideo = Video.builder()
-        .playback(
-            Playback.builder()
-                .thumbnailUrl(firstVideoThumbnailUrl)
-                .build()
-        )
-        .build()
-    private val secondVideoThumbnailUrl = "http://thumbnails.com/second"
-    private val secondVideo = Video.builder()
-        .playback(
-            Playback.builder()
-                .thumbnailUrl(secondVideoThumbnailUrl)
-                .build()
-        )
-        .build()
-    private val thirdVideo = Video.builder().build()
+    @Test
+    fun `fills thumbnails array with nulls when video count is below 4`() {
+        val collectionWithTwoVideos: Collection = Collection.builder()
+            .collectionId(CollectionId(URI("http://localhost/v1/collections/only-two")))
+            .title("Superb collection with only 2 videos!")
+            .videos(videos.subList(0, 2))
+            .subjects(emptySet())
+            .build()
 
-    private val collectionId = 123
-    private val collection: Collection = Collection.builder()
-        .collectionId(CollectionId(URI("http://localhost/v1/collections/$collectionId")))
-        .title("Superb collection!")
-        .videos(listOf(firstVideo, secondVideo, thirdVideo))
-        .subjects(emptySet())
-        .build()
+        val collectionMetadata = toCollectionMetadata(collectionWithTwoVideos)
+
+        assertThat(collectionMetadata.videosCountLabel).isEqualTo("2 videos")
+        assertThat(collectionMetadata.thumbnailUrls).containsExactly(
+            videos.component1().playback.thumbnailUrl,
+            videos.component2().playback.thumbnailUrl,
+            null,
+            null
+        )
+    }
+
+    @Test
+    fun `uses singular form when there is only one video`() {
+        val collectionWithTwoVideos: Collection = Collection.builder()
+            .collectionId(CollectionId(URI("http://localhost/v1/collections/only-one")))
+            .title("Superb collection with only 1 video!")
+            .videos(listOf(videos.component1()))
+            .subjects(emptySet())
+            .build()
+
+        val collectionMetadata = toCollectionMetadata(collectionWithTwoVideos)
+
+        assertThat(collectionMetadata.videosCountLabel).isEqualTo("1 video")
+    }
+
+    private val videos = 1.until(10).map {
+        Video.builder()
+            .playback(
+                Playback.builder()
+                    .thumbnailUrl("http://thumbnails.com/$it")
+                    .build()
+            )
+            .build()
+    }
 
     private lateinit var uriComponentsBuilderFactory: UriComponentsBuilderFactory
     private lateinit var toCollectionMetadata: ToCollectionMetadata

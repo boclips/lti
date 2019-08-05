@@ -13,13 +13,20 @@
 
 <div th:replace="fragments/logo :: logo (logoUrl = ${customLogoUrl})"></div>
 
-<ul>
-  <li th:each="collection : ${collections}">
-    <a href="" th:attr="href=${collection.collectionPageUrl}">
-      <span th:text="${collection.title}"/>
+<div class="userCollectionsContainer">
+  <section class="collectionTile" th:each="collection : ${collections}">
+    <a href="" class="collectionTile__link" th:attr="href=${collection.collectionPageUrl}">
+      <div class="collectionTile__contentWrapper">
+        <h2 class="collectionTile__title" th:text="${collection.title}"></h2>
+        <p class="collectionTile__videosCount" th:text="${collection.videosCountLabel}"></p>
+        <section class="collectionTile__thumbnails">
+          <figure class="collectionTile__thumbnail" th:each="thumbnailUrl : ${collection.thumbnailUrls}" th:style="'background-image: url(\'' + ${thumbnailUrl} + '\');'">
+          </figure>
+        </section>
+      </div>
     </a>
-  </li>
-</ul>
+  </section>
+</div>
 
 </body>
 </html>
