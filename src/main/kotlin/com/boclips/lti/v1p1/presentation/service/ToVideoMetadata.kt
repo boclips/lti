@@ -11,7 +11,10 @@ class ToVideoMetadata(
     private val uriComponentsBuilderFactory: UriComponentsBuilderFactory,
     private val formatDuration: FormatDuration
 ) {
-    companion object : KLogging()
+    companion object : KLogging() {
+        const val shortDescriptionLength = 300
+        const val mobileDescriptionLength = 100
+    }
 
     operator fun invoke(video: Video): VideoMetadata {
         val uriComponentsBuilder = uriComponentsBuilderFactory.getInstance()
@@ -25,16 +28,17 @@ class ToVideoMetadata(
                 .toUriString(),
             title = video.title,
             description = video.description ?: "",
-            shortDescription = formatShortDescription(video.description),
+            shortDescription = trimDescription(video.description, shortDescriptionLength),
+            mobileDescription = trimDescription(video.description, mobileDescriptionLength),
             thumbnailUrl = video.playback.thumbnailUrl,
             duration = formatDuration(video.playback.duration)
         )
     }
 
-    private fun formatShortDescription(description: String?): String {
+    private fun trimDescription(description: String?, trimLength: Int): String {
         return when {
             description == null -> ""
-            description.length > 100 -> "${description.substring(0, 100).trim()}..."
+            description.length > trimLength -> "${description.substring(0, trimLength).trim()}..."
             else -> description
         }
     }
