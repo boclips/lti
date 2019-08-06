@@ -22,7 +22,6 @@ html {
 .collectionTile {
   background-color: #FFFFFF;
 
-  width: 27%;
   height: 100%;
 
   margin: 1rem;
@@ -31,6 +30,18 @@ html {
 
   border-radius: 8px;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 481px) {
+  .collectionTile {
+    width: 27%;
+  }
+}
+
+@media (max-width: 480px) {
+  .collectionTile {
+    width: 30rem;
+  }
 }
 
 .collectionTile__link {
