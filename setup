@@ -6,5 +6,4 @@ ktlint --apply-to-idea-project
 # Generate local development configuration
 pushd src/main/resources/
 ./setup-local-development
-echo "Local development configuration"
 popd
