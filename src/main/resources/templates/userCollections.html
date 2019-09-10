@@ -14,7 +14,7 @@
 <div th:replace="fragments/logo :: logo (logoUrl = ${customLogoUrl})"></div>
 
 <div class="userCollectionsContainer">
-  <section class="collectionTile" th:each="collection : ${collections}">
+  <section data-qa="collectionTile" class="collectionTile" th:each="collection : ${collections}">
     <a href="" class="collectionTile__link" th:attr="href=${collection.collectionPageUrl}">
       <div class="collectionTile__contentWrapper">
         <h2 class="collectionTile__title" th:text="${collection.title}"></h2>
