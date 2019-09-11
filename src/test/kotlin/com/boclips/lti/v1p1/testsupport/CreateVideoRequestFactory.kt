@@ -20,7 +20,6 @@ object CreateVideoRequestFactory {
         subjects: Set<String> = emptySet()
     ): CreateVideoRequest {
         return CreateVideoRequest.builder()
-            .provider(contentProviderId)
             .providerId(contentProviderId)
             .providerVideoId(contentProviderVideoId)
             .title(title)

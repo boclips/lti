@@ -7,6 +7,7 @@ import com.boclips.lti.v1p1.presentation.model.VideoMetadata
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.v1p1.testsupport.CreateVideoRequestFactory
 import com.boclips.videos.service.client.Collection
+import com.boclips.videos.service.client.CreateContentPartnerRequest
 import com.boclips.videos.service.client.Subject
 import com.boclips.videos.service.client.SubjectId
 import com.boclips.videos.service.client.Video
@@ -30,7 +31,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.model
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
 import org.springframework.util.LinkedMultiValueMap
-import java.util.UUID
 import javax.servlet.http.HttpSession
 
 @EnableAutoConfiguration(exclude = [MongoAutoConfiguration::class, MongoDataAutoConfiguration::class])
@@ -65,7 +65,7 @@ class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIn
     fun createVideo() {
         videoServiceClient.apply {
             val videoId =
-                videoServiceClient.createVideo(CreateVideoRequestFactory.create(contentProviderId = UUID.randomUUID().toString()))
+                videoServiceClient.createVideo(CreateVideoRequestFactory.create(contentProviderId = contentProviderId))
             videoIdString = videoId.value
             video = videoServiceClient.get(videoId)
         }
@@ -138,11 +138,23 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
     fun populateCollection() {
         videoServiceClient.apply {
             firstVideoId =
-                videoServiceClient.createVideo(CreateVideoRequestFactory.create(contentProviderId = "firstContentProvider"))
+                videoServiceClient.createVideo(CreateVideoRequestFactory.create(
+                    contentProviderId = contentProviderId,
+                    contentProviderVideoId = "First Video"
+                )
+            )
             secondVideoId =
-                videoServiceClient.createVideo(CreateVideoRequestFactory.create(contentProviderId = "secondContentProvider"))
+                videoServiceClient.createVideo(CreateVideoRequestFactory.create(
+                    contentProviderId = contentProviderId,
+                    contentProviderVideoId = "Second Video"
+                )
+            )
             thirdVideoId =
-                videoServiceClient.createVideo(CreateVideoRequestFactory.create(contentProviderId = "thirdContentProvider"))
+                videoServiceClient.createVideo(CreateVideoRequestFactory.create(
+                    contentProviderId = contentProviderId,
+                    contentProviderVideoId = "Third Video"
+                )
+            )
 
             val videos = listOf(firstVideoId, secondVideoId, thirdVideoId).map(::get)
 
@@ -341,10 +353,16 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
     abstract fun interpolateResourcePath(resourceId: String? = null): String
 
     val invalidResourceId = "000000000000000000000000"
+    lateinit var contentProviderId: String
 
     @BeforeEach
     fun clearVideoServiceClient() {
         videoServiceClient.clear()
+        contentProviderId = videoServiceClient.createContentPartner(
+            CreateContentPartnerRequest.builder()
+                .name("ted")
+                .build()
+        ).value
     }
 
     protected fun executeLtiLaunch(customParameters: Map<String, String> = emptyMap()): HttpSession? {
