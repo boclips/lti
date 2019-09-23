@@ -2,14 +2,13 @@
 
 set -eu
 
-cwd="$(cd "$(dirname $0)" && pwd)"
 export GRADLE_USER_HOME=".gradle"
 
 version=$(cat version/version)
 
 (
 cd source
-./gradlew -Pversion=${version} clean build dependencyCheckAnalyze --rerun-tasks
+./gradlew -Pversion="$version" clean build --rerun-tasks
 )
 
 cp -a source/* dist/
