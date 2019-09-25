@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.2.xsd">
     <suppress>
-        <notes><![CDATA[
-      File name: jackson-databind-2.9.8.jar
-
-      Related to configurations which use the MySQL driver as well.
-      ]]></notes>
-        <cpe>cpe:2.3:a:fasterxml:jackson:2.9.8</cpe>
-        <cve>CVE-2019-12086</cve>
-    </suppress>
-    <suppress>
       <notes><![CDATA[
         File name: spring-security-*.jar in combination with Spring Framework 5.0.5.RELEASE
 
@@ -17,14 +8,5 @@
         ]]></notes>
       <gav regex="true">^org\.springframework\.security:spring-security-.*:.*$</gav>
       <cve>CVE-2018-1258</cve>
-    </suppress>
-    <suppress until="2019-10-10Z">
-      <notes><![CDATA[
-        File name: jackson-databind-2.9.9.2.jar
-
-        We need to wait for a fix, it's not released yet.
-        ]]></notes>
-      <cpe>cpe:/a:fasterxml:jackson-databind:2.9.9.2</cpe>
-      <cve>CVE-2019-16335</cve>
     </suppress>
 </suppressions>
