@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.2.xsd">
-    <suppress>
-      <notes><![CDATA[
+  <suppress>
+    <notes><![CDATA[
         File name: spring-security-*.jar in combination with Spring Framework 5.0.5.RELEASE
 
         Affects Spring Framework 5.0.5.RELEASE only.
+        ^ However it still flags a vulnerability in combination with a newer release (5.1.6.RELEASE)
+        So we'll need to leave it here for now.
+        -AO
         ]]></notes>
-      <gav regex="true">^org\.springframework\.security:spring-security-.*:.*$</gav>
-      <cve>CVE-2018-1258</cve>
-    </suppress>
+    <gav regex="true">^org\.springframework\.security:spring-security-.*:.*$</gav>
+    <cve>CVE-2018-1258</cve>
+  </suppress>
+  <suppress until="2019-11-01Z">
+    <notes><![CDATA[
+      file name: jackson-databind-2.9.10.jar
+
+      https://github.com/FasterXML/jackson-databind/issues/2478 They indicate a fix should be issued around the 19th october
+      ]]></notes>
+    <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
+    <cpe>cpe:/a:fasterxml:jackson</cpe>
+  </suppress>
 </suppressions>
