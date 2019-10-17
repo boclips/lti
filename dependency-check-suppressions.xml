@@ -5,7 +5,7 @@
         File name: spring-security-*.jar in combination with Spring Framework 5.0.5.RELEASE
 
         Affects Spring Framework 5.0.5.RELEASE only.
-        ^ However it still flags a vulnerability in combination with a newer release (5.1.6.RELEASE)
+        ^ However it still flags a false positive with a newer release (5.1.6.RELEASE)
         So we'll need to leave it here for now.
         -AO
         ]]></notes>
