@@ -31,7 +31,7 @@ private class ApiVideoRepositoryTest : AbstractSpringIntegrationTest() {
         assertThatThrownBy { videoRepository.get(videoIdString) }
             .isInstanceOf(HttpClientErrorException::class.java)
             .extracting("statusCode")
-            .containsOnly(HttpStatus.BAD_REQUEST)
+            .isEqualTo(HttpStatus.BAD_REQUEST)
     }
 
     @Test

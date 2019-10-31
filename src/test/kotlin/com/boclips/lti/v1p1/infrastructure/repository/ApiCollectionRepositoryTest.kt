@@ -42,7 +42,7 @@ class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
         assertThatThrownBy { collectionRepository.get(collectionIdString) }
             .isInstanceOf(HttpClientErrorException::class.java)
             .extracting("statusCode")
-            .containsOnly(HttpStatus.BAD_REQUEST)
+            .isEqualTo(HttpStatus.BAD_REQUEST)
     }
 
     @Test
@@ -85,7 +85,7 @@ class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
         assertThatThrownBy { collectionRepository.getMyCollections() }
             .isInstanceOf(HttpClientErrorException::class.java)
             .extracting("statusCode")
-            .containsOnly(HttpStatus.BAD_REQUEST)
+            .isEqualTo(HttpStatus.BAD_REQUEST)
     }
 
     @Test

@@ -12,13 +12,17 @@
     <gav regex="true">^org\.springframework\.security:spring-security-.*:.*$</gav>
     <cve>CVE-2018-1258</cve>
   </suppress>
-  <suppress until="2019-11-01Z">
+  <suppress until="2019-12-01Z">
     <notes><![CDATA[
-      file name: jackson-databind-2.9.10.jar
-
-      https://github.com/FasterXML/jackson-databind/issues/2478 They indicate a fix should be issued around the 19th october
-      ]]></notes>
-    <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
-    <cpe>cpe:/a:fasterxml:jackson</cpe>
+      We're stuck with IMSGlobal/basiclti-util-java using prehistoric dependencies... It's an OS project, perhaps
+      we can contribute and update the deps for them...
+    ]]></notes>
+    <gav regex="true">^org\.codehaus\.jackson:jackson-mapper-asl:.*$</gav>
+    <cve>CVE-2017-17485</cve>
+    <cve>CVE-2018-5968</cve>
+    <cve>CVE-2017-7525</cve>
+    <cve>CVE-2017-15095</cve>
+    <cve>CVE-2018-14718</cve>
+    <cve>CVE-2018-7489</cve>
   </suppress>
 </suppressions>
