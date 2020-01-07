@@ -8,12 +8,14 @@ buildscript {
 
   }
   repositories {
+    jcenter()
     mavenCentral()
   }
   dependencies {
     classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
     classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.27.0'
   }
 }
 
@@ -31,6 +33,7 @@ apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.owasp.dependencycheck'
+apply plugin: 'com.github.ben-manes.versions'
 
 group = 'com.boclips.lti'
 version = '0.0.1-SNAPSHOT'
