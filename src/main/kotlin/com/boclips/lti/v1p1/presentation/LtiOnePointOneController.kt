@@ -81,7 +81,7 @@ class LtiOnePointOneController(
             "collection", mapOf(
                 "customLogoUrl" to session.getAttribute(customLogoHolder),
                 "collectionTitle" to collection.title,
-                "videos" to collection.videos.mapNotNull { video -> toVideoMetadata(video) }
+                "videos" to collection.videos.map { video -> toVideoMetadata(video) }
             )
         )
     }

@@ -10,6 +10,9 @@ import javax.validation.constraints.NotBlank
 @ConfigurationProperties(prefix = "video-service")
 class VideoServiceProperties {
     @NotBlank
+    var baseUrl: String = ""
+
+    @NotBlank
     var accessTokenUri: String = ""
 
     @NotBlank

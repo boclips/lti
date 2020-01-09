@@ -2,16 +2,14 @@ package com.boclips.lti.v1p1.presentation
 
 import com.boclips.lti.v1p1.domain.exception.LaunchRequestInvalidException
 import com.boclips.lti.v1p1.domain.model.CustomLaunchParams
+import com.boclips.lti.v1p1.domain.model.Video
+import com.boclips.lti.v1p1.infrastructure.repository.VideoResourceConverter
 import com.boclips.lti.v1p1.presentation.model.CollectionMetadata
 import com.boclips.lti.v1p1.presentation.model.VideoMetadata
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
-import com.boclips.lti.v1p1.testsupport.CreateVideoRequestFactory
-import com.boclips.videos.service.client.Collection
-import com.boclips.videos.service.client.CreateContentPartnerRequest
-import com.boclips.videos.service.client.Subject
-import com.boclips.videos.service.client.SubjectId
-import com.boclips.videos.service.client.Video
-import com.boclips.videos.service.client.VideoId
+import com.boclips.lti.v1p1.testsupport.factories.CollectionResourceFactory
+import com.boclips.lti.v1p1.testsupport.factories.VideoResourceFactory
+import com.boclips.videos.api.response.video.VideoResource
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.CoreMatchers.nullValue
 import org.junit.jupiter.api.BeforeEach
@@ -54,21 +52,17 @@ class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIn
             .andExpect(status().isNotFound)
     }
 
-    lateinit var videoIdString: String
     lateinit var video: Video
 
-    override fun resourcePath() = interpolateResourcePath(videoIdString)
+    override fun resourcePath() = interpolateResourcePath(video.videoId.value)
 
     override fun interpolateResourcePath(resourceId: String?) = "/v1p1/videos/$resourceId"
 
     @BeforeEach
     fun createVideo() {
-        videoServiceClient.apply {
-            val videoId =
-                videoServiceClient.createVideo(CreateVideoRequestFactory.create(contentProviderId = contentProviderId))
-            videoIdString = videoId.value
-            video = videoServiceClient.get(videoId)
-        }
+        val resource = VideoResourceFactory.sample()
+        videosClient.add(resource)
+        video = VideoResourceConverter.toVideo(resource)
     }
 }
 
@@ -91,7 +85,7 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
                             .filterIsInstance(VideoMetadata::class.java)
                             .map { videoMetadata -> videoMetadata.videoPageUrl.substringAfterLast("/") }
                     )
-                        .containsExactly(firstVideoId.value, secondVideoId.value, thirdVideoId.value)
+                        .containsExactly(firstVideo.id, secondVideo.id, thirdVideo.id)
                 }
             }
     }
@@ -110,7 +104,7 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
             .andExpect(status().isOk)
             .andExpect(model().attribute("customLogoUrl", testLogoUri))
 
-        mvc.perform(get("/v1p1/videos/${firstVideoId.value}").session(session))
+        mvc.perform(get("/v1p1/videos/${firstVideo.id}").session(session))
             .andExpect(status().isOk)
             .andExpect(model().attribute("customLogoUrl", testLogoUri))
     }
@@ -123,9 +117,9 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
             .andExpect(status().isNotFound)
     }
 
-    lateinit var firstVideoId: VideoId
-    lateinit var secondVideoId: VideoId
-    lateinit var thirdVideoId: VideoId
+    lateinit var firstVideo: VideoResource
+    lateinit var secondVideo: VideoResource
+    lateinit var thirdVideo: VideoResource
 
     val collectionId = "87064254edd642a8a4c2e22a"
     val collectionTitle = "first collection"
@@ -136,37 +130,17 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
 
     @BeforeEach
     fun populateCollection() {
-        videoServiceClient.apply {
-            firstVideoId =
-                videoServiceClient.createVideo(CreateVideoRequestFactory.create(
-                    contentProviderId = contentProviderId,
-                    contentProviderVideoId = "First Video"
-                )
-            )
-            secondVideoId =
-                videoServiceClient.createVideo(CreateVideoRequestFactory.create(
-                    contentProviderId = contentProviderId,
-                    contentProviderVideoId = "Second Video"
-                )
-            )
-            thirdVideoId =
-                videoServiceClient.createVideo(CreateVideoRequestFactory.create(
-                    contentProviderId = contentProviderId,
-                    contentProviderVideoId = "Third Video"
-                )
-            )
+        firstVideo = videosClient.add(VideoResourceFactory.sample())
+        secondVideo = videosClient.add(VideoResourceFactory.sample())
+        thirdVideo = videosClient.add(VideoResourceFactory.sample())
 
-            val videos = listOf(firstVideoId, secondVideoId, thirdVideoId).map(::get)
-
-            addCollection(
-                Collection.builder()
-                    .collectionId(rawIdToCollectionId(collectionId))
-                    .title(collectionTitle)
-                    .subjects(testSubjects())
-                    .videos(videos)
-                    .build()
+        collectionsClient.add(
+            CollectionResourceFactory.sample(
+                id = collectionId,
+                title = collectionTitle,
+                videos = listOf(firstVideo, secondVideo, thirdVideo)
             )
-        }
+        )
     }
 }
 
@@ -219,24 +193,18 @@ class UserCollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneCon
 
     @BeforeEach
     fun populateCollections() {
-        videoServiceClient.apply {
-            addCollection(
-                Collection.builder()
-                    .collectionId(rawIdToCollectionId(firstCollectionId))
-                    .title("First collection")
-                    .subjects(testSubjects())
-                    .videos(emptyList())
-                    .build()
+        collectionsClient.add(
+            CollectionResourceFactory.sample(
+                id = firstCollectionId,
+                title = "First collection"
             )
-            addCollection(
-                Collection.builder()
-                    .collectionId(rawIdToCollectionId(secondCollectionId))
-                    .title("Second collection")
-                    .subjects(testSubjects())
-                    .videos(emptyList())
-                    .build()
+        )
+        collectionsClient.add(
+            CollectionResourceFactory.sample(
+                id = secondCollectionId,
+                title = "Second collection"
             )
-        }
+        )
     }
 }
 
@@ -353,17 +321,6 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
     abstract fun interpolateResourcePath(resourceId: String? = null): String
 
     val invalidResourceId = "000000000000000000000000"
-    lateinit var contentProviderId: String
-
-    @BeforeEach
-    fun clearVideoServiceClient() {
-        videoServiceClient.clear()
-        contentProviderId = videoServiceClient.createContentPartner(
-            CreateContentPartnerRequest.builder()
-                .name("ted")
-                .build()
-        ).value
-    }
 
     protected fun executeLtiLaunch(customParameters: Map<String, String> = emptyMap()): HttpSession? {
         return mvc.perform(
@@ -402,11 +359,4 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
 
         return LinkedMultiValueMap(signedParameters.mapValues { listOf(it.value) })
     }
-
-    protected fun testSubjects() = setOf(
-        Subject.builder()
-            .id(SubjectId("Math"))
-            .name("Math")
-            .build()
-    )
 }
