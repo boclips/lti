@@ -18,7 +18,8 @@ class VideoServiceClientConfig {
             apiUrl = properties.baseUrl,
             tokenFactory = ServiceAccountTokenFactory(
                 ServiceAccountCredentials(
-                    properties.accessTokenUri,
+                    // TODO Use token URI?
+                    properties.baseUrl,
                     properties.clientId,
                     properties.clientSecret
                 )
@@ -32,7 +33,8 @@ class VideoServiceClientConfig {
             apiUrl = properties.baseUrl,
             tokenFactory = ServiceAccountTokenFactory(
                 ServiceAccountCredentials(
-                    properties.accessTokenUri,
+                    // TODO Use token URI?
+                    properties.baseUrl,
                     properties.clientId,
                     properties.clientSecret
                 )
