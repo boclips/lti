@@ -2,32 +2,33 @@ package com.boclips.lti.v1p1.presentation.service
 
 import com.boclips.lti.v1p1.application.service.UriComponentsBuilderFactory
 import com.boclips.lti.v1p1.presentation.model.CollectionMetadata
-import com.boclips.videos.service.client.Collection
-import com.boclips.videos.service.client.Video
+import com.boclips.videos.api.response.collection.CollectionResource
+import com.boclips.videos.api.response.video.VideoResource
 import org.springframework.stereotype.Service
 
 @Service
 class ToCollectionMetadata(private val uriComponentsBuilderFactory: UriComponentsBuilderFactory) {
-    operator fun invoke(collection: Collection): CollectionMetadata {
+    operator fun invoke(collection: CollectionResource): CollectionMetadata {
         return CollectionMetadata(
-            collection.title,
+            collection.title!!,
             uriComponentsBuilderFactory.getInstance()
                 .replacePath(
-                "/v1p1/collections/${collection.collectionId.uri.toString().substringAfterLast("/")}")
+                    "/v1p1/collections/${collection.id}"
+                )
                 .toUriString(),
             getVideosCountLabel(collection.videos),
             getPreviewThumbnails(collection.videos)
         )
     }
 
-    private fun getVideosCountLabel(videos: List<Video>): String {
+    private fun getVideosCountLabel(videos: List<VideoResource>): String {
         return when {
             videos.size == 1 -> "1 video"
             else -> "${videos.size} videos"
         }
     }
 
-    private fun getPreviewThumbnails(videos: List<Video>): List<String?> {
+    private fun getPreviewThumbnails(videos: List<VideoResource>): List<String?> {
         val thumbnails = videos.mapNotNull { it.playback?.thumbnailUrl }
 
         return when {

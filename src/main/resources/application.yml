@@ -2,6 +2,7 @@ logging:
   config: "classpath:logback.xml"
 
 video-service:
+  base-url:
   access-token-uri:
   client-id:
   client-secret:

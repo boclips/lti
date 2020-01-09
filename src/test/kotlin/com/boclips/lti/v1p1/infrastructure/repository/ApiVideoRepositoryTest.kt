@@ -26,7 +26,7 @@ import java.net.URI
 private class ApiVideoRepositoryTest : AbstractSpringIntegrationTest() {
     @Test
     fun `rethrows other HttpClientErrorException instances`() {
-        whenever(videoServiceClient.get(videoId)).thenThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST))
+        whenever(videosClient.get(videoId)).thenThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST))
 
         assertThatThrownBy { videoRepository.get(videoIdString) }
             .isInstanceOf(HttpClientErrorException::class.java)
@@ -36,7 +36,7 @@ private class ApiVideoRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `retries non-404 errors up to 3 times and returns requested video`(@Mock video: Video) {
-        whenever(videoServiceClient.get(videoId))
+        whenever(videosClient.get(videoId))
             .thenThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST))
             .thenThrow(RuntimeException("Something's gone completely wrong"))
             .thenReturn(video)
@@ -46,7 +46,7 @@ private class ApiVideoRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `does not retry 404 errors and throws a ResourceNotFoundException`(@Mock video: Video) {
-        whenever(videoServiceClient.get(videoId))
+        whenever(videosClient.get(videoId))
             .thenThrow(HttpClientErrorException(HttpStatus.NOT_FOUND))
             .thenReturn(video)
 
@@ -58,11 +58,11 @@ private class ApiVideoRepositoryTest : AbstractSpringIntegrationTest() {
     private val videoIdString = "87064254edd642a8a4c2e22a"
     private val videoId = VideoId(URI("https://video-service.com/videos/$videoIdString"))
 
-    @MockBean(name = "videoServiceClient")
-    override lateinit var videoServiceClient: FakeClient
+    @MockBean(name = "videosClient")
+    override lateinit var videosClient: FakeClient
 
     @BeforeEach
     fun setup() {
-        whenever(videoServiceClient.rawIdToVideoId(videoIdString)).thenReturn(videoId)
+        whenever(videosClient.rawIdToVideoId(videoIdString)).thenReturn(videoId)
     }
 }

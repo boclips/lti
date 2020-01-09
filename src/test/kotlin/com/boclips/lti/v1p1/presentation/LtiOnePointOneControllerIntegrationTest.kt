@@ -63,11 +63,11 @@ class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIn
 
     @BeforeEach
     fun createVideo() {
-        videoServiceClient.apply {
+        videosClient.apply {
             val videoId =
-                videoServiceClient.createVideo(CreateVideoRequestFactory.create(contentProviderId = contentProviderId))
+                videosClient.createVideo(CreateVideoRequestFactory.create(contentProviderId = contentProviderId))
             videoIdString = videoId.value
-            video = videoServiceClient.get(videoId)
+            video = videosClient.get(videoId)
         }
     }
 }
@@ -136,21 +136,21 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
 
     @BeforeEach
     fun populateCollection() {
-        videoServiceClient.apply {
+        videosClient.apply {
             firstVideoId =
-                videoServiceClient.createVideo(CreateVideoRequestFactory.create(
+                videosClient.createVideo(CreateVideoRequestFactory.create(
                     contentProviderId = contentProviderId,
                     contentProviderVideoId = "First Video"
                 )
             )
             secondVideoId =
-                videoServiceClient.createVideo(CreateVideoRequestFactory.create(
+                videosClient.createVideo(CreateVideoRequestFactory.create(
                     contentProviderId = contentProviderId,
                     contentProviderVideoId = "Second Video"
                 )
             )
             thirdVideoId =
-                videoServiceClient.createVideo(CreateVideoRequestFactory.create(
+                videosClient.createVideo(CreateVideoRequestFactory.create(
                     contentProviderId = contentProviderId,
                     contentProviderVideoId = "Third Video"
                 )
@@ -219,7 +219,7 @@ class UserCollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneCon
 
     @BeforeEach
     fun populateCollections() {
-        videoServiceClient.apply {
+        videosClient.apply {
             addCollection(
                 Collection.builder()
                     .collectionId(rawIdToCollectionId(firstCollectionId))
@@ -357,8 +357,8 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
 
     @BeforeEach
     fun clearVideoServiceClient() {
-        videoServiceClient.clear()
-        contentProviderId = videoServiceClient.createContentPartner(
+        videosClient.clear()
+        contentProviderId = videosClient.createContentPartner(
             CreateContentPartnerRequest.builder()
                 .name("ted")
                 .build()

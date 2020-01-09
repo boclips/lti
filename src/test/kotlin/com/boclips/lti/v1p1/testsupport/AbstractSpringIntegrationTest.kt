@@ -5,6 +5,8 @@ import com.boclips.lti.v1p1.configuration.properties.LtiProperties
 import com.boclips.lti.v1p1.domain.repository.CollectionRepository
 import com.boclips.lti.v1p1.domain.repository.VideoRepository
 import com.boclips.lti.v1p1.presentation.service.ToVideoMetadata
+import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
+import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
 import com.boclips.videos.service.client.internal.FakeClient
 import com.boclips.videos.service.client.spring.MockVideoServiceClient
 import org.imsglobal.lti.launch.LtiOauthSigner
@@ -20,7 +22,6 @@ import org.springframework.test.web.servlet.MockMvc
 @ExtendWith(SpringExtension::class)
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-@MockVideoServiceClient
 @AutoConfigureMockMvc
 @TestPropertySource(
     properties = [
@@ -37,7 +38,10 @@ abstract class AbstractSpringIntegrationTest {
     protected lateinit var ltiProperties: LtiProperties
 
     @Autowired
-    protected lateinit var videoServiceClient: FakeClient
+    protected lateinit var videosClient: VideosClientFake
+
+    @Autowired
+    protected lateinit var collectionsClient: CollectionsClientFake
 
     @Autowired
     protected lateinit var toVideoMetadata: ToVideoMetadata

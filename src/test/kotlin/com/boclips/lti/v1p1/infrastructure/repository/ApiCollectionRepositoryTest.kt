@@ -1,10 +1,8 @@
 package com.boclips.lti.v1p1.infrastructure.repository
 
-import com.boclips.lti.v1p1.domain.exception.ResourceNotFoundException
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
-import com.boclips.videos.service.client.Collection
-import com.boclips.videos.service.client.CollectionId
-import com.boclips.videos.service.client.internal.FakeClient
+import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
+import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -19,25 +17,14 @@ import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpStatus
 import org.springframework.web.client.HttpClientErrorException
-import java.net.URI
 
 @ExtendWith(MockitoExtension::class)
 @EnableAutoConfiguration(exclude = [MongoAutoConfiguration::class, MongoDataAutoConfiguration::class])
 class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
-    @Test
-    fun `get does not retry 404 errors and throws a ResourceNotFoundException`(@Mock collection: Collection) {
-        whenever(videoServiceClient.getDetailed(collectionId))
-            .thenThrow(HttpClientErrorException(HttpStatus.NOT_FOUND))
-            .thenReturn(collection)
-
-        assertThatThrownBy { collectionRepository.get(collectionIdString) }
-            .isInstanceOf(ResourceNotFoundException::class.java)
-            .hasMessageContaining(collectionIdString)
-    }
 
     @Test
     fun `get rethrows other HttpClientErrorException instances`() {
-        whenever(videoServiceClient.getDetailed(collectionId)).thenThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST))
+        whenever(videosClient.getDetailed(collectionId)).thenThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST))
 
         assertThatThrownBy { collectionRepository.get(collectionIdString) }
             .isInstanceOf(HttpClientErrorException::class.java)
@@ -47,7 +34,7 @@ class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `get retries non-404 errors up to 3 times and returns requested collection`(@Mock collection: Collection) {
-        whenever(videoServiceClient.getDetailed(collectionId))
+        whenever(videosClient.getDetailed(collectionId))
             .thenThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST))
             .thenThrow(RuntimeException("Something's gone completely wrong"))
             .thenReturn(collection)
@@ -57,7 +44,7 @@ class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `getMyCollections returns an empty list if no collections are found for specified owner`() {
-        whenever(videoServiceClient.collectionsDetailed)
+        whenever(videosClient.collectionsDetailed)
             .thenReturn(emptyList())
 
         assertThat(collectionRepository.getMyCollections()).isEmpty()
@@ -68,7 +55,7 @@ class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
         @Mock firstCollection: Collection,
         @Mock secondCollection: Collection
     ) {
-        whenever(videoServiceClient.collectionsDetailed)
+        whenever(videosClient.collectionsDetailed)
             .thenReturn(listOf(firstCollection, secondCollection))
 
         assertThat(collectionRepository.getMyCollections()).containsExactlyInAnyOrder(
@@ -79,7 +66,7 @@ class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `getMyCollections rethrows other HttpClientErrorException instances`() {
-        whenever(videoServiceClient.collectionsDetailed)
+        whenever(videosClient.collectionsDetailed)
             .thenThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST))
 
         assertThatThrownBy { collectionRepository.getMyCollections() }
@@ -90,7 +77,7 @@ class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `getMyCollections retries non-404 errors up to 3 times and returns found collections`(@Mock collection: Collection) {
-        whenever(videoServiceClient.collectionsDetailed)
+        whenever(videosClient.collectionsDetailed)
             .thenThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST))
             .thenThrow(RuntimeException("Something's gone completely wrong"))
             .thenReturn(listOf(collection))
@@ -99,13 +86,16 @@ class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
     }
 
     private final val collectionIdString = "87064254edd642a8a4c2e22a"
-    private val collectionId = CollectionId(URI("https://video-service.com/collections/$collectionIdString"))
+    private val collectionId = "123"
 
-    @MockBean(name = "videoServiceClient")
-    override lateinit var videoServiceClient: FakeClient
+    @MockBean(name = "videosClient")
+    override lateinit var videosClient: VideosClientFake
+
+    @MockBean(name = "collectionsClient")
+    override lateinit var collectionsClient: CollectionsClientFake
 
     @BeforeEach
     fun setup() {
-        whenever(videoServiceClient.rawIdToCollectionId(collectionIdString)).thenReturn(collectionId)
+        whenever(collections.rawIdToCollectionId(collectionIdString)).thenReturn(collectionId)
     }
 }
