@@ -2,7 +2,7 @@ package com.boclips.lti.v1p1.infrastructure.repository
 
 import com.boclips.lti.v1p1.domain.exception.ResourceNotFoundException
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
-import com.boclips.lti.v1p1.testsupport.factories.VideoResourceFactory
+import com.boclips.lti.v1p1.testsupport.factories.VideoResourcesFactory
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Nested
@@ -21,7 +21,7 @@ private class ApiVideoRepositoryTest : AbstractSpringIntegrationTest() {
         @Test
         fun `returns a domain object corresponding to returned resource`() {
             val id = "test-id"
-            val resource = VideoResourceFactory.sample(videoId = id)
+            val resource = VideoResourcesFactory.sampleVideo(videoId = id)
             videosClient.add(resource)
 
             assertThat(videoRepository.get(id)).isEqualTo(VideoResourceConverter.toVideo(resource))

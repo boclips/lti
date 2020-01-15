@@ -8,7 +8,7 @@ import com.boclips.lti.v1p1.presentation.model.CollectionMetadata
 import com.boclips.lti.v1p1.presentation.model.VideoMetadata
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.v1p1.testsupport.factories.CollectionResourceFactory
-import com.boclips.lti.v1p1.testsupport.factories.VideoResourceFactory
+import com.boclips.lti.v1p1.testsupport.factories.VideoResourcesFactory
 import com.boclips.videos.api.response.video.VideoResource
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.CoreMatchers.nullValue
@@ -60,7 +60,7 @@ class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIn
 
     @BeforeEach
     fun createVideo() {
-        val resource = VideoResourceFactory.sample()
+        val resource = VideoResourcesFactory.sampleVideo()
         videosClient.add(resource)
         video = VideoResourceConverter.toVideo(resource)
     }
@@ -130,9 +130,9 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
 
     @BeforeEach
     fun populateCollection() {
-        firstVideo = videosClient.add(VideoResourceFactory.sample())
-        secondVideo = videosClient.add(VideoResourceFactory.sample())
-        thirdVideo = videosClient.add(VideoResourceFactory.sample())
+        firstVideo = videosClient.add(VideoResourcesFactory.sampleVideo())
+        secondVideo = videosClient.add(VideoResourcesFactory.sampleVideo())
+        thirdVideo = videosClient.add(VideoResourcesFactory.sampleVideo())
 
         collectionsClient.add(
             CollectionResourceFactory.sample(
