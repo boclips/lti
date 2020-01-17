@@ -6,6 +6,7 @@ import com.boclips.lti.v1p1.domain.service.AssertHasLtiSession
 import com.boclips.lti.v1p1.domain.service.AssertLaunchRequestIsValid
 import com.boclips.lti.v1p1.domain.service.InitializeLtiSession
 import com.boclips.lti.v1p1.domain.service.InitializeLtiSession.Companion.customLogoHolder
+import com.boclips.lti.v1p1.domain.service.InitializeLtiSession.Companion.userIdHolder
 import com.boclips.lti.v1p1.domain.service.RedirectToRequestedResource
 import com.boclips.lti.v1p1.presentation.service.SortByCollectionTitle
 import com.boclips.lti.v1p1.presentation.service.ToCollectionMetadata
@@ -66,7 +67,8 @@ class LtiOnePointOneController(
                 "customLogoUrl" to session.getAttribute(customLogoHolder),
                 "video" to toVideoMetadata(
                     videoRepository.get(videoId)
-                )
+                ),
+                "userId" to session.getAttribute(userIdHolder)
             )
         )
     }

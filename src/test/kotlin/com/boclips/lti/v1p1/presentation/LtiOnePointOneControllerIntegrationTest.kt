@@ -35,13 +35,15 @@ import javax.servlet.http.HttpSession
 class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIntegrationTest() {
     @Test
     fun `valid video launch establishes an LTI session and resource can be correctly retrieved`() {
-        val session = executeLtiLaunch()
+        val testUserId = "test-user-id"
+        val session = executeLtiLaunch(mapOf(CustomLaunchParams.USER_ID to testUserId))
 
         mvc.perform(get(resourcePath()).session(session as MockHttpSession))
             .andExpect(header().doesNotExist("X-Frame-Options"))
             .andExpect(status().isOk)
             .andExpect(view().name("video"))
             .andExpect(model().attribute("video", toVideoMetadata(video)))
+            .andExpect(model().attribute("userId", testUserId))
     }
 
     @Test
