@@ -1,6 +1,7 @@
 package com.boclips.lti.v1p1.configuration
 
 import com.boclips.lti.v1p1.configuration.properties.VideoServiceProperties
+import feign.FeignException
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
