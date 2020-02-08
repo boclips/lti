@@ -7,11 +7,11 @@ resources:
 commonLabels:
   app: lti
 commonAnnotations:
-  boclips-version: "18"
+  boclips-version: "19"
 images:
 - name: app
   newName: eu.gcr.io/boclips-prod/boclips/lti
-  newTag: "18"
+  newTag: "19"
 patches:
 - path: spread-across-zones.yaml
   target:
