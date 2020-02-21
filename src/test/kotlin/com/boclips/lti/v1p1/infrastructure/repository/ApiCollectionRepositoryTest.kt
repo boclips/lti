@@ -9,12 +9,8 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
-import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
 
 @ExtendWith(MockitoExtension::class)
-@EnableAutoConfiguration(exclude = [MongoAutoConfiguration::class, MongoDataAutoConfiguration::class])
 class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
     @Nested
     inner class FetchingSpecificCollection {

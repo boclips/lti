@@ -102,6 +102,7 @@ dependencies {
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0'
   testImplementation 'org.mockito:mockito-junit-jupiter:2.23.0'
+  testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 }
 
 dependencyManagement {

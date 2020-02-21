@@ -17,14 +17,10 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
-import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.web.client.HttpClientErrorException
 
-@EnableAutoConfiguration(exclude = [MongoAutoConfiguration::class, MongoDataAutoConfiguration::class])
 class VideoServiceAccessTokenProviderTest : AbstractSpringIntegrationTest() {
     @Test
     fun `fetches the token and automatically refreshes after it expires`() {

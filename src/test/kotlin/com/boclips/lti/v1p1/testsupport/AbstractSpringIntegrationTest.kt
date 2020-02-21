@@ -7,7 +7,11 @@ import com.boclips.lti.v1p1.domain.repository.VideoRepository
 import com.boclips.lti.v1p1.presentation.service.ToVideoMetadata
 import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
 import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
+import com.mongodb.MongoClient
+import de.flapdoodle.embed.mongo.MongodProcess
+import mu.KLogging
 import org.imsglobal.lti.launch.LtiOauthSigner
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -52,7 +56,34 @@ abstract class AbstractSpringIntegrationTest {
     @Autowired
     protected lateinit var collectionRepository: CollectionRepository
 
+    @Autowired
+    lateinit var mongoClient: MongoClient
+
     val ltiOauthSigner = LtiOauthSigner()
+
+    companion object : KLogging() {
+        private var mongoProcess: MongodProcess? = null
+
+        @BeforeAll
+        @JvmStatic
+        fun beforeAll() {
+            if (mongoProcess == null) {
+                mongoProcess = TestMongoProcess.process
+            }
+        }
+    }
+
+    @BeforeEach
+    fun clearDatabases() {
+        mongoClient.apply {
+            listDatabaseNames()
+                .filterNot { setOf("admin", "config").contains(it) }
+                .forEach {
+                    println("Dropping $it")
+                    dropDatabase(it)
+                }
+        }
+    }
 
     @BeforeEach
     fun clearFakes() {
