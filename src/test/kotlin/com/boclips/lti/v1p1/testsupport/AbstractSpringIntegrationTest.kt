@@ -57,7 +57,7 @@ abstract class AbstractSpringIntegrationTest {
     protected lateinit var collectionRepository: CollectionRepository
 
     @Autowired
-    lateinit var mongoClient: MongoClient
+    protected lateinit var mongoClient: MongoClient
 
     val ltiOauthSigner = LtiOauthSigner()
 
