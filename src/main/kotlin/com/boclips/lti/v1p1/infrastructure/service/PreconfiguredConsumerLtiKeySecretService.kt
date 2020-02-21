@@ -1,4 +1,4 @@
-package com.boclips.lti.v1p1.domain.service
+package com.boclips.lti.v1p1.infrastructure.service
 
 import com.boclips.lti.v1p1.configuration.properties.LtiProperties
 import org.imsglobal.aspect.LtiKeySecretService

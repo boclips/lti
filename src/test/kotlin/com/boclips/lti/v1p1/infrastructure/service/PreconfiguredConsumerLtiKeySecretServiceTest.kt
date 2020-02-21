@@ -1,4 +1,4 @@
-package com.boclips.lti.v1p1.domain.service
+package com.boclips.lti.v1p1.infrastructure.service
 
 import com.boclips.lti.v1p1.configuration.properties.LtiProperties
 import org.assertj.core.api.Assertions.assertThat
@@ -17,7 +17,10 @@ internal class PreconfiguredConsumerLtiKeySecretServiceTest {
         ltiProperties = LtiProperties()
         ltiProperties.consumer.key = testKey
         ltiProperties.consumer.secret = testSecret
-        service = PreconfiguredConsumerLtiKeySecretService(ltiProperties)
+        service =
+            PreconfiguredConsumerLtiKeySecretService(
+                ltiProperties
+            )
     }
 
     @Test
