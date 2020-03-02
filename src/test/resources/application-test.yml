@@ -5,5 +5,5 @@ boclips:
   lti:
     v1p1:
       consumer:
-        key: 'test-consumer-key'
-        secret: 'test-consumer-secret'
+        key: 'integration-one'
+        secret: 'integration-one-secret'

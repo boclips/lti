@@ -4,6 +4,7 @@ import com.boclips.lti.v1p1.application.service.VideoServiceAccessTokenProviderT
 import com.boclips.lti.v1p1.configuration.properties.LtiProperties
 import com.boclips.lti.v1p1.domain.repository.CollectionRepository
 import com.boclips.lti.v1p1.domain.repository.VideoRepository
+import com.boclips.lti.v1p1.infrastructure.service.VideosClientFactory
 import com.boclips.lti.v1p1.presentation.service.ToVideoMetadata
 import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
 import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
@@ -42,7 +43,7 @@ abstract class AbstractSpringIntegrationTest {
     protected lateinit var ltiProperties: LtiProperties
 
     @Autowired
-    protected lateinit var videosClient: VideosClientFake
+    protected lateinit var videosClientFactory: VideosClientFactory
 
     @Autowired
     protected lateinit var collectionsClient: CollectionsClientFake
@@ -87,7 +88,7 @@ abstract class AbstractSpringIntegrationTest {
 
     @BeforeEach
     fun clearFakes() {
-        videosClient.clear()
+        (videosClientFactory.getClient("integration-one") as VideosClientFake).clear()
         collectionsClient.clear()
     }
 }

@@ -1,7 +1,7 @@
 package com.boclips.lti.v1p1.presentation
 
 import com.boclips.lti.v1p1.domain.exception.LaunchRequestInvalidException
-import com.boclips.lti.v1p1.domain.model.CustomLaunchParams
+import com.boclips.lti.v1p1.domain.model.LaunchParams
 import com.boclips.lti.v1p1.domain.model.Video
 import com.boclips.lti.v1p1.infrastructure.repository.VideoResourceConverter
 import com.boclips.lti.v1p1.presentation.model.CollectionMetadata
@@ -9,6 +9,7 @@ import com.boclips.lti.v1p1.presentation.model.VideoMetadata
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.v1p1.testsupport.factories.CollectionResourceFactory
 import com.boclips.lti.v1p1.testsupport.factories.VideoResourcesFactory
+import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
 import com.boclips.videos.api.response.video.VideoResource
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.CoreMatchers.nullValue
@@ -32,7 +33,7 @@ class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIn
     @Test
     fun `valid video launch establishes an LTI session and resource can be correctly retrieved`() {
         val testUserId = "test-user-id"
-        val session = executeLtiLaunch(mapOf(CustomLaunchParams.USER_ID to testUserId))
+        val session = executeLtiLaunch(mapOf(LaunchParams.Custom.USER_ID to testUserId))
 
         mvc.perform(get(resourcePath()).session(session as MockHttpSession))
             .andExpect(header().doesNotExist("X-Frame-Options"))
@@ -59,7 +60,7 @@ class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIn
     @BeforeEach
     fun createVideo() {
         val resource = VideoResourcesFactory.sampleVideo()
-        videosClient.add(resource)
+        (videosClientFactory.getClient("integration-one") as VideosClientFake).add(resource)
         video = VideoResourceConverter.toVideo(resource)
     }
 }
@@ -93,7 +94,7 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
 
         val session = executeLtiLaunch(
             mapOf(
-                CustomLaunchParams.LOGO to testLogoUri
+                LaunchParams.Custom.LOGO to testLogoUri
             )
         )
 
@@ -127,9 +128,12 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
 
     @BeforeEach
     fun populateCollection() {
-        firstVideo = videosClient.add(VideoResourcesFactory.sampleVideo())
-        secondVideo = videosClient.add(VideoResourcesFactory.sampleVideo())
-        thirdVideo = videosClient.add(VideoResourcesFactory.sampleVideo())
+        firstVideo =
+            (videosClientFactory.getClient("integration-one") as VideosClientFake).add(VideoResourcesFactory.sampleVideo())
+        secondVideo =
+            (videosClientFactory.getClient("integration-one") as VideosClientFake).add(VideoResourcesFactory.sampleVideo())
+        thirdVideo =
+            (videosClientFactory.getClient("integration-one") as VideosClientFake).add(VideoResourcesFactory.sampleVideo())
 
         collectionsClient.add(
             CollectionResourceFactory.sample(
@@ -169,7 +173,7 @@ class UserCollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneCon
 
         val session = executeLtiLaunch(
             mapOf(
-                CustomLaunchParams.LOGO to testLogoUri
+                LaunchParams.Custom.LOGO to testLogoUri
             )
         )
 
@@ -282,7 +286,7 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
 
         val session = executeLtiLaunch(
             mapOf(
-                CustomLaunchParams.LOGO to testLogoUri
+                LaunchParams.Custom.LOGO to testLogoUri
             )
         )
 
@@ -304,7 +308,7 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
     fun `does not set partner logo on response model if empty value is provided in LTI launch`() {
         val session = executeLtiLaunch(
             mapOf(
-                CustomLaunchParams.LOGO to ""
+                LaunchParams.Custom.LOGO to ""
             )
         )
 
