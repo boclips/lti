@@ -1,5 +1,6 @@
 package com.boclips.lti.v1p1.presentation
 
+import com.boclips.lti.v1p1.domain.model.VideoRequest
 import com.boclips.lti.v1p1.domain.repository.CollectionRepository
 import com.boclips.lti.v1p1.domain.repository.VideoRepository
 import com.boclips.lti.v1p1.domain.service.AssertHasLtiSession
@@ -66,7 +67,7 @@ class LtiOnePointOneController(
             "video", mapOf(
                 "customLogoUrl" to session.getAttribute(customLogoHolder),
                 "video" to toVideoMetadata(
-                    videoRepository.get(videoId)
+                    videoRepository.get(VideoRequest(videoId))
                 ),
                 "userId" to session.getAttribute(userIdHolder)
             )
