@@ -9,6 +9,7 @@ import com.boclips.lti.v1p1.presentation.model.VideoMetadata
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.v1p1.testsupport.factories.CollectionResourceFactory
 import com.boclips.lti.v1p1.testsupport.factories.VideoResourcesFactory
+import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
 import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
 import com.boclips.videos.api.response.video.VideoResource
 import org.assertj.core.api.Assertions.assertThat
@@ -135,7 +136,7 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
         thirdVideo =
             (videosClientFactory.getClient("integration-one") as VideosClientFake).add(VideoResourcesFactory.sampleVideo())
 
-        collectionsClient.add(
+        (collectionsClientFactory.getClient("integration-one") as CollectionsClientFake).add(
             CollectionResourceFactory.sample(
                 id = collectionId,
                 title = collectionTitle,
@@ -193,13 +194,13 @@ class UserCollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneCon
 
     @BeforeEach
     fun populateCollections() {
-        collectionsClient.add(
+        (collectionsClientFactory.getClient("integration-one") as CollectionsClientFake).add(
             CollectionResourceFactory.sample(
                 id = firstCollectionId,
                 title = "First collection"
             )
         )
-        collectionsClient.add(
+            (collectionsClientFactory.getClient("integration-one") as CollectionsClientFake).add(
             CollectionResourceFactory.sample(
                 id = secondCollectionId,
                 title = "Second collection"

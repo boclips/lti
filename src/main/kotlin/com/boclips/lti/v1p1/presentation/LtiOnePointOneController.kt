@@ -1,6 +1,7 @@
 package com.boclips.lti.v1p1.presentation
 
 import com.boclips.lti.v1p1.domain.model.CollectionRequest
+import com.boclips.lti.v1p1.domain.model.CollectionsRequest
 import com.boclips.lti.v1p1.domain.model.VideoRequest
 import com.boclips.lti.v1p1.domain.repository.CollectionRepository
 import com.boclips.lti.v1p1.domain.repository.VideoRepository
@@ -69,7 +70,12 @@ class LtiOnePointOneController(
             "video", mapOf(
                 "customLogoUrl" to session.getAttribute(customLogoHolder),
                 "video" to toVideoMetadata(
-                    videoRepository.get(VideoRequest(videoId = videoId, integrationId = session.getAttribute(consumerKeyHolder) as String))
+                    videoRepository.get(
+                        VideoRequest(
+                            videoId = videoId,
+                            integrationId = session.getAttribute(consumerKeyHolder) as String
+                        )
+                    )
                 ),
                 "userId" to session.getAttribute(userIdHolder)
             )
@@ -80,7 +86,12 @@ class LtiOnePointOneController(
     fun getCollection(session: HttpSession, @PathVariable("collectionId") collectionId: String): ModelAndView {
         assertHasLtiSession(session)
 
-        val collection = collectionRepository.get(CollectionRequest(collectionId = collectionId))
+        val collection = collectionRepository.get(
+            CollectionRequest(
+                collectionId = collectionId,
+                integrationId = session.getAttribute(consumerKeyHolder) as String
+            )
+        )
 
         return ModelAndView(
             "collection", mapOf(
@@ -95,7 +106,11 @@ class LtiOnePointOneController(
     fun getUserCollections(session: HttpSession): ModelAndView {
         assertHasLtiSession(session)
 
-        val userCollections = collectionRepository.getMyCollections()
+        val userCollections = collectionRepository.getMyCollections(
+            CollectionsRequest(
+                integrationId = session.getAttribute(consumerKeyHolder) as String
+            )
+        )
 
         return ModelAndView(
             "userCollections", mapOf(
