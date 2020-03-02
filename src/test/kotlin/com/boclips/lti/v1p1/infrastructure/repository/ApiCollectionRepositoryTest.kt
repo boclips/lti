@@ -1,6 +1,7 @@
 package com.boclips.lti.v1p1.infrastructure.repository
 
 import com.boclips.lti.v1p1.domain.exception.ResourceNotFoundException
+import com.boclips.lti.v1p1.domain.model.CollectionRequest
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.v1p1.testsupport.factories.CollectionResourceFactory
 import org.assertj.core.api.Assertions.assertThat
@@ -20,12 +21,14 @@ class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
             val resource = CollectionResourceFactory.sample(id = id)
             collectionsClient.add(resource)
 
-            assertThat(collectionRepository.get(id)).isEqualTo(CollectionResourceConverter.toCollection(resource))
+            assertThat(collectionRepository.get(CollectionRequest(collectionId = id))).isEqualTo(
+                CollectionResourceConverter.toCollection(resource)
+            )
         }
 
         @Test
         fun `throw a not found exception when client returns a 404`() {
-            assertThatThrownBy { collectionRepository.get("123") }
+            assertThatThrownBy { collectionRepository.get(CollectionRequest(collectionId = "123")) }
                 .isInstanceOf(ResourceNotFoundException::class.java)
                 .hasMessage("Collection with id 123 not found")
         }

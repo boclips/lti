@@ -1,5 +1,6 @@
 package com.boclips.lti.v1p1.presentation
 
+import com.boclips.lti.v1p1.domain.model.CollectionRequest
 import com.boclips.lti.v1p1.domain.model.VideoRequest
 import com.boclips.lti.v1p1.domain.repository.CollectionRepository
 import com.boclips.lti.v1p1.domain.repository.VideoRepository
@@ -79,7 +80,7 @@ class LtiOnePointOneController(
     fun getCollection(session: HttpSession, @PathVariable("collectionId") collectionId: String): ModelAndView {
         assertHasLtiSession(session)
 
-        val collection = collectionRepository.get(collectionId)
+        val collection = collectionRepository.get(CollectionRequest(collectionId = collectionId))
 
         return ModelAndView(
             "collection", mapOf(
