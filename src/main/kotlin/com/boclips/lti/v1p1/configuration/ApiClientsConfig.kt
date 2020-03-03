@@ -2,6 +2,7 @@ package com.boclips.lti.v1p1.configuration
 
 import com.boclips.lti.v1p1.configuration.properties.LtiProperties
 import com.boclips.lti.v1p1.configuration.properties.VideoServiceProperties
+import com.boclips.lti.v1p1.infrastructure.repository.MongoIntegrationDocumentRepository
 import com.boclips.lti.v1p1.infrastructure.service.CollectionsClientFactory
 import com.boclips.lti.v1p1.infrastructure.service.VideosClientFactory
 import com.boclips.videos.api.httpclient.CollectionsClient
@@ -14,11 +15,16 @@ import org.springframework.context.annotation.Profile
 
 @Profile("!test")
 @Configuration
-class VideoServiceClientConfig {
+class ApiClientsConfig {
     @Bean
-    fun videosClientFactory(properties: VideoServiceProperties, ltiProperties: LtiProperties): VideosClientFactory {
+    fun videosClientFactory(
+        properties: VideoServiceProperties,
+        ltiProperties: LtiProperties,
+        videoServiceProperties: VideoServiceProperties,
+        integrationDocumentRepository: MongoIntegrationDocumentRepository
+    ): VideosClientFactory {
         return VideosClientFactory(
-            VideosClient.create(
+            preconfiguredVideosClient = VideosClient.create(
                 apiUrl = properties.baseUrl,
                 tokenFactory = ServiceAccountTokenFactory(
                     ServiceAccountCredentials(
@@ -29,14 +35,21 @@ class VideoServiceClientConfig {
                     )
                 )
             ),
-            ltiProperties
+            ltiProperties = ltiProperties,
+            videoServiceProperties = videoServiceProperties,
+            integrationDocumentRepository = integrationDocumentRepository
         )
     }
 
     @Bean
-    fun collectionsClientFactory(properties: VideoServiceProperties, ltiProperties: LtiProperties): CollectionsClientFactory {
+    fun collectionsClientFactory(
+        properties: VideoServiceProperties,
+        ltiProperties: LtiProperties,
+        videoServiceProperties: VideoServiceProperties,
+        integrationDocumentRepository: MongoIntegrationDocumentRepository
+    ): CollectionsClientFactory {
         return CollectionsClientFactory(
-            CollectionsClient.create(
+            preconfiguredCollectionsClient = CollectionsClient.create(
                 apiUrl = properties.baseUrl,
                 tokenFactory = ServiceAccountTokenFactory(
                     ServiceAccountCredentials(
@@ -47,7 +60,9 @@ class VideoServiceClientConfig {
                     )
                 )
             ),
-            ltiProperties
+            ltiProperties = ltiProperties,
+            videoServiceProperties = videoServiceProperties,
+            integrationDocumentRepository = integrationDocumentRepository
         )
     }
 }
