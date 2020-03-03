@@ -200,7 +200,7 @@ class UserCollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneCon
                 title = "First collection"
             )
         )
-            (collectionsClientFactory.getClient("integration-one") as CollectionsClientFake).add(
+        (collectionsClientFactory.getClient("integration-one") as CollectionsClientFake).add(
             CollectionResourceFactory.sample(
                 id = secondCollectionId,
                 title = "Second collection"

@@ -20,12 +20,11 @@ class FakeClientsConfig {
         videoServiceProperties: VideoServiceProperties,
         integrationDocumentRepository: MongoIntegrationDocumentRepository
     ): VideosClientFactory {
-        return VideosClientFactory(
-            preconfiguredVideosClient = VideosClientFake(),
-            ltiProperties = ltiProperties,
-            videoServiceProperties = videoServiceProperties,
-            integrationDocumentRepository = integrationDocumentRepository
-        )
+        return object : VideosClientFactory {
+            private val clientsMap: MutableMap<String, VideosClientFake> = HashMap()
+
+            override fun getClient(integrationId: String) = clientsMap.getOrPut(integrationId, { VideosClientFake() })
+        }
     }
 
     @Bean
@@ -34,11 +33,11 @@ class FakeClientsConfig {
         videoServiceProperties: VideoServiceProperties,
         integrationDocumentRepository: MongoIntegrationDocumentRepository
     ): CollectionsClientFactory {
-        return CollectionsClientFactory(
-            preconfiguredCollectionsClient = CollectionsClientFake(),
-            ltiProperties = ltiProperties,
-            videoServiceProperties = videoServiceProperties,
-            integrationDocumentRepository = integrationDocumentRepository
-        )
+        return object : CollectionsClientFactory {
+            private val clientsMap: MutableMap<String, CollectionsClientFake> = HashMap()
+
+            override fun getClient(integrationId: String) =
+                clientsMap.getOrPut(integrationId, { CollectionsClientFake() })
+        }
     }
 }

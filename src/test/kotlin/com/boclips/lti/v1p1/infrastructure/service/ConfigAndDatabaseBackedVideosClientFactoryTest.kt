@@ -5,8 +5,8 @@ import com.boclips.lti.v1p1.configuration.properties.VideoServiceProperties
 import com.boclips.lti.v1p1.infrastructure.model.IntegrationDocument
 import com.boclips.lti.v1p1.infrastructure.model.exception.ClientNotFoundException
 import com.boclips.lti.v1p1.infrastructure.repository.MongoIntegrationDocumentRepository
-import com.boclips.videos.api.httpclient.CollectionsClient
-import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
+import com.boclips.videos.api.httpclient.VideosClient
+import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.bson.types.ObjectId
@@ -18,17 +18,16 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-class CollectionsClientFactoryTest {
-    private lateinit var preconfiguredCollectionsClient: CollectionsClient
-    private lateinit var integrationDocumentRepository: MongoIntegrationDocumentRepository
+class ConfigAndDatabaseBackedVideosClientFactoryTest {
+    private lateinit var preconfiguredVideosClient: VideosClient
+    private lateinit var mongoIntegrationDocumentRepository: MongoIntegrationDocumentRepository
     private lateinit var ltiProperties: LtiProperties
     private lateinit var videoServiceProperties: VideoServiceProperties
-    private lateinit var factory: CollectionsClientFactory
+    private lateinit var factory: ConfigAndDatabaseBackedVideosClientFactory
 
     @BeforeEach
-    fun setupCollectionsClientFactory(@Mock integrationDocumentRepository: MongoIntegrationDocumentRepository) {
-        preconfiguredCollectionsClient = CollectionsClientFake()
-        this.integrationDocumentRepository = integrationDocumentRepository
+    fun setupVideosClientFactory(@Mock mongoIntegrationDocumentRepository: MongoIntegrationDocumentRepository) {
+        preconfiguredVideosClient = VideosClientFake()
         ltiProperties = LtiProperties().apply {
             consumer.key = "pho"
             consumer.secret = "a secret ingredient"
@@ -36,37 +35,38 @@ class CollectionsClientFactoryTest {
         videoServiceProperties = VideoServiceProperties().apply {
             baseUrl = "https://api.com/"
         }
+        this.mongoIntegrationDocumentRepository = mongoIntegrationDocumentRepository
 
-        factory = CollectionsClientFactory(
-            preconfiguredCollectionsClient = preconfiguredCollectionsClient,
+        factory = ConfigAndDatabaseBackedVideosClientFactory(
+            preconfiguredVideosClient = preconfiguredVideosClient,
             ltiProperties = ltiProperties,
             videoServiceProperties = videoServiceProperties,
-            integrationDocumentRepository = integrationDocumentRepository
+            integrationDocumentRepository = this.mongoIntegrationDocumentRepository
         )
     }
 
     @Test
-    fun `returns the preconfigured client if it matches the preconfigured consumer`() {
-        val returnedCollectionsClient = factory.getClient(ltiProperties.consumer.key)
+    fun `returns the preconfigured VideosClient for the preconfigured consumer key`() {
+        val returnedVideosClient = factory.getClient(ltiProperties.consumer.key)
 
-        assertThat(returnedCollectionsClient).isEqualTo(preconfiguredCollectionsClient)
+        assertThat(returnedVideosClient).isEqualTo(preconfiguredVideosClient)
     }
 
     @Test
-    fun `configures the client through a database when preconfigured key does not match`() {
+    fun `looks the client configuration up in the database when preconfigured key does not match`() {
         val integrationDocument = IntegrationDocument(
             id = ObjectId(),
             integrationId = "miso",
             clientId = "super",
             clientSecret = "secret"
         )
-        whenever(integrationDocumentRepository.findOneByIntegrationId("miso")).thenReturn(integrationDocument)
+        whenever(mongoIntegrationDocumentRepository.findOneByIntegrationId("miso")).thenReturn(integrationDocument)
 
-        val returnedCollectionsClient = factory.getClient("miso")
+        val returnedVideosClient = factory.getClient("miso")
 
-        assertThat(returnedCollectionsClient)
+        assertThat(returnedVideosClient)
             .isNotNull()
-            .isNotEqualTo(preconfiguredCollectionsClient)
+            .isNotEqualTo(preconfiguredVideosClient)
     }
 
     @Test

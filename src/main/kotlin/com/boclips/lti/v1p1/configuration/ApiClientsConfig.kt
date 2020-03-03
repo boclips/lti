@@ -4,6 +4,8 @@ import com.boclips.lti.v1p1.configuration.properties.LtiProperties
 import com.boclips.lti.v1p1.configuration.properties.VideoServiceProperties
 import com.boclips.lti.v1p1.infrastructure.repository.MongoIntegrationDocumentRepository
 import com.boclips.lti.v1p1.infrastructure.service.CollectionsClientFactory
+import com.boclips.lti.v1p1.infrastructure.service.ConfigAndDatabaseBackedCollectionsClientFactory
+import com.boclips.lti.v1p1.infrastructure.service.ConfigAndDatabaseBackedVideosClientFactory
 import com.boclips.lti.v1p1.infrastructure.service.VideosClientFactory
 import com.boclips.videos.api.httpclient.CollectionsClient
 import com.boclips.videos.api.httpclient.VideosClient
@@ -23,7 +25,7 @@ class ApiClientsConfig {
         videoServiceProperties: VideoServiceProperties,
         integrationDocumentRepository: MongoIntegrationDocumentRepository
     ): VideosClientFactory {
-        return VideosClientFactory(
+        return ConfigAndDatabaseBackedVideosClientFactory(
             preconfiguredVideosClient = VideosClient.create(
                 apiUrl = properties.baseUrl,
                 tokenFactory = ServiceAccountTokenFactory(
@@ -48,7 +50,7 @@ class ApiClientsConfig {
         videoServiceProperties: VideoServiceProperties,
         integrationDocumentRepository: MongoIntegrationDocumentRepository
     ): CollectionsClientFactory {
-        return CollectionsClientFactory(
+        return ConfigAndDatabaseBackedCollectionsClientFactory(
             preconfiguredCollectionsClient = CollectionsClient.create(
                 apiUrl = properties.baseUrl,
                 tokenFactory = ServiceAccountTokenFactory(
