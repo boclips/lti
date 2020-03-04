@@ -5,3 +5,11 @@ spring:
   mvc:
     favicon:
       enabled: false
+
+fixtures:
+  ltiOnePointOne:
+    consumerKey:
+    consumerSecret:
+  videosClient:
+    id:
+    secret:
