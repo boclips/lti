@@ -1,6 +1,6 @@
 boclips:
   api:
-    baseUrl: 'https://api.testing-boclips.com/v1'
+    baseUrl: 'https://api.testing-boclips.com'
     tokenUrl: 'https://api.testing-boclips.com/v1/token'
 
 keycloak:
