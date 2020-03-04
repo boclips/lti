@@ -1,3 +1,7 @@
+boclips:
+  api:
+    baseUrl: 'https://api.boclips.com/v1'
+
 keycloak:
   configurationFile: 'classpath:keycloak-production.json'
 

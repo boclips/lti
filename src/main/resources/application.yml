@@ -1,6 +1,2 @@
 logging:
   config: "classpath:logback.xml"
-
-boclips:
-  api:
-    baseUrl:
