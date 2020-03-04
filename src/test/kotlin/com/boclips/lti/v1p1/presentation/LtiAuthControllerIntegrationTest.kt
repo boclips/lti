@@ -36,7 +36,7 @@ class LtiAuthControllerIntegrationTest : AbstractSpringIntegrationTest() {
 
     @BeforeEach
     fun setup() {
-        whenever(videoServiceAccessTokenProvider.getAccessToken()).thenReturn("test-auth-token")
+        whenever(videoServiceAccessTokenProvider.getAccessToken(LtiTestSession.TEST_CONSUMER_KEY)).thenReturn("test-auth-token")
     }
 
     @MockBean(name = "videoServiceAccessTokenProvider")

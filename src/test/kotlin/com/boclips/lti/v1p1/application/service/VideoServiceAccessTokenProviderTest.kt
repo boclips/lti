@@ -1,6 +1,6 @@
 package com.boclips.lti.v1p1.application.service
 
-import com.boclips.lti.v1p1.configuration.properties.VideoServiceProperties
+import com.boclips.lti.v1p1.infrastructure.model.IntegrationDocument
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
@@ -13,8 +13,10 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.bson.types.ObjectId
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
@@ -22,13 +24,29 @@ import org.springframework.http.MediaType
 import org.springframework.web.client.HttpClientErrorException
 
 class VideoServiceAccessTokenProviderTest : AbstractSpringIntegrationTest() {
+    private val integrationId = "test-integration"
+    private val clientId = "test-client-id"
+    private val clientSecret = "test-client-secret"
+
+    @BeforeEach
+    fun insertIntegrationFixture() {
+        integrationDocumentRepository.insert(
+            IntegrationDocument(
+                id = ObjectId(),
+                integrationId = integrationId,
+                clientId = clientId,
+                clientSecret = clientSecret
+            )
+        )
+    }
+
     @Test
     fun `fetches the token and automatically refreshes after it expires`() {
         stubFor(
             post(urlEqualTo("/v1/token"))
                 .withHeader(HttpHeaders.CONTENT_TYPE, equalTo(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
                 .withRequestBody(equalTo("grant_type=client_credentials"))
-                .withBasicAuth(videoServiceProperties.clientId, videoServiceProperties.clientSecret)
+                .withBasicAuth(clientId, clientSecret)
                 .willReturn(
                     aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -44,7 +62,7 @@ class VideoServiceAccessTokenProviderTest : AbstractSpringIntegrationTest() {
                 )
         )
 
-        assertThat(videoServiceAccessTokenProvider.getAccessToken()).isEqualTo("brand-new-access-token")
+        assertThat(videoServiceAccessTokenProvider.getAccessToken(integrationId)).isEqualTo("brand-new-access-token")
     }
 
     @Test
@@ -52,17 +70,17 @@ class VideoServiceAccessTokenProviderTest : AbstractSpringIntegrationTest() {
         stubFor(
             post(urlEqualTo("/v1/token"))
                 .withRequestBody(equalTo("grant_type=client_credentials"))
-                .withBasicAuth(videoServiceProperties.clientId, videoServiceProperties.clientSecret)
+                .withBasicAuth(clientId, clientSecret)
                 .willReturn(
                     badRequest()
                 )
         )
 
-        assertThatThrownBy { videoServiceAccessTokenProvider.getAccessToken() }.isInstanceOf(HttpClientErrorException::class.java)
+        assertThatThrownBy { videoServiceAccessTokenProvider.getAccessToken(integrationId) }.isInstanceOf(
+            HttpClientErrorException::class.java
+        )
     }
 
-    @Autowired
-    private lateinit var videoServiceProperties: VideoServiceProperties
     @Autowired
     private lateinit var videoServiceAccessTokenProvider: VideoServiceAccessTokenProvider
 

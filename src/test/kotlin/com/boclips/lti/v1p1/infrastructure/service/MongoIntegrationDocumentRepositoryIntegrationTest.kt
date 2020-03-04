@@ -1,17 +1,12 @@
 package com.boclips.lti.v1p1.infrastructure.service
 
 import com.boclips.lti.v1p1.infrastructure.model.IntegrationDocument
-import com.boclips.lti.v1p1.infrastructure.repository.MongoIntegrationDocumentRepository
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
 import org.bson.types.ObjectId
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 
 class MongoIntegrationDocumentRepositoryIntegrationTest : AbstractSpringIntegrationTest() {
-    @Autowired
-    lateinit var integrationDocumentRepository: MongoIntegrationDocumentRepository
-
     @Test
     fun `returns an integration when it's found by integrationId`() {
         val newIntegrationDocument = IntegrationDocument(

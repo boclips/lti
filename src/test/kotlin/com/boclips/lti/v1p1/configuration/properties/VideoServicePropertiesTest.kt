@@ -8,43 +8,40 @@ import javax.validation.Validator
 
 class VideoServicePropertiesTest {
     @Test
-    fun `returns validation errors when video service token uri is not blank`() {
-        properties.accessTokenUri = ""
+    fun `returns validation errors when base url is blank`() {
+        val properties = VideoServiceProperties().apply {
+            baseUrl = ""
+            tokenUrl = "http://localhost/v1/token"
+        }
 
         assertThat(validator.validate(properties)).hasSize(1)
     }
 
     @Test
-    fun `returns validation errors when video service client id is blank`() {
-        properties.clientId = ""
-
-        assertThat(validator.validate(properties)).hasSize(1)
-    }
-
-    @Test
-    fun `returns validation errors when video service secret is blank`() {
-        properties.clientSecret = ""
+    fun `returns validation errors when token url is blank`() {
+        val properties = VideoServiceProperties().apply {
+            baseUrl = "http://localhost/v1"
+            tokenUrl = ""
+        }
 
         assertThat(validator.validate(properties)).hasSize(1)
     }
 
     @Test
     fun `does not return validation errors when given valid object`() {
+        val properties = VideoServiceProperties().apply {
+            baseUrl = "http://localhost/v1"
+            tokenUrl = "http://localhost/v1/token"
+        }
+
         assertThat(validator.validate(properties)).isEmpty()
     }
 
-    lateinit var properties: VideoServiceProperties
-    lateinit var validator: Validator
+    private lateinit var validator: Validator
 
     @BeforeEach
     fun setup() {
         val factory = Validation.buildDefaultValidatorFactory()
-        validator = factory.getValidator()
-
-        properties = VideoServiceProperties()
-        properties.baseUrl = "http://localhost"
-        properties.accessTokenUri = "http://localhost/auth/token"
-        properties.clientId = "test-id"
-        properties.clientSecret = "test-secret"
+        validator = factory.validator
     }
 }

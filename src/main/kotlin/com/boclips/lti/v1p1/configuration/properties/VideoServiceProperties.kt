@@ -7,17 +7,11 @@ import javax.validation.constraints.NotBlank
 
 @Component
 @Validated
-@ConfigurationProperties(prefix = "video-service")
+@ConfigurationProperties(prefix = "boclips.api")
 class VideoServiceProperties {
     @NotBlank
     var baseUrl: String = ""
 
     @NotBlank
-    var accessTokenUri: String = ""
-
-    @NotBlank
-    var clientId: String = ""
-
-    @NotBlank
-    var clientSecret: String = ""
+    var tokenUrl: String = ""
 }

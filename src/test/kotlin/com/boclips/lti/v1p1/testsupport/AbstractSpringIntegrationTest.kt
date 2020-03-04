@@ -4,6 +4,7 @@ import com.boclips.lti.v1p1.application.service.VideoServiceAccessTokenProviderT
 import com.boclips.lti.v1p1.domain.repository.CollectionRepository
 import com.boclips.lti.v1p1.domain.repository.VideoRepository
 import com.boclips.lti.v1p1.infrastructure.repository.LtiOnePointOneConsumerRepository
+import com.boclips.lti.v1p1.infrastructure.repository.MongoIntegrationDocumentRepository
 import com.boclips.lti.v1p1.infrastructure.service.CollectionsClientFactory
 import com.boclips.lti.v1p1.infrastructure.service.VideosClientFactory
 import com.boclips.lti.v1p1.presentation.service.ToVideoMetadata
@@ -28,14 +29,10 @@ import org.springframework.test.web.servlet.MockMvc
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@TestPropertySource(
-    properties = [
-        "video-service.base-url=http://localhost:${VideoServiceAccessTokenProviderTest.API_SERVER_PORT}",
-        "video-service.access-token-uri=http://localhost:${VideoServiceAccessTokenProviderTest.API_SERVER_PORT}/v1/token",
-        "video-service.client-id=test-client-id",
-        "video-service.client-secret=test-client-secret"
-    ]
-)
+@TestPropertySource(properties = [
+    "boclips.api.baseUrl=http://localhost:${VideoServiceAccessTokenProviderTest.API_SERVER_PORT}/v1",
+    "boclips.api.tokenUrl=http://localhost:${VideoServiceAccessTokenProviderTest.API_SERVER_PORT}/v1/token"
+])
 abstract class AbstractSpringIntegrationTest {
     @Autowired
     lateinit var mvc: MockMvc
@@ -60,6 +57,9 @@ abstract class AbstractSpringIntegrationTest {
 
     @Autowired
     protected lateinit var ltiOnePointOneConsumerRepository: LtiOnePointOneConsumerRepository
+
+    @Autowired
+    protected lateinit var integrationDocumentRepository: MongoIntegrationDocumentRepository
 
     val ltiOauthSigner = LtiOauthSigner()
 
