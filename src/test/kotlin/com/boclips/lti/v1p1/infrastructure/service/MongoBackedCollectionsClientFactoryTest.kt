@@ -1,6 +1,5 @@
 package com.boclips.lti.v1p1.infrastructure.service
 
-import com.boclips.lti.v1p1.configuration.properties.LtiProperties
 import com.boclips.lti.v1p1.configuration.properties.VideoServiceProperties
 import com.boclips.lti.v1p1.infrastructure.model.IntegrationDocument
 import com.boclips.lti.v1p1.infrastructure.model.exception.ClientNotFoundException
@@ -18,42 +17,28 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-class ConfigAndDatabaseBackedCollectionsClientFactoryTest {
+class MongoBackedCollectionsClientFactoryTest {
     private lateinit var preconfiguredCollectionsClient: CollectionsClient
     private lateinit var integrationDocumentRepository: MongoIntegrationDocumentRepository
-    private lateinit var ltiProperties: LtiProperties
     private lateinit var videoServiceProperties: VideoServiceProperties
-    private lateinit var factory: ConfigAndDatabaseBackedCollectionsClientFactory
+    private lateinit var factory: MongoBackedCollectionsClientFactory
 
     @BeforeEach
     fun setupCollectionsClientFactory(@Mock integrationDocumentRepository: MongoIntegrationDocumentRepository) {
         preconfiguredCollectionsClient = CollectionsClientFake()
         this.integrationDocumentRepository = integrationDocumentRepository
-        ltiProperties = LtiProperties().apply {
-            consumer.key = "pho"
-            consumer.secret = "a secret ingredient"
-        }
         videoServiceProperties = VideoServiceProperties().apply {
             baseUrl = "https://api.com/"
         }
 
-        factory = ConfigAndDatabaseBackedCollectionsClientFactory(
-            preconfiguredCollectionsClient = preconfiguredCollectionsClient,
-            ltiProperties = ltiProperties,
+        factory = MongoBackedCollectionsClientFactory(
             videoServiceProperties = videoServiceProperties,
             integrationDocumentRepository = integrationDocumentRepository
         )
     }
 
     @Test
-    fun `returns the preconfigured client if it matches the preconfigured consumer`() {
-        val returnedCollectionsClient = factory.getClient(ltiProperties.consumer.key)
-
-        assertThat(returnedCollectionsClient).isEqualTo(preconfiguredCollectionsClient)
-    }
-
-    @Test
-    fun `configures the client through a database when preconfigured key does not match`() {
+    fun `configures the client through a database`() {
         val integrationDocument = IntegrationDocument(
             id = ObjectId(),
             integrationId = "miso",

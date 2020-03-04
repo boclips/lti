@@ -1,6 +1,5 @@
 package com.boclips.lti.v1p1.config
 
-import com.boclips.lti.v1p1.configuration.properties.LtiProperties
 import com.boclips.lti.v1p1.configuration.properties.VideoServiceProperties
 import com.boclips.lti.v1p1.infrastructure.repository.MongoIntegrationDocumentRepository
 import com.boclips.lti.v1p1.infrastructure.service.CollectionsClientFactory
@@ -16,7 +15,6 @@ import org.springframework.context.annotation.Profile
 class FakeClientsConfig {
     @Bean
     fun videosClientFactory(
-        ltiProperties: LtiProperties,
         videoServiceProperties: VideoServiceProperties,
         integrationDocumentRepository: MongoIntegrationDocumentRepository
     ): VideosClientFactory {
@@ -29,7 +27,6 @@ class FakeClientsConfig {
 
     @Bean
     fun collectionsClientFactory(
-        ltiProperties: LtiProperties,
         videoServiceProperties: VideoServiceProperties,
         integrationDocumentRepository: MongoIntegrationDocumentRepository
     ): CollectionsClientFactory {

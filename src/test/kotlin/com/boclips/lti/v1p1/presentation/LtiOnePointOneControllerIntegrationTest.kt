@@ -3,6 +3,7 @@ package com.boclips.lti.v1p1.presentation
 import com.boclips.lti.v1p1.domain.exception.LaunchRequestInvalidException
 import com.boclips.lti.v1p1.domain.model.LaunchParams
 import com.boclips.lti.v1p1.domain.model.Video
+import com.boclips.lti.v1p1.infrastructure.model.LtiOnePointOneConsumerDocument
 import com.boclips.lti.v1p1.infrastructure.repository.VideoResourceConverter
 import com.boclips.lti.v1p1.presentation.model.CollectionMetadata
 import com.boclips.lti.v1p1.presentation.model.VideoMetadata
@@ -13,6 +14,7 @@ import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
 import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
 import com.boclips.videos.api.response.video.VideoResource
 import org.assertj.core.api.Assertions.assertThat
+import org.bson.types.ObjectId
 import org.hamcrest.CoreMatchers.nullValue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -61,7 +63,7 @@ class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIn
     @BeforeEach
     fun createVideo() {
         val resource = VideoResourcesFactory.sampleVideo()
-        (videosClientFactory.getClient("integration-one") as VideosClientFake).add(resource)
+        (videosClientFactory.getClient(consumerKey) as VideosClientFake).add(resource)
         video = VideoResourceConverter.toVideo(resource)
     }
 }
@@ -130,13 +132,13 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
     @BeforeEach
     fun populateCollection() {
         firstVideo =
-            (videosClientFactory.getClient("integration-one") as VideosClientFake).add(VideoResourcesFactory.sampleVideo())
+            (videosClientFactory.getClient(consumerKey) as VideosClientFake).add(VideoResourcesFactory.sampleVideo())
         secondVideo =
-            (videosClientFactory.getClient("integration-one") as VideosClientFake).add(VideoResourcesFactory.sampleVideo())
+            (videosClientFactory.getClient(consumerKey) as VideosClientFake).add(VideoResourcesFactory.sampleVideo())
         thirdVideo =
-            (videosClientFactory.getClient("integration-one") as VideosClientFake).add(VideoResourcesFactory.sampleVideo())
+            (videosClientFactory.getClient(consumerKey) as VideosClientFake).add(VideoResourcesFactory.sampleVideo())
 
-        (collectionsClientFactory.getClient("integration-one") as CollectionsClientFake).add(
+        (collectionsClientFactory.getClient(consumerKey) as CollectionsClientFake).add(
             CollectionResourceFactory.sample(
                 id = collectionId,
                 title = collectionTitle,
@@ -194,13 +196,13 @@ class UserCollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneCon
 
     @BeforeEach
     fun populateCollections() {
-        (collectionsClientFactory.getClient("integration-one") as CollectionsClientFake).add(
+        (collectionsClientFactory.getClient(consumerKey) as CollectionsClientFake).add(
             CollectionResourceFactory.sample(
                 id = firstCollectionId,
                 title = "First collection"
             )
         )
-        (collectionsClientFactory.getClient("integration-one") as CollectionsClientFake).add(
+        (collectionsClientFactory.getClient(consumerKey) as CollectionsClientFake).add(
             CollectionResourceFactory.sample(
                 id = secondCollectionId,
                 title = "Second collection"
@@ -234,10 +236,10 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
                             mapOf(
                                 "lti_message_type" to "basic-lti-launch-request",
                                 "lti_version" to "LTI-1p0",
-                                "oauth_consumer_key" to ltiProperties.consumer.key
+                                "oauth_consumer_key" to consumerKey
                             ),
-                            ltiProperties.consumer.key,
-                            ltiProperties.consumer.secret
+                            consumerKey,
+                            consumerSecret
                         )
                     )
             )
@@ -318,6 +320,20 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
             .andExpect(model().attribute("customLogoUrl", nullValue()))
     }
 
+    @BeforeEach
+    fun configureLtiCredentials() {
+        ltiOnePointOneConsumerRepository.insert(
+            LtiOnePointOneConsumerDocument(
+                id = ObjectId(),
+                key = consumerKey,
+                secret = consumerSecret
+            )
+        )
+    }
+
+    val consumerSecret = "test-secret"
+    val consumerKey = "test-consumer"
+
     fun resourcePath() = interpolateResourcePath()
     abstract fun interpolateResourcePath(resourceId: String? = null): String
 
@@ -336,11 +352,11 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
             mapOf(
                 "lti_message_type" to "basic-lti-launch-request",
                 "lti_version" to "LTI-1p0",
-                "oauth_consumer_key" to ltiProperties.consumer.key,
+                "oauth_consumer_key" to consumerKey,
                 "resource_link_id" to "41B464BA-F406-485C-ACDF-C1E5EB474156"
             ) + customParameters,
-            ltiProperties.consumer.key,
-            ltiProperties.consumer.secret
+            consumerKey,
+            consumerSecret
         )
     }
 

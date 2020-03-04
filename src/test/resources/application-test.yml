@@ -1,9 +1,0 @@
-boclips:
-  api:
-    url: 'http://localhost/api'
-
-  lti:
-    v1p1:
-      consumer:
-        key: 'integration-one'
-        secret: 'integration-one-secret'

@@ -1,9 +1,9 @@
 package com.boclips.lti.v1p1.testsupport
 
 import com.boclips.lti.v1p1.application.service.VideoServiceAccessTokenProviderTest
-import com.boclips.lti.v1p1.configuration.properties.LtiProperties
 import com.boclips.lti.v1p1.domain.repository.CollectionRepository
 import com.boclips.lti.v1p1.domain.repository.VideoRepository
+import com.boclips.lti.v1p1.infrastructure.repository.LtiOnePointOneConsumerRepository
 import com.boclips.lti.v1p1.infrastructure.service.CollectionsClientFactory
 import com.boclips.lti.v1p1.infrastructure.service.VideosClientFactory
 import com.boclips.lti.v1p1.presentation.service.ToVideoMetadata
@@ -41,9 +41,6 @@ abstract class AbstractSpringIntegrationTest {
     lateinit var mvc: MockMvc
 
     @Autowired
-    protected lateinit var ltiProperties: LtiProperties
-
-    @Autowired
     protected lateinit var videosClientFactory: VideosClientFactory
 
     @Autowired
@@ -60,6 +57,9 @@ abstract class AbstractSpringIntegrationTest {
 
     @Autowired
     protected lateinit var mongoClient: MongoClient
+
+    @Autowired
+    protected lateinit var ltiOnePointOneConsumerRepository: LtiOnePointOneConsumerRepository
 
     val ltiOauthSigner = LtiOauthSigner()
 

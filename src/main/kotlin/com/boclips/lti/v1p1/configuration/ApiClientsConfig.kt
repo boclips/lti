@@ -1,16 +1,11 @@
 package com.boclips.lti.v1p1.configuration
 
-import com.boclips.lti.v1p1.configuration.properties.LtiProperties
 import com.boclips.lti.v1p1.configuration.properties.VideoServiceProperties
 import com.boclips.lti.v1p1.infrastructure.repository.MongoIntegrationDocumentRepository
 import com.boclips.lti.v1p1.infrastructure.service.CollectionsClientFactory
-import com.boclips.lti.v1p1.infrastructure.service.ConfigAndDatabaseBackedCollectionsClientFactory
-import com.boclips.lti.v1p1.infrastructure.service.ConfigAndDatabaseBackedVideosClientFactory
+import com.boclips.lti.v1p1.infrastructure.service.MongoBackedCollectionsClientFactory
+import com.boclips.lti.v1p1.infrastructure.service.MongoBackedVideosClientFactory
 import com.boclips.lti.v1p1.infrastructure.service.VideosClientFactory
-import com.boclips.videos.api.httpclient.CollectionsClient
-import com.boclips.videos.api.httpclient.VideosClient
-import com.boclips.videos.api.httpclient.helper.ServiceAccountCredentials
-import com.boclips.videos.api.httpclient.helper.ServiceAccountTokenFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
@@ -21,23 +16,10 @@ class ApiClientsConfig {
     @Bean
     fun videosClientFactory(
         properties: VideoServiceProperties,
-        ltiProperties: LtiProperties,
         videoServiceProperties: VideoServiceProperties,
         integrationDocumentRepository: MongoIntegrationDocumentRepository
     ): VideosClientFactory {
-        return ConfigAndDatabaseBackedVideosClientFactory(
-            preconfiguredVideosClient = VideosClient.create(
-                apiUrl = properties.baseUrl,
-                tokenFactory = ServiceAccountTokenFactory(
-                    ServiceAccountCredentials(
-                        // TODO Use token URI?
-                        properties.baseUrl,
-                        properties.clientId,
-                        properties.clientSecret
-                    )
-                )
-            ),
-            ltiProperties = ltiProperties,
+        return MongoBackedVideosClientFactory(
             videoServiceProperties = videoServiceProperties,
             integrationDocumentRepository = integrationDocumentRepository
         )
@@ -46,23 +28,10 @@ class ApiClientsConfig {
     @Bean
     fun collectionsClientFactory(
         properties: VideoServiceProperties,
-        ltiProperties: LtiProperties,
         videoServiceProperties: VideoServiceProperties,
         integrationDocumentRepository: MongoIntegrationDocumentRepository
     ): CollectionsClientFactory {
-        return ConfigAndDatabaseBackedCollectionsClientFactory(
-            preconfiguredCollectionsClient = CollectionsClient.create(
-                apiUrl = properties.baseUrl,
-                tokenFactory = ServiceAccountTokenFactory(
-                    ServiceAccountCredentials(
-                        // TODO Use token URI?
-                        properties.baseUrl,
-                        properties.clientId,
-                        properties.clientSecret
-                    )
-                )
-            ),
-            ltiProperties = ltiProperties,
+        return MongoBackedCollectionsClientFactory(
             videoServiceProperties = videoServiceProperties,
             integrationDocumentRepository = integrationDocumentRepository
         )
