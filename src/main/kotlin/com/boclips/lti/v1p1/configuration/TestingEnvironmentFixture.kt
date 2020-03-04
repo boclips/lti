@@ -15,10 +15,10 @@ import javax.annotation.PostConstruct
 class TestingEnvironmentFixture(
     private val ltiOnePointOneConsumerRepository: LtiOnePointOneConsumerRepository,
     private val integrationDocumentRepository: MongoIntegrationDocumentRepository,
-    @Value("\${boclips.lti.v1p1.consumer.key}") private val testingConsumerKey: String,
-    @Value("\${boclips.lti.v1p1.consumer.secret}") private val testingConsumerSecret: String,
-    @Value("\${video-service.client-id}") private val testingClientId: String,
-    @Value("\${video-service.client-secret}") private val testingClientSecret: String
+    @Value("\${fixtures.ltiOnePointOne.consumerKey}") private val testingConsumerKey: String,
+    @Value("\${fixtures.ltiOnePointOne.consumerSecret}") private val testingConsumerSecret: String,
+    @Value("\${fixtures.videosClient.id}") private val testingClientId: String,
+    @Value("\${fixtures.videosClient.secret}") private val testingClientSecret: String
 ) {
     @PostConstruct
     fun insertTestingConsumerFixture() {
