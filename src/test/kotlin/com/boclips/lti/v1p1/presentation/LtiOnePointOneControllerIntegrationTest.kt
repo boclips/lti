@@ -2,9 +2,9 @@ package com.boclips.lti.v1p1.presentation
 
 import com.boclips.lti.v1p1.domain.exception.LaunchRequestInvalidException
 import com.boclips.lti.v1p1.domain.model.LaunchParams
-import com.boclips.lti.v1p1.domain.model.Video
+import com.boclips.lti.core.domain.model.Video
 import com.boclips.lti.v1p1.infrastructure.model.LtiOnePointOneConsumerDocument
-import com.boclips.lti.v1p1.infrastructure.repository.VideoResourceConverter
+import com.boclips.lti.core.infrastructure.repository.VideoResourceConverter
 import com.boclips.lti.v1p1.presentation.model.CollectionMetadata
 import com.boclips.lti.v1p1.presentation.model.VideoMetadata
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest

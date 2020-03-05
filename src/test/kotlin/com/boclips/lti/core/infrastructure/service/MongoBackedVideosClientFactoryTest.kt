@@ -1,11 +1,11 @@
-package com.boclips.lti.v1p1.infrastructure.service
+package com.boclips.lti.core.infrastructure.service
 
 import com.boclips.lti.v1p1.configuration.properties.VideoServiceProperties
 import com.boclips.lti.v1p1.infrastructure.model.IntegrationDocument
 import com.boclips.lti.v1p1.infrastructure.model.exception.ClientNotFoundException
 import com.boclips.lti.v1p1.infrastructure.repository.MongoIntegrationDocumentRepository
-import com.boclips.videos.api.httpclient.CollectionsClient
-import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
+import com.boclips.videos.api.httpclient.VideosClient
+import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.bson.types.ObjectId
@@ -17,41 +17,41 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-class MongoBackedCollectionsClientFactoryTest {
-    private lateinit var preconfiguredCollectionsClient: CollectionsClient
-    private lateinit var integrationDocumentRepository: MongoIntegrationDocumentRepository
+class MongoBackedVideosClientFactoryTest {
+    private lateinit var preconfiguredVideosClient: VideosClient
+    private lateinit var mongoIntegrationDocumentRepository: MongoIntegrationDocumentRepository
     private lateinit var videoServiceProperties: VideoServiceProperties
-    private lateinit var factory: MongoBackedCollectionsClientFactory
+    private lateinit var factory: MongoBackedVideosClientFactory
 
     @BeforeEach
-    fun setupCollectionsClientFactory(@Mock integrationDocumentRepository: MongoIntegrationDocumentRepository) {
-        preconfiguredCollectionsClient = CollectionsClientFake()
-        this.integrationDocumentRepository = integrationDocumentRepository
+    fun setupVideosClientFactory(@Mock mongoIntegrationDocumentRepository: MongoIntegrationDocumentRepository) {
+        preconfiguredVideosClient = VideosClientFake()
         videoServiceProperties = VideoServiceProperties().apply {
             baseUrl = "https://api.com/"
         }
+        this.mongoIntegrationDocumentRepository = mongoIntegrationDocumentRepository
 
-        factory = MongoBackedCollectionsClientFactory(
+        factory = MongoBackedVideosClientFactory(
             videoServiceProperties = videoServiceProperties,
-            integrationDocumentRepository = integrationDocumentRepository
+            integrationDocumentRepository = this.mongoIntegrationDocumentRepository
         )
     }
 
     @Test
-    fun `configures the client through a database`() {
+    fun `looks the client configuration up in the database`() {
         val integrationDocument = IntegrationDocument(
             id = ObjectId(),
             integrationId = "miso",
             clientId = "super",
             clientSecret = "secret"
         )
-        whenever(integrationDocumentRepository.findOneByIntegrationId("miso")).thenReturn(integrationDocument)
+        whenever(mongoIntegrationDocumentRepository.findOneByIntegrationId("miso")).thenReturn(integrationDocument)
 
-        val returnedCollectionsClient = factory.getClient("miso")
+        val returnedVideosClient = factory.getClient("miso")
 
-        assertThat(returnedCollectionsClient)
+        assertThat(returnedVideosClient)
             .isNotNull()
-            .isNotEqualTo(preconfiguredCollectionsClient)
+            .isNotEqualTo(preconfiguredVideosClient)
     }
 
     @Test

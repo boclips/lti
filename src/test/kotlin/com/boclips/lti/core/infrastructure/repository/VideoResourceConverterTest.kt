@@ -1,4 +1,4 @@
-package com.boclips.lti.v1p1.infrastructure.repository
+package com.boclips.lti.core.infrastructure.repository
 
 import com.boclips.lti.v1p1.infrastructure.repository.exception.ResourceConversionException
 import com.boclips.lti.v1p1.testsupport.factories.VideoResourcesFactory

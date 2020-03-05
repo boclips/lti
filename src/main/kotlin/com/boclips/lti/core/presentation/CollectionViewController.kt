@@ -4,7 +4,7 @@ import com.boclips.lti.core.application.model.SessionKeys.consumerKey
 import com.boclips.lti.core.application.model.SessionKeys.customLogo
 import com.boclips.lti.core.application.service.AssertHasValidSession
 import com.boclips.lti.core.domain.model.CollectionRequest
-import com.boclips.lti.v1p1.domain.repository.CollectionRepository
+import com.boclips.lti.core.domain.repository.CollectionRepository
 import com.boclips.lti.v1p1.presentation.service.ToVideoMetadata
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping

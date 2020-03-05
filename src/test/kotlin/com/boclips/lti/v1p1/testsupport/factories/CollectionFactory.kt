@@ -1,8 +1,8 @@
 package com.boclips.lti.v1p1.testsupport.factories
 
-import com.boclips.lti.v1p1.domain.model.Collection
-import com.boclips.lti.v1p1.domain.model.CollectionId
-import com.boclips.lti.v1p1.domain.model.Video
+import com.boclips.lti.core.domain.model.Collection
+import com.boclips.lti.core.domain.model.CollectionId
+import com.boclips.lti.core.domain.model.Video
 import java.net.URI
 import java.util.UUID
 

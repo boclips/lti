@@ -1,12 +1,12 @@
 package com.boclips.lti.v1p1.testsupport
 
 import com.boclips.lti.v1p1.application.service.VideoServiceAccessTokenProviderTest
-import com.boclips.lti.v1p1.domain.repository.CollectionRepository
-import com.boclips.lti.v1p1.domain.repository.VideoRepository
+import com.boclips.lti.core.domain.repository.CollectionRepository
+import com.boclips.lti.core.domain.repository.VideoRepository
 import com.boclips.lti.v1p1.infrastructure.repository.LtiOnePointOneConsumerRepository
 import com.boclips.lti.v1p1.infrastructure.repository.MongoIntegrationDocumentRepository
-import com.boclips.lti.v1p1.infrastructure.service.CollectionsClientFactory
-import com.boclips.lti.v1p1.infrastructure.service.VideosClientFactory
+import com.boclips.lti.core.infrastructure.service.CollectionsClientFactory
+import com.boclips.lti.core.infrastructure.service.VideosClientFactory
 import com.boclips.lti.v1p1.presentation.service.ToVideoMetadata
 import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
 import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake

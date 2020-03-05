@@ -1,7 +1,7 @@
-package com.boclips.lti.v1p1.infrastructure.repository
+package com.boclips.lti.core.infrastructure.repository
 
-import com.boclips.lti.v1p1.domain.model.Collection
-import com.boclips.lti.v1p1.domain.model.CollectionId
+import com.boclips.lti.core.domain.model.Collection
+import com.boclips.lti.core.domain.model.CollectionId
 import com.boclips.videos.api.response.collection.CollectionResource
 import java.net.URI
 

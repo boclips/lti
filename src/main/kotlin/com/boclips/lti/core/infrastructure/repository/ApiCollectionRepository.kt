@@ -1,11 +1,11 @@
-package com.boclips.lti.v1p1.infrastructure.repository
+package com.boclips.lti.core.infrastructure.repository
 
-import com.boclips.lti.v1p1.domain.exception.ResourceNotFoundException
-import com.boclips.lti.v1p1.domain.model.Collection
+import com.boclips.lti.core.domain.exception.ResourceNotFoundException
+import com.boclips.lti.core.domain.model.Collection
 import com.boclips.lti.core.domain.model.CollectionRequest
 import com.boclips.lti.core.domain.model.CollectionsRequest
-import com.boclips.lti.v1p1.domain.repository.CollectionRepository
-import com.boclips.lti.v1p1.infrastructure.service.CollectionsClientFactory
+import com.boclips.lti.core.domain.repository.CollectionRepository
+import com.boclips.lti.core.infrastructure.service.CollectionsClientFactory
 import com.boclips.videos.api.request.Projection
 import com.boclips.videos.api.request.collection.CollectionFilterRequest
 import feign.FeignException

@@ -1,7 +1,7 @@
 package com.boclips.lti.v1p1.presentation.service
 
 import com.boclips.lti.v1p1.application.service.UriComponentsBuilderFactory
-import com.boclips.lti.v1p1.domain.model.Collection
+import com.boclips.lti.core.domain.model.Collection
 import com.boclips.lti.v1p1.testsupport.factories.CollectionFactory
 import com.boclips.lti.v1p1.testsupport.factories.VideoFactory
 import com.nhaarman.mockitokotlin2.whenever

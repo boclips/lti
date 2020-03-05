@@ -1,6 +1,6 @@
-package com.boclips.lti.v1p1.infrastructure.repository
+package com.boclips.lti.core.infrastructure.repository
 
-import com.boclips.lti.v1p1.domain.exception.ResourceNotFoundException
+import com.boclips.lti.core.domain.exception.ResourceNotFoundException
 import com.boclips.lti.core.domain.model.CollectionRequest
 import com.boclips.lti.core.domain.model.CollectionsRequest
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
@@ -28,7 +28,9 @@ class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
                     )
                 )
             ).isEqualTo(
-                CollectionResourceConverter.toCollection(resource)
+                CollectionResourceConverter.toCollection(
+                    resource
+                )
             )
         }
 
@@ -60,8 +62,12 @@ class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
                 .getMyCollections(CollectionsRequest(integrationId = "integration-one"))
 
             assertThat(returnedCollections).containsExactlyInAnyOrder(
-                CollectionResourceConverter.toCollection(firstResource),
-                CollectionResourceConverter.toCollection(secondResource)
+                CollectionResourceConverter.toCollection(
+                    firstResource
+                ),
+                CollectionResourceConverter.toCollection(
+                    secondResource
+                )
             )
         }
     }

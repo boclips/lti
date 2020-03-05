@@ -1,6 +1,6 @@
-package com.boclips.lti.v1p1.infrastructure.repository
+package com.boclips.lti.core.infrastructure.repository
 
-import com.boclips.lti.v1p1.domain.exception.ResourceNotFoundException
+import com.boclips.lti.core.domain.exception.ResourceNotFoundException
 import com.boclips.lti.core.domain.model.VideoRequest
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.v1p1.testsupport.factories.VideoResourcesFactory
@@ -25,7 +25,9 @@ private class ApiVideoRepositoryTest : AbstractSpringIntegrationTest() {
                     integrationId = "integration-one"
                 )
             )).isEqualTo(
-                VideoResourceConverter.toVideo(resource)
+                VideoResourceConverter.toVideo(
+                    resource
+                )
             )
         }
 

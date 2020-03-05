@@ -1,8 +1,8 @@
 package com.boclips.lti.v1p1.testsupport.factories
 
-import com.boclips.lti.v1p1.domain.model.Playback
-import com.boclips.lti.v1p1.domain.model.Video
-import com.boclips.lti.v1p1.domain.model.VideoId
+import com.boclips.lti.core.domain.model.Playback
+import com.boclips.lti.core.domain.model.Video
+import com.boclips.lti.core.domain.model.VideoId
 import java.net.URI
 import java.time.Duration
 import java.util.UUID
@@ -16,9 +16,15 @@ object VideoFactory {
         playbackDuration: Duration = Duration.ofMinutes(3)
     ) =
         Video(
-            videoId = VideoId(value = videoId, uri = URI("http://server.net/v1/videos/$videoId")),
+            videoId = VideoId(
+                value = videoId,
+                uri = URI("http://server.net/v1/videos/$videoId")
+            ),
             title = title,
             description = description,
-            playback = Playback(thumbnailUrl = thumbnailUrl, duration = playbackDuration)
+            playback = Playback(
+                thumbnailUrl = thumbnailUrl,
+                duration = playbackDuration
+            )
         )
 }

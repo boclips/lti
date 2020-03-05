@@ -1,4 +1,4 @@
-package com.boclips.lti.v1p1.infrastructure.service
+package com.boclips.lti.core.infrastructure.service
 
 import com.boclips.videos.api.httpclient.CollectionsClient
 
