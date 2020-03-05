@@ -1,6 +1,6 @@
-package com.boclips.lti.v1p1.infrastructure.repository
+package com.boclips.lti.core.infrastructure.repository
 
-import com.boclips.lti.v1p1.infrastructure.model.IntegrationDocument
+import com.boclips.lti.core.infrastructure.model.IntegrationDocument
 import org.bson.types.ObjectId
 import org.springframework.data.mongodb.repository.MongoRepository
 

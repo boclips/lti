@@ -1,9 +1,9 @@
 package com.boclips.lti.v1p1.configuration
 
-import com.boclips.lti.v1p1.infrastructure.model.IntegrationDocument
+import com.boclips.lti.core.infrastructure.model.IntegrationDocument
 import com.boclips.lti.v1p1.infrastructure.model.LtiOnePointOneConsumerDocument
 import com.boclips.lti.v1p1.infrastructure.repository.LtiOnePointOneConsumerRepository
-import com.boclips.lti.v1p1.infrastructure.repository.MongoIntegrationDocumentRepository
+import com.boclips.lti.core.infrastructure.repository.MongoIntegrationDocumentRepository
 import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile

@@ -4,7 +4,7 @@ import com.boclips.lti.v1p1.application.service.VideoServiceAccessTokenProviderT
 import com.boclips.lti.core.domain.repository.CollectionRepository
 import com.boclips.lti.core.domain.repository.VideoRepository
 import com.boclips.lti.v1p1.infrastructure.repository.LtiOnePointOneConsumerRepository
-import com.boclips.lti.v1p1.infrastructure.repository.MongoIntegrationDocumentRepository
+import com.boclips.lti.core.infrastructure.repository.MongoIntegrationDocumentRepository
 import com.boclips.lti.core.infrastructure.service.CollectionsClientFactory
 import com.boclips.lti.core.infrastructure.service.VideosClientFactory
 import com.boclips.lti.v1p1.presentation.service.ToVideoMetadata

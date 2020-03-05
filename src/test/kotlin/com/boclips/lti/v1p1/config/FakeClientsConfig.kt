@@ -1,7 +1,7 @@
 package com.boclips.lti.v1p1.config
 
 import com.boclips.lti.core.infrastructure.configuration.properties.BoclipsApiProperties
-import com.boclips.lti.v1p1.infrastructure.repository.MongoIntegrationDocumentRepository
+import com.boclips.lti.core.infrastructure.repository.MongoIntegrationDocumentRepository
 import com.boclips.lti.core.infrastructure.service.CollectionsClientFactory
 import com.boclips.lti.core.infrastructure.service.VideosClientFactory
 import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake

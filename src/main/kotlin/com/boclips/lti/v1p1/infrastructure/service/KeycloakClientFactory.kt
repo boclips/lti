@@ -1,7 +1,7 @@
 package com.boclips.lti.v1p1.infrastructure.service
 
 import com.boclips.lti.v1p1.infrastructure.model.exception.IntegrationNotFoundException
-import com.boclips.lti.v1p1.infrastructure.repository.MongoIntegrationDocumentRepository
+import com.boclips.lti.core.infrastructure.repository.MongoIntegrationDocumentRepository
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate

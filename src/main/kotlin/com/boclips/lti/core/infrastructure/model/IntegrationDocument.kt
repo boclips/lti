@@ -1,4 +1,4 @@
-package com.boclips.lti.v1p1.infrastructure.model
+package com.boclips.lti.core.infrastructure.model
 
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
