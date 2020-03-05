@@ -1,3 +1,3 @@
-package com.boclips.lti.v1p1.application.model
+package com.boclips.lti.core.application.model
 
 data class AccessTokenResponse(val access_token: String)

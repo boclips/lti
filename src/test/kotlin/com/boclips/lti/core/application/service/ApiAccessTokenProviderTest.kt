@@ -1,4 +1,4 @@
-package com.boclips.lti.v1p1.application.service
+package com.boclips.lti.core.application.service
 
 import com.boclips.lti.core.infrastructure.model.IntegrationDocument
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
@@ -23,7 +23,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.web.client.HttpClientErrorException
 
-class VideoServiceAccessTokenProviderTest : AbstractSpringIntegrationTest() {
+class ApiAccessTokenProviderTest : AbstractSpringIntegrationTest() {
     private val integrationId = "test-integration"
     private val clientId = "test-client-id"
     private val clientSecret = "test-client-secret"
@@ -62,7 +62,7 @@ class VideoServiceAccessTokenProviderTest : AbstractSpringIntegrationTest() {
                 )
         )
 
-        assertThat(videoServiceAccessTokenProvider.getAccessToken(integrationId)).isEqualTo("brand-new-access-token")
+        assertThat(apiAccessTokenProvider.getAccessToken(integrationId)).isEqualTo("brand-new-access-token")
     }
 
     @Test
@@ -76,13 +76,13 @@ class VideoServiceAccessTokenProviderTest : AbstractSpringIntegrationTest() {
                 )
         )
 
-        assertThatThrownBy { videoServiceAccessTokenProvider.getAccessToken(integrationId) }.isInstanceOf(
+        assertThatThrownBy { apiAccessTokenProvider.getAccessToken(integrationId) }.isInstanceOf(
             HttpClientErrorException::class.java
         )
     }
 
     @Autowired
-    private lateinit var videoServiceAccessTokenProvider: VideoServiceAccessTokenProvider
+    private lateinit var apiAccessTokenProvider: ApiAccessTokenProvider
 
     companion object {
         const val API_SERVER_PORT = 8081
@@ -93,7 +93,9 @@ class VideoServiceAccessTokenProviderTest : AbstractSpringIntegrationTest() {
         @JvmStatic
         internal fun beforeAll() {
             apiMockServer.start()
-            configureFor("localhost", API_SERVER_PORT)
+            configureFor("localhost",
+                API_SERVER_PORT
+            )
         }
 
         @AfterAll

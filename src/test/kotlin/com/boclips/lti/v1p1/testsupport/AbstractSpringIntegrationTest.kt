@@ -1,6 +1,6 @@
 package com.boclips.lti.v1p1.testsupport
 
-import com.boclips.lti.v1p1.application.service.VideoServiceAccessTokenProviderTest
+import com.boclips.lti.core.application.service.ApiAccessTokenProviderTest
 import com.boclips.lti.core.domain.repository.CollectionRepository
 import com.boclips.lti.core.domain.repository.VideoRepository
 import com.boclips.lti.v1p1.infrastructure.repository.LtiOnePointOneConsumerRepository
@@ -30,8 +30,8 @@ import org.springframework.test.web.servlet.MockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @TestPropertySource(properties = [
-    "boclips.api.baseUrl=http://localhost:${VideoServiceAccessTokenProviderTest.API_SERVER_PORT}/v1",
-    "boclips.api.tokenUrl=http://localhost:${VideoServiceAccessTokenProviderTest.API_SERVER_PORT}/v1/token"
+    "boclips.api.baseUrl=http://localhost:${ApiAccessTokenProviderTest.API_SERVER_PORT}/v1",
+    "boclips.api.tokenUrl=http://localhost:${ApiAccessTokenProviderTest.API_SERVER_PORT}/v1/token"
 ])
 abstract class AbstractSpringIntegrationTest {
     @Autowired

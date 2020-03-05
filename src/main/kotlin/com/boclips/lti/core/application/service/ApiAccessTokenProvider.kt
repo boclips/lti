@@ -1,8 +1,8 @@
-package com.boclips.lti.v1p1.application.service
+package com.boclips.lti.core.application.service
 
-import com.boclips.lti.v1p1.application.model.AccessTokenResponse
+import com.boclips.lti.core.application.model.AccessTokenResponse
 import com.boclips.lti.core.infrastructure.configuration.properties.BoclipsApiProperties
-import com.boclips.lti.v1p1.infrastructure.service.KeycloakClientFactory
+import com.boclips.lti.core.infrastructure.service.KeycloakClientFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -10,7 +10,7 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 
 @Service
-class VideoServiceAccessTokenProvider(
+class ApiAccessTokenProvider(
     private val boclipsApiProperties: BoclipsApiProperties,
     private val keycloakClientFactory: KeycloakClientFactory
 ) {
