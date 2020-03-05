@@ -1,4 +1,4 @@
-package com.boclips.lti.v1p1.infrastructure.model.exception
+package com.boclips.lti.core.infrastructure.exception
 
 import java.lang.RuntimeException
 

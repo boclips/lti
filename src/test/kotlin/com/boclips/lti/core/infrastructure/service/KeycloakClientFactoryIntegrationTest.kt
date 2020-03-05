@@ -1,7 +1,7 @@
 package com.boclips.lti.core.infrastructure.service
 
 import com.boclips.lti.core.infrastructure.model.IntegrationDocument
-import com.boclips.lti.v1p1.infrastructure.model.exception.IntegrationNotFoundException
+import com.boclips.lti.core.infrastructure.exception.IntegrationNotFoundException
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
 import org.bson.types.ObjectId
