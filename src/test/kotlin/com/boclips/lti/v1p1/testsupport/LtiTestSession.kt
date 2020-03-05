@@ -1,7 +1,7 @@
 package com.boclips.lti.v1p1.testsupport
 
-import com.boclips.lti.v1p1.domain.service.InitializeLtiSession.Companion.authenticationStateHolder
-import com.boclips.lti.v1p1.domain.service.InitializeLtiSession.Companion.consumerKeyHolder
+import com.boclips.lti.core.application.model.SessionKeys
+import com.boclips.lti.core.application.model.SessionKeys.consumerKey
 import org.springframework.mock.web.MockHttpSession
 import javax.servlet.http.HttpSession
 
@@ -14,8 +14,8 @@ object LtiTestSession {
 
     private fun sessionWithAuthenticationState(authenticationState: Boolean?): HttpSession {
         val session = MockHttpSession()
-        session.setAttribute(authenticationStateHolder, authenticationState)
-        session.setAttribute(consumerKeyHolder, TEST_CONSUMER_KEY)
+        session.setAttribute(SessionKeys.authenticationState, authenticationState)
+        session.setAttribute(consumerKey, TEST_CONSUMER_KEY)
         return session
     }
 }

@@ -1,10 +1,10 @@
 package com.boclips.lti.core.presentation
 
+import com.boclips.lti.core.application.model.SessionKeys.consumerKey
+import com.boclips.lti.core.application.model.SessionKeys.customLogo
+import com.boclips.lti.core.application.service.AssertHasValidSession
 import com.boclips.lti.v1p1.domain.model.CollectionsRequest
 import com.boclips.lti.v1p1.domain.repository.CollectionRepository
-import com.boclips.lti.v1p1.domain.service.AssertHasLtiSession
-import com.boclips.lti.v1p1.domain.service.InitializeLtiSession.Companion.consumerKeyHolder
-import com.boclips.lti.v1p1.domain.service.InitializeLtiSession.Companion.customLogoHolder
 import com.boclips.lti.v1p1.presentation.service.SortByCollectionTitle
 import com.boclips.lti.v1p1.presentation.service.ToCollectionMetadata
 import org.springframework.stereotype.Controller
@@ -17,24 +17,24 @@ import javax.servlet.http.HttpSession
 // TODO We don't need to map this to LTI 1.1
 @RequestMapping("/v1p1")
 class UserCollectionsViewController(
-    private val assertHasLtiSession: AssertHasLtiSession,
+    private val assertHasValidSession: AssertHasValidSession,
     private val collectionRepository: CollectionRepository,
     private val toCollectionMetadata: ToCollectionMetadata,
     private val sortByCollectionTitle: SortByCollectionTitle
 ) {
     @GetMapping("/collections")
     fun getUserCollections(session: HttpSession): ModelAndView {
-        assertHasLtiSession(session)
+        assertHasValidSession(session)
 
         val userCollections = collectionRepository.getMyCollections(
             CollectionsRequest(
-                integrationId = session.getAttribute(consumerKeyHolder) as String
+                integrationId = session.getAttribute(consumerKey) as String
             )
         )
 
         return ModelAndView(
             "userCollections", mapOf(
-                "customLogoUrl" to session.getAttribute(customLogoHolder),
+                "customLogoUrl" to session.getAttribute(customLogo),
                 "collections" to sortByCollectionTitle(
                     userCollections.map { collection -> toCollectionMetadata(collection) }
                 )

@@ -1,10 +1,11 @@
 package com.boclips.lti.v1p1.domain.service
 
+import com.boclips.lti.core.application.model.SessionKeys
+import com.boclips.lti.core.application.model.SessionKeys.authenticationState
+import com.boclips.lti.core.application.model.SessionKeys.consumerKey
+import com.boclips.lti.core.application.model.SessionKeys.customLogo
+import com.boclips.lti.core.application.model.SessionKeys.userId
 import com.boclips.lti.v1p1.domain.model.LaunchParams
-import com.boclips.lti.v1p1.domain.service.InitializeLtiSession.Companion.authenticationStateHolder
-import com.boclips.lti.v1p1.domain.service.InitializeLtiSession.Companion.consumerKeyHolder
-import com.boclips.lti.v1p1.domain.service.InitializeLtiSession.Companion.customLogoHolder
-import com.boclips.lti.v1p1.domain.service.InitializeLtiSession.Companion.userIdHolder
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
@@ -24,7 +25,7 @@ class InitializeLtiSessionTest {
     fun `marks the session as authenticated`(@Mock request: HttpServletRequest) {
         initializeLtiSession.markAsAuthenticated(session)
 
-        assertThat(session.getAttribute(authenticationStateHolder)).isEqualTo(true)
+        assertThat(session.getAttribute(authenticationState)).isEqualTo(true)
     }
 
     @Test
@@ -34,7 +35,7 @@ class InitializeLtiSessionTest {
 
         initializeLtiSession.handleLogo(request, session)
 
-        assertThat(session.getAttribute(customLogoHolder)).isEqualTo(logoUri)
+        assertThat(session.getAttribute(customLogo)).isEqualTo(logoUri)
     }
 
     @Test
@@ -43,7 +44,7 @@ class InitializeLtiSessionTest {
 
         initializeLtiSession.handleLogo(request, session)
 
-        assertThat(session.getAttribute(customLogoHolder)).isNull()
+        assertThat(session.getAttribute(customLogo)).isNull()
     }
 
     @Test
@@ -52,14 +53,14 @@ class InitializeLtiSessionTest {
 
         initializeLtiSession.handleLogo(request, session)
 
-        assertThat(session.getAttribute(customLogoHolder)).isNull()
+        assertThat(session.getAttribute(customLogo)).isNull()
     }
 
     @Test
     fun `does not set custom logo if custom_logo parameter is not provided`(@Mock request: HttpServletRequest) {
         initializeLtiSession.handleLogo(request, session)
 
-        assertThat(session.getAttribute(customLogoHolder)).isNull()
+        assertThat(session.getAttribute(customLogo)).isNull()
     }
 
     @Test
@@ -69,7 +70,7 @@ class InitializeLtiSessionTest {
 
         initializeLtiSession.handleUserId(request, session)
 
-        assertThat(session.getAttribute(userIdHolder)).isEqualTo(userId)
+        assertThat(session.getAttribute(SessionKeys.userId)).isEqualTo(userId)
     }
 
     @Test
@@ -78,7 +79,7 @@ class InitializeLtiSessionTest {
 
         initializeLtiSession.handleUserId(request, session)
 
-        assertThat(session.getAttribute(userIdHolder)).isEqualTo(null)
+        assertThat(session.getAttribute(userId)).isEqualTo(null)
     }
 
     @Test
@@ -87,7 +88,7 @@ class InitializeLtiSessionTest {
 
         initializeLtiSession.handleConsumerKey(request, session)
 
-        assertThat(session.getAttribute(consumerKeyHolder)).isEqualTo("test-consumer-key")
+        assertThat(session.getAttribute(consumerKey)).isEqualTo("test-consumer-key")
     }
 
     val initializeLtiSession = InitializeLtiSession()

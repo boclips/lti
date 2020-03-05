@@ -1,11 +1,11 @@
 package com.boclips.lti.core.presentation
 
+import com.boclips.lti.core.application.model.SessionKeys.consumerKey
+import com.boclips.lti.core.application.model.SessionKeys.customLogo
+import com.boclips.lti.core.application.model.SessionKeys.userId
+import com.boclips.lti.core.application.service.AssertHasValidSession
 import com.boclips.lti.v1p1.domain.model.VideoRequest
 import com.boclips.lti.v1p1.domain.repository.VideoRepository
-import com.boclips.lti.v1p1.domain.service.AssertHasLtiSession
-import com.boclips.lti.v1p1.domain.service.InitializeLtiSession.Companion.consumerKeyHolder
-import com.boclips.lti.v1p1.domain.service.InitializeLtiSession.Companion.customLogoHolder
-import com.boclips.lti.v1p1.domain.service.InitializeLtiSession.Companion.userIdHolder
 import com.boclips.lti.v1p1.presentation.service.ToVideoMetadata
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,26 +18,26 @@ import javax.servlet.http.HttpSession
 // TODO We don't need to map this to LTI 1.1
 @RequestMapping("/v1p1")
 class VideoViewController(
-    private val assertHasLtiSession: AssertHasLtiSession,
+    private val assertHasValidSession: AssertHasValidSession,
     private val videoRepository: VideoRepository,
     private val toVideoMetadata: ToVideoMetadata
 ) {
     @GetMapping("/videos/{videoId}")
     fun getVideo(session: HttpSession, @PathVariable("videoId") videoId: String): ModelAndView {
-        assertHasLtiSession(session)
+        assertHasValidSession(session)
 
         return ModelAndView(
             "video", mapOf(
-                "customLogoUrl" to session.getAttribute(customLogoHolder),
+                "customLogoUrl" to session.getAttribute(customLogo),
                 "video" to toVideoMetadata(
                     videoRepository.get(
                         VideoRequest(
                             videoId = videoId,
-                            integrationId = session.getAttribute(consumerKeyHolder) as String
+                            integrationId = session.getAttribute(consumerKey) as String
                         )
                     )
                 ),
-                "userId" to session.getAttribute(userIdHolder)
+                "userId" to session.getAttribute(userId)
             )
         )
     }
