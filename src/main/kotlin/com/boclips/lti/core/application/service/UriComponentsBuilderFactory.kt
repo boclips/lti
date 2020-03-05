@@ -1,4 +1,4 @@
-package com.boclips.lti.v1p1.application.service
+package com.boclips.lti.core.application.service
 
 import org.springframework.context.annotation.Scope
 import org.springframework.context.annotation.ScopedProxyMode

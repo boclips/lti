@@ -1,8 +1,8 @@
-package com.boclips.lti.v1p1.presentation.service
+package com.boclips.lti.core.presentation.service
 
-import com.boclips.lti.v1p1.application.service.UriComponentsBuilderFactory
+import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
 import com.boclips.lti.core.domain.model.Video
-import com.boclips.lti.v1p1.presentation.model.VideoMetadata
+import com.boclips.lti.core.presentation.model.VideoMetadata
 import mu.KLogging
 import org.springframework.stereotype.Service
 
@@ -28,8 +28,14 @@ class ToVideoMetadata(
                 .toUriString(),
             title = video.title,
             description = video.description ?: "",
-            shortDescription = trimDescription(video.description, shortDescriptionLength),
-            mobileDescription = trimDescription(video.description, mobileDescriptionLength),
+            shortDescription = trimDescription(
+                video.description,
+                shortDescriptionLength
+            ),
+            mobileDescription = trimDescription(
+                video.description,
+                mobileDescriptionLength
+            ),
             thumbnailUrl = video.playback.thumbnailUrl,
             duration = formatDuration(video.playback.duration)
         )

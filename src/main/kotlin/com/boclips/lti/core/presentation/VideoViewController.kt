@@ -6,7 +6,7 @@ import com.boclips.lti.core.application.model.SessionKeys.userId
 import com.boclips.lti.core.application.service.AssertHasValidSession
 import com.boclips.lti.core.domain.model.VideoRequest
 import com.boclips.lti.core.domain.repository.VideoRepository
-import com.boclips.lti.v1p1.presentation.service.ToVideoMetadata
+import com.boclips.lti.core.presentation.service.ToVideoMetadata
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

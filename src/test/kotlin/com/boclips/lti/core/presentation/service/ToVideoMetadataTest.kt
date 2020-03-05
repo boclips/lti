@@ -1,8 +1,8 @@
-package com.boclips.lti.v1p1.presentation.service
+package com.boclips.lti.core.presentation.service
 
-import com.boclips.lti.v1p1.application.service.UriComponentsBuilderFactory
-import com.boclips.lti.v1p1.presentation.service.ToVideoMetadata.Companion.mobileDescriptionLength
-import com.boclips.lti.v1p1.presentation.service.ToVideoMetadata.Companion.shortDescriptionLength
+import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
+import com.boclips.lti.core.presentation.service.ToVideoMetadata.Companion.mobileDescriptionLength
+import com.boclips.lti.core.presentation.service.ToVideoMetadata.Companion.shortDescriptionLength
 import com.boclips.lti.v1p1.testsupport.factories.VideoFactory
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -110,6 +110,9 @@ class ToVideoMetadataTest {
     ) {
         this.uriComponentsBuilderFactory = uriComponentsBuilderFactory
         toVideoMetadata =
-            ToVideoMetadata(uriComponentsBuilderFactory, FormatDuration())
+            ToVideoMetadata(
+                uriComponentsBuilderFactory,
+                FormatDuration()
+            )
     }
 }

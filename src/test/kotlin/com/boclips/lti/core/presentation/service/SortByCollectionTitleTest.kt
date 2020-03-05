@@ -1,6 +1,6 @@
-package com.boclips.lti.v1p1.presentation.service
+package com.boclips.lti.core.presentation.service
 
-import com.boclips.lti.v1p1.presentation.model.CollectionMetadata
+import com.boclips.lti.core.presentation.model.CollectionMetadata
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -25,11 +25,36 @@ class SortByCollectionTitleTest {
     @Test
     fun `sorts titles with numbers according to the number`() {
         val collections = listOf(
-            CollectionMetadata("Grade 11", "", "", emptyList()),
-            CollectionMetadata("Grade 10", "", "", emptyList()),
-            CollectionMetadata("Grade 9", "", "", emptyList()),
-            CollectionMetadata("Grade 66", "", "", emptyList()),
-            CollectionMetadata("Grade 1", "", "", emptyList())
+            CollectionMetadata(
+                "Grade 11",
+                "",
+                "",
+                emptyList()
+            ),
+            CollectionMetadata(
+                "Grade 10",
+                "",
+                "",
+                emptyList()
+            ),
+            CollectionMetadata(
+                "Grade 9",
+                "",
+                "",
+                emptyList()
+            ),
+            CollectionMetadata(
+                "Grade 66",
+                "",
+                "",
+                emptyList()
+            ),
+            CollectionMetadata(
+                "Grade 1",
+                "",
+                "",
+                emptyList()
+            )
         )
 
         val sorted = sortByCollectionTitle(collections)
@@ -42,11 +67,31 @@ class SortByCollectionTitleTest {
     @Test
     fun `places titles with numbers before other ones`() {
         val collections = listOf(
-            CollectionMetadata("Grade 11", "", "", emptyList()),
-            CollectionMetadata("Grade 2", "", "", emptyList()),
-            CollectionMetadata("Beagle", "", "", emptyList()),
+            CollectionMetadata(
+                "Grade 11",
+                "",
+                "",
+                emptyList()
+            ),
+            CollectionMetadata(
+                "Grade 2",
+                "",
+                "",
+                emptyList()
+            ),
+            CollectionMetadata(
+                "Beagle",
+                "",
+                "",
+                emptyList()
+            ),
             CollectionMetadata("Apple", "", "", emptyList()),
-            CollectionMetadata("Grade 1", "", "", emptyList())
+            CollectionMetadata(
+                "Grade 1",
+                "",
+                "",
+                emptyList()
+            )
         )
 
         val sorted = sortByCollectionTitle(collections)

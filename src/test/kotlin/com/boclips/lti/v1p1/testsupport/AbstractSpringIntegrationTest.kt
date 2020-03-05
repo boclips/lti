@@ -7,7 +7,7 @@ import com.boclips.lti.v1p1.infrastructure.repository.LtiOnePointOneConsumerRepo
 import com.boclips.lti.core.infrastructure.repository.MongoIntegrationDocumentRepository
 import com.boclips.lti.core.infrastructure.service.CollectionsClientFactory
 import com.boclips.lti.core.infrastructure.service.VideosClientFactory
-import com.boclips.lti.v1p1.presentation.service.ToVideoMetadata
+import com.boclips.lti.core.presentation.service.ToVideoMetadata
 import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
 import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
 import com.mongodb.MongoClient

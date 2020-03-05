@@ -1,9 +1,9 @@
-package com.boclips.lti.v1p1.presentation.service
+package com.boclips.lti.core.presentation.service
 
-import com.boclips.lti.v1p1.application.service.UriComponentsBuilderFactory
+import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
 import com.boclips.lti.core.domain.model.Collection
 import com.boclips.lti.core.domain.model.Video
-import com.boclips.lti.v1p1.presentation.model.CollectionMetadata
+import com.boclips.lti.core.presentation.model.CollectionMetadata
 import org.springframework.stereotype.Service
 
 @Service

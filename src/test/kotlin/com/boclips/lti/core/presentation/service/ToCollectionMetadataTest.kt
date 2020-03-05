@@ -1,6 +1,6 @@
-package com.boclips.lti.v1p1.presentation.service
+package com.boclips.lti.core.presentation.service
 
-import com.boclips.lti.v1p1.application.service.UriComponentsBuilderFactory
+import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
 import com.boclips.lti.core.domain.model.Collection
 import com.boclips.lti.v1p1.testsupport.factories.CollectionFactory
 import com.boclips.lti.v1p1.testsupport.factories.VideoFactory
@@ -78,7 +78,9 @@ class ToCollectionMetadataTest {
         this.uriComponentsBuilderFactory = uriComponentsBuilderFactory
 
         toCollectionMetadata =
-            ToCollectionMetadata(uriComponentsBuilderFactory)
+            ToCollectionMetadata(
+                uriComponentsBuilderFactory
+            )
 
         whenever(uriComponentsBuilderFactory.getInstance()).thenReturn(
             UriComponentsBuilder.fromHttpUrl("http://localhost/v1p1/collections")

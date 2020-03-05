@@ -1,4 +1,4 @@
-package com.boclips.lti.v1p1.presentation.service
+package com.boclips.lti.core.presentation.service
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
