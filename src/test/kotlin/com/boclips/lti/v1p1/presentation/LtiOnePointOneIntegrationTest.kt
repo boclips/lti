@@ -17,7 +17,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.bson.types.ObjectId
 import org.hamcrest.CoreMatchers.nullValue
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
@@ -32,7 +31,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
 import org.springframework.util.LinkedMultiValueMap
 import javax.servlet.http.HttpSession
 
-class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIntegrationTest() {
+class VideosLtiOnePointOneIntegrationTest : LtiOnePointOneIntegrationTest() {
     @Test
     fun `valid video launch establishes an LTI session and resource can be correctly retrieved`() {
         val testUserId = "test-user-id"
@@ -68,7 +67,7 @@ class VideosLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIn
     }
 }
 
-class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIntegrationTest() {
+class CollectionsLtiOnePointOneIntegrationTest : LtiOnePointOneIntegrationTest() {
     @Test
     fun `valid collection launch establishes an LTI session and resource can be correctly retrieved`() {
         val session = executeLtiLaunch()
@@ -148,7 +147,7 @@ class CollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControl
     }
 }
 
-class UserCollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneControllerIntegrationTest() {
+class UserCollectionsLtiOnePointOneIntegrationTest : LtiOnePointOneIntegrationTest() {
     @Test
     fun `valid user collections launch establishes an LTI session and user collections page can be correctly accessed`() {
         val session = executeLtiLaunch()
@@ -211,7 +210,7 @@ class UserCollectionsLtiOnePointOneControllerIntegrationTest : LtiOnePointOneCon
     }
 }
 
-abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() {
+abstract class LtiOnePointOneIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
     fun `endpoint redirects user to landing page if it receives a minimal correct request`() {
         mvc.perform(
@@ -224,7 +223,6 @@ abstract class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrati
     }
 
     @Nested
-    @DisplayName(value = "Invalid Requests")
     inner class InvalidRequests {
         @Test
         fun `endpoint returns an error if request misses resource_link_id`() {
