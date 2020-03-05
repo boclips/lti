@@ -1,6 +1,6 @@
 package com.boclips.lti.core.infrastructure.repository
 
-import com.boclips.lti.v1p1.testsupport.factories.CollectionResourceFactory
+import com.boclips.lti.testsupport.factories.CollectionResourceFactory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.net.URI

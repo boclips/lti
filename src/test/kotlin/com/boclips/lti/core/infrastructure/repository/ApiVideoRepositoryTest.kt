@@ -2,8 +2,8 @@ package com.boclips.lti.core.infrastructure.repository
 
 import com.boclips.lti.core.domain.exception.ResourceNotFoundException
 import com.boclips.lti.core.domain.model.VideoRequest
-import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
-import com.boclips.lti.v1p1.testsupport.factories.VideoResourcesFactory
+import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
+import com.boclips.lti.testsupport.factories.VideoResourcesFactory
 import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy

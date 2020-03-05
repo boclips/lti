@@ -1,4 +1,4 @@
-package com.boclips.lti.v1p1.testsupport.factories
+package com.boclips.lti.testsupport.factories
 
 import com.boclips.videos.api.request.video.PlaybackResource
 import com.boclips.videos.api.request.video.StreamPlaybackResource

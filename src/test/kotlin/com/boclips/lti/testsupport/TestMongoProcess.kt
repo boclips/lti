@@ -1,4 +1,4 @@
-package com.boclips.lti.v1p1.testsupport
+package com.boclips.lti.testsupport
 
 import de.flapdoodle.embed.mongo.MongodProcess
 import de.flapdoodle.embed.mongo.MongodStarter

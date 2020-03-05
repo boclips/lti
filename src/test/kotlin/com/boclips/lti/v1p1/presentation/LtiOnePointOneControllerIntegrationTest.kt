@@ -1,15 +1,15 @@
 package com.boclips.lti.v1p1.presentation
 
-import com.boclips.lti.v1p1.domain.exception.LaunchRequestInvalidException
-import com.boclips.lti.v1p1.domain.model.LaunchParams
 import com.boclips.lti.core.domain.model.Video
-import com.boclips.lti.v1p1.infrastructure.model.LtiOnePointOneConsumerDocument
 import com.boclips.lti.core.infrastructure.repository.VideoResourceConverter
 import com.boclips.lti.core.presentation.model.CollectionMetadata
 import com.boclips.lti.core.presentation.model.VideoMetadata
-import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
-import com.boclips.lti.v1p1.testsupport.factories.CollectionResourceFactory
-import com.boclips.lti.v1p1.testsupport.factories.VideoResourcesFactory
+import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
+import com.boclips.lti.testsupport.factories.CollectionResourceFactory
+import com.boclips.lti.testsupport.factories.VideoResourcesFactory
+import com.boclips.lti.v1p1.domain.exception.LaunchRequestInvalidException
+import com.boclips.lti.v1p1.domain.model.LaunchParams
+import com.boclips.lti.v1p1.infrastructure.model.LtiOnePointOneConsumerDocument
 import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
 import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
 import com.boclips.videos.api.response.video.VideoResource

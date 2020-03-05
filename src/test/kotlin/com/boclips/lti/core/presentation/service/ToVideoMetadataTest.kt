@@ -3,7 +3,7 @@ package com.boclips.lti.core.presentation.service
 import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
 import com.boclips.lti.core.presentation.service.ToVideoMetadata.Companion.mobileDescriptionLength
 import com.boclips.lti.core.presentation.service.ToVideoMetadata.Companion.shortDescriptionLength
-import com.boclips.lti.v1p1.testsupport.factories.VideoFactory
+import com.boclips.lti.testsupport.factories.VideoFactory
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach

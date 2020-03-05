@@ -1,4 +1,4 @@
-package com.boclips.lti.v1p1.testsupport
+package com.boclips.lti.testsupport
 
 import com.boclips.lti.core.application.service.ApiAccessTokenProviderTest
 import com.boclips.lti.core.domain.repository.CollectionRepository

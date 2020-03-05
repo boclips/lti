@@ -1,4 +1,4 @@
-package com.boclips.lti.v1p1.config
+package com.boclips.lti.testsupport.configuration
 
 import com.boclips.security.testing.MockBoclipsSecurity
 import org.springframework.context.annotation.Profile

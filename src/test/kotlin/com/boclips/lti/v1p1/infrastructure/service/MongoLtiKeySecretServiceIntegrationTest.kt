@@ -1,7 +1,7 @@
 package com.boclips.lti.v1p1.infrastructure.service
 
 import com.boclips.lti.v1p1.infrastructure.model.LtiOnePointOneConsumerDocument
-import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
+import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
 import org.bson.types.ObjectId
 import org.junit.jupiter.api.Test

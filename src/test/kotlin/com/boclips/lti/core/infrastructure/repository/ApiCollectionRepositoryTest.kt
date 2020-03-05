@@ -3,8 +3,8 @@ package com.boclips.lti.core.infrastructure.repository
 import com.boclips.lti.core.domain.exception.ResourceNotFoundException
 import com.boclips.lti.core.domain.model.CollectionRequest
 import com.boclips.lti.core.domain.model.CollectionsRequest
-import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
-import com.boclips.lti.v1p1.testsupport.factories.CollectionResourceFactory
+import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
+import com.boclips.lti.testsupport.factories.CollectionResourceFactory
 import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy

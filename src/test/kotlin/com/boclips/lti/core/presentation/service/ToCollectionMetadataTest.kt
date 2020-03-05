@@ -2,8 +2,8 @@ package com.boclips.lti.core.presentation.service
 
 import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
 import com.boclips.lti.core.domain.model.Collection
-import com.boclips.lti.v1p1.testsupport.factories.CollectionFactory
-import com.boclips.lti.v1p1.testsupport.factories.VideoFactory
+import com.boclips.lti.testsupport.factories.CollectionFactory
+import com.boclips.lti.testsupport.factories.VideoFactory
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach

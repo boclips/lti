@@ -1,8 +1,8 @@
 package com.boclips.lti.core.presentation
 
 import com.boclips.lti.core.application.service.ApiAccessTokenProvider
-import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
-import com.boclips.lti.v1p1.testsupport.LtiTestSession
+import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
+import com.boclips.lti.testsupport.LtiTestSession
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

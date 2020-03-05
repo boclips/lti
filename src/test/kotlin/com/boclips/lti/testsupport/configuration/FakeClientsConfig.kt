@@ -1,4 +1,4 @@
-package com.boclips.lti.v1p1.config
+package com.boclips.lti.testsupport.configuration
 
 import com.boclips.lti.core.infrastructure.configuration.properties.BoclipsApiProperties
 import com.boclips.lti.core.infrastructure.repository.MongoIntegrationDocumentRepository

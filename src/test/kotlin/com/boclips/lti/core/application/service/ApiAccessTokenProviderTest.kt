@@ -1,7 +1,7 @@
 package com.boclips.lti.core.application.service
 
 import com.boclips.lti.core.infrastructure.model.IntegrationDocument
-import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
+import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.badRequest

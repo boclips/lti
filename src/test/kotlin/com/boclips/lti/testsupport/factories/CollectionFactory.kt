@@ -1,4 +1,4 @@
-package com.boclips.lti.v1p1.testsupport.factories
+package com.boclips.lti.testsupport.factories
 
 import com.boclips.lti.core.domain.model.Collection
 import com.boclips.lti.core.domain.model.CollectionId
