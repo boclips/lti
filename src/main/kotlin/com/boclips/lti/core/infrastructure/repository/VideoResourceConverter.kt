@@ -3,7 +3,7 @@ package com.boclips.lti.core.infrastructure.repository
 import com.boclips.lti.core.domain.model.Playback
 import com.boclips.lti.core.domain.model.Video
 import com.boclips.lti.core.domain.model.VideoId
-import com.boclips.lti.v1p1.infrastructure.repository.exception.ResourceConversionException
+import com.boclips.lti.core.infrastructure.exception.ResourceConversionException
 import com.boclips.videos.api.request.video.PlaybackResource
 import com.boclips.videos.api.response.video.VideoResource
 import org.springframework.hateoas.Link
@@ -29,7 +29,9 @@ object VideoResourceConverter {
 
     private fun convertThumbnailUrl(playbackResource: PlaybackResource): String {
         val rawThumbnailLink =
-            playbackResource._links!!["thumbnail"] ?: throw ResourceConversionException("Thumbnail link not available")
+            playbackResource._links!!["thumbnail"] ?: throw ResourceConversionException(
+                "Thumbnail link not available"
+            )
 
         // We need this because as of today Spring HATEOAS does not deserialize links correctly
         val thumbnailLink = Link(rawThumbnailLink.href)

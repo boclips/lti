@@ -1,6 +1,6 @@
 package com.boclips.lti.core.infrastructure.repository
 
-import com.boclips.lti.v1p1.infrastructure.repository.exception.ResourceConversionException
+import com.boclips.lti.core.infrastructure.exception.ResourceConversionException
 import com.boclips.lti.v1p1.testsupport.factories.VideoResourcesFactory
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy

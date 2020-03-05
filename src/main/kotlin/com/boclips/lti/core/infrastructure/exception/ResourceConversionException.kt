@@ -1,3 +1,3 @@
-package com.boclips.lti.v1p1.infrastructure.repository.exception
+package com.boclips.lti.core.infrastructure.exception
 
 class ResourceConversionException(message: String) : RuntimeException(message)
