@@ -2,7 +2,7 @@ package com.boclips.lti.v1p1.infrastructure.repository
 
 import com.boclips.lti.v1p1.domain.exception.ResourceNotFoundException
 import com.boclips.lti.v1p1.domain.model.Video
-import com.boclips.lti.v1p1.domain.model.VideoRequest
+import com.boclips.lti.core.domain.model.VideoRequest
 import com.boclips.lti.v1p1.domain.repository.VideoRepository
 import com.boclips.lti.v1p1.infrastructure.service.VideosClientFactory
 import feign.FeignException

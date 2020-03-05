@@ -1,8 +1,8 @@
 package com.boclips.lti.v1p1.infrastructure.repository
 
 import com.boclips.lti.v1p1.domain.exception.ResourceNotFoundException
-import com.boclips.lti.v1p1.domain.model.CollectionRequest
-import com.boclips.lti.v1p1.domain.model.CollectionsRequest
+import com.boclips.lti.core.domain.model.CollectionRequest
+import com.boclips.lti.core.domain.model.CollectionsRequest
 import com.boclips.lti.v1p1.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.v1p1.testsupport.factories.CollectionResourceFactory
 import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake

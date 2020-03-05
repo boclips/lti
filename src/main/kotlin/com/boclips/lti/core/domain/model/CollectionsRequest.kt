@@ -1,3 +1,3 @@
-package com.boclips.lti.v1p1.domain.model
+package com.boclips.lti.core.domain.model
 
 data class CollectionsRequest(val integrationId: String)
