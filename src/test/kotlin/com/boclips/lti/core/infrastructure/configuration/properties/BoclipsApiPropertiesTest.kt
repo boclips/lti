@@ -1,4 +1,4 @@
-package com.boclips.lti.v1p1.configuration.properties
+package com.boclips.lti.core.infrastructure.configuration.properties
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -6,10 +6,11 @@ import org.junit.jupiter.api.Test
 import javax.validation.Validation
 import javax.validation.Validator
 
-class VideoServicePropertiesTest {
+class BoclipsApiPropertiesTest {
     @Test
     fun `returns validation errors when base url is blank`() {
-        val properties = VideoServiceProperties().apply {
+        val properties = BoclipsApiProperties()
+            .apply {
             baseUrl = ""
             tokenUrl = "http://localhost/v1/token"
         }
@@ -19,7 +20,8 @@ class VideoServicePropertiesTest {
 
     @Test
     fun `returns validation errors when token url is blank`() {
-        val properties = VideoServiceProperties().apply {
+        val properties = BoclipsApiProperties()
+            .apply {
             baseUrl = "http://localhost/v1"
             tokenUrl = ""
         }
@@ -29,7 +31,8 @@ class VideoServicePropertiesTest {
 
     @Test
     fun `does not return validation errors when given valid object`() {
-        val properties = VideoServiceProperties().apply {
+        val properties = BoclipsApiProperties()
+            .apply {
             baseUrl = "http://localhost/v1"
             tokenUrl = "http://localhost/v1/token"
         }

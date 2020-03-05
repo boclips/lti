@@ -1,7 +1,7 @@
 package com.boclips.lti.v1p1.application.service
 
 import com.boclips.lti.v1p1.application.model.AccessTokenResponse
-import com.boclips.lti.v1p1.configuration.properties.VideoServiceProperties
+import com.boclips.lti.core.infrastructure.configuration.properties.BoclipsApiProperties
 import com.boclips.lti.v1p1.infrastructure.service.KeycloakClientFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class VideoServiceAccessTokenProvider(
-    private val videoServiceProperties: VideoServiceProperties,
+    private val boclipsApiProperties: BoclipsApiProperties,
     private val keycloakClientFactory: KeycloakClientFactory
 ) {
     fun getAccessToken(integrationId: String): String {
@@ -23,7 +23,7 @@ class VideoServiceAccessTokenProvider(
         )
 
         return keycloakClientFactory.getKeycloakClient(integrationId).exchange(
-            videoServiceProperties.tokenUrl,
+            boclipsApiProperties.tokenUrl,
             HttpMethod.POST,
             requestEntity,
             AccessTokenResponse::class.java

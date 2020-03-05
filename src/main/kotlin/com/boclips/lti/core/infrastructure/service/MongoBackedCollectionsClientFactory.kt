@@ -1,7 +1,6 @@
 package com.boclips.lti.core.infrastructure.service
 
-import com.boclips.lti.core.infrastructure.service.CollectionsClientFactory
-import com.boclips.lti.v1p1.configuration.properties.VideoServiceProperties
+import com.boclips.lti.core.infrastructure.configuration.properties.BoclipsApiProperties
 import com.boclips.lti.v1p1.infrastructure.model.exception.ClientNotFoundException
 import com.boclips.lti.v1p1.infrastructure.repository.MongoIntegrationDocumentRepository
 import com.boclips.videos.api.httpclient.CollectionsClient
@@ -9,7 +8,7 @@ import com.boclips.videos.api.httpclient.helper.ServiceAccountCredentials
 import com.boclips.videos.api.httpclient.helper.ServiceAccountTokenFactory
 
 class MongoBackedCollectionsClientFactory(
-    private val videoServiceProperties: VideoServiceProperties,
+    private val boclipsApiProperties: BoclipsApiProperties,
     private val integrationDocumentRepository: MongoIntegrationDocumentRepository
 ) : CollectionsClientFactory {
     override fun getClient(integrationId: String): CollectionsClient {
@@ -17,11 +16,11 @@ class MongoBackedCollectionsClientFactory(
 
         if (integration != null) {
             return CollectionsClient.create(
-                apiUrl = videoServiceProperties.baseUrl,
+                apiUrl = boclipsApiProperties.baseUrl,
                 tokenFactory = ServiceAccountTokenFactory(
                     ServiceAccountCredentials(
                         // TODO Use token URI?
-                        videoServiceProperties.baseUrl,
+                        boclipsApiProperties.baseUrl,
                         integration.clientId,
                         integration.clientSecret
                     )

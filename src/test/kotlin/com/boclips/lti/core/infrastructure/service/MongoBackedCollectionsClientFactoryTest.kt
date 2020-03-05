@@ -1,6 +1,6 @@
 package com.boclips.lti.core.infrastructure.service
 
-import com.boclips.lti.v1p1.configuration.properties.VideoServiceProperties
+import com.boclips.lti.core.infrastructure.configuration.properties.BoclipsApiProperties
 import com.boclips.lti.v1p1.infrastructure.model.IntegrationDocument
 import com.boclips.lti.v1p1.infrastructure.model.exception.ClientNotFoundException
 import com.boclips.lti.v1p1.infrastructure.repository.MongoIntegrationDocumentRepository
@@ -20,19 +20,20 @@ import org.mockito.junit.jupiter.MockitoExtension
 class MongoBackedCollectionsClientFactoryTest {
     private lateinit var preconfiguredCollectionsClient: CollectionsClient
     private lateinit var integrationDocumentRepository: MongoIntegrationDocumentRepository
-    private lateinit var videoServiceProperties: VideoServiceProperties
+    private lateinit var boclipsApiProperties: BoclipsApiProperties
     private lateinit var factory: MongoBackedCollectionsClientFactory
 
     @BeforeEach
     fun setupCollectionsClientFactory(@Mock integrationDocumentRepository: MongoIntegrationDocumentRepository) {
         preconfiguredCollectionsClient = CollectionsClientFake()
         this.integrationDocumentRepository = integrationDocumentRepository
-        videoServiceProperties = VideoServiceProperties().apply {
+        boclipsApiProperties = BoclipsApiProperties()
+            .apply {
             baseUrl = "https://api.com/"
         }
 
         factory = MongoBackedCollectionsClientFactory(
-            videoServiceProperties = videoServiceProperties,
+            boclipsApiProperties = boclipsApiProperties,
             integrationDocumentRepository = integrationDocumentRepository
         )
     }

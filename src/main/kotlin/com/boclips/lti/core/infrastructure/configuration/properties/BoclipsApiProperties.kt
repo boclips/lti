@@ -1,4 +1,4 @@
-package com.boclips.lti.v1p1.configuration.properties
+package com.boclips.lti.core.infrastructure.configuration.properties
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank
 @Component
 @Validated
 @ConfigurationProperties(prefix = "boclips.api")
-class VideoServiceProperties {
+class BoclipsApiProperties {
     @NotBlank
     var baseUrl: String = ""
 
