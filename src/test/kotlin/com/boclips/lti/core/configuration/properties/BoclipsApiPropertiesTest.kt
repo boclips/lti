@@ -1,4 +1,4 @@
-package com.boclips.lti.core.infrastructure.configuration.properties
+package com.boclips.lti.core.configuration.properties
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach

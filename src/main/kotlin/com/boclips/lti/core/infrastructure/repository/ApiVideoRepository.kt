@@ -6,9 +6,7 @@ import com.boclips.lti.core.domain.model.VideoRequest
 import com.boclips.lti.core.domain.repository.VideoRepository
 import com.boclips.lti.core.infrastructure.service.VideosClientFactory
 import feign.FeignException
-import org.springframework.stereotype.Repository
 
-@Repository
 class ApiVideoRepository(private val videosClientFactory: VideosClientFactory) :
     VideoRepository {
     override fun get(videoRequest: VideoRequest): Video {

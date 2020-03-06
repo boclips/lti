@@ -3,9 +3,7 @@ package com.boclips.lti.v1p1.domain.service
 import com.boclips.lti.v1p1.domain.exception.LaunchRequestInvalidException
 import mu.KLogging
 import org.imsglobal.lti.launch.LtiVerificationResult
-import org.springframework.stereotype.Service
 
-@Service
 class AssertLaunchRequestIsValid {
     companion object : KLogging()
 

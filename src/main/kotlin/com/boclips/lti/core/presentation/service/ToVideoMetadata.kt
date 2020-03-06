@@ -4,9 +4,7 @@ import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
 import com.boclips.lti.core.domain.model.Video
 import com.boclips.lti.core.presentation.model.VideoMetadata
 import mu.KLogging
-import org.springframework.stereotype.Service
 
-@Service
 class ToVideoMetadata(
     private val uriComponentsBuilderFactory: UriComponentsBuilderFactory,
     private val formatDuration: FormatDuration

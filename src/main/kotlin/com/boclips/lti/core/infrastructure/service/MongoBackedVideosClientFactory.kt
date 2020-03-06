@@ -1,6 +1,6 @@
 package com.boclips.lti.core.infrastructure.service
 
-import com.boclips.lti.core.infrastructure.configuration.properties.BoclipsApiProperties
+import com.boclips.lti.core.configuration.properties.BoclipsApiProperties
 import com.boclips.lti.core.infrastructure.exception.ClientNotFoundException
 import com.boclips.lti.core.infrastructure.repository.MongoIntegrationDocumentRepository
 import com.boclips.videos.api.httpclient.VideosClient

@@ -9,9 +9,7 @@ import com.boclips.lti.core.infrastructure.service.CollectionsClientFactory
 import com.boclips.videos.api.request.Projection
 import com.boclips.videos.api.request.collection.CollectionFilterRequest
 import feign.FeignException
-import org.springframework.stereotype.Repository
 
-@Repository
 class ApiCollectionRepository(
     private val collectionsClientFactory: CollectionsClientFactory
 ) : CollectionRepository {

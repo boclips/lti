@@ -3,11 +3,9 @@ package com.boclips.lti.v1p1.domain.service
 import com.boclips.lti.core.application.model.SessionKeys
 import com.boclips.lti.core.application.model.SessionKeys.authenticationState
 import com.boclips.lti.v1p1.domain.model.LaunchParams
-import org.springframework.stereotype.Service
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpSession
 
-@Service
 class InitializeLtiSession {
     operator fun invoke(request: HttpServletRequest, session: HttpSession) {
         markAsAuthenticated(session)

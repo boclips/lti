@@ -3,10 +3,8 @@ package com.boclips.lti.core.infrastructure.service
 import com.boclips.lti.core.infrastructure.exception.IntegrationNotFoundException
 import com.boclips.lti.core.infrastructure.repository.MongoIntegrationDocumentRepository
 import org.springframework.boot.web.client.RestTemplateBuilder
-import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
-@Service
 class KeycloakClientFactory(val integrationDocumentRepository: MongoIntegrationDocumentRepository) {
     fun getKeycloakClient(integrationId: String): RestTemplate {
         val integrationKeyCloakClient = integrationDocumentRepository.findOneByIntegrationId(integrationId)

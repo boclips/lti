@@ -1,7 +1,7 @@
 package com.boclips.lti.core.application.service
 
 import com.boclips.lti.core.application.model.AccessTokenResponse
-import com.boclips.lti.core.infrastructure.configuration.properties.BoclipsApiProperties
+import com.boclips.lti.core.configuration.properties.BoclipsApiProperties
 import com.boclips.lti.core.infrastructure.service.KeycloakClientFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders

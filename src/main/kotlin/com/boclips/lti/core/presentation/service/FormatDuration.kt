@@ -1,9 +1,7 @@
 package com.boclips.lti.core.presentation.service
 
-import org.springframework.stereotype.Service
 import java.time.Duration
 
-@Service
 class FormatDuration {
     operator fun invoke(duration: Duration?): String {
         return when {

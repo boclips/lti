@@ -10,7 +10,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy
 
 @Configuration
 @EnableAspectJAutoProxy
-class LtiContext {
+class LtiOnePointOneContext {
     @Bean
     fun ltiVerifier(): LtiVerifier {
         return LtiOauthVerifier()

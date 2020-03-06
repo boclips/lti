@@ -1,9 +1,7 @@
 package com.boclips.lti.core.presentation.service
 
 import com.boclips.lti.core.presentation.model.CollectionMetadata
-import org.springframework.stereotype.Service
 
-@Service
 class SortByCollectionTitle {
     val titlesWithNumbersRegex = "[^\\d]*(\\d+)[^\\d]*".toRegex()
 

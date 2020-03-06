@@ -4,9 +4,7 @@ import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
 import com.boclips.lti.core.domain.model.Collection
 import com.boclips.lti.core.domain.model.Video
 import com.boclips.lti.core.presentation.model.CollectionMetadata
-import org.springframework.stereotype.Service
 
-@Service
 class ToCollectionMetadata(private val uriComponentsBuilderFactory: UriComponentsBuilderFactory) {
     operator fun invoke(collection: Collection): CollectionMetadata {
         return CollectionMetadata(
