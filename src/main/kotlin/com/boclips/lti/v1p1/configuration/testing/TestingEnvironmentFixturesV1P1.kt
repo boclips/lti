@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct
 
 @Component
 @Profile("testing")
-class TestingEnvironmentFixtures(
+class TestingEnvironmentFixturesV1P1(
     private val ltiOnePointOneConsumerRepository: LtiOnePointOneConsumerRepository,
     @Value("\${fixtures.ltiOnePointOne.consumerKey}") private val testingConsumerKey: String,
     @Value("\${fixtures.ltiOnePointOne.consumerSecret}") private val testingConsumerSecret: String

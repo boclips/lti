@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct
 
 @Component
 @Profile("testing")
-class TestingEnvironmentFixtures(
+class TestingEnvironmentFixturesCore(
     private val integrationDocumentRepository: MongoIntegrationDocumentRepository,
     @Value("\${fixtures.ltiOnePointOne.consumerKey}") private val testingConsumerKey: String,
     @Value("\${fixtures.videosClient.id}") private val testingClientId: String,
