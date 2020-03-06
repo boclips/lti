@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpSession
 
 @RestController
-class LtiAuthController(
+class AccessTokenController(
     private val apiAccessTokenProvider: ApiAccessTokenProvider,
     private val assertHasValidSession: AssertHasValidSession
 ) {

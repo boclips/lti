@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-class LtiAuthControllerIntegrationTest : AbstractSpringIntegrationTest() {
+class AccessTokenControllerIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
     fun `does not permit unauthenticated requests`() {
         mvc.perform(get("/auth/token"))
