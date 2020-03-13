@@ -19,7 +19,12 @@ class UserCollectionsViewController(
     private val toCollectionViewModel: ToCollectionViewModel,
     private val sortByCollectionTitle: SortByCollectionTitle
 ) {
-    @GetMapping("/collections")
+    @GetMapping(
+        // TODO There will be a transition period where we support both paths to not break
+        // existing user sessions.
+        "/v1p1/collections",
+        "/collections"
+    )
     fun getUserCollections(session: HttpSession): ModelAndView {
         assertHasValidSession(session)
 

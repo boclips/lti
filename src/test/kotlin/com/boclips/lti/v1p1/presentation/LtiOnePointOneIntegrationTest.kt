@@ -222,6 +222,14 @@ abstract class LtiOnePointOneIntegrationTest : AbstractSpringIntegrationTest() {
             .andExpect(header().string("Location", resourcePath()))
     }
 
+    @Test
+    fun `it's able to access the resource through old LTI 1p1 path within the transition period`() {
+        val session = executeLtiLaunch()
+
+        mvc.perform(get(launchRequestPath()).session(session as MockHttpSession))
+            .andExpect(status().isOk)
+    }
+
     @Nested
     inner class InvalidRequests {
         @Test
