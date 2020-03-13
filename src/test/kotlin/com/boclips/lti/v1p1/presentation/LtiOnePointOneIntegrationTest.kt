@@ -2,8 +2,8 @@ package com.boclips.lti.v1p1.presentation
 
 import com.boclips.lti.core.domain.model.Video
 import com.boclips.lti.core.infrastructure.repository.VideoResourceConverter
-import com.boclips.lti.core.presentation.model.CollectionMetadata
-import com.boclips.lti.core.presentation.model.VideoMetadata
+import com.boclips.lti.core.presentation.model.CollectionViewModel
+import com.boclips.lti.core.presentation.model.VideoViewModel
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.testsupport.factories.CollectionResourceFactory
 import com.boclips.lti.testsupport.factories.VideoResourcesFactory
@@ -41,7 +41,7 @@ class VideosLtiOnePointOneIntegrationTest : LtiOnePointOneIntegrationTest() {
             .andExpect(header().doesNotExist("X-Frame-Options"))
             .andExpect(status().isOk)
             .andExpect(view().name("video"))
-            .andExpect(model().attribute("video", toVideoMetadata(video)))
+            .andExpect(model().attribute("video", toVideoViewModel(video)))
             .andExpect(model().attribute("userId", testUserId))
     }
 
@@ -82,7 +82,7 @@ class CollectionsLtiOnePointOneIntegrationTest : LtiOnePointOneIntegrationTest()
                     val videos = it as List<*>
                     assertThat(
                         videos
-                            .filterIsInstance(VideoMetadata::class.java)
+                            .filterIsInstance(VideoViewModel::class.java)
                             .map { videoMetadata -> videoMetadata.videoPageUrl.substringAfterLast("/") }
                     )
                         .containsExactly(firstVideo.id, secondVideo.id, thirdVideo.id)
@@ -161,7 +161,7 @@ class UserCollectionsLtiOnePointOneIntegrationTest : LtiOnePointOneIntegrationTe
                     val collections = it as List<*>
                     assertThat(
                         collections
-                            .filterIsInstance(CollectionMetadata::class.java)
+                            .filterIsInstance(CollectionViewModel::class.java)
                             .map { collectionMetadata -> collectionMetadata.collectionPageUrl.substringAfterLast("/") }
                     )
                         .containsExactly(firstCollectionId, secondCollectionId)

@@ -1,6 +1,6 @@
 package com.boclips.lti.core.presentation.model
 
-data class CollectionMetadata(
+data class CollectionViewModel(
     val title: String,
     val collectionPageUrl: String,
     val videosCountLabel: String,

@@ -1,6 +1,6 @@
 package com.boclips.lti.core.presentation.service
 
-import com.boclips.lti.core.presentation.model.CollectionMetadata
+import com.boclips.lti.core.presentation.model.CollectionViewModel
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -8,11 +8,11 @@ class SortByCollectionTitleTest {
     @Test
     fun `sorts collections alphabetically by title, ignoring case`() {
         val collections = listOf(
-            CollectionMetadata("Doge", "", "", emptyList()),
-            CollectionMetadata("apple", "", "", emptyList()),
-            CollectionMetadata("car", "", "", emptyList()),
-            CollectionMetadata("Air", "", "", emptyList()),
-            CollectionMetadata("City", "", "", emptyList())
+            CollectionViewModel("Doge", "", "", emptyList()),
+            CollectionViewModel("apple", "", "", emptyList()),
+            CollectionViewModel("car", "", "", emptyList()),
+            CollectionViewModel("Air", "", "", emptyList()),
+            CollectionViewModel("City", "", "", emptyList())
         )
 
         val sorted = sortByCollectionTitle(collections)
@@ -25,31 +25,31 @@ class SortByCollectionTitleTest {
     @Test
     fun `sorts titles with numbers according to the number`() {
         val collections = listOf(
-            CollectionMetadata(
+            CollectionViewModel(
                 "Grade 11",
                 "",
                 "",
                 emptyList()
             ),
-            CollectionMetadata(
+            CollectionViewModel(
                 "Grade 10",
                 "",
                 "",
                 emptyList()
             ),
-            CollectionMetadata(
+            CollectionViewModel(
                 "Grade 9",
                 "",
                 "",
                 emptyList()
             ),
-            CollectionMetadata(
+            CollectionViewModel(
                 "Grade 66",
                 "",
                 "",
                 emptyList()
             ),
-            CollectionMetadata(
+            CollectionViewModel(
                 "Grade 1",
                 "",
                 "",
@@ -67,26 +67,26 @@ class SortByCollectionTitleTest {
     @Test
     fun `places titles with numbers before other ones`() {
         val collections = listOf(
-            CollectionMetadata(
+            CollectionViewModel(
                 "Grade 11",
                 "",
                 "",
                 emptyList()
             ),
-            CollectionMetadata(
+            CollectionViewModel(
                 "Grade 2",
                 "",
                 "",
                 emptyList()
             ),
-            CollectionMetadata(
+            CollectionViewModel(
                 "Beagle",
                 "",
                 "",
                 emptyList()
             ),
-            CollectionMetadata("Apple", "", "", emptyList()),
-            CollectionMetadata(
+            CollectionViewModel("Apple", "", "", emptyList()),
+            CollectionViewModel(
                 "Grade 1",
                 "",
                 "",

@@ -6,7 +6,7 @@ import com.boclips.lti.core.domain.repository.VideoRepository
 import com.boclips.lti.core.infrastructure.repository.MongoIntegrationDocumentRepository
 import com.boclips.lti.core.infrastructure.service.CollectionsClientFactory
 import com.boclips.lti.core.infrastructure.service.VideosClientFactory
-import com.boclips.lti.core.presentation.service.ToVideoMetadata
+import com.boclips.lti.core.presentation.service.ToVideoViewModel
 import com.boclips.lti.testsupport.configuration.FakeClientsConfig
 import com.boclips.lti.v1p1.infrastructure.repository.LtiOnePointOneConsumerRepository
 import com.mongodb.MongoClient
@@ -43,7 +43,7 @@ abstract class AbstractSpringIntegrationTest {
     protected lateinit var collectionsClientFactory: CollectionsClientFactory
 
     @Autowired
-    protected lateinit var toVideoMetadata: ToVideoMetadata
+    protected lateinit var toVideoViewModel: ToVideoViewModel
 
     @Autowired
     protected lateinit var videoRepository: VideoRepository

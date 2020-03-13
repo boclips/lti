@@ -1,6 +1,6 @@
 package com.boclips.lti.core.presentation.model
 
-data class VideoMetadata (
+data class VideoViewModel (
     val videoPageUrl: String,
     val playbackUrl: String,
     val playerAuthUrl: String,

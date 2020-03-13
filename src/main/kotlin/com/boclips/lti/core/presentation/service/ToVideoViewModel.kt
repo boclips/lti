@@ -2,10 +2,10 @@ package com.boclips.lti.core.presentation.service
 
 import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
 import com.boclips.lti.core.domain.model.Video
-import com.boclips.lti.core.presentation.model.VideoMetadata
+import com.boclips.lti.core.presentation.model.VideoViewModel
 import mu.KLogging
 
-class ToVideoMetadata(
+class ToVideoViewModel(
     private val uriComponentsBuilderFactory: UriComponentsBuilderFactory,
     private val formatDuration: FormatDuration
 ) {
@@ -14,11 +14,11 @@ class ToVideoMetadata(
         const val mobileDescriptionLength = 100
     }
 
-    operator fun invoke(video: Video): VideoMetadata {
+    operator fun invoke(video: Video): VideoViewModel {
         val uriComponentsBuilder = uriComponentsBuilderFactory.getInstance()
-        return VideoMetadata(
+        return VideoViewModel(
             videoPageUrl = uriComponentsBuilder
-                .replacePath("/v1p1/videos/${video.videoId.value}")
+                .replacePath("/videos/${video.videoId.value}")
                 .toUriString(),
             playbackUrl = video.videoId.uri.toString(),
             playerAuthUrl = uriComponentsBuilder

@@ -3,15 +3,15 @@ package com.boclips.lti.core.presentation.service
 import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
 import com.boclips.lti.core.domain.model.Collection
 import com.boclips.lti.core.domain.model.Video
-import com.boclips.lti.core.presentation.model.CollectionMetadata
+import com.boclips.lti.core.presentation.model.CollectionViewModel
 
-class ToCollectionMetadata(private val uriComponentsBuilderFactory: UriComponentsBuilderFactory) {
-    operator fun invoke(collection: Collection): CollectionMetadata {
-        return CollectionMetadata(
+class ToCollectionViewModel(private val uriComponentsBuilderFactory: UriComponentsBuilderFactory) {
+    operator fun invoke(collection: Collection): CollectionViewModel {
+        return CollectionViewModel(
             collection.title,
             uriComponentsBuilderFactory.getInstance()
                 .replacePath(
-                    "/v1p1/collections/${collection.collectionId.uri.toString().substringAfterLast("/")}"
+                    "/collections/${collection.collectionId.uri.toString().substringAfterLast("/")}"
                 )
                 .toUriString(),
             getVideosCountLabel(collection.videos),

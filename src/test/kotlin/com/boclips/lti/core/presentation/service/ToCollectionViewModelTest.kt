@@ -14,17 +14,17 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.web.util.UriComponentsBuilder
 
 @ExtendWith(MockitoExtension::class)
-class ToCollectionMetadataTest {
+class ToCollectionViewModelTest {
     @Test
     fun `returns metadata corresponding to provided collection and limits thumbnails to 4 items`() {
         val collectionId = "123"
         val collection: Collection =
             CollectionFactory.sample(collectionId = collectionId, title = "Superb collection!", videos = videos)
 
-        val collectionMetadata = toCollectionMetadata(collection)
+        val collectionMetadata = toCollectionViewModel(collection)
 
         assertThat(collectionMetadata.title).isEqualTo(collection.title)
-        assertThat(collectionMetadata.collectionPageUrl).isEqualTo("http://localhost/v1p1/collections/$collectionId")
+        assertThat(collectionMetadata.collectionPageUrl).isEqualTo("http://localhost/collections/$collectionId")
         assertThat(collectionMetadata.videosCountLabel).isEqualTo("9 videos")
         assertThat(collectionMetadata.thumbnailUrls).containsExactly(
             videos.component1().playback.thumbnailUrl,
@@ -42,7 +42,7 @@ class ToCollectionMetadataTest {
             videos = videos.subList(0, 2)
         )
 
-        val collectionMetadata = toCollectionMetadata(collectionWithTwoVideos)
+        val collectionMetadata = toCollectionViewModel(collectionWithTwoVideos)
 
         assertThat(collectionMetadata.videosCountLabel).isEqualTo("2 videos")
         assertThat(collectionMetadata.thumbnailUrls).containsExactly(
@@ -61,7 +61,7 @@ class ToCollectionMetadataTest {
             videos = listOf(videos.component1())
         )
 
-        val collectionMetadata = toCollectionMetadata(collectionWithTwoVideos)
+        val collectionMetadata = toCollectionViewModel(collectionWithTwoVideos)
 
         assertThat(collectionMetadata.videosCountLabel).isEqualTo("1 video")
     }
@@ -69,7 +69,7 @@ class ToCollectionMetadataTest {
     private val videos = 1.until(10).map { VideoFactory.sample(thumbnailUrl = "http://thumbnails.com/$it") }
 
     private lateinit var uriComponentsBuilderFactory: UriComponentsBuilderFactory
-    private lateinit var toCollectionMetadata: ToCollectionMetadata
+    private lateinit var toCollectionViewModel: ToCollectionViewModel
 
     @BeforeEach
     private fun setup(
@@ -77,13 +77,13 @@ class ToCollectionMetadataTest {
     ) {
         this.uriComponentsBuilderFactory = uriComponentsBuilderFactory
 
-        toCollectionMetadata =
-            ToCollectionMetadata(
+        toCollectionViewModel =
+            ToCollectionViewModel(
                 uriComponentsBuilderFactory
             )
 
         whenever(uriComponentsBuilderFactory.getInstance()).thenReturn(
-            UriComponentsBuilder.fromHttpUrl("http://localhost/v1p1/collections")
+            UriComponentsBuilder.fromHttpUrl("http://localhost/collections")
         )
     }
 }
