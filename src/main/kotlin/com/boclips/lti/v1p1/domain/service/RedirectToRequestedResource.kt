@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest
 class RedirectToRequestedResource {
     operator fun invoke(request: HttpServletRequest): ResponseEntity<Unit> {
         val responseHeaders = HttpHeaders()
-        responseHeaders.location = URI(request.requestURI)
+        responseHeaders.location = URI(request.requestURI.toString().replace("/v1p1", ""))
         return ResponseEntity(responseHeaders, HttpStatus.SEE_OTHER)
     }
 }

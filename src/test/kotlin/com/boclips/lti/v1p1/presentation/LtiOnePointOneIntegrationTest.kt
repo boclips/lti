@@ -57,7 +57,7 @@ class VideosLtiOnePointOneIntegrationTest : LtiOnePointOneIntegrationTest() {
 
     override fun resourcePath() = interpolateResourcePath(video.videoId.value)
 
-    override fun interpolateResourcePath(resourceId: String?) = "/v1p1/videos/$resourceId"
+    override fun interpolateResourcePath(resourceId: String?) = "/videos/$resourceId"
 
     @BeforeEach
     fun createVideo() {
@@ -104,7 +104,7 @@ class CollectionsLtiOnePointOneIntegrationTest : LtiOnePointOneIntegrationTest()
             .andExpect(status().isOk)
             .andExpect(model().attribute("customLogoUrl", testLogoUri))
 
-        mvc.perform(get("/v1p1/videos/${firstVideo.id}").session(session))
+        mvc.perform(get("/videos/${firstVideo.id}").session(session))
             .andExpect(status().isOk)
             .andExpect(model().attribute("customLogoUrl", testLogoUri))
     }
@@ -126,7 +126,7 @@ class CollectionsLtiOnePointOneIntegrationTest : LtiOnePointOneIntegrationTest()
 
     override fun resourcePath() = interpolateResourcePath(collectionId)
 
-    override fun interpolateResourcePath(resourceId: String?) = "/v1p1/collections/$resourceId"
+    override fun interpolateResourcePath(resourceId: String?) = "/collections/$resourceId"
 
     @BeforeEach
     fun populateCollection() {
@@ -183,7 +183,7 @@ class UserCollectionsLtiOnePointOneIntegrationTest : LtiOnePointOneIntegrationTe
             .andExpect(status().isOk)
             .andExpect(model().attribute("customLogoUrl", testLogoUri))
 
-        mvc.perform(get("/v1p1/collections/$firstCollectionId").session(session))
+        mvc.perform(get("/collections/$firstCollectionId").session(session))
             .andExpect(status().isOk)
             .andExpect(model().attribute("customLogoUrl", testLogoUri))
     }
@@ -191,7 +191,7 @@ class UserCollectionsLtiOnePointOneIntegrationTest : LtiOnePointOneIntegrationTe
     val firstCollectionId = "87064254edd642a8a4c2e22a"
     val secondCollectionId = "d02f78473e1545c6aa4a508a"
 
-    override fun interpolateResourcePath(resourceId: String?) = "/v1p1/collections"
+    override fun interpolateResourcePath(resourceId: String?) = "/collections"
 
     @BeforeEach
     fun populateCollections() {
@@ -214,7 +214,7 @@ abstract class LtiOnePointOneIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
     fun `endpoint redirects user to landing page if it receives a minimal correct request`() {
         mvc.perform(
-            post(resourcePath())
+            post(launchRequestPath())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .params(validLaunchRequest())
         )
@@ -227,7 +227,7 @@ abstract class LtiOnePointOneIntegrationTest : AbstractSpringIntegrationTest() {
         @Test
         fun `endpoint returns an error if request misses resource_link_id`() {
             mvc.perform(
-                post(resourcePath())
+                post(launchRequestPath())
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .params(
                         prepareLaunchRequest(
@@ -252,7 +252,7 @@ abstract class LtiOnePointOneIntegrationTest : AbstractSpringIntegrationTest() {
         @Test
         fun `endpoint returns an error if it receives a blank request`() {
             mvc.perform(
-                post(resourcePath())
+                post(launchRequestPath())
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             )
                 .andExpect(status().isBadRequest)
@@ -267,7 +267,7 @@ abstract class LtiOnePointOneIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
     fun `if request is invalid do not set a session`() {
         val session = mvc.perform(
-            post(resourcePath())
+            post(launchRequestPath())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         ).andReturn().request.session
 
@@ -332,6 +332,7 @@ abstract class LtiOnePointOneIntegrationTest : AbstractSpringIntegrationTest() {
     val consumerSecret = "test-secret"
     val consumerKey = "test-consumer"
 
+    private fun launchRequestPath() = "/v1p1${resourcePath()}"
     fun resourcePath() = interpolateResourcePath()
     abstract fun interpolateResourcePath(resourceId: String? = null): String
 
@@ -339,10 +340,13 @@ abstract class LtiOnePointOneIntegrationTest : AbstractSpringIntegrationTest() {
 
     protected fun executeLtiLaunch(customParameters: Map<String, String> = emptyMap()): HttpSession? {
         return mvc.perform(
-            post(resourcePath())
+            post(launchRequestPath())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .params(validLaunchRequest(customParameters))
-        ).andReturn().request.session
+        )
+            .andExpect(status().isSeeOther)
+            .andExpect(header().string("Location", resourcePath()))
+            .andReturn().request.session
     }
 
     protected fun validLaunchRequest(customParameters: Map<String, String> = emptyMap()): LinkedMultiValueMap<String, String> {
@@ -368,7 +372,7 @@ abstract class LtiOnePointOneIntegrationTest : AbstractSpringIntegrationTest() {
             parameters,
             key,
             secret,
-            "http://localhost${resourcePath()}",
+            "http://localhost${launchRequestPath()}",
             "POST"
         )
 

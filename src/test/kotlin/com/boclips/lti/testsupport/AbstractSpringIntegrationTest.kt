@@ -3,13 +3,12 @@ package com.boclips.lti.testsupport
 import com.boclips.lti.core.application.service.ApiAccessTokenProviderTest
 import com.boclips.lti.core.domain.repository.CollectionRepository
 import com.boclips.lti.core.domain.repository.VideoRepository
-import com.boclips.lti.v1p1.infrastructure.repository.LtiOnePointOneConsumerRepository
 import com.boclips.lti.core.infrastructure.repository.MongoIntegrationDocumentRepository
 import com.boclips.lti.core.infrastructure.service.CollectionsClientFactory
 import com.boclips.lti.core.infrastructure.service.VideosClientFactory
 import com.boclips.lti.core.presentation.service.ToVideoMetadata
-import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
-import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
+import com.boclips.lti.testsupport.configuration.FakeClientsConfig
+import com.boclips.lti.v1p1.infrastructure.repository.LtiOnePointOneConsumerRepository
 import com.mongodb.MongoClient
 import de.flapdoodle.embed.mongo.MongodProcess
 import mu.KLogging
@@ -88,8 +87,8 @@ abstract class AbstractSpringIntegrationTest {
     }
 
     @BeforeEach
-    fun clearFakes() {
-        (videosClientFactory.getClient("integration-one") as VideosClientFake).clear()
-        (collectionsClientFactory.getClient("integration-one") as CollectionsClientFake).clear()
+    fun clearClientFixtures() {
+        FakeClientsConfig.FakeVideoClientFactory.clear()
+        FakeClientsConfig.FakeCollectionsClientFactory.clear()
     }
 }

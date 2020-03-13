@@ -9,13 +9,10 @@ import com.boclips.lti.core.presentation.service.ToVideoMetadata
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.servlet.ModelAndView
 import javax.servlet.http.HttpSession
 
 @Controller
-// TODO We don't need to map this to LTI 1.1
-@RequestMapping("/v1p1")
 class CollectionViewController(
     private val assertHasValidSession: AssertHasValidSession,
     private val collectionRepository: CollectionRepository,

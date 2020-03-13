@@ -1,7 +1,5 @@
 package com.boclips.lti.testsupport.configuration
 
-import com.boclips.lti.core.configuration.properties.BoclipsApiProperties
-import com.boclips.lti.core.infrastructure.repository.MongoIntegrationDocumentRepository
 import com.boclips.lti.core.infrastructure.service.CollectionsClientFactory
 import com.boclips.lti.core.infrastructure.service.VideosClientFactory
 import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
@@ -13,28 +11,29 @@ import org.springframework.context.annotation.Profile
 @Profile("test")
 @Configuration
 class FakeClientsConfig {
-    @Bean
-    fun videosClientFactory(
-        boclipsApiProperties: BoclipsApiProperties,
-        integrationDocumentRepository: MongoIntegrationDocumentRepository
-    ): VideosClientFactory {
-        return object : VideosClientFactory {
-            private val clientsMap: MutableMap<String, VideosClientFake> = HashMap()
+    object FakeVideoClientFactory : VideosClientFactory {
+        private val clientsMap: MutableMap<String, VideosClientFake> = HashMap()
 
-            override fun getClient(integrationId: String) = clientsMap.getOrPut(integrationId, { VideosClientFake() })
+        override fun getClient(integrationId: String) = clientsMap.getOrPut(integrationId, { VideosClientFake() })
+
+        fun clear() {
+            clientsMap.clear()
         }
     }
 
     @Bean
-    fun collectionsClientFactory(
-        boclipsApiProperties: BoclipsApiProperties,
-        integrationDocumentRepository: MongoIntegrationDocumentRepository
-    ): CollectionsClientFactory {
-        return object : CollectionsClientFactory {
-            private val clientsMap: MutableMap<String, CollectionsClientFake> = HashMap()
+    fun videosClientFactory() = FakeVideoClientFactory
 
-            override fun getClient(integrationId: String) =
-                clientsMap.getOrPut(integrationId, { CollectionsClientFake() })
+    object FakeCollectionsClientFactory : CollectionsClientFactory {
+        private val clientsMap: MutableMap<String, CollectionsClientFake> = HashMap()
+
+        override fun getClient(integrationId: String) = clientsMap.getOrPut(integrationId, { CollectionsClientFake() })
+
+        fun clear() {
+            clientsMap.clear()
         }
     }
+
+    @Bean
+    fun collectionsClientFactory() = FakeCollectionsClientFactory
 }
