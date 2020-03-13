@@ -49,7 +49,7 @@ class VideosLtiOnePointOneIntegrationTest : LtiOnePointOneIntegrationTest() {
     fun `returns a 404 response when requested video is not found`() {
         val session = executeLtiLaunch()
 
-        mvc.perform(get(interpolateResourcePath(invalidResourceId)).session(session as MockHttpSession))
+        mvc.perform(get(interpolateResourcePath("this-does-not-exit")).session(session as MockHttpSession))
             .andExpect(status().isNotFound)
     }
 
@@ -110,10 +110,10 @@ class CollectionsLtiOnePointOneIntegrationTest : LtiOnePointOneIntegrationTest()
     }
 
     @Test
-    fun `returns a 404 response when requested video is not found`() {
+    fun `returns a 404 response when requested collection is not found`() {
         val session = executeLtiLaunch()
 
-        mvc.perform(get(interpolateResourcePath(invalidResourceId)).session(session as MockHttpSession))
+        mvc.perform(get(interpolateResourcePath("this-does-not-exist")).session(session as MockHttpSession))
             .andExpect(status().isNotFound)
     }
 
@@ -343,8 +343,6 @@ abstract class LtiOnePointOneIntegrationTest : AbstractSpringIntegrationTest() {
     private fun launchRequestPath() = "/v1p1${resourcePath()}"
     fun resourcePath() = interpolateResourcePath()
     abstract fun interpolateResourcePath(resourceId: String? = null): String
-
-    val invalidResourceId = "000000000000000000000000"
 
     protected fun executeLtiLaunch(customParameters: Map<String, String> = emptyMap()): HttpSession? {
         return mvc.perform(
