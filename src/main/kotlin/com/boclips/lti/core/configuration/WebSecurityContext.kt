@@ -18,6 +18,9 @@ class WebSecurityContext : HttpSecurityConfigurer {
             // Infrastructure
             .antMatchers(HttpMethod.GET, "/actuator/health").permitAll()
 
+            // Assets
+            .antMatchers(HttpMethod.GET, "/styles/*.css").permitAll()
+
             // Core LTI features
             .antMatchers(HttpMethod.GET, "/videos/*").permitAll()
             .antMatchers(HttpMethod.GET, "/collections").permitAll()
