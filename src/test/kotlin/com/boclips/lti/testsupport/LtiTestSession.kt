@@ -6,9 +6,7 @@ import org.springframework.mock.web.MockHttpSession
 import javax.servlet.http.HttpSession
 
 object LtiTestSession {
-    const val TEST_INTEGRATION = "test-integration"
-
-    fun authenticated(integrationId: String = TEST_INTEGRATION, sessionAttributes: Map<String, Any> = emptyMap()) =
+    fun authenticated(integrationId: String, sessionAttributes: Map<String, Any> = emptyMap()) =
         sessionWithAuthenticationState(
             integration = integrationId,
             authenticationState = true,

@@ -110,7 +110,7 @@ class VideoViewControllerIntegrationTest : AbstractSpringIntegrationTest() {
     fun `returns a 404 response when requested video is not found`() {
         mvc.perform(
                 get("/videos/this-does-not-exit")
-                    .session(LtiTestSession.authenticated() as MockHttpSession)
+                    .session(LtiTestSession.authenticated(integrationId = integrationId) as MockHttpSession)
             )
             .andExpect(status().isNotFound)
     }

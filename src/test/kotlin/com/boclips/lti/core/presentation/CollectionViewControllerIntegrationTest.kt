@@ -103,7 +103,7 @@ class CollectionViewControllerIntegrationTest : AbstractSpringIntegrationTest() 
     fun `returns a 404 response when requested collection is not found`() {
         mvc.perform(
                 get("/collections/this-does-not-exit")
-                    .session(LtiTestSession.authenticated() as MockHttpSession)
+                    .session(LtiTestSession.authenticated(integrationId = integrationId) as MockHttpSession)
             )
             .andExpect(status().isNotFound)
     }

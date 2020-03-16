@@ -28,7 +28,7 @@ class AccessTokenControllerIntegrationTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `permits requests with a valid LTI session and returns the token`() {
-        mvc.perform(get("/auth/token").session(LtiTestSession.authenticated() as MockHttpSession))
+        mvc.perform(get("/auth/token").session(LtiTestSession.authenticated(integrationId = integrationId) as MockHttpSession))
             .andExpect(status().isOk)
             .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
             .andExpect(content().string("test-auth-token"))
@@ -36,8 +36,10 @@ class AccessTokenControllerIntegrationTest : AbstractSpringIntegrationTest() {
 
     @BeforeEach
     fun setup() {
-        whenever(apiAccessTokenProvider.getAccessToken(LtiTestSession.TEST_INTEGRATION)).thenReturn("test-auth-token")
+        whenever(apiAccessTokenProvider.getAccessToken(integrationId)).thenReturn("test-auth-token")
     }
+
+    val integrationId = "test-lti-consumer"
 
     @MockBean(name = "apiAccessTokenProvider")
     lateinit var apiAccessTokenProvider: ApiAccessTokenProvider
