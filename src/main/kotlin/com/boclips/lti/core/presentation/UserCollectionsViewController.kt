@@ -1,8 +1,8 @@
 package com.boclips.lti.core.presentation
 
-import com.boclips.lti.core.application.model.SessionKeys.consumerKey
 import com.boclips.lti.core.application.model.SessionKeys.customLogo
 import com.boclips.lti.core.application.service.AssertHasValidSession
+import com.boclips.lti.core.application.service.LtiSessionHelpers.getIntegrationId
 import com.boclips.lti.core.domain.model.CollectionsRequest
 import com.boclips.lti.core.domain.repository.CollectionRepository
 import com.boclips.lti.core.presentation.service.SortByCollectionTitle
@@ -30,7 +30,7 @@ class UserCollectionsViewController(
 
         val userCollections = collectionRepository.getMyCollections(
             CollectionsRequest(
-                integrationId = session.getAttribute(consumerKey) as String
+                integrationId = getIntegrationId(session)
             )
         )
 

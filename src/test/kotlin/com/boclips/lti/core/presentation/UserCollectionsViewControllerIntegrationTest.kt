@@ -8,6 +8,7 @@ import com.boclips.lti.testsupport.factories.CollectionResourceFactory
 import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.CoreMatchers.nullValue
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.mock.web.MockHttpSession
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -62,15 +63,32 @@ class UserCollectionsViewControllerIntegrationTest : AbstractSpringIntegrationTe
             .andExpect(header().doesNotExist("X-Frame-Options"))
     }
 
-    @Test
-    fun `it's able to access the collection through a legacy path`() {
-        val session = LtiTestSession.authenticated(
-            integrationId = integrationId
-        )
+    @Nested
+    inner class LegacySetup {
+        @Test
+        fun `it's able to access the collection through a legacy path`() {
+            val session = LtiTestSession.authenticated(
+                integrationId = integrationId
+            )
 
-        mvc.perform(MockMvcRequestBuilders.get("/v1p1/collections").session(session as MockHttpSession))
-            .andExpect(status().isOk)
-            .andExpect(view().name("userCollections"))
+            mvc.perform(MockMvcRequestBuilders.get("/v1p1/collections").session(session as MockHttpSession))
+                .andExpect(status().isOk)
+                .andExpect(view().name("userCollections"))
+        }
+
+        @Test
+        fun `it's able to access resources using legacy consumerKey attribute`() {
+            val session = LtiTestSession.authenticated(
+                integrationId = integrationId
+            )
+
+            session.removeAttribute(SessionKeys.integrationId)
+            session.setAttribute(SessionKeys.consumerKey, integrationId)
+
+            mvc.perform(MockMvcRequestBuilders.get("/v1p1/collections").session(session as MockHttpSession))
+                .andExpect(status().isOk)
+                .andExpect(view().name("userCollections"))
+        }
     }
 
     @Test

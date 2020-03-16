@@ -1,16 +1,19 @@
 package com.boclips.lti.core.application.service
 
 import com.boclips.lti.core.application.exception.UnauthorizedException
-import com.boclips.lti.core.application.model.SessionKeys.authenticationState
+import com.boclips.lti.core.application.model.SessionKeys
 import javax.servlet.http.HttpSession
 
 class AssertHasValidSession {
     operator fun invoke(session: HttpSession?) {
-        val isAuthenticated: Boolean = session?.getAttribute(authenticationState)?.let {
-            (it as Boolean)
-        } ?: false
+        val hasIntegrationIdSet =
+            session
+                ?.getAttribute(SessionKeys.integrationId)
+                .let { it ?: session?.getAttribute(SessionKeys.consumerKey) }
+                ?.let { (it as String).isNotBlank() }
+                ?: false
 
-        if (!isAuthenticated) {
+        if (!hasIntegrationIdSet) {
             throw UnauthorizedException("A valid session is required")
         }
     }

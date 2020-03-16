@@ -1,31 +1,26 @@
 package com.boclips.lti.testsupport
 
 import com.boclips.lti.core.application.model.SessionKeys
-import com.boclips.lti.core.application.model.SessionKeys.consumerKey
 import org.springframework.mock.web.MockHttpSession
 import javax.servlet.http.HttpSession
 
 object LtiTestSession {
     fun authenticated(integrationId: String, sessionAttributes: Map<String, Any> = emptyMap()) =
         sessionWithAuthenticationState(
-            integration = integrationId,
-            authenticationState = true,
+            integrationId = integrationId,
             sessionAttributes = sessionAttributes
         )
 
     fun unauthenticated() = sessionWithAuthenticationState(
-        authenticationState = false,
         sessionAttributes = emptyMap()
     )
 
     private fun sessionWithAuthenticationState(
-        integration: String? = null,
-        authenticationState: Boolean,
+        integrationId: String? = null,
         sessionAttributes: Map<String, Any>
     ): HttpSession {
         val session = MockHttpSession()
-        session.setAttribute(SessionKeys.authenticationState, authenticationState)
-        session.setAttribute(consumerKey, integration)
+        session.setAttribute(SessionKeys.integrationId, integrationId)
 
         sessionAttributes.entries.forEach { entry ->
             session.setAttribute(entry.key, entry.value)

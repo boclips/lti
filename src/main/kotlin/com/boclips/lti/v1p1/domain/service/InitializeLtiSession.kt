@@ -1,21 +1,15 @@
 package com.boclips.lti.v1p1.domain.service
 
 import com.boclips.lti.core.application.model.SessionKeys
-import com.boclips.lti.core.application.model.SessionKeys.authenticationState
 import com.boclips.lti.v1p1.domain.model.LaunchParams
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpSession
 
 class InitializeLtiSession {
     operator fun invoke(request: HttpServletRequest, session: HttpSession) {
-        markAsAuthenticated(session)
         handleLogo(request, session)
         handleUserId(request, session)
         handleConsumerKey(request, session)
-    }
-
-    fun markAsAuthenticated(session: HttpSession) {
-        session.setAttribute(authenticationState, true)
     }
 
     fun handleLogo(request: HttpServletRequest, session: HttpSession) {
@@ -34,6 +28,6 @@ class InitializeLtiSession {
 
     fun handleConsumerKey(request: HttpServletRequest, session: HttpSession) {
         val consumerKey: String = request.getParameter(LaunchParams.Lti.CONSUMER_KEY).orEmpty()
-        session.setAttribute(SessionKeys.consumerKey, consumerKey)
+        session.setAttribute(SessionKeys.integrationId, consumerKey)
     }
 }
