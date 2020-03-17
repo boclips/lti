@@ -15,6 +15,6 @@ fixtures:
   ltiOnePointOne:
     consumerKey:
     consumerSecret:
-  videosClient:
+  apiClient:
     id:
     secret:
