@@ -19,14 +19,6 @@ class AssertHasValidSessionTest {
     }
 
     @Test
-    fun `does not throw an exception when given an LTI session with legacy consumerKy`() {
-        val session = mock<HttpSession> {
-            on { getAttribute(SessionKeys.consumerKey) } doReturn "test-integration"
-        }
-        assertThatCode { assertHasLtiSession(session) }.doesNotThrowAnyException()
-    }
-
-    @Test
     fun `throws UnauthorizedException if given session is null`() {
         assertThatThrownBy { assertHasLtiSession(null) }.isInstanceOf(UnauthorizedException::class.java)
     }
@@ -38,10 +30,9 @@ class AssertHasValidSessionTest {
     }
 
     @Test
-    fun `throws UnauthorizedException if given session does not have neither integrationId nor consumerKey set`() {
+    fun `throws UnauthorizedException if given session does not have integrationId set`() {
         val session = mock<HttpSession> {
             on { getAttribute(SessionKeys.integrationId) } doReturn null
-            on { getAttribute(SessionKeys.consumerKey) } doReturn null
         }
         assertThatThrownBy { assertHasLtiSession(session) }.isInstanceOf(UnauthorizedException::class.java)
     }

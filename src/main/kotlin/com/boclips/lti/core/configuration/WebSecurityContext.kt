@@ -27,12 +27,6 @@ class WebSecurityContext : HttpSecurityConfigurer {
             .antMatchers(HttpMethod.GET, "/collections/*").permitAll()
             .antMatchers(HttpMethod.GET, "/auth/token").permitAll()
 
-            // TODO There will be a transition period where we support both paths to not break
-            // existing user sessions.
-            .antMatchers(HttpMethod.GET, "/v1p1/videos/*").permitAll()
-            .antMatchers(HttpMethod.GET, "/v1p1/collections").permitAll()
-            .antMatchers(HttpMethod.GET, "/v1p1/collections/*").permitAll()
-
             // LTI 1.1
             .antMatchers(HttpMethod.POST, "/v1p1/**").permitAll()
 

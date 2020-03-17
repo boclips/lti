@@ -1,6 +1,5 @@
 package com.boclips.lti.core.presentation
 
-import com.boclips.lti.core.application.model.SessionKeys
 import com.boclips.lti.core.application.service.ApiAccessTokenProvider
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.testsupport.LtiTestSession
@@ -30,19 +29,6 @@ class AccessTokenControllerIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
     fun `permits requests with a valid LTI session and returns the token`() {
         mvc.perform(get("/auth/token").session(LtiTestSession.authenticated(integrationId = integrationId) as MockHttpSession))
-            .andExpect(status().isOk)
-            .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
-            .andExpect(content().string("test-auth-token"))
-    }
-
-    @Test
-    fun `it's able to retrieve the token for a session that uses the legacy consumerKey attribute`() {
-        val session = LtiTestSession.authenticated(integrationId = integrationId)
-
-        session.removeAttribute(SessionKeys.integrationId)
-        session.setAttribute(SessionKeys.consumerKey, integrationId)
-
-        mvc.perform(get("/auth/token").session(session as MockHttpSession))
             .andExpect(status().isOk)
             .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
             .andExpect(content().string("test-auth-token"))

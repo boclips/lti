@@ -9,7 +9,6 @@ class AssertHasValidSession {
         val hasIntegrationIdSet =
             session
                 ?.getAttribute(SessionKeys.integrationId)
-                .let { it ?: session?.getAttribute(SessionKeys.consumerKey) }
                 ?.let { (it as String).isNotBlank() }
                 ?: false
 

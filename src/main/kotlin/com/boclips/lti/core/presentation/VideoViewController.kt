@@ -19,12 +19,7 @@ class VideoViewController(
     private val videoRepository: VideoRepository,
     private val toVideoViewModel: ToVideoViewModel
 ) {
-    @GetMapping(
-        // TODO There will be a transition period where we support both paths to not break
-        // existing user sessions.
-        "/v1p1/videos/{videoId}",
-        "/videos/{videoId}"
-    )
+    @GetMapping("/videos/{videoId}")
     fun getVideo(session: HttpSession, @PathVariable("videoId") videoId: String): ModelAndView {
         assertHasValidSession(session)
 

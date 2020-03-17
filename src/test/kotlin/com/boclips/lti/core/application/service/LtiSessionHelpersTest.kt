@@ -15,13 +15,4 @@ class LtiSessionHelpersTest {
 
         assertThat(getIntegrationId(session)).isEqualTo("test-id")
     }
-
-    @Test
-    fun `returns integration id by legacy consumerKey attribute`() {
-        val session = MockHttpSession()
-
-        session.setAttribute(SessionKeys.consumerKey, "test-id")
-
-        assertThat(getIntegrationId(session)).isEqualTo("test-id")
-    }
 }

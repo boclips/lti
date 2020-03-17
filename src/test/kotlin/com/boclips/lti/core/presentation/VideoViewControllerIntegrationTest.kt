@@ -9,7 +9,6 @@ import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
 import com.boclips.videos.api.response.video.VideoResource
 import org.hamcrest.CoreMatchers.nullValue
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.mock.web.MockHttpSession
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -49,34 +48,6 @@ class VideoViewControllerIntegrationTest : AbstractSpringIntegrationTest() {
 
         mvc.perform(get("/videos/${video.videoId.value}").session(session as MockHttpSession))
             .andExpect(header().doesNotExist("X-Frame-Options"))
-    }
-
-    @Nested
-    inner class LegacySetup {
-        @Test
-        fun `it's able to access the video through a legacy path`() {
-            val session = LtiTestSession.authenticated(
-                integrationId = integrationId
-            )
-
-            mvc.perform(get("/v1p1/videos/${videoResource.id}").session(session as MockHttpSession))
-                .andExpect(status().isOk)
-                .andExpect(view().name("video"))
-        }
-
-        @Test
-        fun `it's able to access resources through legacy consumerKey attribute`() {
-            val session = LtiTestSession.authenticated(
-                integrationId = integrationId
-            )
-
-            session.removeAttribute(SessionKeys.integrationId)
-            session.setAttribute(SessionKeys.consumerKey, integrationId)
-
-            mvc.perform(get("/v1p1/videos/${videoResource.id}").session(session as MockHttpSession))
-                .andExpect(status().isOk)
-                .andExpect(view().name("video"))
-        }
     }
 
     @Test

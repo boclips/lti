@@ -18,12 +18,7 @@ class CollectionViewController(
     private val collectionRepository: CollectionRepository,
     private val toVideoViewModel: ToVideoViewModel
 ) {
-    @GetMapping(
-        // TODO There will be a transition period where we support both paths to not break
-        // existing user sessions.
-        "/v1p1/collections/{collectionId}",
-        "/collections/{collectionId}"
-    )
+    @GetMapping("/collections/{collectionId}")
     fun getCollection(session: HttpSession, @PathVariable("collectionId") collectionId: String): ModelAndView {
         assertHasValidSession(session)
 

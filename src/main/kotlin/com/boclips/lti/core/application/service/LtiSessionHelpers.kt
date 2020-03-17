@@ -5,8 +5,7 @@ import javax.servlet.http.HttpSession
 
 object LtiSessionHelpers {
     fun getIntegrationId(session: HttpSession): String {
-        return (session.getAttribute(SessionKeys.integrationId)
-            ?: session.getAttribute(SessionKeys.consumerKey))
+        return session.getAttribute(SessionKeys.integrationId)
             .let { it as String }
     }
 }
