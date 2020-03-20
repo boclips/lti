@@ -12,6 +12,7 @@ import com.boclips.lti.v1p1.infrastructure.repository.LtiOnePointOneConsumerRepo
 import com.mongodb.MongoClient
 import de.flapdoodle.embed.mongo.MongodProcess
 import mu.KLogging
+import org.hamcrest.Matchers.equalTo
 import org.imsglobal.lti.launch.LtiOauthSigner
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
@@ -23,6 +24,8 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.ResultActions
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 
 @ExtendWith(SpringExtension::class)
 @ActiveProfiles("test")
@@ -90,5 +93,13 @@ abstract class AbstractSpringIntegrationTest {
     fun clearClientFixtures() {
         FakeClientsConfig.FakeVideoClientFactory.clear()
         FakeClientsConfig.FakeCollectionsClientFactory.clear()
+    }
+
+    fun ResultActions.andExpectApiErrorPayload(message: String): ResultActions {
+        return this.andExpect(jsonPath("$.timestamp").exists())
+            .andExpect(jsonPath("$.status").exists())
+            .andExpect(jsonPath("$.error").exists())
+            .andExpect(jsonPath("$.message", equalTo(message)))
+            .andExpect(jsonPath("$.path").exists())
     }
 }
