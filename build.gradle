@@ -77,6 +77,10 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'org.springframework.boot:spring-boot-starter-security'
   implementation 'org.springframework.session:spring-session-data-mongodb'
+  // TODO Use this once we start registering public keys/JWKS URIs
+  //  implementation 'org.springframework.security:spring-security-oauth2-jose'
+
+  implementation 'com.auth0:java-jwt:3.10.1'
 
   implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
   implementation 'org.jetbrains.kotlin:kotlin-reflect'

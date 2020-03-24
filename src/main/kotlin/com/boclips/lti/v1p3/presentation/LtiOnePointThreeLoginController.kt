@@ -1,5 +1,6 @@
 package com.boclips.lti.v1p3.presentation
 
+import com.auth0.jwt.JWT
 import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
 import com.boclips.lti.v1p3.domain.model.SessionKeys
 import org.hibernate.validator.constraints.URL
@@ -13,11 +14,14 @@ import java.util.UUID
 import javax.servlet.http.HttpSession
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
+import com.boclips.lti.core.application.model.SessionKeys as CoreSessionKeys
 
 @Validated
 @Controller
 @RequestMapping("/v1p3")
-class LtiOnePointThreeLoginController(private val uriComponentsBuilderFactory: UriComponentsBuilderFactory) {
+class LtiOnePointThreeLoginController(
+    private val uriComponentsBuilderFactory: UriComponentsBuilderFactory
+) {
     @PostMapping("/initiate-login")
     fun initiateLogin(
         @NotNull(message = "'iss' parameter must not be blank")
@@ -35,6 +39,7 @@ class LtiOnePointThreeLoginController(private val uriComponentsBuilderFactory: U
     ): String {
         val state = UUID.randomUUID().toString()
         session.setAttribute(SessionKeys.state, state)
+        session.setAttribute(SessionKeys.targetLinkUri, targetLinkUri)
 
         // TODO I believe the value of iss parameter doesn't necessarily need to match the Platform authentication endpoint.
         // We probably need to store a mapping on our side and retrieve the auth endpoint based on iss value.
@@ -54,5 +59,23 @@ class LtiOnePointThreeLoginController(private val uriComponentsBuilderFactory: U
             .toUriString()
 
         return "redirect:$authenticationRequestUri"
+    }
+
+    @PostMapping("/authentication-response")
+    fun handleAuthenticationResponse(
+        @NotBlank(message = "'state' parameter must not be blank")
+        state: String?,
+        @NotBlank(message = "'id_token' parameter must not be blank")
+        @RequestParam(name = "id_token")
+        idToken: String?,
+        session: HttpSession
+    ): String {
+        val resource = session.getAttribute(SessionKeys.targetLinkUri)
+
+        val decodedToken = JWT.decode(idToken)
+
+        session.setAttribute(CoreSessionKeys.integrationId, decodedToken.issuer)
+
+        return "redirect:$resource"
     }
 }
