@@ -1,13 +1,15 @@
 package com.boclips.lti.v1p1.infrastructure.model
 
-import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
+import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 
 @Document(collection = "ltiOnePointOneConsumers")
 data class LtiOnePointOneConsumerDocument(
-    @BsonId
+    @Id
     val id: ObjectId,
+    @Indexed
     val key: String,
     val secret: String
 )
