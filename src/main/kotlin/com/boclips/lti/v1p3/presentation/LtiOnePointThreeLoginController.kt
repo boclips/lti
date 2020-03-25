@@ -3,6 +3,7 @@ package com.boclips.lti.v1p3.presentation
 import com.auth0.jwt.JWT
 import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
 import com.boclips.lti.v1p3.domain.model.SessionKeys
+import mu.KLogging
 import org.hibernate.validator.constraints.URL
 import org.springframework.stereotype.Controller
 import org.springframework.validation.annotation.Validated
@@ -22,6 +23,8 @@ import com.boclips.lti.core.application.model.SessionKeys as CoreSessionKeys
 class LtiOnePointThreeLoginController(
     private val uriComponentsBuilderFactory: UriComponentsBuilderFactory
 ) {
+    companion object : KLogging()
+
     @PostMapping("/initiate-login")
     fun initiateLogin(
         @NotNull(message = "'iss' parameter must not be blank")
@@ -37,6 +40,8 @@ class LtiOnePointThreeLoginController(
         targetLinkUri: String?,
         session: HttpSession
     ): String {
+        logger.info { "LTI 1.3 Initiate Login { iss: '$issuer', login_hint: '$loginHint', target_link_uri: '$targetLinkUri' }" }
+
         val state = UUID.randomUUID().toString()
         session.setAttribute(SessionKeys.state, state)
         session.setAttribute(SessionKeys.targetLinkUri, targetLinkUri)

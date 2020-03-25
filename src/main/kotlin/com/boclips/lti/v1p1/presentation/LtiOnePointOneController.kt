@@ -33,7 +33,7 @@ class LtiOnePointOneController(
         result: LtiVerificationResult,
         session: HttpSession
     ): ResponseEntity<Unit> {
-        logger.info { "Received launch request: ${request.method} ${request.requestURL}" }
+        logger.info { "LTI 1.1 Launch Request: ${request.method} ${request.requestURL}" }
 
         assertLaunchRequestIsValid(result)
         initializeLtiSession(request, session)
