@@ -21,16 +21,16 @@ class WebSecurityContext : HttpSecurityConfigurer {
             // Assets
             .antMatchers(HttpMethod.GET, "/styles/*.css").permitAll()
 
-            // Core LTI features
+            // Exposed resources
             .antMatchers(HttpMethod.GET, "/videos/*").permitAll()
             .antMatchers(HttpMethod.GET, "/collections").permitAll()
             .antMatchers(HttpMethod.GET, "/collections/*").permitAll()
             .antMatchers(HttpMethod.GET, "/auth/token").permitAll()
 
-            // LTI 1.1
+            // LTI 1.1 Launch endpoint
             .antMatchers(HttpMethod.POST, "/v1p1/**").permitAll()
 
-            // LTI 1.3
+            // LTI 1.3 Login endpoints
             .antMatchers(HttpMethod.POST, "/v1p3/initiate-login").permitAll()
             .antMatchers(HttpMethod.POST, "/v1p3/authentication-response").permitAll()
 
