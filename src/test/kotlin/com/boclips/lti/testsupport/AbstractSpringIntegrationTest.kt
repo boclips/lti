@@ -9,6 +9,7 @@ import com.boclips.lti.core.infrastructure.service.VideosClientFactory
 import com.boclips.lti.core.presentation.service.ToVideoViewModel
 import com.boclips.lti.testsupport.configuration.FakeClientsConfig
 import com.boclips.lti.v1p1.infrastructure.repository.LtiOnePointOneConsumerRepository
+import com.boclips.lti.v1p3.infrastructure.repository.MongoPlatformDocumentRepository
 import com.mongodb.MongoClient
 import de.flapdoodle.embed.mongo.MongodProcess
 import mu.KLogging
@@ -59,6 +60,9 @@ abstract class AbstractSpringIntegrationTest {
 
     @Autowired
     protected lateinit var integrationDocumentRepository: MongoIntegrationDocumentRepository
+
+    @Autowired
+    protected lateinit var mongoPlatformDocumentRepository: MongoPlatformDocumentRepository
 
     val ltiOauthSigner = LtiOauthSigner()
 

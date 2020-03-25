@@ -5,7 +5,9 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.testsupport.LtiTestSession
 import com.boclips.lti.v1p3.domain.model.SessionKeys
+import com.boclips.lti.v1p3.infrastructure.model.PlatformDocument
 import org.assertj.core.api.Assertions.assertThat
+import org.bson.types.ObjectId
 import org.hamcrest.Matchers.containsString
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Nested
@@ -24,23 +26,32 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
     @Nested
     inner class InitiateLogin {
         @Test
-        fun `redirects to the Platform on a valid login request`() {
+        fun `redirects to the Platform authentication endpoint on a valid login initiation request`() {
             val iss = "https://a-learning-platform.com"
+            val authenticationEndpoint = "https://idp.a-learning-platform.com/auth"
             val loginHint = "a-user-login-hint"
-            mvc.perform(
-                post("/v1p3/initiate-login")
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .param("iss", iss)
-                    .param("login_hint", loginHint)
-                    .param("target_link_uri", "https://tool.com/resource/super-cool")
+
+            mongoPlatformDocumentRepository.insert(
+                PlatformDocument(
+                    id = ObjectId(),
+                    issuer = iss,
+                    authenticationEndpoint = authenticationEndpoint
+                )
             )
+
+            mvc.perform(
+                    post("/v1p3/initiate-login")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("iss", iss)
+                        .param("login_hint", loginHint)
+                        .param("target_link_uri", "https://tool.com/resource/super-cool")
+                )
                 .andExpect(status().isFound)
                 .andDo { result ->
                     val location = result.response.getHeader("Location")
                     val locationUri = URI(location!!)
 
-                    // TODO This doesn't necessarily need to be true
-                    assertThat(location).startsWith(iss)
+                    assertThat(location).startsWith(authenticationEndpoint)
 
                     assertThat(locationUri).hasParameter("scope", "openid")
                     assertThat(locationUri).hasParameter("response_type", "id_token")
@@ -60,12 +71,21 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
 
         @Test
         fun `stores the requested resource on the browser session`() {
+            val issuer = "https://a-learning-platform.com"
             val resource = "https://tool.com/resource/super-cool"
+
+            mongoPlatformDocumentRepository.insert(
+                PlatformDocument(
+                    id = ObjectId(),
+                    issuer = issuer,
+                    authenticationEndpoint = "https://a-learning-platform.com/auth"
+                )
+            )
 
             val session = mvc.perform(
                 post("/v1p3/initiate-login")
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .param("iss", "https://a-learning-platform.com")
+                    .param("iss", issuer)
                     .param("login_hint", "a login hint")
                     .param("target_link_uri", resource)
             )
@@ -78,12 +98,12 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
         @Test
         fun `returns a bad request response when issuer is not a valid https URL`() {
             mvc.perform(
-                post("/v1p3/initiate-login")
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .param("iss", "http://insecure.com")
-                    .param("login_hint", "a-user-login-hint")
-                    .param("target_link_uri", "https://tool.com/resource/super-cool")
-            )
+                    post("/v1p3/initiate-login")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("iss", "http://insecure.com")
+                        .param("login_hint", "a-user-login-hint")
+                        .param("target_link_uri", "https://tool.com/resource/super-cool")
+                )
                 .andExpect(status().isBadRequest)
                 .andExpect(content().string(containsString("iss")))
         }
@@ -91,11 +111,11 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
         @Test
         fun `returns a bad request response when issuer is not provided`() {
             mvc.perform(
-                post("/v1p3/initiate-login")
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .param("login_hint", "a-user-login-hint")
-                    .param("target_link_uri", "https://tool.com/resource/super-cool")
-            )
+                    post("/v1p3/initiate-login")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("login_hint", "a-user-login-hint")
+                        .param("target_link_uri", "https://tool.com/resource/super-cool")
+                )
                 .andExpect(status().isBadRequest)
                 .andExpect(content().string(containsString("iss")))
         }
@@ -103,11 +123,11 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
         @Test
         fun `returns a bad request response when login_hint is not provided`() {
             mvc.perform(
-                post("/v1p3/initiate-login")
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .param("iss", "https://a-learning-platform.com")
-                    .param("target_link_uri", "https://tool.com/resource/super-cool")
-            )
+                    post("/v1p3/initiate-login")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("iss", "https://a-learning-platform.com")
+                        .param("target_link_uri", "https://tool.com/resource/super-cool")
+                )
                 .andExpect(status().isBadRequest)
                 .andExpect(content().string(containsString("login_hint")))
         }
@@ -115,11 +135,11 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
         @Test
         fun `returns a bad request response when target_link_uri is not provided`() {
             mvc.perform(
-                post("/v1p3/initiate-login")
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .param("iss", "https://a-learning-platform.com")
-                    .param("login_hint", "a-user-login-hint")
-            )
+                    post("/v1p3/initiate-login")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("iss", "https://a-learning-platform.com")
+                        .param("login_hint", "a-user-login-hint")
+                )
                 .andExpect(status().isBadRequest)
                 .andExpect(content().string(containsString("target_link_uri")))
         }
@@ -127,12 +147,12 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
         @Test
         fun `returns a bad request when target_link_uri is not a URL`() {
             mvc.perform(
-                post("/v1p3/initiate-login")
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .param("iss", "https://a-learning-platform.com")
-                    .param("login_hint", "a-user-login-hint")
-                    .param("target_link_uri", "definitely not an URI")
-            )
+                    post("/v1p3/initiate-login")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("iss", "https://a-learning-platform.com")
+                        .param("login_hint", "a-user-login-hint")
+                        .param("target_link_uri", "definitely not an URI")
+                )
                 .andExpect(status().isBadRequest)
                 .andExpect(content().string(containsString("target_link_uri")))
         }
@@ -156,12 +176,12 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
             )
 
             mvc.perform(
-                post("/v1p3/authentication-response")
-                    .session(session as MockHttpSession)
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .param("state", state)
-                    .param("id_token", idToken)
-            )
+                    post("/v1p3/authentication-response")
+                        .session(session as MockHttpSession)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("state", state)
+                        .param("id_token", idToken)
+                )
                 .andExpect(status().isFound)
                 .andDo { result ->
                     val location = result.response.getHeader("Location")
@@ -192,10 +212,10 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
         @Test
         fun `returns a bad request response when state parameter is missing`() {
             mvc.perform(
-                post("/v1p3/authentication-response")
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .param("id_token", "a token")
-            )
+                    post("/v1p3/authentication-response")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("id_token", "a token")
+                )
                 .andExpect(status().isBadRequest)
                 .andExpect(content().string(containsString("state")))
         }
@@ -203,10 +223,10 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
         @Test
         fun `returns a bad request response when id_token parameter is missing`() {
             mvc.perform(
-                post("/v1p3/authentication-response")
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .param("state", "of art")
-            )
+                    post("/v1p3/authentication-response")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("state", "of art")
+                )
                 .andExpect(status().isBadRequest)
                 .andExpect(content().string(containsString("id_token")))
         }

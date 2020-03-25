@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 
-@Configuration
+@Configuration("coreInfrastructureContext")
 class InfrastructureContext(
     private val boclipsApiProperties: BoclipsApiProperties,
     private val integrationDocumentRepository: MongoIntegrationDocumentRepository
