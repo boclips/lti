@@ -79,6 +79,8 @@ class LtiOnePointThreeLoginController(
 
         val decodedToken = JWT.decode(idToken)
 
+        logger.info { "LTI 1.3 Authentication Response Token ${decodedToken.token}" }
+
         session.setAttribute(CoreSessionKeys.integrationId, decodedToken.issuer)
 
         return "redirect:$resource"
