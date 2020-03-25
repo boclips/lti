@@ -40,6 +40,8 @@ class LtiOnePointThreeLoginController(
         @URL(message = "'target_link_uri' must be a valid URL")
         @RequestParam("target_link_uri")
         targetLinkUri: String?,
+        @RequestParam("lti_message_hint")
+        ltiMessageHint: String?,
         session: HttpSession
     ): String {
         logger.info { "LTI 1.3 Initiate Login { iss: '$issuer', login_hint: '$loginHint', target_link_uri: '$targetLinkUri' }" }
@@ -59,6 +61,9 @@ class LtiOnePointThreeLoginController(
                 uriComponentsBuilderFactory.getInstance().replacePath("/v1p3/auth").toUriString()
             )
             .queryParam("login_hint", loginHint!!)
+            .also {
+                if (!ltiMessageHint.isNullOrBlank()) it.queryParam("lti_message_hint", ltiMessageHint)
+            }
             .queryParam("state", state)
             .queryParam("response_mode", "form_post")
             .queryParam("nonce", UUID.randomUUID().toString())

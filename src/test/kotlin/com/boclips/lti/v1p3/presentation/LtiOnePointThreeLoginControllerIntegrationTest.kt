@@ -70,6 +70,64 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
         }
 
         @Test
+        fun `passes lti_message_hint if it's provided in the request`() {
+            val iss = "https://a-learning-platform.com"
+            val authenticationEndpoint = "https://idp.a-learning-platform.com/auth"
+            val ltiMessageHint = "lti-message-hint"
+
+            mongoPlatformDocumentRepository.insert(
+                PlatformDocument(
+                    id = ObjectId(),
+                    issuer = iss,
+                    authenticationEndpoint = authenticationEndpoint
+                )
+            )
+
+            mvc.perform(
+                    post("/v1p3/initiate-login")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("iss", iss)
+                        .param("login_hint", "a-user-login-hint")
+                        .param("lti_message_hint", ltiMessageHint)
+                        .param("target_link_uri", "https://tool.com/resource/super-cool")
+                )
+                .andExpect(status().isFound)
+                .andDo { result ->
+                    val locationUri = URI(result.response.getHeader("Location")!!)
+
+                    assertThat(locationUri).hasParameter("lti_message_hint", ltiMessageHint)
+                }
+        }
+
+        @Test
+        fun `does not pass lti_message_hint if it's not provided in the request`() {
+            val iss = "https://a-learning-platform.com"
+            val authenticationEndpoint = "https://idp.a-learning-platform.com/auth"
+
+            mongoPlatformDocumentRepository.insert(
+                PlatformDocument(
+                    id = ObjectId(),
+                    issuer = iss,
+                    authenticationEndpoint = authenticationEndpoint
+                )
+            )
+
+            mvc.perform(
+                    post("/v1p3/initiate-login")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("iss", iss)
+                        .param("login_hint", "a-user-login-hint")
+                        .param("target_link_uri", "https://tool.com/resource/super-cool")
+                )
+                .andExpect(status().isFound)
+                .andDo { result ->
+                    val locationUri = URI(result.response.getHeader("Location")!!)
+
+                    assertThat(locationUri).hasNoParameter("lti_message_hint")
+                }
+        }
+
+        @Test
         fun `stores the requested resource on the browser session`() {
             val issuer = "https://a-learning-platform.com"
             val resource = "https://tool.com/resource/super-cool"
