@@ -56,7 +56,7 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
                     assertThat(locationUri).hasParameter("scope", "openid")
                     assertThat(locationUri).hasParameter("response_type", "id_token")
                     assertThat(locationUri).hasParameter("client_id", "boclips")
-                    assertThat(locationUri).hasParameter("redirect_uri", "http://localhost/v1p3/auth")
+                    assertThat(locationUri).hasParameter("redirect_uri", "http://localhost/v1p3/authentication-response")
                     assertThat(locationUri).hasParameter("login_hint", loginHint)
                     assertThat(locationUri).hasParameter(
                         "state",

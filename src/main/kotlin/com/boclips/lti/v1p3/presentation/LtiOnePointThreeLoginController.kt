@@ -58,7 +58,7 @@ class LtiOnePointThreeLoginController(
             .queryParam("client_id", "boclips")
             .queryParam(
                 "redirect_uri",
-                uriComponentsBuilderFactory.getInstance().replacePath("/v1p3/auth").toUriString()
+                uriComponentsBuilderFactory.getInstance().replacePath("/v1p3/authentication-response").toUriString()
             )
             .queryParam("login_hint", loginHint!!)
             .also {
