@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpSession
 
 @Controller
-@RequestMapping("/v1p1")
+@RequestMapping("/v1p1/**")
 class LtiOnePointOneController(
     private val assertLaunchRequestIsValid: AssertLaunchRequestIsValid,
     private val initializeLtiSession: InitializeLtiSession,
@@ -23,11 +23,7 @@ class LtiOnePointOneController(
     companion object : KLogging()
 
     @Lti
-    @PostMapping(
-        "/videos/*",
-        "/collections",
-        "/collections/*"
-    )
+    @PostMapping
     fun handleLtiLaunchRequest(
         request: HttpServletRequest,
         result: LtiVerificationResult,
