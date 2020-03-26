@@ -10,11 +10,11 @@ import com.boclips.lti.core.application.model.SessionKeys as CoreSessionKeys
 @Component
 @SessionScope
 class LtiOnePointThreeSession(private val httpSession: HttpSession) {
-    fun getState() =
-        httpSession.getAttribute(SessionKeys.state) as? String ?: throw MissingSessionAttributeException("state")
+    fun getState(): String =
+        (httpSession.getAttribute(SessionKeys.state) ?: throw MissingSessionAttributeException("state")) as String
 
-    fun getTargetLinkUri() = httpSession.getAttribute(SessionKeys.targetLinkUri) as? String
-        ?: throw MissingSessionAttributeException("targetLinkUri")
+    fun getTargetLinkUri(): String = (httpSession.getAttribute(SessionKeys.targetLinkUri)
+        ?: throw MissingSessionAttributeException("targetLinkUri")) as String
 
     fun setIntegrationId(value: String) = httpSession.setAttribute(CoreSessionKeys.integrationId, value)
 }
