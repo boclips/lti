@@ -3,9 +3,10 @@ package com.boclips.lti.v1p3.presentation
 import com.auth0.jwt.JWT
 import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
 import com.boclips.lti.v1p3.application.service.LtiOnePointThreeSession
-import com.boclips.lti.v1p3.domain.exception.StatesDoNotMatchException
+import com.boclips.lti.v1p3.domain.exception.ResourceDoesNotMatchException
 import com.boclips.lti.v1p3.domain.model.SessionKeys
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
+import com.boclips.lti.v1p3.domain.service.VerifyCrossSiteRequestForgeryProtection
 import mu.KLogging
 import org.hibernate.validator.constraints.URL
 import org.springframework.stereotype.Controller
@@ -23,8 +24,9 @@ import javax.validation.constraints.NotNull
 @Controller
 @RequestMapping("/v1p3")
 class LtiOnePointThreeLoginController(
-    private val platformRepository: PlatformRepository,
     private val uriComponentsBuilderFactory: UriComponentsBuilderFactory,
+    private val platformRepository: PlatformRepository,
+    private val verifyCrossSiteRequestForgeryProtection: VerifyCrossSiteRequestForgeryProtection,
     private val ltiSession: LtiOnePointThreeSession
 ) {
     companion object : KLogging()
@@ -83,9 +85,12 @@ class LtiOnePointThreeLoginController(
         @RequestParam(name = "id_token")
         idToken: String?
     ): String {
-        if (ltiSession.getState() != state) throw StatesDoNotMatchException()
+        verifyCrossSiteRequestForgeryProtection(state!!, ltiSession)
 
         val decodedToken = JWT.decode(idToken)
+        val targetLinkUri = decodedToken.getClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri").asString()!!
+
+        if (ltiSession.getTargetLinkUri() != targetLinkUri) throw ResourceDoesNotMatchException()
 
         logger.info { "LTI 1.3 Authentication Response Token ${decodedToken.token}" }
 

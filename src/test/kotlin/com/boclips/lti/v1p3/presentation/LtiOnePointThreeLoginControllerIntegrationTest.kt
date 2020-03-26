@@ -9,7 +9,6 @@ import com.boclips.lti.v1p3.infrastructure.model.PlatformDocument
 import org.assertj.core.api.Assertions.assertThat
 import org.bson.types.ObjectId
 import org.hamcrest.Matchers.containsString
-import org.hamcrest.Matchers.matchesPattern
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -228,7 +227,10 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
             val issuer = "https://platform.com/for-learning"
             val resource = "https://lti.resource/we-expose"
 
-            val idToken = JWT.create().withIssuer(issuer).sign(Algorithm.HMAC256("super-secret"))
+            val idToken = JWT.create()
+                .withIssuer(issuer)
+                .withClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri", resource)
+                .sign(Algorithm.HMAC256("super-secret"))
 
             val session = LtiTestSession.unauthenticated(
                 sessionAttributes = mapOf(
@@ -261,14 +263,17 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
 
         @Test
         fun `returns an unauthorised response when states do not match`() {
+            val resource = "https://lti.resource/we-expose"
+
             val idToken = JWT.create()
                 .withIssuer("https://platform.com/for-learning")
+                .withClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri", resource)
                 .sign(Algorithm.HMAC256("super-secret"))
 
             val session = LtiTestSession.unauthenticated(
                 sessionAttributes = mapOf(
                     SessionKeys.state to "a united state of lti",
-                    SessionKeys.targetLinkUri to "https://lti.resource/we-expose"
+                    SessionKeys.targetLinkUri to resource
                 )
             )
 
@@ -279,6 +284,31 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
                         .param("state", "this is a rebel state")
                         .param("id_token", idToken)
                 )
+                .andExpect(status().isUnauthorized)
+        }
+
+        @Test
+        fun `returns an unauthorised response when target_link_uri in the token does not match what's in the session`() {
+            val state = "a united state of lti"
+            val idToken = JWT.create()
+                .withIssuer("https://platform.com/for-learning")
+                .withClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri", "https://lti.resource/we-expose")
+                .sign(Algorithm.HMAC256("super-secret"))
+
+            val session = LtiTestSession.unauthenticated(
+                sessionAttributes = mapOf(
+                    SessionKeys.state to state,
+                    SessionKeys.targetLinkUri to "https://lti.resource/this-is-a-different-resource"
+                )
+            )
+
+            mvc.perform(
+                post("/v1p3/authentication-response")
+                    .session(session as MockHttpSession)
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .param("state", state)
+                    .param("id_token", idToken)
+            )
                 .andExpect(status().isUnauthorized)
         }
 
@@ -308,6 +338,61 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
                 )
                 .andExpect(status().isBadRequest)
                 .andExpect(content().string(containsString("id_token")))
+        }
+    }
+
+    @Nested
+    inner class EndToEnd {
+        @Test
+        fun `can handle a full login to launch request round-trip`() {
+            val issuer = "https://a-learning-platform.com"
+            val resource = "https://tool.com/resource/super-cool"
+            val authenticationEndpoint = "https://idp.a-learning-platform.com/auth"
+            val loginHint = "a-user-login-hint"
+
+            mongoPlatformDocumentRepository.insert(
+                PlatformDocument(
+                    id = ObjectId(),
+                    issuer = issuer,
+                    authenticationEndpoint = authenticationEndpoint
+                )
+            )
+
+            val session = mvc.perform(
+                post("/v1p3/initiate-login")
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .param("iss", issuer)
+                    .param("login_hint", loginHint)
+                    .param("target_link_uri", resource)
+            )
+                .andExpect(status().isFound)
+                .andReturn().request.session
+
+            val idToken = JWT.create()
+                .withIssuer(issuer)
+                .withClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri", resource)
+                .sign(Algorithm.HMAC256("super-secret"))
+
+            mvc.perform(
+                post("/v1p3/authentication-response")
+                    .session(session as MockHttpSession)
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .param("state", session.getAttribute(SessionKeys.state) as String)
+                    .param("id_token", idToken)
+            )
+                .andExpect(status().isFound)
+                .andDo { result ->
+                    val location = result.response.getHeader("Location")
+
+                    assertThat(location).isEqualTo(resource)
+                    assertThat(result.request.session?.getAttribute(CoreSessionKeys.integrationId)).isEqualTo(issuer)
+                }
+        }
+
+        @Disabled
+        @Test
+        fun `is able to handle interweaving launch requests from the same platform`() {
+            TODO("Not yet implemented")
         }
     }
 }
