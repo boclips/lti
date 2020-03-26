@@ -9,6 +9,7 @@ import com.boclips.lti.v1p3.infrastructure.model.PlatformDocument
 import org.assertj.core.api.Assertions.assertThat
 import org.bson.types.ObjectId
 import org.hamcrest.Matchers.containsString
+import org.hamcrest.Matchers.matchesPattern
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -56,7 +57,10 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
                     assertThat(locationUri).hasParameter("scope", "openid")
                     assertThat(locationUri).hasParameter("response_type", "id_token")
                     assertThat(locationUri).hasParameter("client_id", "boclips")
-                    assertThat(locationUri).hasParameter("redirect_uri", "http://localhost/v1p3/authentication-response")
+                    assertThat(locationUri).hasParameter(
+                        "redirect_uri",
+                        "http://localhost/v1p3/authentication-response"
+                    )
                     assertThat(locationUri).hasParameter("login_hint", loginHint)
                     assertThat(locationUri).hasParameter(
                         "state",
@@ -255,10 +259,27 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
             TODO("Not yet implemented")
         }
 
-        @Disabled
         @Test
         fun `returns an unauthorised response when states do not match`() {
-            TODO("Not yet implemented")
+            val idToken = JWT.create()
+                .withIssuer("https://platform.com/for-learning")
+                .sign(Algorithm.HMAC256("super-secret"))
+
+            val session = LtiTestSession.unauthenticated(
+                sessionAttributes = mapOf(
+                    SessionKeys.state to "a united state of lti",
+                    SessionKeys.targetLinkUri to "https://lti.resource/we-expose"
+                )
+            )
+
+            mvc.perform(
+                    post("/v1p3/authentication-response")
+                        .session(session as MockHttpSession)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("state", "this is a rebel state")
+                        .param("id_token", idToken)
+                )
+                .andExpect(status().isUnauthorized)
         }
 
         @Disabled

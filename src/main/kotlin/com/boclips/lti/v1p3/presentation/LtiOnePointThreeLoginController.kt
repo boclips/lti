@@ -2,6 +2,8 @@ package com.boclips.lti.v1p3.presentation
 
 import com.auth0.jwt.JWT
 import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
+import com.boclips.lti.v1p3.application.service.LtiOnePointThreeSession
+import com.boclips.lti.v1p3.domain.exception.StatesDoNotMatchException
 import com.boclips.lti.v1p3.domain.model.SessionKeys
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
 import mu.KLogging
@@ -16,14 +18,14 @@ import java.util.UUID
 import javax.servlet.http.HttpSession
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
-import com.boclips.lti.core.application.model.SessionKeys as CoreSessionKeys
 
 @Validated
 @Controller
 @RequestMapping("/v1p3")
 class LtiOnePointThreeLoginController(
     private val platformRepository: PlatformRepository,
-    private val uriComponentsBuilderFactory: UriComponentsBuilderFactory
+    private val uriComponentsBuilderFactory: UriComponentsBuilderFactory,
+    private val ltiSession: LtiOnePointThreeSession
 ) {
     companion object : KLogging()
 
@@ -79,17 +81,16 @@ class LtiOnePointThreeLoginController(
         state: String?,
         @NotBlank(message = "'id_token' parameter must not be blank")
         @RequestParam(name = "id_token")
-        idToken: String?,
-        session: HttpSession
+        idToken: String?
     ): String {
-        val resource = session.getAttribute(SessionKeys.targetLinkUri)
+        if (ltiSession.getState() != state) throw StatesDoNotMatchException()
 
         val decodedToken = JWT.decode(idToken)
 
         logger.info { "LTI 1.3 Authentication Response Token ${decodedToken.token}" }
 
-        session.setAttribute(CoreSessionKeys.integrationId, decodedToken.issuer)
+        ltiSession.setIntegrationId(decodedToken.issuer)
 
-        return "redirect:$resource"
+        return "redirect:${ltiSession.getTargetLinkUri()}"
     }
 }
