@@ -1,8 +1,13 @@
 package com.boclips.lti.v1p3.presentation
 
+import com.auth0.jwk.UrlJwkProvider
 import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
+import com.auth0.jwt.exceptions.SignatureVerificationException
 import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
+import com.boclips.lti.v1p3.application.service.JwksKeyProvider
 import com.boclips.lti.v1p3.application.service.LtiOnePointThreeSession
+import com.boclips.lti.v1p3.domain.exception.InvalidSignatureException
 import com.boclips.lti.v1p3.domain.exception.ResourceDoesNotMatchException
 import com.boclips.lti.v1p3.domain.model.SessionKeys
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
@@ -88,7 +93,19 @@ class LtiOnePointThreeLoginController(
         verifyCrossSiteRequestForgeryProtection(state!!, ltiSession)
 
         val decodedToken = JWT.decode(idToken)
-        val targetLinkUri = decodedToken.getClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri").asString()!!
+        val platform = platformRepository.getByIssuer(java.net.URL(decodedToken.issuer))
+
+        val keyProvider = JwksKeyProvider(UrlJwkProvider(platform.jwksEndpoint))
+        val algorithm = Algorithm.RSA256(keyProvider)
+
+        try {
+            algorithm.verify(decodedToken)
+        } catch (e: SignatureVerificationException) {
+            throw InvalidSignatureException()
+        }
+
+        val targetLinkUri =
+            decodedToken.getClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri").asString()!!
 
         if (ltiSession.getTargetLinkUri() != targetLinkUri) throw ResourceDoesNotMatchException()
 

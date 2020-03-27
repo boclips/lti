@@ -1,12 +1,11 @@
 package com.boclips.lti.v1p3.infrastructure.repository
 
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
+import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
 import com.boclips.lti.v1p3.domain.exception.PlatformNotFoundException
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
-import com.boclips.lti.v1p3.infrastructure.model.PlatformDocument
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.bson.types.ObjectId
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.net.URL
@@ -20,8 +19,7 @@ class MongoPlatformRepositoryIntegrationTest : AbstractSpringIntegrationTest() {
         val issuer = URL("https://lms.com/its-great")
         val authenticationEndpoint = URL("https://idp.lms.com/auth")
         mongoPlatformDocumentRepository.insert(
-            PlatformDocument(
-                id = ObjectId(),
+            PlatformDocumentFactory.sample(
                 issuer = issuer.toString(),
                 authenticationEndpoint = authenticationEndpoint.toString()
             )

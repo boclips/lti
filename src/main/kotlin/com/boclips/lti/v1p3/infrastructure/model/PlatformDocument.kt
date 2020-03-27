@@ -9,5 +9,6 @@ data class PlatformDocument(
     @Id
     val id: ObjectId,
     val issuer: String,
-    val authenticationEndpoint: String
+    val authenticationEndpoint: String,
+    val jwksUrl: String
 )
