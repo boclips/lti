@@ -1,4 +1,4 @@
-package com.boclips.lti.v1p3.domain.exception
+package com.boclips.lti.v1p3.presentation.exception
 
 import com.boclips.web.exceptions.BoclipsApiException
 import com.boclips.web.exceptions.ExceptionDetails

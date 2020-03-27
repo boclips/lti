@@ -1,16 +1,13 @@
 package com.boclips.lti.v1p3.presentation
 
-import com.auth0.jwk.UrlJwkProvider
 import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
-import com.auth0.jwt.exceptions.SignatureVerificationException
 import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
-import com.boclips.lti.v1p3.application.service.JwksKeyProvider
 import com.boclips.lti.v1p3.application.service.LtiOnePointThreeSession
-import com.boclips.lti.v1p3.domain.exception.InvalidSignatureException
+import com.boclips.lti.v1p3.presentation.exception.InvalidSignatureException
 import com.boclips.lti.v1p3.domain.exception.ResourceDoesNotMatchException
 import com.boclips.lti.v1p3.domain.model.SessionKeys
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
+import com.boclips.lti.v1p3.domain.service.JwtVerificationService
 import com.boclips.lti.v1p3.domain.service.VerifyCrossSiteRequestForgeryProtection
 import mu.KLogging
 import org.hibernate.validator.constraints.URL
@@ -32,7 +29,8 @@ class LtiOnePointThreeLoginController(
     private val uriComponentsBuilderFactory: UriComponentsBuilderFactory,
     private val platformRepository: PlatformRepository,
     private val verifyCrossSiteRequestForgeryProtection: VerifyCrossSiteRequestForgeryProtection,
-    private val ltiSession: LtiOnePointThreeSession
+    private val ltiSession: LtiOnePointThreeSession,
+    private val jwtVerificationService: JwtVerificationService
 ) {
     companion object : KLogging()
 
@@ -93,14 +91,7 @@ class LtiOnePointThreeLoginController(
         verifyCrossSiteRequestForgeryProtection(state!!, ltiSession)
 
         val decodedToken = JWT.decode(idToken)
-        val platform = platformRepository.getByIssuer(java.net.URL(decodedToken.issuer))
-
-        val keyProvider = JwksKeyProvider(UrlJwkProvider(platform.jwksEndpoint))
-        val algorithm = Algorithm.RSA256(keyProvider)
-
-        try {
-            algorithm.verify(decodedToken)
-        } catch (e: SignatureVerificationException) {
+        if (!jwtVerificationService.verifySignature(idToken!!)) {
             throw InvalidSignatureException()
         }
 

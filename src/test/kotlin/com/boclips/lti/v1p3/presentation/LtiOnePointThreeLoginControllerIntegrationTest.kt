@@ -25,7 +25,6 @@ import java.net.URI
 import java.security.KeyPairGenerator
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
-import java.util.Base64
 import java.util.UUID
 import com.boclips.lti.core.application.model.SessionKeys as CoreSessionKeys
 
@@ -476,29 +475,4 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
             TODO("Not yet implemented")
         }
     }
-
-    fun setupTokenSigning(server: WireMockServer, uri: String): TokenSigningSetup {
-        val publicKeyId = UUID.randomUUID().toString()
-        val keyPair = KeyPairGenerator.getInstance("RSA").genKeyPair()
-        val rsaPublicKey = keyPair.public as RSAPublicKey
-
-        stubJwksResponse(
-            server,
-            publicKeyId,
-            Base64.getUrlEncoder().encodeToString(rsaPublicKey.modulus.toByteArray()),
-            Base64.getUrlEncoder().encodeToString(rsaPublicKey.publicExponent.toByteArray())
-        )
-
-        return TokenSigningSetup(
-            publicKeyId = publicKeyId,
-            keyPair = rsaPublicKey to keyPair.private as RSAPrivateKey,
-            jwksUrl = "$uri/.well-known/jwks.json"
-        )
-    }
-
-    data class TokenSigningSetup(
-        val publicKeyId: String,
-        val keyPair: Pair<RSAPublicKey, RSAPrivateKey>,
-        val jwksUrl: String
-    )
 }

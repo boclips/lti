@@ -26,15 +26,22 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
+import java.security.KeyPairGenerator
+import java.security.interfaces.RSAPrivateKey
+import java.security.interfaces.RSAPublicKey
+import java.util.Base64
+import java.util.UUID
 
 @ExtendWith(SpringExtension::class)
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@TestPropertySource(properties = [
-    "boclips.api.baseUrl=http://localhost:${ApiAccessTokenProviderTest.API_SERVER_PORT}/v1",
-    "boclips.api.tokenUrl=http://localhost:${ApiAccessTokenProviderTest.API_SERVER_PORT}/v1/token"
-])
+@TestPropertySource(
+    properties = [
+        "boclips.api.baseUrl=http://localhost:${ApiAccessTokenProviderTest.API_SERVER_PORT}/v1",
+        "boclips.api.tokenUrl=http://localhost:${ApiAccessTokenProviderTest.API_SERVER_PORT}/v1/token"
+    ]
+)
 abstract class AbstractSpringIntegrationTest {
     @Autowired
     lateinit var mvc: MockMvc
@@ -98,7 +105,12 @@ abstract class AbstractSpringIntegrationTest {
         FakeClientsConfig.FakeCollectionsClientFactory.clear()
     }
 
-    protected fun stubJwksResponse(server: WireMockServer, publicKeyId: String, encodedModulus: String, encodedExponent: String) {
+    protected fun stubJwksResponse(
+        server: WireMockServer,
+        publicKeyId: String,
+        encodedModulus: String,
+        encodedExponent: String
+    ) {
         server
             .stubFor(
                 WireMock.get(WireMock.urlEqualTo("/.well-known/jwks.json"))
@@ -130,4 +142,29 @@ abstract class AbstractSpringIntegrationTest {
                     )
             )
     }
+
+    fun setupTokenSigning(server: WireMockServer, uri: String): TokenSigningSetup {
+        val publicKeyId = UUID.randomUUID().toString()
+        val keyPair = KeyPairGenerator.getInstance("RSA").genKeyPair()
+        val rsaPublicKey = keyPair.public as RSAPublicKey
+
+        stubJwksResponse(
+            server,
+            publicKeyId,
+            Base64.getUrlEncoder().encodeToString(rsaPublicKey.modulus.toByteArray()),
+            Base64.getUrlEncoder().encodeToString(rsaPublicKey.publicExponent.toByteArray())
+        )
+
+        return TokenSigningSetup(
+            publicKeyId = publicKeyId,
+            keyPair = rsaPublicKey to keyPair.private as RSAPrivateKey,
+            jwksUrl = "$uri/.well-known/jwks.json"
+        )
+    }
+
+    data class TokenSigningSetup(
+        val publicKeyId: String,
+        val keyPair: Pair<RSAPublicKey, RSAPrivateKey>,
+        val jwksUrl: String
+    )
 }
