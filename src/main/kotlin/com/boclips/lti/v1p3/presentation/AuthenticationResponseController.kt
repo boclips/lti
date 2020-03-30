@@ -5,7 +5,7 @@ import com.boclips.lti.v1p3.application.service.LtiOnePointThreeSession
 import com.boclips.lti.v1p3.domain.exception.ResourceDoesNotMatchException
 import com.boclips.lti.v1p3.domain.service.JwtVerificationService
 import com.boclips.lti.v1p3.domain.service.VerifyCrossSiteRequestForgeryProtection
-import com.boclips.lti.v1p3.presentation.exception.InvalidSignatureException
+import com.boclips.lti.v1p3.domain.exception.InvalidIdTokenSignatureException
 import mu.KLogging
 import org.springframework.stereotype.Controller
 import org.springframework.validation.annotation.Validated
@@ -33,13 +33,10 @@ class AuthenticationResponseController(
         verifyCrossSiteRequestForgeryProtection(state!!, ltiSession)
 
         val decodedToken = JWT.decode(idToken)
-        if (!jwtVerificationService.verifySignature(idToken!!)) {
-            throw InvalidSignatureException()
-        }
+        if (!jwtVerificationService.isSignatureValid(idToken!!)) throw InvalidIdTokenSignatureException()
 
         val targetLinkUri =
             decodedToken.getClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri").asString()!!
-
         if (ltiSession.getTargetLinkUri() != targetLinkUri) throw ResourceDoesNotMatchException()
 
         logger.info { "LTI 1.3 Authentication Response Token ${decodedToken.token}" }

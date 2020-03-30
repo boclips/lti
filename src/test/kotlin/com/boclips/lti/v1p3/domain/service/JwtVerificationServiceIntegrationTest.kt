@@ -43,7 +43,7 @@ class JwtVerificationServiceIntegrationTest : AbstractSpringIntegrationTest() {
             .withIssuer(issuer)
             .sign(Algorithm.RSA256(tokenSigningSetup.keyPair.first, tokenSigningSetup.keyPair.second))
 
-        assertThat(service.verifySignature(token)).isTrue()
+        assertThat(service.isSignatureValid(token)).isTrue()
     }
 
     @Test
@@ -67,6 +67,6 @@ class JwtVerificationServiceIntegrationTest : AbstractSpringIntegrationTest() {
             .withIssuer(issuer)
             .sign(Algorithm.RSA256(keyPair.public as RSAPublicKey, keyPair.private as RSAPrivateKey))
 
-        assertThat(service.verifySignature(token)).isFalse()
+        assertThat(service.isSignatureValid(token)).isFalse()
     }
 }

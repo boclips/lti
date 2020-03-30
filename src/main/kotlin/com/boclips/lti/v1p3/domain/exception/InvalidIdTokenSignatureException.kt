@@ -1,13 +1,13 @@
-package com.boclips.lti.v1p3.presentation.exception
+package com.boclips.lti.v1p3.domain.exception
 
 import com.boclips.web.exceptions.BoclipsApiException
 import com.boclips.web.exceptions.ExceptionDetails
 import org.springframework.http.HttpStatus
 
-class InvalidSignatureException : BoclipsApiException(
+class InvalidIdTokenSignatureException : BoclipsApiException(
     exceptionDetails = ExceptionDetails(
         error = "Unauthorised",
-        message = "Could not verify signature of token",
+        message = "Token signature was invalid",
         status = HttpStatus.UNAUTHORIZED
     )
 )
