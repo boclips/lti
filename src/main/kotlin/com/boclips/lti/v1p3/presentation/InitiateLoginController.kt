@@ -1,20 +1,13 @@
 package com.boclips.lti.v1p3.presentation
 
-import com.auth0.jwt.JWT
 import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
-import com.boclips.lti.v1p3.application.service.LtiOnePointThreeSession
-import com.boclips.lti.v1p3.presentation.exception.InvalidSignatureException
-import com.boclips.lti.v1p3.domain.exception.ResourceDoesNotMatchException
 import com.boclips.lti.v1p3.domain.model.SessionKeys
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
-import com.boclips.lti.v1p3.domain.service.JwtVerificationService
-import com.boclips.lti.v1p3.domain.service.VerifyCrossSiteRequestForgeryProtection
 import mu.KLogging
 import org.hibernate.validator.constraints.URL
 import org.springframework.stereotype.Controller
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.util.UriComponentsBuilder
 import java.util.UUID
@@ -24,17 +17,13 @@ import javax.validation.constraints.NotNull
 
 @Validated
 @Controller
-@RequestMapping("/v1p3")
-class LtiOnePointThreeLoginController(
+class InitiateLoginController(
     private val uriComponentsBuilderFactory: UriComponentsBuilderFactory,
-    private val platformRepository: PlatformRepository,
-    private val verifyCrossSiteRequestForgeryProtection: VerifyCrossSiteRequestForgeryProtection,
-    private val ltiSession: LtiOnePointThreeSession,
-    private val jwtVerificationService: JwtVerificationService
+    private val platformRepository: PlatformRepository
 ) {
     companion object : KLogging()
 
-    @PostMapping("/initiate-login")
+    @PostMapping("/v1p3/initiate-login")
     fun initiateLogin(
         @NotNull(message = "'iss' parameter must not be blank")
         @URL(protocol = "https", message = "'iss' parameter must be a valid HTTPS URL")
@@ -51,7 +40,7 @@ class LtiOnePointThreeLoginController(
         ltiMessageHint: String?,
         session: HttpSession
     ): String {
-        logger.info { "LTI 1.3 Initiate Login { iss: '$issuer', login_hint: '$loginHint', target_link_uri: '$targetLinkUri' }" }
+        AuthenticationResponseController.logger.info { "LTI 1.3 Initiate Login { iss: '$issuer', login_hint: '$loginHint', target_link_uri: '$targetLinkUri' }" }
 
         val platform = platformRepository.getByIssuer(java.net.URL(issuer!!))
 
@@ -78,32 +67,5 @@ class LtiOnePointThreeLoginController(
             .toUriString()
 
         return "redirect:$authenticationRequestUri"
-    }
-
-    @PostMapping("/authentication-response")
-    fun handleAuthenticationResponse(
-        @NotBlank(message = "'state' parameter must not be blank")
-        state: String?,
-        @NotBlank(message = "'id_token' parameter must not be blank")
-        @RequestParam(name = "id_token")
-        idToken: String?
-    ): String {
-        verifyCrossSiteRequestForgeryProtection(state!!, ltiSession)
-
-        val decodedToken = JWT.decode(idToken)
-        if (!jwtVerificationService.verifySignature(idToken!!)) {
-            throw InvalidSignatureException()
-        }
-
-        val targetLinkUri =
-            decodedToken.getClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri").asString()!!
-
-        if (ltiSession.getTargetLinkUri() != targetLinkUri) throw ResourceDoesNotMatchException()
-
-        logger.info { "LTI 1.3 Authentication Response Token ${decodedToken.token}" }
-
-        ltiSession.setIntegrationId(decodedToken.issuer)
-
-        return "redirect:${ltiSession.getTargetLinkUri()}"
     }
 }
