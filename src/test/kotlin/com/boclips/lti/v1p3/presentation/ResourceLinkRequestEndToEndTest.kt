@@ -56,6 +56,7 @@ class ResourceLinkRequestEndToEndTest : AbstractSpringIntegrationTest() {
             .withKeyId(tokenSigningSetup.publicKeyId)
             .withIssuer(issuer)
             .withClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri", resource)
+            .withClaim("https://purl.imsglobal.org/spec/lti/claim/message_type", "LtiResourceLinkRequest")
             .sign(
                 Algorithm.RSA256(
                     tokenSigningSetup.keyPair.first,

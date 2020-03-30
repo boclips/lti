@@ -1,11 +1,11 @@
 package com.boclips.lti.v1p3.presentation
 
-import com.auth0.jwt.JWT
+import com.boclips.lti.v1p3.application.service.JwtService
 import com.boclips.lti.v1p3.application.service.LtiOnePointThreeSession
-import com.boclips.lti.v1p3.domain.exception.ResourceDoesNotMatchException
-import com.boclips.lti.v1p3.domain.service.JwtVerificationService
-import com.boclips.lti.v1p3.domain.service.VerifyCrossSiteRequestForgeryProtection
 import com.boclips.lti.v1p3.domain.exception.InvalidIdTokenSignatureException
+import com.boclips.lti.v1p3.domain.exception.ResourceDoesNotMatchException
+import com.boclips.lti.v1p3.domain.exception.UnsupportedMessageTypeException
+import com.boclips.lti.v1p3.domain.service.VerifyCrossSiteRequestForgeryProtection
 import mu.KLogging
 import org.springframework.stereotype.Controller
 import org.springframework.validation.annotation.Validated
@@ -18,7 +18,7 @@ import javax.validation.constraints.NotBlank
 class AuthenticationResponseController(
     private val verifyCrossSiteRequestForgeryProtection: VerifyCrossSiteRequestForgeryProtection,
     private val ltiSession: LtiOnePointThreeSession,
-    private val jwtVerificationService: JwtVerificationService
+    private val jwtService: JwtService
 ) {
     companion object : KLogging()
 
@@ -32,17 +32,16 @@ class AuthenticationResponseController(
     ): String {
         verifyCrossSiteRequestForgeryProtection(state!!, ltiSession)
 
-        val decodedToken = JWT.decode(idToken)
-        if (!jwtVerificationService.isSignatureValid(idToken!!)) throw InvalidIdTokenSignatureException()
+        if (!jwtService.isSignatureValid(idToken!!)) throw InvalidIdTokenSignatureException()
+        val decodedToken = jwtService.decode(idToken)
 
-        val targetLinkUri =
-            decodedToken.getClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri").asString()!!
-        if (ltiSession.getTargetLinkUri() != targetLinkUri) throw ResourceDoesNotMatchException()
+        if (decodedToken.messageType != "LtiResourceLinkRequest") throw UnsupportedMessageTypeException(decodedToken.messageType!!)
+        if (ltiSession.getTargetLinkUri() != decodedToken.targetLinkUri) throw ResourceDoesNotMatchException()
 
-        logger.info { "LTI 1.3 Authentication Response Token ${decodedToken.token}" }
+        logger.info { "LTI 1.3 Authentication Response Token $decodedToken" }
 
-        ltiSession.setIntegrationId(decodedToken.issuer)
+        ltiSession.setIntegrationId(decodedToken.issuer!!)
 
-        return "redirect:${ltiSession.getTargetLinkUri()}"
+        return "redirect:${decodedToken.targetLinkUri}"
     }
 }

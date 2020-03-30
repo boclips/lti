@@ -54,6 +54,7 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
             .withKeyId(tokenSigningSetup.publicKeyId)
             .withIssuer(issuer)
             .withClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri", resource)
+            .withClaim("https://purl.imsglobal.org/spec/lti/claim/message_type", "LtiResourceLinkRequest")
             .sign(Algorithm.RSA256(tokenSigningSetup.keyPair.first, tokenSigningSetup.keyPair.second))
 
         val session = LtiTestSession.unauthenticated(
@@ -102,6 +103,7 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
             .withKeyId(tokenSigningSetup.publicKeyId)
             .withIssuer(issuer)
             .withClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri", resource)
+            .withClaim("https://purl.imsglobal.org/spec/lti/claim/message_type", "LtiResourceLinkRequest")
             .sign(Algorithm.RSA256(otherKeyPair.public as RSAPublicKey, otherKeyPair.private as RSAPrivateKey))
 
         val session = LtiTestSession.unauthenticated(
@@ -170,6 +172,7 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
                 "https://purl.imsglobal.org/spec/lti/claim/target_link_uri",
                 "https://lti.resource/we-expose"
             )
+            .withClaim("https://purl.imsglobal.org/spec/lti/claim/message_type", "LtiResourceLinkRequest")
             .sign(Algorithm.RSA256(tokenSigningSetup.keyPair.first, tokenSigningSetup.keyPair.second))
 
         val session = LtiTestSession.unauthenticated(
@@ -187,6 +190,48 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
                 .param("id_token", idToken)
         )
             .andExpect(status().isUnauthorized)
+    }
+
+    @Test
+    fun `returns a bad request response when a message type other than LtiResourceLinkRequest is used`(
+        @WiremockResolver.Wiremock server: WireMockServer,
+        @WiremockUriResolver.WiremockUri uri: String
+    ) {
+        val tokenSigningSetup = setupTokenSigning(server, uri)
+
+        val issuer = "https://platform.com/for-learning"
+        mongoPlatformDocumentRepository.insert(
+            PlatformDocumentFactory.sample(
+                issuer = issuer,
+                jwksUrl = tokenSigningSetup.jwksUrl
+            )
+        )
+
+        val state = UUID.randomUUID().toString()
+        val resource = "https://lti.resource/we-expose"
+
+        val idToken = JWT.create()
+            .withKeyId(tokenSigningSetup.publicKeyId)
+            .withIssuer(issuer)
+            .withClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri", resource)
+            .withClaim("https://purl.imsglobal.org/spec/lti/claim/message_type", "I can has cheezbureger?")
+            .sign(Algorithm.RSA256(tokenSigningSetup.keyPair.first, tokenSigningSetup.keyPair.second))
+
+        val session = LtiTestSession.unauthenticated(
+            sessionAttributes = mapOf(
+                SessionKeys.state to state,
+                SessionKeys.targetLinkUri to resource
+            )
+        )
+
+        mvc.perform(
+            post("/v1p3/authentication-response")
+                .session(session as MockHttpSession)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("state", state)
+                .param("id_token", idToken)
+        )
+            .andExpect(status().isBadRequest)
     }
 
     @Disabled

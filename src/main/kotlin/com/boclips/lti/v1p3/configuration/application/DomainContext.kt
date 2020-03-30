@@ -1,7 +1,5 @@
 package com.boclips.lti.v1p3.configuration.application
 
-import com.boclips.lti.v1p3.domain.repository.PlatformRepository
-import com.boclips.lti.v1p3.domain.service.JwtVerificationService
 import com.boclips.lti.v1p3.domain.service.VerifyCrossSiteRequestForgeryProtection
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -10,7 +8,4 @@ import org.springframework.context.annotation.Configuration
 class DomainContext {
     @Bean
     fun assertVerificationResponseIsValid() = VerifyCrossSiteRequestForgeryProtection()
-
-    @Bean
-    fun jwtVerificationService(platformRepository: PlatformRepository) = JwtVerificationService(platformRepository)
 }
