@@ -86,13 +86,12 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
         @Test
         fun `passes lti_message_hint if it's provided in the request`() {
             val iss = "https://a-learning-platform.com"
-            val authenticationEndpoint = "https://idp.a-learning-platform.com/auth"
             val ltiMessageHint = "lti-message-hint"
 
             mongoPlatformDocumentRepository.insert(
                 PlatformDocumentFactory.sample(
                     issuer = iss,
-                    authenticationEndpoint = authenticationEndpoint
+                    authenticationEndpoint = "https://idp.a-learning-platform.com/auth"
                 )
             )
 
@@ -115,12 +114,11 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
         @Test
         fun `does not pass lti_message_hint if it's not provided in the request`() {
             val iss = "https://a-learning-platform.com"
-            val authenticationEndpoint = "https://idp.a-learning-platform.com/auth"
 
             mongoPlatformDocumentRepository.insert(
                 PlatformDocumentFactory.sample(
                     issuer = iss,
-                    authenticationEndpoint = authenticationEndpoint
+                    authenticationEndpoint = "https://idp.a-learning-platform.com/auth"
                 )
             )
 
@@ -423,16 +421,14 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
             @WiremockUriResolver.WiremockUri uri: String
         ) {
             val issuer = "https://a-learning-platform.com"
-            val authenticationEndpoint = "https://idp.a-learning-platform.com/auth"
             val resource = "https://tool.com/resource/super-cool"
-            val loginHint = "a-user-login-hint"
 
             val tokenSigningSetup = setupTokenSigning(server, uri)
 
             mongoPlatformDocumentRepository.insert(
                 PlatformDocumentFactory.sample(
                     issuer = issuer,
-                    authenticationEndpoint = authenticationEndpoint,
+                    authenticationEndpoint = "https://idp.a-learning-platform.com/auth",
                     jwksUrl = tokenSigningSetup.jwksUrl
                 )
             )
@@ -441,7 +437,7 @@ class LtiOnePointThreeLoginControllerIntegrationTest : AbstractSpringIntegration
                 post("/v1p3/initiate-login")
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .param("iss", issuer)
-                    .param("login_hint", loginHint)
+                    .param("login_hint", "a-user-login-hint")
                     .param("target_link_uri", resource)
             )
                 .andExpect(status().isFound)
