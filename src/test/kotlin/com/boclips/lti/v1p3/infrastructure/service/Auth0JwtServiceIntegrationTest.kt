@@ -135,9 +135,9 @@ PwIDAQAB
 
             val decodedToken = service.decode(encodedToken)
 
-            Assertions.assertThat(decodedToken.issuer).isEqualTo("super-issuer")
-            Assertions.assertThat(decodedToken.targetLinkUri).isEqualTo("https://tool.net/super/resource")
-            Assertions.assertThat(decodedToken.messageType).isEqualTo("LtiResourceLinkRequest")
+            Assertions.assertThat(decodedToken.issuerClaim).isEqualTo("super-issuer")
+            Assertions.assertThat(decodedToken.targetLinkUriClaim).isEqualTo("https://tool.net/super/resource")
+            Assertions.assertThat(decodedToken.messageTypeClaim).isEqualTo("LtiResourceLinkRequest")
         }
 
         @Test
@@ -154,9 +154,9 @@ PwIDAQAB
 
             val decodedToken = service.decode(encodedToken)
 
-            Assertions.assertThat(decodedToken.issuer).isNull()
-            Assertions.assertThat(decodedToken.targetLinkUri).isNull()
-            Assertions.assertThat(decodedToken.messageType).isNull()
+            Assertions.assertThat(decodedToken.issuerClaim).isNull()
+            Assertions.assertThat(decodedToken.targetLinkUriClaim).isNull()
+            Assertions.assertThat(decodedToken.messageTypeClaim).isNull()
         }
     }
 }

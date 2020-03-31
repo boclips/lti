@@ -34,9 +34,9 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
         whenever(jwtService.isSignatureValid(jwtToken)).thenReturn(true)
         whenever(jwtService.decode(jwtToken)).thenReturn(
             DecodedJwtTokenFactory.sample(
-                issuer = issuer,
-                targetLinkUri = resource,
-                messageType = "LtiResourceLinkRequest"
+                issuerClaim = issuer,
+                targetLinkUriClaim = resource,
+                messageTypeClaim = "LtiResourceLinkRequest"
             )
         )
 
@@ -114,8 +114,8 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
         whenever(jwtService.isSignatureValid(jwtToken)).thenReturn(true)
         whenever(jwtService.decode(jwtToken)).thenReturn(
             DecodedJwtTokenFactory.sample(
-                issuer = issuer,
-                targetLinkUri = "https://lti.resource/we-expose"
+                issuerClaim = issuer,
+                targetLinkUriClaim = "https://lti.resource/we-expose"
             )
         )
 
@@ -146,9 +146,9 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
         whenever(jwtService.isSignatureValid(jwtToken)).thenReturn(true)
         whenever(jwtService.decode(jwtToken)).thenReturn(
             DecodedJwtTokenFactory.sample(
-                issuer = issuer,
-                targetLinkUri = "https://lti.resource/we-expose",
-                messageType = "I can has cheezbureger?"
+                issuerClaim = issuer,
+                targetLinkUriClaim = "https://lti.resource/we-expose",
+                messageTypeClaim = "I can has cheezbureger?"
             )
         )
 

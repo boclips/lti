@@ -4,12 +4,12 @@ import com.boclips.lti.v1p3.application.model.DecodedJwtToken
 
 object DecodedJwtTokenFactory {
     fun sample(
-        issuer: String? = "https://lms.com",
-        targetLinkUri: String? = "https://tool.com/resource/1",
-        messageType: String? = "LtiResourceLinkRequest"
+        issuerClaim: String? = "https://lms.com",
+        targetLinkUriClaim: String? = "https://tool.com/resource/1",
+        messageTypeClaim: String? = "LtiResourceLinkRequest"
     ) = DecodedJwtToken(
-        issuer = issuer,
-        targetLinkUri = targetLinkUri,
-        messageType = messageType
+        issuerClaim = issuerClaim,
+        targetLinkUriClaim = targetLinkUriClaim,
+        messageTypeClaim = messageTypeClaim
     )
 }

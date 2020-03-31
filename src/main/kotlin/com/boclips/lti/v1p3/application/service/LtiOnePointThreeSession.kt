@@ -13,8 +13,13 @@ class LtiOnePointThreeSession(private val httpSession: HttpSession) {
     fun getState(): String =
         (httpSession.getAttribute(SessionKeys.state) ?: throw MissingSessionAttributeException("state")) as String
 
+    fun setTargetLinkUri(value: String) = httpSession.setAttribute(SessionKeys.targetLinkUri, value)
+
     fun getTargetLinkUri(): String = (httpSession.getAttribute(SessionKeys.targetLinkUri)
         ?: throw MissingSessionAttributeException("targetLinkUri")) as String
 
     fun setIntegrationId(value: String) = httpSession.setAttribute(CoreSessionKeys.integrationId, value)
+
+    fun getIntegrationId(): String = (httpSession.getAttribute(CoreSessionKeys.integrationId)
+        ?: throw MissingSessionAttributeException("integrationId")) as String
 }

@@ -43,6 +43,18 @@ class LtiOnePointThreeSessionTest {
     }
 
     @Test
+    fun `sets a target link uri`() {
+        val httpSession = MockHttpSession()
+
+        val ltiSession = LtiOnePointThreeSession(httpSession)
+
+        val uri = "https://super.com/ok"
+        ltiSession.setTargetLinkUri(uri)
+
+        assertThat(httpSession.getAttribute(SessionKeys.targetLinkUri)).isEqualTo(uri)
+    }
+
+    @Test
     fun `throws an exception if targetLinkUri value is missing`() {
         val httpSession = MockHttpSession()
 
@@ -62,5 +74,15 @@ class LtiOnePointThreeSessionTest {
         ltiSession.setIntegrationId("hello")
 
         assertThat(httpSession.getAttribute(CoreSessionKeys.integrationId)).isEqualTo("hello")
+    }
+
+    @Test
+    fun `retrieves an integrationId`() {
+        val httpSession = MockHttpSession()
+
+        val ltiSession = LtiOnePointThreeSession(httpSession)
+        ltiSession.setIntegrationId("hello")
+
+        assertThat(ltiSession.getIntegrationId()).isEqualTo("hello")
     }
 }

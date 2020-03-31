@@ -28,9 +28,9 @@ class Auth0JwtService(private val platformRepository: PlatformRepository) : JwtS
     override fun decode(token: String) = JWT.decode(token)
         .let {
             DecodedJwtToken(
-                issuer = it.issuer,
-                targetLinkUri = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri").asString(),
-                messageType = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/message_type").asString()
+                issuerClaim = it.issuer,
+                targetLinkUriClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri").asString(),
+                messageTypeClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/message_type").asString()
             )
         }
 }

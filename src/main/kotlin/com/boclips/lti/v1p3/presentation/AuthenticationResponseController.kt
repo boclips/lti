@@ -1,12 +1,11 @@
 package com.boclips.lti.v1p3.presentation
 
+import com.boclips.lti.v1p3.application.command.HandlePlatformMessage
 import com.boclips.lti.v1p3.application.exception.InvalidJwtTokenSignatureException
 import com.boclips.lti.v1p3.application.exception.StatesDoNotMatchException
 import com.boclips.lti.v1p3.application.service.JwtService
 import com.boclips.lti.v1p3.application.service.LtiOnePointThreeSession
 import com.boclips.lti.v1p3.application.service.SecurityService
-import com.boclips.lti.v1p3.domain.exception.ResourceDoesNotMatchException
-import com.boclips.lti.v1p3.domain.exception.UnsupportedMessageTypeException
 import mu.KLogging
 import org.springframework.stereotype.Controller
 import org.springframework.validation.annotation.Validated
@@ -19,7 +18,8 @@ import javax.validation.constraints.NotBlank
 class AuthenticationResponseController(
     private val securityService: SecurityService,
     private val ltiSession: LtiOnePointThreeSession,
-    private val jwtService: JwtService
+    private val jwtService: JwtService,
+    private val handlePlatformMessage: HandlePlatformMessage
 ) {
     companion object : KLogging()
 
@@ -32,17 +32,12 @@ class AuthenticationResponseController(
         idToken: String?
     ): String {
         if (!securityService.doesCsrfStateMatch(state!!, ltiSession)) throw StatesDoNotMatchException()
-
         if (!jwtService.isSignatureValid(idToken!!)) throw InvalidJwtTokenSignatureException()
+
         val decodedToken = jwtService.decode(idToken)
 
-        if (decodedToken.messageType != "LtiResourceLinkRequest") throw UnsupportedMessageTypeException(decodedToken.messageType!!)
-        if (ltiSession.getTargetLinkUri() != decodedToken.targetLinkUri) throw ResourceDoesNotMatchException()
+        val resourceUrl = handlePlatformMessage(decodedToken)
 
-        logger.info { "LTI 1.3 Authentication Response Token $decodedToken" }
-
-        ltiSession.setIntegrationId(decodedToken.issuer!!)
-
-        return "redirect:${decodedToken.targetLinkUri}"
+        return "redirect:${resourceUrl}"
     }
 }
