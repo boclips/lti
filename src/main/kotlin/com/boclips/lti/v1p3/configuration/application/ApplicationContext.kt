@@ -4,9 +4,8 @@ import com.boclips.lti.v1p3.application.service.SecurityService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
-@Configuration("onePointThreeDomainContext")
-class DomainContext {
+@Configuration("onePointThreeApplicationContext")
+class ApplicationContext {
     @Bean
-    fun assertVerificationResponseIsValid() =
-        SecurityService()
+    fun securityService() = SecurityService()
 }
