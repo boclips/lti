@@ -1,63 +1,49 @@
 package com.boclips.lti.v1p3.presentation
 
-import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
-import com.boclips.lti.testsupport.LtiTestSession
+import com.boclips.lti.testsupport.factories.DecodedJwtTokenFactory
+import com.boclips.lti.testsupport.factories.LtiTestSessionFactory
 import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
+import com.boclips.lti.v1p3.application.service.JwtService
 import com.boclips.lti.v1p3.domain.model.SessionKeys
-import com.github.tomakehurst.wiremock.WireMockServer
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.containsString
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpSession
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import ru.lanwen.wiremock.ext.WiremockResolver
-import ru.lanwen.wiremock.ext.WiremockUriResolver
-import java.security.KeyPairGenerator
-import java.security.interfaces.RSAPrivateKey
-import java.security.interfaces.RSAPublicKey
 import java.util.UUID
 import com.boclips.lti.core.application.model.SessionKeys as CoreSessionKeys
 
-@ExtendWith(
-    value = [
-        WiremockResolver::class,
-        WiremockUriResolver::class
-    ]
-)
 class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegrationTest() {
-    @Test
-    fun `initiates a user session and redirects to requested resource`(
-        @WiremockResolver.Wiremock server: WireMockServer,
-        @WiremockUriResolver.WiremockUri uri: String
-    ) {
-        val tokenSigningSetup = setupTokenSigning(server, uri)
+    private val jwtToken = "a dummy token because JwtService is mocked to reduce test complexity"
 
+    @MockBean
+    private lateinit var jwtService: JwtService
+
+    @Test
+    fun `initiates a user session and redirects to requested resource`() {
         val issuer = "https://platform.com/for-learning"
-        mongoPlatformDocumentRepository.insert(
-            PlatformDocumentFactory.sample(
+        val resource = "https://lti.resource/we-expose"
+
+        whenever(jwtService.isSignatureValid(jwtToken)).thenReturn(true)
+        whenever(jwtService.decode(jwtToken)).thenReturn(
+            DecodedJwtTokenFactory.sample(
                 issuer = issuer,
-                jwksUrl = tokenSigningSetup.jwksUrl
+                targetLinkUri = resource,
+                messageType = "LtiResourceLinkRequest"
             )
         )
 
+        mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer))
+
         val state = UUID.randomUUID().toString()
-        val resource = "https://lti.resource/we-expose"
-
-        val idToken = JWT.create()
-            .withKeyId(tokenSigningSetup.publicKeyId)
-            .withIssuer(issuer)
-            .withClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri", resource)
-            .withClaim("https://purl.imsglobal.org/spec/lti/claim/message_type", "LtiResourceLinkRequest")
-            .sign(Algorithm.RSA256(tokenSigningSetup.keyPair.first, tokenSigningSetup.keyPair.second))
-
-        val session = LtiTestSession.unauthenticated(
+        val session = LtiTestSessionFactory.unauthenticated(
             sessionAttributes = mapOf(
                 SessionKeys.state to state,
                 SessionKeys.targetLinkUri to resource
@@ -69,7 +55,7 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
                 .session(session as MockHttpSession)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("state", state)
-                .param("id_token", idToken)
+                .param("id_token", jwtToken)
         )
             .andExpect(status().isFound)
             .andDo { result ->
@@ -81,35 +67,14 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
     }
 
     @Test
-    fun `returns an unauthorised response when JWT signature verification fails`(
-        @WiremockResolver.Wiremock server: WireMockServer,
-        @WiremockUriResolver.WiremockUri uri: String
-    ) {
-        val tokenSigningSetup = setupTokenSigning(server, uri)
-
-        val issuer = "https://platform.com/for-learning"
-        mongoPlatformDocumentRepository.insert(
-            PlatformDocumentFactory.sample(
-                issuer = issuer,
-                jwksUrl = tokenSigningSetup.jwksUrl
-            )
-        )
+    fun `returns an unauthorised response when JWT signature verification fails`() {
+        whenever(jwtService.isSignatureValid(jwtToken)).thenReturn(false)
 
         val state = UUID.randomUUID().toString()
-        val resource = "https://lti.resource/we-expose"
-
-        val otherKeyPair = KeyPairGenerator.getInstance("RSA").genKeyPair()
-        val idToken = JWT.create()
-            .withKeyId(tokenSigningSetup.publicKeyId)
-            .withIssuer(issuer)
-            .withClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri", resource)
-            .withClaim("https://purl.imsglobal.org/spec/lti/claim/message_type", "LtiResourceLinkRequest")
-            .sign(Algorithm.RSA256(otherKeyPair.public as RSAPublicKey, otherKeyPair.private as RSAPrivateKey))
-
-        val session = LtiTestSession.unauthenticated(
+        val session = LtiTestSessionFactory.unauthenticated(
             sessionAttributes = mapOf(
                 SessionKeys.state to state,
-                SessionKeys.targetLinkUri to resource
+                SessionKeys.targetLinkUri to "https://lti.resource/we-expose"
             )
         )
 
@@ -118,24 +83,17 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
                 .session(session as MockHttpSession)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("state", state)
-                .param("id_token", idToken)
+                .param("id_token", jwtToken)
         )
             .andExpect(status().isUnauthorized)
     }
 
     @Test
     fun `returns an unauthorised response when states do not match`() {
-        val resource = "https://lti.resource/we-expose"
-
-        val idToken = JWT.create()
-            .withIssuer("https://platform.com/for-learning")
-            .withClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri", resource)
-            .sign(Algorithm.HMAC256("super-secret"))
-
-        val session = LtiTestSession.unauthenticated(
+        val session = LtiTestSessionFactory.unauthenticated(
             sessionAttributes = mapOf(
                 SessionKeys.state to "a united state of lti",
-                SessionKeys.targetLinkUri to resource
+                SessionKeys.targetLinkUri to "https://lti.resource/we-expose"
             )
         )
 
@@ -144,38 +102,27 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
                 .session(session as MockHttpSession)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("state", "this is a rebel state")
-                .param("id_token", idToken)
+                .param("id_token", jwtToken)
         )
             .andExpect(status().isUnauthorized)
     }
 
     @Test
-    fun `returns an unauthorised response when target_link_uri in the token does not match what's in the session`(
-        @WiremockResolver.Wiremock server: WireMockServer,
-        @WiremockUriResolver.WiremockUri uri: String
-    ) {
-        val tokenSigningSetup = setupTokenSigning(server, uri)
-
-        val state = "a united state of lti"
+    fun `returns an unauthorised response when target_link_uri in the token does not match what's in the session`() {
         val issuer = "https://platform.com/for-learning"
-        mongoPlatformDocumentRepository.insert(
-            PlatformDocumentFactory.sample(
+
+        whenever(jwtService.isSignatureValid(jwtToken)).thenReturn(true)
+        whenever(jwtService.decode(jwtToken)).thenReturn(
+            DecodedJwtTokenFactory.sample(
                 issuer = issuer,
-                jwksUrl = tokenSigningSetup.jwksUrl
+                targetLinkUri = "https://lti.resource/we-expose"
             )
         )
 
-        val idToken = JWT.create()
-            .withKeyId(tokenSigningSetup.publicKeyId)
-            .withIssuer(issuer)
-            .withClaim(
-                "https://purl.imsglobal.org/spec/lti/claim/target_link_uri",
-                "https://lti.resource/we-expose"
-            )
-            .withClaim("https://purl.imsglobal.org/spec/lti/claim/message_type", "LtiResourceLinkRequest")
-            .sign(Algorithm.RSA256(tokenSigningSetup.keyPair.first, tokenSigningSetup.keyPair.second))
+        val state = "a united state of lti"
+        mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer))
 
-        val session = LtiTestSession.unauthenticated(
+        val session = LtiTestSessionFactory.unauthenticated(
             sessionAttributes = mapOf(
                 SessionKeys.state to state,
                 SessionKeys.targetLinkUri to "https://lti.resource/this-is-a-different-resource"
@@ -187,40 +134,32 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
                 .session(session as MockHttpSession)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("state", state)
-                .param("id_token", idToken)
+                .param("id_token", jwtToken)
         )
             .andExpect(status().isUnauthorized)
     }
 
     @Test
-    fun `returns a bad request response when a message type other than LtiResourceLinkRequest is used`(
-        @WiremockResolver.Wiremock server: WireMockServer,
-        @WiremockUriResolver.WiremockUri uri: String
-    ) {
-        val tokenSigningSetup = setupTokenSigning(server, uri)
-
+    fun `returns a bad request response when a message type other than LtiResourceLinkRequest is used`() {
         val issuer = "https://platform.com/for-learning"
-        mongoPlatformDocumentRepository.insert(
-            PlatformDocumentFactory.sample(
+
+        whenever(jwtService.isSignatureValid(jwtToken)).thenReturn(true)
+        whenever(jwtService.decode(jwtToken)).thenReturn(
+            DecodedJwtTokenFactory.sample(
                 issuer = issuer,
-                jwksUrl = tokenSigningSetup.jwksUrl
+                targetLinkUri = "https://lti.resource/we-expose",
+                messageType = "I can has cheezbureger?"
             )
         )
 
+        mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer))
+
         val state = UUID.randomUUID().toString()
-        val resource = "https://lti.resource/we-expose"
 
-        val idToken = JWT.create()
-            .withKeyId(tokenSigningSetup.publicKeyId)
-            .withIssuer(issuer)
-            .withClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri", resource)
-            .withClaim("https://purl.imsglobal.org/spec/lti/claim/message_type", "I can has cheezbureger?")
-            .sign(Algorithm.RSA256(tokenSigningSetup.keyPair.first, tokenSigningSetup.keyPair.second))
-
-        val session = LtiTestSession.unauthenticated(
+        val session = LtiTestSessionFactory.unauthenticated(
             sessionAttributes = mapOf(
                 SessionKeys.state to state,
-                SessionKeys.targetLinkUri to resource
+                SessionKeys.targetLinkUri to "https://lti.resource/we-expose"
             )
         )
 
@@ -229,7 +168,7 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
                 .session(session as MockHttpSession)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("state", state)
-                .param("id_token", idToken)
+                .param("id_token", jwtToken)
         )
             .andExpect(status().isBadRequest)
     }

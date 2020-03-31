@@ -2,7 +2,7 @@ package com.boclips.lti.core.presentation
 
 import com.boclips.lti.core.application.service.ApiAccessTokenProvider
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
-import com.boclips.lti.testsupport.LtiTestSession
+import com.boclips.lti.testsupport.factories.LtiTestSessionFactory
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -22,13 +22,13 @@ class AccessTokenControllerIntegrationTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `does not permit requests with invalid LTI session`() {
-        mvc.perform(get("/auth/token").session(LtiTestSession.unauthenticated() as MockHttpSession))
+        mvc.perform(get("/auth/token").session(LtiTestSessionFactory.unauthenticated() as MockHttpSession))
             .andExpect(status().isUnauthorized)
     }
 
     @Test
     fun `permits requests with a valid LTI session and returns the token`() {
-        mvc.perform(get("/auth/token").session(LtiTestSession.authenticated(integrationId = integrationId) as MockHttpSession))
+        mvc.perform(get("/auth/token").session(LtiTestSessionFactory.authenticated(integrationId = integrationId) as MockHttpSession))
             .andExpect(status().isOk)
             .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
             .andExpect(content().string("test-auth-token"))

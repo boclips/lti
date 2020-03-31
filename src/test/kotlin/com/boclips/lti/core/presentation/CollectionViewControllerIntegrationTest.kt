@@ -3,7 +3,7 @@ package com.boclips.lti.core.presentation
 import com.boclips.lti.core.application.model.SessionKeys
 import com.boclips.lti.core.presentation.model.VideoViewModel
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
-import com.boclips.lti.testsupport.LtiTestSession
+import com.boclips.lti.testsupport.factories.LtiTestSessionFactory
 import com.boclips.lti.testsupport.factories.CollectionResourceFactory
 import com.boclips.lti.testsupport.factories.VideoResourcesFactory
 import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
@@ -30,7 +30,7 @@ class CollectionViewControllerIntegrationTest : AbstractSpringIntegrationTest() 
 
     @Test
     fun `displays a collection page with expected data`() {
-        val session = LtiTestSession.authenticated(
+        val session = LtiTestSessionFactory.authenticated(
             integrationId = integrationId
         )
 
@@ -53,7 +53,7 @@ class CollectionViewControllerIntegrationTest : AbstractSpringIntegrationTest() 
 
     @Test
     fun `frame embedding protection is disabled`() {
-        val session = LtiTestSession.authenticated(
+        val session = LtiTestSessionFactory.authenticated(
             integrationId = integrationId
         )
 
@@ -65,7 +65,7 @@ class CollectionViewControllerIntegrationTest : AbstractSpringIntegrationTest() 
     fun `sets partner logo on collection page`() {
         val testLogoUri = "https://images.com/partner/custom/logo.png"
 
-        val session = LtiTestSession.authenticated(
+        val session = LtiTestSessionFactory.authenticated(
             integrationId = integrationId,
             sessionAttributes = mapOf(
                 SessionKeys.customLogo to testLogoUri
@@ -79,7 +79,7 @@ class CollectionViewControllerIntegrationTest : AbstractSpringIntegrationTest() 
 
     @Test
     fun `does not set partner logo if it's not set in the session`() {
-        val session = LtiTestSession.authenticated(
+        val session = LtiTestSessionFactory.authenticated(
             integrationId = integrationId
         )
 
@@ -92,7 +92,7 @@ class CollectionViewControllerIntegrationTest : AbstractSpringIntegrationTest() 
     fun `returns a 404 response when requested collection is not found`() {
         mvc.perform(
                 get("/collections/this-does-not-exit")
-                    .session(LtiTestSession.authenticated(integrationId = integrationId) as MockHttpSession)
+                    .session(LtiTestSessionFactory.authenticated(integrationId = integrationId) as MockHttpSession)
             )
             .andExpect(status().isNotFound)
     }

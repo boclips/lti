@@ -1,7 +1,7 @@
 package com.boclips.lti.core.presentation
 
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
-import com.boclips.lti.testsupport.LtiTestSession
+import com.boclips.lti.testsupport.factories.LtiTestSessionFactory
 import org.junit.jupiter.api.Test
 import org.springframework.mock.web.MockHttpSession
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -10,7 +10,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 class WebAssetsIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
     fun `can retrieve the stylesheets`() {
-        val session = LtiTestSession.authenticated(
+        val session = LtiTestSessionFactory.authenticated(
             integrationId = "test-integration"
         )
 

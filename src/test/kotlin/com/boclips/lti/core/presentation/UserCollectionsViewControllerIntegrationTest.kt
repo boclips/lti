@@ -3,7 +3,7 @@ package com.boclips.lti.core.presentation
 import com.boclips.lti.core.application.model.SessionKeys
 import com.boclips.lti.core.presentation.model.CollectionViewModel
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
-import com.boclips.lti.testsupport.LtiTestSession
+import com.boclips.lti.testsupport.factories.LtiTestSessionFactory
 import com.boclips.lti.testsupport.factories.CollectionResourceFactory
 import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
 import org.assertj.core.api.Assertions.assertThat
@@ -32,7 +32,7 @@ class UserCollectionsViewControllerIntegrationTest : AbstractSpringIntegrationTe
             CollectionResourceFactory.sample(title = "Second collection")
         )
 
-        val session = LtiTestSession.authenticated(
+        val session = LtiTestSessionFactory.authenticated(
             integrationId = integrationId
         )
 
@@ -54,7 +54,7 @@ class UserCollectionsViewControllerIntegrationTest : AbstractSpringIntegrationTe
 
     @Test
     fun `frame embedding protection is disabled`() {
-        val session = LtiTestSession.authenticated(
+        val session = LtiTestSessionFactory.authenticated(
             integrationId = integrationId
         )
 
@@ -66,7 +66,7 @@ class UserCollectionsViewControllerIntegrationTest : AbstractSpringIntegrationTe
     fun `sets partner logo on user collections page`() {
         val testLogoUri = "https://images.com/partner/custom/logo.png"
 
-        val session = LtiTestSession.authenticated(
+        val session = LtiTestSessionFactory.authenticated(
             integrationId = integrationId,
             sessionAttributes = mapOf(
                 SessionKeys.customLogo to testLogoUri
@@ -80,7 +80,7 @@ class UserCollectionsViewControllerIntegrationTest : AbstractSpringIntegrationTe
 
     @Test
     fun `does not set partner logo if it's not set in the session`() {
-        val session = LtiTestSession.authenticated(
+        val session = LtiTestSessionFactory.authenticated(
             integrationId = integrationId
         )
 
