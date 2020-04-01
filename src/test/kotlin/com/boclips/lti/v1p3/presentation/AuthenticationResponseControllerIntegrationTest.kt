@@ -173,6 +173,40 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
             .andExpect(status().isBadRequest)
     }
 
+    @Test
+    fun `returns a bad request response when the token is missing required claims`() {
+        val issuer = "https://platform.com/for-learning"
+
+        whenever(jwtService.isSignatureValid(jwtToken)).thenReturn(true)
+        whenever(jwtService.decode(jwtToken)).thenReturn(
+            DecodedJwtTokenFactory.sample(
+                issuerClaim = issuer,
+                targetLinkUriClaim = "https://lti.resource/we-expose",
+                ltiVersionClaim = null
+            )
+        )
+
+        mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer))
+
+        val state = UUID.randomUUID().toString()
+
+        val session = LtiTestSessionFactory.unauthenticated(
+            sessionAttributes = mapOf(
+                SessionKeys.state to state,
+                SessionKeys.targetLinkUri to "https://lti.resource/we-expose"
+            )
+        )
+
+        mvc.perform(
+            post("/v1p3/authentication-response")
+                .session(session as MockHttpSession)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("state", state)
+                .param("id_token", jwtToken)
+        )
+            .andExpect(status().isBadRequest)
+    }
+
     @Disabled
     @Test
     fun `returns a bad request when nonce has already been used within the allowed time window`() {

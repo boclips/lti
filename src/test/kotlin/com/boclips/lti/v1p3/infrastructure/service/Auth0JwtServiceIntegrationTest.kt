@@ -6,7 +6,7 @@ import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
 import com.boclips.lti.v1p3.application.service.JwtService
 import com.github.tomakehurst.wiremock.WireMockServer
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -47,7 +47,7 @@ class Auth0JwtServiceIntegrationTest : AbstractSpringIntegrationTest() {
                 .withIssuer(issuer)
                 .sign(Algorithm.RSA256(tokenSigningSetup.keyPair.first, tokenSigningSetup.keyPair.second))
 
-            Assertions.assertThat(service.isSignatureValid(token)).isTrue()
+            assertThat(service.isSignatureValid(token)).isTrue()
         }
 
         @Test
@@ -70,7 +70,7 @@ class Auth0JwtServiceIntegrationTest : AbstractSpringIntegrationTest() {
                 .withIssuer(issuer)
                 .sign(Algorithm.RSA256(keyPair.public as RSAPublicKey, keyPair.private as RSAPrivateKey))
 
-            Assertions.assertThat(service.isSignatureValid(token)).isFalse()
+            assertThat(service.isSignatureValid(token)).isFalse()
         }
     }
 
@@ -127,17 +127,19 @@ PwIDAQAB
             {
               "iss": "super-issuer",
               "https://purl.imsglobal.org/spec/lti/claim/target_link_uri": "https://tool.net/super/resource",
-              "https://purl.imsglobal.org/spec/lti/claim/message_type": "LtiResourceLinkRequest"
+              "https://purl.imsglobal.org/spec/lti/claim/message_type": "LtiResourceLinkRequest",
+              "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0"
             }
 
             */
-            val encodedToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBlci1pc3N1ZXIiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS90YXJnZXRfbGlua191cmkiOiJodHRwczovL3Rvb2wubmV0L3N1cGVyL3Jlc291cmNlIiwiaHR0cHM6Ly9wdXJsLmltc2dsb2JhbC5vcmcvc3BlYy9sdGkvY2xhaW0vbWVzc2FnZV90eXBlIjoiTHRpUmVzb3VyY2VMaW5rUmVxdWVzdCJ9.cKWpNWmKNuzQkwTuOcp7mK03PEa-toBBjJMWAuoJd7azNahRNJ3Id7J2Hyt3Alo6ZzJWPx1ZeFOleC8EyBwmZtrR13w2Lt8K9v-CK7Q5rQnXTYfAS1Yxh54IQAqshBCFQi6mm0yJNo45N7ltSHcN23wqsdLnG6q1Bx6KN2L1EgyiT0tG21s7iT1yXnCWg3_fYunRhl-MLw8CegUW_QptxG46iwnhSbKWjw3XC6kahNY-t5VEubYBxeoWSGxP0vpjag1VHl5yRTBlyTc1SXV_M-FOZaBDaN1vpOxQGKuJX5XDfoVT-P5f7dezccJIaxoHER7n-kRUXpV8_QKjfIFb6g"
+            val encodedToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBlci1pc3N1ZXIiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS90YXJnZXRfbGlua191cmkiOiJodHRwczovL3Rvb2wubmV0L3N1cGVyL3Jlc291cmNlIiwiaHR0cHM6Ly9wdXJsLmltc2dsb2JhbC5vcmcvc3BlYy9sdGkvY2xhaW0vbWVzc2FnZV90eXBlIjoiTHRpUmVzb3VyY2VMaW5rUmVxdWVzdCIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL3ZlcnNpb24iOiIxLjMuMCJ9.enO5jgX0p8OShUOPzsux0jcctNZlrpRXpYIEOuX0og0goHth8nAdQ1nqkAV4o-_fpSX022FrbrRz8nLwm7PP_dGmohi9HC0cs9PYxl-4NNDDKwlCepN_V0UnMRAUnMp4A2M7Rd3rsMBnjzDpNlPSOaysz2SDKHF1kyNxBSGbNFuYtnoNcr6D7Y5WOyZ4Ttqx_TOoDToQN6vbP3v9Bp42PVWKkzL--pHVTuWPLp8UxZmnlmx97lNsZES1E-0NgsuR1mI-aN4MFHFdkA_vsLBb6yUieaErLxI93PvmjLtykiNyd1Yrdb7Um8r1VPvdkU3HL88jxnUKEhLV7BxR0GodoA"
 
             val decodedToken = service.decode(encodedToken)
 
-            Assertions.assertThat(decodedToken.issuerClaim).isEqualTo("super-issuer")
-            Assertions.assertThat(decodedToken.targetLinkUriClaim).isEqualTo("https://tool.net/super/resource")
-            Assertions.assertThat(decodedToken.messageTypeClaim).isEqualTo("LtiResourceLinkRequest")
+            assertThat(decodedToken.issuerClaim).isEqualTo("super-issuer")
+            assertThat(decodedToken.targetLinkUriClaim).isEqualTo("https://tool.net/super/resource")
+            assertThat(decodedToken.messageTypeClaim).isEqualTo("LtiResourceLinkRequest")
+            assertThat(decodedToken.ltiVersionClaim).isEqualTo("1.3.0")
         }
 
         @Test
@@ -154,9 +156,10 @@ PwIDAQAB
 
             val decodedToken = service.decode(encodedToken)
 
-            Assertions.assertThat(decodedToken.issuerClaim).isNull()
-            Assertions.assertThat(decodedToken.targetLinkUriClaim).isNull()
-            Assertions.assertThat(decodedToken.messageTypeClaim).isNull()
+            assertThat(decodedToken.issuerClaim).isNull()
+            assertThat(decodedToken.targetLinkUriClaim).isNull()
+            assertThat(decodedToken.messageTypeClaim).isNull()
+            assertThat(decodedToken.ltiVersionClaim).isNull()
         }
     }
 }

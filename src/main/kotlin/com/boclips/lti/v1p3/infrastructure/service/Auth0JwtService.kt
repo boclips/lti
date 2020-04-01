@@ -30,7 +30,8 @@ class Auth0JwtService(private val platformRepository: PlatformRepository) : JwtS
             DecodedJwtToken(
                 issuerClaim = it.issuer,
                 targetLinkUriClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri").asString(),
-                messageTypeClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/message_type").asString()
+                messageTypeClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/message_type").asString(),
+                ltiVersionClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/version").asString()
             )
         }
 }
