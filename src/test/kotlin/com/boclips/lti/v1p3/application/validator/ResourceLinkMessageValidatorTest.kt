@@ -21,4 +21,62 @@ class ResourceLinkMessageValidatorTest {
         assertThatThrownBy { ResourceLinkMessageValidator.assertContainsAllRequiredClaims(token) }
             .isInstanceOf(TokenClaimValidationException::class.java)
     }
+
+    @Test
+    fun `throws a validation error when deploymentId is not provided`() {
+        val token = DecodedJwtTokenFactory.sample(deploymentIdClaim = null)
+
+        assertThatThrownBy { ResourceLinkMessageValidator.assertContainsAllRequiredClaims(token) }
+            .isInstanceOf(TokenClaimValidationException::class.java)
+    }
+
+    @Test
+    fun `throws a validation error when deploymentId is blank`() {
+        val token = DecodedJwtTokenFactory.sample(deploymentIdClaim = " ")
+
+        assertThatThrownBy { ResourceLinkMessageValidator.assertContainsAllRequiredClaims(token) }
+            .isInstanceOf(TokenClaimValidationException::class.java)
+    }
+
+    @Test
+    fun `throws a validation error when target_link_uri is not provided`() {
+        val token = DecodedJwtTokenFactory.sample(targetLinkUriClaim = null)
+
+        assertThatThrownBy { ResourceLinkMessageValidator.assertContainsAllRequiredClaims(token) }
+            .isInstanceOf(TokenClaimValidationException::class.java)
+    }
+
+    @Test
+    fun `throws a validation error when target_link_uri is not a URL`() {
+        val token = DecodedJwtTokenFactory.sample(targetLinkUriClaim = "well hello there")
+
+        assertThatThrownBy { ResourceLinkMessageValidator.assertContainsAllRequiredClaims(token) }
+            .isInstanceOf(TokenClaimValidationException::class.java)
+    }
+
+    @Test
+    fun `throws a validation error when resource link is not provided`() {
+        val token = DecodedJwtTokenFactory.sample(resourceLinkClaim = null)
+
+        assertThatThrownBy { ResourceLinkMessageValidator.assertContainsAllRequiredClaims(token) }
+            .isInstanceOf(TokenClaimValidationException::class.java)
+    }
+
+    @Test
+    fun `throws a validation error when resource link id is not provided`() {
+        val token =
+            DecodedJwtTokenFactory.sample(resourceLinkClaim = DecodedJwtTokenFactory.sampleResourceLinkClaim(id = null))
+
+        assertThatThrownBy { ResourceLinkMessageValidator.assertContainsAllRequiredClaims(token) }
+            .isInstanceOf(TokenClaimValidationException::class.java)
+    }
+
+    @Test
+    fun `throws a validation error when resource link id is blank`() {
+        val token =
+            DecodedJwtTokenFactory.sample(resourceLinkClaim = DecodedJwtTokenFactory.sampleResourceLinkClaim(id = ""))
+
+        assertThatThrownBy { ResourceLinkMessageValidator.assertContainsAllRequiredClaims(token) }
+            .isInstanceOf(TokenClaimValidationException::class.java)
+    }
 }

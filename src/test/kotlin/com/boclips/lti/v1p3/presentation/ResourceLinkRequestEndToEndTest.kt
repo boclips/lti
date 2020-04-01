@@ -55,9 +55,14 @@ class ResourceLinkRequestEndToEndTest : AbstractSpringIntegrationTest() {
         val idToken = JWT.create()
             .withKeyId(tokenSigningSetup.publicKeyId)
             .withIssuer(issuer)
+            .withClaim("https://purl.imsglobal.org/spec/lti/claim/deployment_id", "test-deployment-id")
             .withClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri", resource)
             .withClaim("https://purl.imsglobal.org/spec/lti/claim/message_type", "LtiResourceLinkRequest")
             .withClaim("https://purl.imsglobal.org/spec/lti/claim/version", "1.3.0")
+            .withClaim(
+                "https://purl.imsglobal.org/spec/lti/claim/resource_link",
+                mapOf("id" to "test-resource-link-id")
+            )
             .sign(
                 Algorithm.RSA256(
                     tokenSigningSetup.keyPair.first,

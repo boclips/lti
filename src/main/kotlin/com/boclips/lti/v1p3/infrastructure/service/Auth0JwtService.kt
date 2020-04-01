@@ -5,6 +5,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.SignatureVerificationException
 import com.boclips.lti.v1p3.application.model.DecodedJwtToken
+import com.boclips.lti.v1p3.application.model.ResourceLinkClaim
 import com.boclips.lti.v1p3.application.service.JwtService
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
 import java.net.URL
@@ -29,9 +30,13 @@ class Auth0JwtService(private val platformRepository: PlatformRepository) : JwtS
         .let {
             DecodedJwtToken(
                 issuerClaim = it.issuer,
-                targetLinkUriClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri").asString(),
+                targetLinkUriClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri")
+                    .asString(),
+                deploymentIdClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/deployment_id").asString(),
                 messageTypeClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/message_type").asString(),
-                ltiVersionClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/version").asString()
+                ltiVersionClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/version").asString(),
+                resourceLinkClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/resource_link").asMap()
+                    ?.let { claim -> ResourceLinkClaim(claim["id"].toString()) }
             )
         }
 }

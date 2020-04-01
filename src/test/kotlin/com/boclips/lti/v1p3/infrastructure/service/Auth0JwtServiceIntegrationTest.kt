@@ -126,20 +126,26 @@ PwIDAQAB
 
             {
               "iss": "super-issuer",
+              "https://purl.imsglobal.org/spec/lti/claim/deployment_id": "test-deployment-id",
               "https://purl.imsglobal.org/spec/lti/claim/target_link_uri": "https://tool.net/super/resource",
               "https://purl.imsglobal.org/spec/lti/claim/message_type": "LtiResourceLinkRequest",
-              "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0"
+              "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0",
+              "https://purl.imsglobal.org/spec/lti/claim/resource_link": {
+                "id": "test-resource-link-id"
+              }
             }
 
             */
-            val encodedToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBlci1pc3N1ZXIiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS90YXJnZXRfbGlua191cmkiOiJodHRwczovL3Rvb2wubmV0L3N1cGVyL3Jlc291cmNlIiwiaHR0cHM6Ly9wdXJsLmltc2dsb2JhbC5vcmcvc3BlYy9sdGkvY2xhaW0vbWVzc2FnZV90eXBlIjoiTHRpUmVzb3VyY2VMaW5rUmVxdWVzdCIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL3ZlcnNpb24iOiIxLjMuMCJ9.enO5jgX0p8OShUOPzsux0jcctNZlrpRXpYIEOuX0og0goHth8nAdQ1nqkAV4o-_fpSX022FrbrRz8nLwm7PP_dGmohi9HC0cs9PYxl-4NNDDKwlCepN_V0UnMRAUnMp4A2M7Rd3rsMBnjzDpNlPSOaysz2SDKHF1kyNxBSGbNFuYtnoNcr6D7Y5WOyZ4Ttqx_TOoDToQN6vbP3v9Bp42PVWKkzL--pHVTuWPLp8UxZmnlmx97lNsZES1E-0NgsuR1mI-aN4MFHFdkA_vsLBb6yUieaErLxI93PvmjLtykiNyd1Yrdb7Um8r1VPvdkU3HL88jxnUKEhLV7BxR0GodoA"
+            val encodedToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBlci1pc3N1ZXIiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS9kZXBsb3ltZW50X2lkIjoidGVzdC1kZXBsb3ltZW50LWlkIiwiaHR0cHM6Ly9wdXJsLmltc2dsb2JhbC5vcmcvc3BlYy9sdGkvY2xhaW0vdGFyZ2V0X2xpbmtfdXJpIjoiaHR0cHM6Ly90b29sLm5ldC9zdXBlci9yZXNvdXJjZSIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL21lc3NhZ2VfdHlwZSI6Ikx0aVJlc291cmNlTGlua1JlcXVlc3QiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS92ZXJzaW9uIjoiMS4zLjAiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS9yZXNvdXJjZV9saW5rIjp7ImlkIjoidGVzdC1yZXNvdXJjZS1saW5rLWlkIn19.pCaT2a6J7aWtYUZ3pbfNtbjlwmi2eedGauLdfQ3vvT6Dyu1XcDg335C4FLJEFZD-aRz0wS_AdHzWRsJ0uUE3iUxw_rwQYHYT-XPwq-p9uWvU9SNpM7CFQ2RrqHD0kezWOj-l3tNldr6ENDPM7Nf5h_AjIssWWuwh7pPFtCGLgD1yeoITcvkJTImtcGRHQYfe7622TI6IFzQkJ8cd3-wH6hEld4rGJOO5dRBthMmMHjK1a-T7An7qPxjwbd45oeVCXcWXvPtu1ppaMckiPno-wqUD1y4ZaweKVF-zLr7emIDNPkCbuu_81lCjTmIHRXmpk-g6TNC-cW6SiOtXgc_D6A"
 
             val decodedToken = service.decode(encodedToken)
 
             assertThat(decodedToken.issuerClaim).isEqualTo("super-issuer")
+            assertThat(decodedToken.deploymentIdClaim).isEqualTo("test-deployment-id")
             assertThat(decodedToken.targetLinkUriClaim).isEqualTo("https://tool.net/super/resource")
             assertThat(decodedToken.messageTypeClaim).isEqualTo("LtiResourceLinkRequest")
             assertThat(decodedToken.ltiVersionClaim).isEqualTo("1.3.0")
+            assertThat(decodedToken.resourceLinkClaim?.id).isEqualTo("test-resource-link-id")
         }
 
         @Test
@@ -157,9 +163,11 @@ PwIDAQAB
             val decodedToken = service.decode(encodedToken)
 
             assertThat(decodedToken.issuerClaim).isNull()
+            assertThat(decodedToken.deploymentIdClaim).isNull()
             assertThat(decodedToken.targetLinkUriClaim).isNull()
             assertThat(decodedToken.messageTypeClaim).isNull()
             assertThat(decodedToken.ltiVersionClaim).isNull()
+            assertThat(decodedToken.resourceLinkClaim).isNull()
         }
     }
 }
