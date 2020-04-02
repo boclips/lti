@@ -126,6 +126,7 @@ PwIDAQAB
 
             {
               "iss": "super-issuer",
+              "nonce": "woogie-boogie",
               "https://purl.imsglobal.org/spec/lti/claim/deployment_id": "test-deployment-id",
               "https://purl.imsglobal.org/spec/lti/claim/target_link_uri": "https://tool.net/super/resource",
               "https://purl.imsglobal.org/spec/lti/claim/message_type": "LtiResourceLinkRequest",
@@ -136,11 +137,12 @@ PwIDAQAB
             }
 
             */
-            val encodedToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBlci1pc3N1ZXIiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS9kZXBsb3ltZW50X2lkIjoidGVzdC1kZXBsb3ltZW50LWlkIiwiaHR0cHM6Ly9wdXJsLmltc2dsb2JhbC5vcmcvc3BlYy9sdGkvY2xhaW0vdGFyZ2V0X2xpbmtfdXJpIjoiaHR0cHM6Ly90b29sLm5ldC9zdXBlci9yZXNvdXJjZSIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL21lc3NhZ2VfdHlwZSI6Ikx0aVJlc291cmNlTGlua1JlcXVlc3QiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS92ZXJzaW9uIjoiMS4zLjAiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS9yZXNvdXJjZV9saW5rIjp7ImlkIjoidGVzdC1yZXNvdXJjZS1saW5rLWlkIn19.pCaT2a6J7aWtYUZ3pbfNtbjlwmi2eedGauLdfQ3vvT6Dyu1XcDg335C4FLJEFZD-aRz0wS_AdHzWRsJ0uUE3iUxw_rwQYHYT-XPwq-p9uWvU9SNpM7CFQ2RrqHD0kezWOj-l3tNldr6ENDPM7Nf5h_AjIssWWuwh7pPFtCGLgD1yeoITcvkJTImtcGRHQYfe7622TI6IFzQkJ8cd3-wH6hEld4rGJOO5dRBthMmMHjK1a-T7An7qPxjwbd45oeVCXcWXvPtu1ppaMckiPno-wqUD1y4ZaweKVF-zLr7emIDNPkCbuu_81lCjTmIHRXmpk-g6TNC-cW6SiOtXgc_D6A"
+            val encodedToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBlci1pc3N1ZXIiLCJub25jZSI6Indvb2dpZS1ib29naWUiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS9kZXBsb3ltZW50X2lkIjoidGVzdC1kZXBsb3ltZW50LWlkIiwiaHR0cHM6Ly9wdXJsLmltc2dsb2JhbC5vcmcvc3BlYy9sdGkvY2xhaW0vdGFyZ2V0X2xpbmtfdXJpIjoiaHR0cHM6Ly90b29sLm5ldC9zdXBlci9yZXNvdXJjZSIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL21lc3NhZ2VfdHlwZSI6Ikx0aVJlc291cmNlTGlua1JlcXVlc3QiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS92ZXJzaW9uIjoiMS4zLjAiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS9yZXNvdXJjZV9saW5rIjp7ImlkIjoidGVzdC1yZXNvdXJjZS1saW5rLWlkIn19.QA-MKQ9TdXfgbsJmB5SHDU3TdUUBjfNDvXrUTtvp8FKy6t6wunY4mVoRF2m1PZISArnLNjFx5N1mzgo93-QQTniMJ22y2RL9_wQsQZnC0hrA0kskbGdNbHcs5ilnuX6P_i3BtTgyrtGuxCuo4Nb743M2FEbYXNyq0DKhiDnCku0RNNUrUijxdUUNVqQcp2hCfIIDmM96rIdXlG8YtHfFuyldDBpAWE17xAGN1N5X3KO50IWPyq_JfqWurr3eI3An-14pl3nH_yoMRmsUaOsPn39eGPQi5IudK0Tm42aqd049pmdCI22ee_7ofrZfi9LPJYD5u6Eom3Q-MQVvQ7LOjQ"
 
             val decodedToken = service.decode(encodedToken)
 
             assertThat(decodedToken.issuerClaim).isEqualTo("super-issuer")
+            assertThat(decodedToken.nonceClaim).isEqualTo("woogie-boogie")
             assertThat(decodedToken.deploymentIdClaim).isEqualTo("test-deployment-id")
             assertThat(decodedToken.targetLinkUriClaim).isEqualTo("https://tool.net/super/resource")
             assertThat(decodedToken.messageTypeClaim).isEqualTo("LtiResourceLinkRequest")
@@ -168,6 +170,7 @@ PwIDAQAB
             assertThat(decodedToken.messageTypeClaim).isNull()
             assertThat(decodedToken.ltiVersionClaim).isNull()
             assertThat(decodedToken.resourceLinkClaim).isNull()
+            assertThat(decodedToken.nonceClaim).isNull()
         }
     }
 }

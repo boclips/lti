@@ -8,8 +8,8 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-class SecurityServiceTest {
-    private val securityService = SecurityService()
+class CsrfServiceTest {
+    private val securityService = CsrfService()
 
     @Test
     fun `returns false when given state does not match session state`(@Mock ltiSession: LtiOnePointThreeSession) {

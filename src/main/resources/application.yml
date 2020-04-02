@@ -1,2 +1,7 @@
 logging:
   config: "classpath:logback.xml"
+
+boclips:
+  lti:
+    v1p3:
+      nonceLifetimeInHours: 24

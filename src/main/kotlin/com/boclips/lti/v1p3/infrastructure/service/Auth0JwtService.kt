@@ -30,6 +30,7 @@ class Auth0JwtService(private val platformRepository: PlatformRepository) : JwtS
         .let {
             DecodedJwtToken(
                 issuerClaim = it.issuer,
+                nonceClaim = it.getClaim("nonce").asString(),
                 targetLinkUriClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri")
                     .asString(),
                 deploymentIdClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/deployment_id").asString(),

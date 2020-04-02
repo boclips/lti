@@ -6,5 +6,6 @@ data class DecodedJwtToken(
     val targetLinkUriClaim: String?,
     val messageTypeClaim: String?,
     val ltiVersionClaim: String?,
-    val resourceLinkClaim: ResourceLinkClaim?
+    val resourceLinkClaim: ResourceLinkClaim?,
+    val nonceClaim: String?
 )
