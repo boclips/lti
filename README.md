@@ -1,14 +1,17 @@
-# LTI Launch Request Endpoint
+# LTI
 
-Exposes endpoints that make our content consumable via LTI protocol.
+Exposes endpoints that make our content consumable via [Learning Tools Interoperability](https://www.imsglobal.org/activity/learning-tools-interoperability).
 
-Currently focused around [LTI 1.1](https://www.imsglobal.org/specs/ltiv1p1/implementation-guide), with a plan to enable [LTI 1.3](https://www.imsglobal.org/spec/lti/v1p3/) as a next step. 
+## Versions and features compatibility
 
-## Current assumptions
+### LTI 1.1
 
-Given this is our first LTI endpoint and we have a single LMS that will be integrating with us, the plan is to expose a simplest working implementation quickly and validate it against that LMS.
+- [`basic-lti-launch-request`](https://www.imsglobal.org/specs/ltiv1p1/implementation-guide): videos and collections exposed through the basic resource launch.
 
-Support for an arbitrary number of Tool Consumers and more elaborate content will be added afterwards as needed.
+
+### LTI 1.3
+
+- [`LtiResourceLinkRequest`](http://www.imsglobal.org/spec/lti/v1p3/): videos and collection exposed through the resource link message.
 
 ## Development
 
@@ -20,7 +23,7 @@ Use the provided script to setup [ktLint](https://ktlint.github.io) and download
 $ ./setup
 ```   
 
-The app relies on MongoDB as a session backend. For local development, you can start the one packaged via Docker:
+The app relies on MongoDB as a data store. For local development, you can start the one packaged via Docker:
 
 ```
 $ docker-compose up
