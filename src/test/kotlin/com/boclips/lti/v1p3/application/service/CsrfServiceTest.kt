@@ -1,30 +1,29 @@
 package com.boclips.lti.v1p3.application.service
 
-import com.nhaarman.mockitokotlin2.whenever
+import com.boclips.lti.v1p3.domain.model.SessionKeys
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mock
-import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.mock.web.MockHttpSession
 
-@ExtendWith(MockitoExtension::class)
 class CsrfServiceTest {
     private val securityService = CsrfService()
 
     @Test
-    fun `returns false when given state does not match session state`(@Mock ltiSession: LtiOnePointThreeSession) {
-        whenever(ltiSession.getState()).thenReturn("expectation")
+    fun `returns false when given state does not match session state`() {
+        val session = MockHttpSession()
+        session.setAttribute(SessionKeys.state, "expectation")
 
-        val result = securityService.doesCsrfStateMatch(state = "reality", ltiSession = ltiSession)
+        val result = securityService.doesCsrfStateMatch(state = "reality", session = session)
 
         assertThat(result).isEqualTo(false)
     }
 
     @Test
-    fun `returns true when states match`(@Mock ltiSession: LtiOnePointThreeSession) {
-        whenever(ltiSession.getState()).thenReturn("state")
+    fun `returns true when states match`() {
+        val session = MockHttpSession()
+        session.setAttribute(SessionKeys.state, "state")
 
-        val result = securityService.doesCsrfStateMatch(state = "state", ltiSession = ltiSession)
+        val result = securityService.doesCsrfStateMatch(state = "state", session = session)
 
         assertThat(result).isEqualTo(true)
     }

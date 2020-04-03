@@ -1,4 +1,4 @@
-package com.boclips.lti.v1p3.application.service
+package com.boclips.lti.v1p3.application.model
 
 import com.boclips.lti.v1p3.application.exception.MissingSessionAttributeException
 import com.boclips.lti.v1p3.domain.model.SessionKeys
@@ -6,27 +6,23 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.springframework.mock.web.MockHttpSession
-import com.boclips.lti.core.application.model.SessionKeys as CoreSessionKeys
 
-class LtiOnePointThreeSessionTest {
+class HttpSessionExtensionsTest {
     @Test
     fun `returns a state`() {
         val stateValue = "the best state ever"
+
         val httpSession = MockHttpSession()
         httpSession.setAttribute(SessionKeys.state, stateValue)
 
-        val ltiSession = LtiOnePointThreeSession(httpSession)
-
-        assertThat(ltiSession.getState()).isEqualTo(stateValue)
+        assertThat(httpSession.getState()).isEqualTo(stateValue)
     }
 
     @Test
     fun `throws an exception if state value is missing`() {
         val httpSession = MockHttpSession()
 
-        val ltiSession = LtiOnePointThreeSession(httpSession)
-
-        assertThatThrownBy { ltiSession.getState() }
+        assertThatThrownBy { httpSession.getState() }
             .isInstanceOf(MissingSessionAttributeException::class.java)
             .hasMessageContaining("state")
     }
@@ -37,19 +33,15 @@ class LtiOnePointThreeSessionTest {
         val httpSession = MockHttpSession()
         httpSession.setAttribute(SessionKeys.targetLinkUri, targetLinkUriValue)
 
-        val ltiSession = LtiOnePointThreeSession(httpSession)
-
-        assertThat(ltiSession.getTargetLinkUri()).isEqualTo(targetLinkUriValue)
+        assertThat(httpSession.getTargetLinkUri()).isEqualTo(targetLinkUriValue)
     }
 
     @Test
     fun `sets a target link uri`() {
         val httpSession = MockHttpSession()
 
-        val ltiSession = LtiOnePointThreeSession(httpSession)
-
         val uri = "https://super.com/ok"
-        ltiSession.setTargetLinkUri(uri)
+        httpSession.setTargetLinkUri(uri)
 
         assertThat(httpSession.getAttribute(SessionKeys.targetLinkUri)).isEqualTo(uri)
     }
@@ -58,9 +50,7 @@ class LtiOnePointThreeSessionTest {
     fun `throws an exception if targetLinkUri value is missing`() {
         val httpSession = MockHttpSession()
 
-        val ltiSession = LtiOnePointThreeSession(httpSession)
-
-        assertThatThrownBy { ltiSession.getTargetLinkUri() }
+        assertThatThrownBy { httpSession.getTargetLinkUri() }
             .isInstanceOf(MissingSessionAttributeException::class.java)
             .hasMessageContaining("targetLinkUri")
     }
@@ -69,20 +59,18 @@ class LtiOnePointThreeSessionTest {
     fun `sets an integrationId`() {
         val httpSession = MockHttpSession()
 
-        val ltiSession = LtiOnePointThreeSession(httpSession)
+        httpSession.setIntegrationId("hello")
 
-        ltiSession.setIntegrationId("hello")
-
-        assertThat(httpSession.getAttribute(CoreSessionKeys.integrationId)).isEqualTo("hello")
+        assertThat(httpSession.getAttribute(com.boclips.lti.core.application.model.SessionKeys.integrationId)).isEqualTo(
+            "hello"
+        )
     }
 
     @Test
     fun `retrieves an integrationId`() {
         val httpSession = MockHttpSession()
+        httpSession.setIntegrationId("hello")
 
-        val ltiSession = LtiOnePointThreeSession(httpSession)
-        ltiSession.setIntegrationId("hello")
-
-        assertThat(ltiSession.getIntegrationId()).isEqualTo("hello")
+        assertThat(httpSession.getIntegrationId()).isEqualTo("hello")
     }
 }

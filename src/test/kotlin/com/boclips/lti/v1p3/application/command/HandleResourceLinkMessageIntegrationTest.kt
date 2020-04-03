@@ -3,22 +3,20 @@ package com.boclips.lti.v1p3.application.command
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.testsupport.factories.MessageFactory
 import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
-import com.boclips.lti.v1p3.application.service.LtiOnePointThreeSession
+import com.boclips.lti.v1p3.application.model.getIntegrationId
+import com.boclips.lti.v1p3.application.model.setTargetLinkUri
 import com.boclips.lti.v1p3.domain.exception.PlatformNotFoundException
 import com.boclips.lti.v1p3.domain.exception.ResourceDoesNotMatchException
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.mock.web.MockHttpSession
 import java.net.URL
+import javax.servlet.http.HttpSession
 
 class HandleResourceLinkMessageIntegrationTest : AbstractSpringIntegrationTest() {
-    @Autowired
-    private lateinit var handleResourceLinkMessage: HandleResourceLinkMessage
-
-    @Autowired
-    private lateinit var session: LtiOnePointThreeSession
-
     @Test
     fun `returns a URL to requested resource`() {
         val issuer = URL("https://platform.com/")
@@ -27,10 +25,11 @@ class HandleResourceLinkMessageIntegrationTest : AbstractSpringIntegrationTest()
         mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer.toString()))
 
         val url = handleResourceLinkMessage(
-            MessageFactory.sampleResourceLinkMessage(
+            message = MessageFactory.sampleResourceLinkMessage(
                 issuer = issuer,
                 requestedResource = resource
-            )
+            ),
+            session = session
         )
 
         assertThat(url).isEqualTo(resource)
@@ -44,10 +43,11 @@ class HandleResourceLinkMessageIntegrationTest : AbstractSpringIntegrationTest()
         mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer.toString()))
 
         handleResourceLinkMessage(
-            MessageFactory.sampleResourceLinkMessage(
+            message = MessageFactory.sampleResourceLinkMessage(
                 issuer = issuer,
                 requestedResource = resource
-            )
+            ),
+            session = session
         )
 
         assertThat(session.getIntegrationId()).isEqualTo(issuer.toString())
@@ -60,10 +60,11 @@ class HandleResourceLinkMessageIntegrationTest : AbstractSpringIntegrationTest()
 
         assertThrows<PlatformNotFoundException> {
             handleResourceLinkMessage(
-                MessageFactory.sampleResourceLinkMessage(
+                message = MessageFactory.sampleResourceLinkMessage(
                     issuer = URL("https:/this.does/not/exist"),
                     requestedResource = resource
-                )
+                ),
+                session = session
             )
         }
     }
@@ -76,11 +77,22 @@ class HandleResourceLinkMessageIntegrationTest : AbstractSpringIntegrationTest()
 
         assertThrows<ResourceDoesNotMatchException> {
             handleResourceLinkMessage(
-                MessageFactory.sampleResourceLinkMessage(
+                message = MessageFactory.sampleResourceLinkMessage(
                     issuer = issuer,
                     requestedResource = URL("https://this-is.requested/actually")
-                )
+                ),
+                session = session
             )
         }
     }
+
+    @BeforeEach
+    fun initialiseHttpSession() {
+        session = MockHttpSession()
+    }
+
+    private lateinit var session: HttpSession
+
+    @Autowired
+    private lateinit var handleResourceLinkMessage: HandleResourceLinkMessage
 }

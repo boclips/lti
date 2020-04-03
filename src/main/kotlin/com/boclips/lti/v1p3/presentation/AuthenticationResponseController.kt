@@ -6,7 +6,6 @@ import com.boclips.lti.v1p3.application.exception.NonceReusedException
 import com.boclips.lti.v1p3.application.exception.StatesDoNotMatchException
 import com.boclips.lti.v1p3.application.service.CsrfService
 import com.boclips.lti.v1p3.application.service.JwtService
-import com.boclips.lti.v1p3.application.service.LtiOnePointThreeSession
 import com.boclips.lti.v1p3.application.service.NonceService
 import com.boclips.lti.v1p3.application.validator.IdTokenValidator
 import mu.KLogging
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
+import javax.servlet.http.HttpSession
 import javax.validation.constraints.NotBlank
 
 @Validated
@@ -22,7 +22,6 @@ class AuthenticationResponseController(
     private val csrfService: CsrfService,
     private val nonceService: NonceService,
     private val jwtService: JwtService,
-    private val ltiSession: LtiOnePointThreeSession,
     private val handlePlatformMessage: HandlePlatformMessage
 ) {
     companion object : KLogging()
@@ -33,9 +32,10 @@ class AuthenticationResponseController(
         state: String?,
         @NotBlank(message = "'id_token' parameter must not be blank")
         @RequestParam(name = "id_token")
-        idToken: String?
+        idToken: String?,
+        httpSession: HttpSession
     ): String {
-        if (!csrfService.doesCsrfStateMatch(state!!, ltiSession)) throw StatesDoNotMatchException()
+        if (!csrfService.doesCsrfStateMatch(state!!, httpSession)) throw StatesDoNotMatchException()
         if (!jwtService.isSignatureValid(idToken!!)) throw InvalidJwtTokenSignatureException()
 
         val decodedToken = jwtService.decode(idToken)
@@ -48,7 +48,7 @@ class AuthenticationResponseController(
             }
             .run { nonceService.storeNonce(decodedToken.nonceClaim!!) }
 
-        val resourceUrl = handlePlatformMessage(decodedToken)
+        val resourceUrl = handlePlatformMessage(decodedToken, httpSession)
 
         return "redirect:${resourceUrl}"
     }

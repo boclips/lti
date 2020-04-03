@@ -2,7 +2,6 @@ package com.boclips.lti.v1p3.configuration.application
 
 import com.boclips.lti.v1p3.application.command.HandlePlatformMessage
 import com.boclips.lti.v1p3.application.command.HandleResourceLinkMessage
-import com.boclips.lti.v1p3.application.service.LtiOnePointThreeSession
 import com.boclips.lti.v1p3.application.service.CsrfService
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
 import org.springframework.context.annotation.Bean
@@ -19,6 +18,6 @@ class ApplicationContext {
     }
 
     @Bean
-    fun handleResourceLinkMessage(session: LtiOnePointThreeSession, platformRepository: PlatformRepository) =
-        HandleResourceLinkMessage(session, platformRepository)
+    fun handleResourceLinkMessage(platformRepository: PlatformRepository) =
+        HandleResourceLinkMessage(platformRepository)
 }
