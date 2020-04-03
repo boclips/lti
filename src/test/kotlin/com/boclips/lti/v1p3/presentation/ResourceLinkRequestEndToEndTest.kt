@@ -55,11 +55,6 @@ class ResourceLinkRequestEndToEndTest : AbstractSpringIntegrationTest() {
             .andExpect(status().isFound)
             .andReturn().request.session
 
-        /*
-        "aud": ["boclips"],
-              "azp": "boclips",
-              "exp": 1300819380,
-        * */
         val idToken = JWT.create()
             .withKeyId(tokenSigningSetup.publicKeyId)
             .withIssuer(issuer)
