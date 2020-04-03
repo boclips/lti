@@ -17,6 +17,7 @@ import org.springframework.mock.web.MockHttpSession
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.time.Instant.now
 import java.util.UUID
 import com.boclips.lti.core.application.model.SessionKeys as CoreSessionKeys
 
@@ -176,7 +177,42 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
     }
 
     @Test
-    fun `returns a bad request response when the token is missing required claims`() {
+    fun `returns unauthorised when the token has invalid security claims`() {
+        val issuer = "https://platform.com/for-learning"
+        val resource = "https://lti.resource/we-expose"
+
+        whenever(jwtService.isSignatureValid(jwtToken)).thenReturn(true)
+        whenever(jwtService.decode(jwtToken)).thenReturn(
+            DecodedJwtTokenFactory.sample(
+                issuerClaim = issuer,
+                targetLinkUriClaim = resource,
+                expClaim = now().minusSeconds(120).epochSecond
+            )
+        )
+
+        mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer))
+
+        val state = UUID.randomUUID().toString()
+
+        val session = LtiTestSessionFactory.unauthenticated(
+            sessionAttributes = mapOf(
+                SessionKeys.state to state,
+                SessionKeys.targetLinkUri to resource
+            )
+        )
+
+        mvc.perform(
+            post("/v1p3/authentication-response")
+                .session(session as MockHttpSession)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("state", state)
+                .param("id_token", jwtToken)
+        )
+            .andExpect(status().isUnauthorized)
+    }
+
+    @Test
+    fun `returns a bad request response when the token is missing required LTI message claims`() {
         val issuer = "https://platform.com/for-learning"
         val resource = "https://lti.resource/we-expose"
 

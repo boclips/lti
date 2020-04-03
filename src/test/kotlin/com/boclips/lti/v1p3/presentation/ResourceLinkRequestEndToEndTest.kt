@@ -16,6 +16,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import ru.lanwen.wiremock.ext.WiremockResolver
 import ru.lanwen.wiremock.ext.WiremockUriResolver
+import java.time.Instant.now
+import java.util.Date
 import java.util.UUID
 
 @ExtendWith(
@@ -53,9 +55,16 @@ class ResourceLinkRequestEndToEndTest : AbstractSpringIntegrationTest() {
             .andExpect(status().isFound)
             .andReturn().request.session
 
+        /*
+        "aud": ["boclips"],
+              "azp": "boclips",
+              "exp": 1300819380,
+        * */
         val idToken = JWT.create()
             .withKeyId(tokenSigningSetup.publicKeyId)
             .withIssuer(issuer)
+            .withAudience("boclips")
+            .withExpiresAt(Date.from(now().plusSeconds(120)))
             .withClaim("nonce", UUID.randomUUID().toString())
             .withClaim("https://purl.imsglobal.org/spec/lti/claim/deployment_id", "test-deployment-id")
             .withClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri", resource)

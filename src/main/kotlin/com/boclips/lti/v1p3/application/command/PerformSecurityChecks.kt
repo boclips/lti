@@ -20,7 +20,7 @@ class PerformSecurityChecks(
 
         val decodedToken = jwtService.decode(idToken)
 
-        IdTokenValidator.assertHasNonce(decodedToken)
+        IdTokenValidator.assertHasValidClaims(decodedToken)
             .run {
                 if (nonceService.hasNonceBeenUsedAlready(decodedToken.nonceClaim!!)) throw NonceReusedException(
                     decodedToken.nonceClaim

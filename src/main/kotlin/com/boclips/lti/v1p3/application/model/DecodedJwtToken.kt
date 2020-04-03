@@ -2,10 +2,13 @@ package com.boclips.lti.v1p3.application.model
 
 data class DecodedJwtToken(
     val issuerClaim: String?,
+    val audienceClaim: List<String?>?,
+    val authorizedPartyClaim: String?,
+    val expClaim: Long?,
+    val nonceClaim: String?,
     val deploymentIdClaim: String?,
-    val targetLinkUriClaim: String?,
     val messageTypeClaim: String?,
+    val targetLinkUriClaim: String?,
     val ltiVersionClaim: String?,
-    val resourceLinkClaim: ResourceLinkClaim?,
-    val nonceClaim: String?
+    val resourceLinkClaim: ResourceLinkClaim?
 )

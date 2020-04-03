@@ -30,6 +30,9 @@ class Auth0JwtService(private val platformRepository: PlatformRepository) : JwtS
         .let {
             DecodedJwtToken(
                 issuerClaim = it.issuer,
+                audienceClaim = it.audience,
+                authorizedPartyClaim = it.getClaim("azp").asString(),
+                expClaim = it.expiresAt?.toInstant()?.epochSecond,
                 nonceClaim = it.getClaim("nonce").asString(),
                 targetLinkUriClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri")
                     .asString(),

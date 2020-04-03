@@ -125,7 +125,10 @@ PwIDAQAB
             Payload is:
 
             {
-              "iss": "super-issuer",
+              "iss": "https://lms.com",
+              "aud": ["boclips"],
+              "azp": "boclips",
+              "exp": 1300819380,
               "nonce": "woogie-boogie",
               "https://purl.imsglobal.org/spec/lti/claim/deployment_id": "test-deployment-id",
               "https://purl.imsglobal.org/spec/lti/claim/target_link_uri": "https://tool.net/super/resource",
@@ -137,17 +140,37 @@ PwIDAQAB
             }
 
             */
-            val encodedToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBlci1pc3N1ZXIiLCJub25jZSI6Indvb2dpZS1ib29naWUiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS9kZXBsb3ltZW50X2lkIjoidGVzdC1kZXBsb3ltZW50LWlkIiwiaHR0cHM6Ly9wdXJsLmltc2dsb2JhbC5vcmcvc3BlYy9sdGkvY2xhaW0vdGFyZ2V0X2xpbmtfdXJpIjoiaHR0cHM6Ly90b29sLm5ldC9zdXBlci9yZXNvdXJjZSIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL21lc3NhZ2VfdHlwZSI6Ikx0aVJlc291cmNlTGlua1JlcXVlc3QiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS92ZXJzaW9uIjoiMS4zLjAiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS9yZXNvdXJjZV9saW5rIjp7ImlkIjoidGVzdC1yZXNvdXJjZS1saW5rLWlkIn19.QA-MKQ9TdXfgbsJmB5SHDU3TdUUBjfNDvXrUTtvp8FKy6t6wunY4mVoRF2m1PZISArnLNjFx5N1mzgo93-QQTniMJ22y2RL9_wQsQZnC0hrA0kskbGdNbHcs5ilnuX6P_i3BtTgyrtGuxCuo4Nb743M2FEbYXNyq0DKhiDnCku0RNNUrUijxdUUNVqQcp2hCfIIDmM96rIdXlG8YtHfFuyldDBpAWE17xAGN1N5X3KO50IWPyq_JfqWurr3eI3An-14pl3nH_yoMRmsUaOsPn39eGPQi5IudK0Tm42aqd049pmdCI22ee_7ofrZfi9LPJYD5u6Eom3Q-MQVvQ7LOjQ"
+            val encodedToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2xtcy5jb20iLCJhdWQiOlsiYm9jbGlwcyJdLCJhenAiOiJib2NsaXBzIiwiZXhwIjoxMzAwODE5MzgwLCJub25jZSI6Indvb2dpZS1ib29naWUiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS9kZXBsb3ltZW50X2lkIjoidGVzdC1kZXBsb3ltZW50LWlkIiwiaHR0cHM6Ly9wdXJsLmltc2dsb2JhbC5vcmcvc3BlYy9sdGkvY2xhaW0vdGFyZ2V0X2xpbmtfdXJpIjoiaHR0cHM6Ly90b29sLm5ldC9zdXBlci9yZXNvdXJjZSIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL21lc3NhZ2VfdHlwZSI6Ikx0aVJlc291cmNlTGlua1JlcXVlc3QiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS92ZXJzaW9uIjoiMS4zLjAiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS9yZXNvdXJjZV9saW5rIjp7ImlkIjoidGVzdC1yZXNvdXJjZS1saW5rLWlkIn19.F4KkgGhV-bemb4ycWzV-qnQtT1DFD30euSHBmUJ-SX-asYX_VMmOiXgAqu-F6sohGmei9Mw0UanjhPkeZPtbobzM-1ckyvBo5Fx52tvpPP73IjJ3xd7HsjKcthjCrkkWslZtitFefEbznff57ySn69dLbH2LB-cn4Sav-Z3AoYtdyJ0wDs8iCSFS5uGpSl01CgXihWAUBdCYZJPOxUS4wEYIps8BoLiKTy7p3yxxJNS5PrRJ8bN8rqzPKgjY-EXlilvydf9TT2Pvb8oDN6kunFSunlnXuauxqttHoTQ5K_o-KHMPdfXzY6rEsTwzh2zCkX_Aoulpj92RfsmHkmvIPQ"
 
             val decodedToken = service.decode(encodedToken)
 
-            assertThat(decodedToken.issuerClaim).isEqualTo("super-issuer")
+            assertThat(decodedToken.issuerClaim).isEqualTo("https://lms.com")
+            assertThat(decodedToken.audienceClaim).isEqualTo(listOf("boclips"))
+            assertThat(decodedToken.authorizedPartyClaim).isEqualTo("boclips")
+            assertThat(decodedToken.expClaim).isEqualTo(1300819380L)
             assertThat(decodedToken.nonceClaim).isEqualTo("woogie-boogie")
             assertThat(decodedToken.deploymentIdClaim).isEqualTo("test-deployment-id")
             assertThat(decodedToken.targetLinkUriClaim).isEqualTo("https://tool.net/super/resource")
             assertThat(decodedToken.messageTypeClaim).isEqualTo("LtiResourceLinkRequest")
             assertThat(decodedToken.ltiVersionClaim).isEqualTo("1.3.0")
             assertThat(decodedToken.resourceLinkClaim?.id).isEqualTo("test-resource-link-id")
+        }
+
+        @Test
+        fun `can decode aud claim if it's a special case of a string instead of an array`() {
+            /*
+            Payload is:
+
+            {
+              "aud": "boclips"
+            }
+
+            */
+            val encodedToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJib2NsaXBzIn0.K0xEAWCQ-StRkAvEortwfcACPmnJbCi3nHjwCR0cR3DJ8RotDu8t5e-I3vbIaQgCw2VBHxiCIVMw1fB_YSdgolgOxV19vrnP2VlT50xxQd6Sj_Ns0Wd-6_ofxLC3dXIDnbM0zaZamBu4oP1vqLXF1Ec9pDGItQ3JFhERvkswkpEXwCLxEBU4iF9zdRj1vnc1zdLp5Shi7AUyLxjYRL1PgGkNJxJikr4fBODayMHsVVCn-HVQMDkM3PjSsZ-gvoAvzHlhdt3CaBtBGUxJzEqQNm6BY3o6vp_dx9eLxMej8F6cMAprrAwSjr5GEUyT62Xs148Ub_aorYCGZAO7hh5zfg"
+
+            val decodedToken = service.decode(encodedToken)
+
+            assertThat(decodedToken.audienceClaim).isEqualTo(listOf("boclips"))
         }
 
         @Test
@@ -165,6 +188,9 @@ PwIDAQAB
             val decodedToken = service.decode(encodedToken)
 
             assertThat(decodedToken.issuerClaim).isNull()
+            assertThat(decodedToken.nonceClaim).isNull()
+            assertThat(decodedToken.authorizedPartyClaim).isNull()
+            assertThat(decodedToken.expClaim).isNull()
             assertThat(decodedToken.deploymentIdClaim).isNull()
             assertThat(decodedToken.targetLinkUriClaim).isNull()
             assertThat(decodedToken.messageTypeClaim).isNull()

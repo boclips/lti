@@ -6,7 +6,7 @@ import com.boclips.lti.testsupport.factories.NonceDocumentFactory
 import com.boclips.lti.v1p3.application.exception.InvalidJwtTokenSignatureException
 import com.boclips.lti.v1p3.application.exception.NonceReusedException
 import com.boclips.lti.v1p3.application.exception.StatesDoNotMatchException
-import com.boclips.lti.v1p3.application.exception.TokenClaimValidationException
+import com.boclips.lti.v1p3.application.exception.JwtClaimValidationException
 import com.boclips.lti.v1p3.application.service.JwtService
 import com.boclips.lti.v1p3.domain.model.SessionKeys
 import com.nhaarman.mockitokotlin2.whenever
@@ -94,7 +94,7 @@ class PerformSecurityChecksIntegrationTest : AbstractSpringIntegrationTest() {
             )
         )
 
-        assertThrows<TokenClaimValidationException> { performSecurityChecks(state, token, session) }
+        assertThrows<JwtClaimValidationException> { performSecurityChecks(state, token, session) }
     }
 
     @BeforeEach
