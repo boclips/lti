@@ -12,11 +12,15 @@ class HandleResourceLinkMessage(
     private val platformRepository: PlatformRepository
 ) {
     operator fun invoke(message: ResourceLinkMessage, session: HttpSession): URL {
-        if (URL(session.getTargetLinkUri()) != message.requestedResource) throw ResourceDoesNotMatchException()
+        assertRequestedResourceMatchesOriginalLoginRequest(message.requestedResource, session)
 
         val platform = platformRepository.getByIssuer(message.issuer)
         session.setIntegrationId(platform.issuer.toString())
 
         return message.requestedResource
+    }
+
+    private fun assertRequestedResourceMatchesOriginalLoginRequest(requestedResource: URL, session: HttpSession) {
+        if (requestedResource != URL(session.getTargetLinkUri())) throw ResourceDoesNotMatchException()
     }
 }

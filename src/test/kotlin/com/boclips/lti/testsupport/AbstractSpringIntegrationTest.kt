@@ -9,6 +9,7 @@ import com.boclips.lti.core.infrastructure.service.VideosClientFactory
 import com.boclips.lti.core.presentation.service.ToVideoViewModel
 import com.boclips.lti.testsupport.configuration.FakeClientsConfig
 import com.boclips.lti.v1p1.infrastructure.repository.LtiOnePointOneConsumerRepository
+import com.boclips.lti.v1p3.infrastructure.repository.MongoNonceDocumentRepository
 import com.boclips.lti.v1p3.infrastructure.repository.MongoPlatformDocumentRepository
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
@@ -72,6 +73,9 @@ abstract class AbstractSpringIntegrationTest {
 
     @Autowired
     protected lateinit var mongoPlatformDocumentRepository: MongoPlatformDocumentRepository
+
+    @Autowired
+    protected lateinit var mongoNonceDocumentRepository: MongoNonceDocumentRepository
 
     val ltiOauthSigner = LtiOauthSigner()
 

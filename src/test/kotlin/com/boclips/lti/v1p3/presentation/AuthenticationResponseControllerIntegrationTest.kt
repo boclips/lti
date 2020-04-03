@@ -7,12 +7,10 @@ import com.boclips.lti.testsupport.factories.NonceDocumentFactory
 import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
 import com.boclips.lti.v1p3.application.service.JwtService
 import com.boclips.lti.v1p3.domain.model.SessionKeys
-import com.boclips.lti.v1p3.infrastructure.repository.MongoNonceDocumentRepository
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.containsString
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpSession
@@ -28,11 +26,8 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
     @MockBean
     private lateinit var jwtService: JwtService
 
-    @Autowired
-    private lateinit var nonceRepository: MongoNonceDocumentRepository
-
     @Test
-    fun `initiates a user session, stores the nonce and redirects to requested resource`() {
+    fun `initiates a user session and redirects to requested resource`() {
         val issuer = "https://platform.com/for-learning"
         val resource = "https://lti.resource/we-expose"
         val nonce = "super-random-nonce"
@@ -71,9 +66,6 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
                 assertThat(location).isEqualTo(resource)
                 assertThat(result.request.session?.getAttribute(CoreSessionKeys.integrationId)).isEqualTo(issuer)
             }
-
-        val storedNonce = nonceRepository.findOneByValue(nonce)
-        assertThat(storedNonce!!.value).isEqualTo(nonce)
     }
 
     @Test
@@ -224,7 +216,7 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
         val resource = "https://lti.resource/we-expose"
 
         val nonce = UUID.randomUUID().toString()
-        nonceRepository.insert(NonceDocumentFactory.sample(value = nonce))
+        mongoNonceDocumentRepository.insert(NonceDocumentFactory.sample(value = nonce))
 
         whenever(jwtService.isSignatureValid(jwtToken)).thenReturn(true)
         whenever(jwtService.decode(jwtToken)).thenReturn(
@@ -254,44 +246,6 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
                 .param("id_token", jwtToken)
         )
             .andExpect(status().isUnauthorized)
-    }
-
-    @Test
-    fun `returns a bad request response when nonce is not provided on the token`() {
-        val issuer = "https://platform.com/for-learning"
-        val resource = "https://lti.resource/we-expose"
-
-        val nonce = UUID.randomUUID().toString()
-        nonceRepository.insert(NonceDocumentFactory.sample(value = nonce))
-
-        whenever(jwtService.isSignatureValid(jwtToken)).thenReturn(true)
-        whenever(jwtService.decode(jwtToken)).thenReturn(
-            DecodedJwtTokenFactory.sample(
-                issuerClaim = issuer,
-                targetLinkUriClaim = resource,
-                nonceClaim = null
-            )
-        )
-
-        mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer))
-
-        val state = UUID.randomUUID().toString()
-
-        val session = LtiTestSessionFactory.unauthenticated(
-            sessionAttributes = mapOf(
-                SessionKeys.state to state,
-                SessionKeys.targetLinkUri to resource
-            )
-        )
-
-        mvc.perform(
-            post("/v1p3/authentication-response")
-                .session(session as MockHttpSession)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("state", state)
-                .param("id_token", jwtToken)
-        )
-            .andExpect(status().isBadRequest)
     }
 
     @Test
