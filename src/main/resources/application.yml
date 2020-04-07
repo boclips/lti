@@ -5,3 +5,4 @@ boclips:
   lti:
     v1p3:
       nonceLifetimeInHours: 24
+      maxTokenAgeInSeconds: 60

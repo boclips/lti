@@ -5,6 +5,7 @@ data class DecodedJwtToken(
     val audienceClaim: List<String?>?,
     val authorizedPartyClaim: String?,
     val expClaim: Long?,
+    val issuedAtClaim: Long?,
     val nonceClaim: String?,
     val deploymentIdClaim: String?,
     val messageTypeClaim: String?,

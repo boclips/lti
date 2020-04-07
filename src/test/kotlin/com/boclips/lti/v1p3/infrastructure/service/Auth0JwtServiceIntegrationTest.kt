@@ -128,7 +128,8 @@ PwIDAQAB
               "iss": "https://lms.com",
               "aud": ["boclips"],
               "azp": "boclips",
-              "exp": 1300819380,
+              "iat": 1300819380,
+              "exp": 1300819399,
               "nonce": "woogie-boogie",
               "https://purl.imsglobal.org/spec/lti/claim/deployment_id": "test-deployment-id",
               "https://purl.imsglobal.org/spec/lti/claim/target_link_uri": "https://tool.net/super/resource",
@@ -140,14 +141,15 @@ PwIDAQAB
             }
 
             */
-            val encodedToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2xtcy5jb20iLCJhdWQiOlsiYm9jbGlwcyJdLCJhenAiOiJib2NsaXBzIiwiZXhwIjoxMzAwODE5MzgwLCJub25jZSI6Indvb2dpZS1ib29naWUiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS9kZXBsb3ltZW50X2lkIjoidGVzdC1kZXBsb3ltZW50LWlkIiwiaHR0cHM6Ly9wdXJsLmltc2dsb2JhbC5vcmcvc3BlYy9sdGkvY2xhaW0vdGFyZ2V0X2xpbmtfdXJpIjoiaHR0cHM6Ly90b29sLm5ldC9zdXBlci9yZXNvdXJjZSIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL21lc3NhZ2VfdHlwZSI6Ikx0aVJlc291cmNlTGlua1JlcXVlc3QiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS92ZXJzaW9uIjoiMS4zLjAiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS9yZXNvdXJjZV9saW5rIjp7ImlkIjoidGVzdC1yZXNvdXJjZS1saW5rLWlkIn19.F4KkgGhV-bemb4ycWzV-qnQtT1DFD30euSHBmUJ-SX-asYX_VMmOiXgAqu-F6sohGmei9Mw0UanjhPkeZPtbobzM-1ckyvBo5Fx52tvpPP73IjJ3xd7HsjKcthjCrkkWslZtitFefEbznff57ySn69dLbH2LB-cn4Sav-Z3AoYtdyJ0wDs8iCSFS5uGpSl01CgXihWAUBdCYZJPOxUS4wEYIps8BoLiKTy7p3yxxJNS5PrRJ8bN8rqzPKgjY-EXlilvydf9TT2Pvb8oDN6kunFSunlnXuauxqttHoTQ5K_o-KHMPdfXzY6rEsTwzh2zCkX_Aoulpj92RfsmHkmvIPQ"
+             val encodedToken = "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczovL2xtcy5jb20iLCJhdWQiOlsiYm9jbGlwcyJdLCJhenAiOiJib2NsaXBzIiwiaWF0IjoxMzAwODE5MzgwLCJleHAiOjEzMDA4MTkzOTksIm5vbmNlIjoid29vZ2llLWJvb2dpZSIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL2RlcGxveW1lbnRfaWQiOiJ0ZXN0LWRlcGxveW1lbnQtaWQiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS90YXJnZXRfbGlua191cmkiOiJodHRwczovL3Rvb2wubmV0L3N1cGVyL3Jlc291cmNlIiwiaHR0cHM6Ly9wdXJsLmltc2dsb2JhbC5vcmcvc3BlYy9sdGkvY2xhaW0vbWVzc2FnZV90eXBlIjoiTHRpUmVzb3VyY2VMaW5rUmVxdWVzdCIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL3ZlcnNpb24iOiIxLjMuMCIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL3Jlc291cmNlX2xpbmsiOnsiaWQiOiJ0ZXN0LXJlc291cmNlLWxpbmstaWQifX0.CzAEt0L1mBD_TQ2wCQ0ytPCp2xGq9tzYC_EGHdR1HwwSsFsN6jPyzxjhIMMRHjtsIfSX958W0vFgIWFoLAsk6SdUY0Kshp9A9R-ld3Q99U6nlTMSPdFI52sPBlnp7Xf54SPG426xqOEEGmGOB6I57zoOBxqjgtgK7oQF3SB76xGPZqfPkaSKapV-c2kfi87rg_AmLCJ4HVPgeJFYRNBEg9675BPNL15dsn4zvmY7vnp0kezFds33RYNiiIDA_STGArHx7MFBOiIk033URDJ2ic8r05dbvi8O85TJnVLVE-bKqO0h66y4jmxP7aillN_hMgqwPuKn-zVSnDUIh60QNw"
 
             val decodedToken = service.decode(encodedToken)
 
             assertThat(decodedToken.issuerClaim).isEqualTo("https://lms.com")
             assertThat(decodedToken.audienceClaim).isEqualTo(listOf("boclips"))
             assertThat(decodedToken.authorizedPartyClaim).isEqualTo("boclips")
-            assertThat(decodedToken.expClaim).isEqualTo(1300819380L)
+            assertThat(decodedToken.issuedAtClaim).isEqualTo(1300819380L)
+            assertThat(decodedToken.expClaim).isEqualTo(1300819399L)
             assertThat(decodedToken.nonceClaim).isEqualTo("woogie-boogie")
             assertThat(decodedToken.deploymentIdClaim).isEqualTo("test-deployment-id")
             assertThat(decodedToken.targetLinkUriClaim).isEqualTo("https://tool.net/super/resource")
@@ -191,6 +193,7 @@ PwIDAQAB
             assertThat(decodedToken.nonceClaim).isNull()
             assertThat(decodedToken.authorizedPartyClaim).isNull()
             assertThat(decodedToken.expClaim).isNull()
+            assertThat(decodedToken.issuedAtClaim).isNull()
             assertThat(decodedToken.deploymentIdClaim).isNull()
             assertThat(decodedToken.targetLinkUriClaim).isNull()
             assertThat(decodedToken.messageTypeClaim).isNull()

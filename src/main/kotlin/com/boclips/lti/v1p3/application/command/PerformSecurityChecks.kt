@@ -12,7 +12,8 @@ import javax.servlet.http.HttpSession
 class PerformSecurityChecks(
     private val csrfService: CsrfService,
     private val jwtService: JwtService,
-    private val nonceService: NonceService
+    private val nonceService: NonceService,
+    private val idTokenValidator: IdTokenValidator
 ) {
     operator fun invoke(state: String, idToken: String, httpSession: HttpSession) {
         if (!csrfService.doesCsrfStateMatch(state, httpSession)) throw StatesDoNotMatchException()
@@ -20,7 +21,7 @@ class PerformSecurityChecks(
 
         val decodedToken = jwtService.decode(idToken)
 
-        IdTokenValidator.assertHasValidClaims(decodedToken)
+        idTokenValidator.assertHasValidClaims(decodedToken)
             .run {
                 if (nonceService.hasNonceBeenUsedAlready(decodedToken.nonceClaim!!)) throw NonceReusedException(
                     decodedToken.nonceClaim

@@ -5,8 +5,13 @@ import com.boclips.lti.v1p3.application.model.DecodedJwtToken
 import java.time.Instant
 import java.time.Instant.now
 
-object IdTokenValidator {
-    const val clientId = "boclips"
+class IdTokenValidator(
+    private val maxTokenAgeInSeconds: Long,
+    private val currentTime: () -> Instant = ::now
+) {
+    companion object {
+        const val clientId = "boclips"
+    }
 
     fun assertHasValidClaims(token: DecodedJwtToken) {
         if (token.issuerClaim.isNullOrBlank()) throw JwtClaimValidationException("'iss' was not provided")
@@ -23,8 +28,16 @@ object IdTokenValidator {
 
         token.expClaim?.let {
             val expiryTimestamp = Instant.ofEpochSecond(it)
-            if (now().isAfter(expiryTimestamp)) throw JwtClaimValidationException("'exp' indicates this token has expired")
-        }
+            if (currentTime().isAfter(expiryTimestamp)) throw JwtClaimValidationException("'exp' indicates this token has expired")
+        } ?: throw JwtClaimValidationException("'exp' claim was not provided")
+
+        token.issuedAtClaim?.let {
+            val issueTimestamp = Instant.ofEpochSecond(it)
+            if (currentTime().isBefore(issueTimestamp)) throw JwtClaimValidationException("'iat' is in the future")
+
+            val tokenAgeThreshold = currentTime().minusSeconds(maxTokenAgeInSeconds)
+            if (issueTimestamp.isBefore(tokenAgeThreshold)) throw JwtClaimValidationException("'iat' is too far in the past")
+        } ?: throw JwtClaimValidationException("'iat' claim was not provided")
 
         if (token.nonceClaim.isNullOrBlank()) throw JwtClaimValidationException("'nonce' was not provided")
     }
