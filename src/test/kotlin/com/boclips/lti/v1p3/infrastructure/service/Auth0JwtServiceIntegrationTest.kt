@@ -4,11 +4,13 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
+import com.boclips.lti.v1p3.application.exception.UnsupportedSigningAlgorithmException
 import com.boclips.lti.v1p3.application.service.JwtService
 import com.github.tomakehurst.wiremock.WireMockServer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import ru.lanwen.wiremock.ext.WiremockResolver
@@ -29,6 +31,14 @@ class Auth0JwtServiceIntegrationTest : AbstractSpringIntegrationTest() {
 
     @Nested
     inner class SignatureVerification {
+        @Test
+        fun `throws an exception if the token is not signed using RSA`() {
+            val token = JWT.create()
+                .sign(Algorithm.HMAC256("super-secret"))
+
+            assertThrows<UnsupportedSigningAlgorithmException> { service.isSignatureValid(token) }
+        }
+
         @Test
         fun `returns true if the signature on id_token is correct`(
             @WiremockResolver.Wiremock server: WireMockServer,

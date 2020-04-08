@@ -4,6 +4,7 @@ import com.auth0.jwk.UrlJwkProvider
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.SignatureVerificationException
+import com.boclips.lti.v1p3.application.exception.UnsupportedSigningAlgorithmException
 import com.boclips.lti.v1p3.application.model.DecodedJwtToken
 import com.boclips.lti.v1p3.application.model.ResourceLinkClaim
 import com.boclips.lti.v1p3.application.service.JwtService
@@ -13,6 +14,11 @@ import java.net.URL
 class Auth0JwtService(private val platformRepository: PlatformRepository) : JwtService {
     override fun isSignatureValid(token: String): Boolean {
         val decodedToken = JWT.decode(token)
+
+        if (decodedToken.algorithm == null || !decodedToken.algorithm.startsWith("RS") ) {
+            throw UnsupportedSigningAlgorithmException(decodedToken.algorithm ?: "<null>")
+        }
+
         val platform = platformRepository.getByIssuer(URL(decodedToken.issuer))
 
         val keyProvider = Auth0JwksKeyProvider(UrlJwkProvider(platform.jwksEndpoint))
