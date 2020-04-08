@@ -7,6 +7,7 @@ import com.boclips.lti.v1p3.infrastructure.repository.MongoNonceDocumentReposito
 import com.boclips.lti.v1p3.infrastructure.repository.MongoPlatformDocumentRepository
 import com.boclips.lti.v1p3.infrastructure.repository.MongoPlatformRepository
 import com.boclips.lti.v1p3.infrastructure.service.Auth0JwtService
+import com.boclips.lti.v1p3.infrastructure.service.Auth0UrlJwkProviderRetrier
 import com.boclips.lti.v1p3.infrastructure.service.MongoNonceService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -20,7 +21,8 @@ class InfrastructureContext {
     }
 
     @Bean
-    fun jwtService(platformRepository: PlatformRepository): JwtService = Auth0JwtService(platformRepository)
+    fun jwtService(platformRepository: PlatformRepository, retrier: Auth0UrlJwkProviderRetrier): JwtService =
+        Auth0JwtService(platformRepository, retrier)
 
     @Bean
     fun nonceService(

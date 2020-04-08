@@ -11,17 +11,28 @@ import com.boclips.lti.v1p3.application.service.JwtService
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
 import java.net.URL
 
-class Auth0JwtService(private val platformRepository: PlatformRepository) : JwtService {
+class Auth0JwtService(
+    private val platformRepository: PlatformRepository,
+    private val retrier: Auth0UrlJwkProviderRetrier
+) : JwtService {
+    companion object {
+        const val connectTimeoutInMillis = 5_000
+        const val readTimeoutInMillis = 5_000
+    }
+
     override fun isSignatureValid(token: String): Boolean {
         val decodedToken = JWT.decode(token)
 
-        if (decodedToken.algorithm == null || !decodedToken.algorithm.startsWith("RS") ) {
+        if (decodedToken.algorithm == null || !decodedToken.algorithm.startsWith("RS")) {
             throw UnsupportedSigningAlgorithmException(decodedToken.algorithm ?: "<null>")
         }
 
         val platform = platformRepository.getByIssuer(URL(decodedToken.issuer))
 
-        val keyProvider = Auth0JwksKeyProvider(UrlJwkProvider(platform.jwksEndpoint))
+        val keyProvider = Auth0JwksKeyProvider(
+            UrlJwkProvider(platform.jwksEndpoint, connectTimeoutInMillis, readTimeoutInMillis),
+            retrier
+        )
         val algorithm = Algorithm.RSA256(keyProvider)
 
         return try {

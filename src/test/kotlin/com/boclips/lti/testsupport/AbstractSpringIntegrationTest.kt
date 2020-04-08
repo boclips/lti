@@ -11,6 +11,7 @@ import com.boclips.lti.testsupport.configuration.FakeClientsConfig
 import com.boclips.lti.v1p1.infrastructure.repository.LtiOnePointOneConsumerRepository
 import com.boclips.lti.v1p3.infrastructure.repository.MongoNonceDocumentRepository
 import com.boclips.lti.v1p3.infrastructure.repository.MongoPlatformDocumentRepository
+import com.boclips.lti.v1p3.infrastructure.service.Auth0UrlJwkProviderRetrier
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.mongodb.MongoClient
@@ -76,6 +77,9 @@ abstract class AbstractSpringIntegrationTest {
 
     @Autowired
     protected lateinit var mongoNonceDocumentRepository: MongoNonceDocumentRepository
+
+    @Autowired
+    protected lateinit var retrier: Auth0UrlJwkProviderRetrier
 
     val ltiOauthSigner = LtiOauthSigner()
 
