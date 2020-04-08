@@ -32,7 +32,7 @@ class Auth0JwtServiceIntegrationTest : AbstractSpringIntegrationTest() {
     @Nested
     inner class SignatureVerification {
         @Test
-        fun `throws an exception if the token is not signed using RSA`() {
+        fun `throws an exception if the token is not signed using RS256`() {
             val token = JWT.create()
                 .sign(Algorithm.HMAC256("super-secret"))
 

@@ -23,7 +23,7 @@ class Auth0JwtService(
     override fun isSignatureValid(token: String): Boolean {
         val decodedToken = JWT.decode(token)
 
-        if (decodedToken.algorithm == null || !decodedToken.algorithm.startsWith("RS")) {
+        if (decodedToken.algorithm == null || decodedToken.algorithm != "RS256") {
             throw UnsupportedSigningAlgorithmException(decodedToken.algorithm ?: "<null>")
         }
 
