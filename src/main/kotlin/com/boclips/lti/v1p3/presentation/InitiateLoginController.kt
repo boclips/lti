@@ -40,13 +40,13 @@ class InitiateLoginController(
         ltiMessageHint: String?,
         session: HttpSession
     ): String {
-        AuthenticationResponseController.logger.info { "LTI 1.3 Initiate Login { iss: '$issuer', login_hint: '$loginHint', target_link_uri: '$targetLinkUri' }" }
-
         val platform = platformRepository.getByIssuer(java.net.URL(issuer!!))
 
         val state = UUID.randomUUID().toString()
         session.setAttribute(SessionKeys.state, state)
         session.setAttribute(SessionKeys.targetLinkUri, targetLinkUri)
+
+        logger.info { "LTI 1.3 Initiate Login { iss: '$issuer', login_hint: '$loginHint', target_link_uri: '$targetLinkUri' }, state: '$state'" }
 
         val authenticationRequestUri = UriComponentsBuilder.fromUri(platform.authenticationEndpoint.toURI())
             .queryParam("scope", "openid")

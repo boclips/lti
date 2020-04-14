@@ -33,6 +33,8 @@ class AuthenticationResponseController(
 
         val decodedToken = jwtService.decode(idToken)
 
+        logger.info { "LTI 1.3 Authentication Response { iss: '${decodedToken.issuerClaim}', target_link_uri: '${decodedToken.targetLinkUriClaim}' }, state: '$state'" }
+
         val resourceUrl = handlePlatformMessage(decodedToken, httpSession)
 
         return "redirect:${resourceUrl}"
