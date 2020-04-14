@@ -24,10 +24,12 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.web.util.UriComponentsBuilder
 import java.security.KeyPairGenerator
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
@@ -151,7 +153,7 @@ abstract class AbstractSpringIntegrationTest {
             )
     }
 
-    fun setupTokenSigning(server: WireMockServer, uri: String): TokenSigningSetup {
+    protected fun setupTokenSigning(server: WireMockServer, uri: String): TokenSigningSetup {
         val publicKeyId = UUID.randomUUID().toString()
         val keyPair = KeyPairGenerator.getInstance("RSA").genKeyPair()
         val rsaPublicKey = keyPair.public as RSAPublicKey
@@ -164,15 +166,19 @@ abstract class AbstractSpringIntegrationTest {
         )
 
         return TokenSigningSetup(
-            publicKeyId = publicKeyId,
             keyPair = rsaPublicKey to keyPair.private as RSAPrivateKey,
             jwksUrl = "$uri/.well-known/jwks.json"
         )
     }
 
     data class TokenSigningSetup(
-        val publicKeyId: String,
         val keyPair: Pair<RSAPublicKey, RSAPrivateKey>,
         val jwksUrl: String
     )
+
+    protected fun extractStateFromLocationHeader(response: MockHttpServletResponse): String {
+        return UriComponentsBuilder.fromUriString(response.getHeader("Location")!!).build()
+            .queryParams["state"]!!
+            .first()
+    }
 }

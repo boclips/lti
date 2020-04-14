@@ -7,6 +7,7 @@ import com.boclips.lti.v1p3.application.service.CsrfService
 import com.boclips.lti.v1p3.application.service.JwtService
 import com.boclips.lti.v1p3.application.service.NonceService
 import com.boclips.lti.v1p3.application.validator.IdTokenValidator
+import com.boclips.lti.v1p3.application.validator.TargetLinkUriValidator
 import javax.servlet.http.HttpSession
 
 class PerformSecurityChecks(
@@ -22,6 +23,9 @@ class PerformSecurityChecks(
         val decodedToken = jwtService.decode(idToken)
 
         idTokenValidator.assertHasValidClaims(decodedToken)
+            .run {
+                TargetLinkUriValidator.assertTargetLinkUriMatchesSessionState(decodedToken, httpSession, state)
+            }
             .run {
                 if (nonceService.hasNonceBeenUsedAlready(decodedToken.nonceClaim!!)) throw NonceReusedException(
                     decodedToken.nonceClaim

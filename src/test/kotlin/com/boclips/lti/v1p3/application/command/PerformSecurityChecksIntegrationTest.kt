@@ -4,11 +4,12 @@ import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.testsupport.factories.DecodedJwtTokenFactory
 import com.boclips.lti.testsupport.factories.NonceDocumentFactory
 import com.boclips.lti.v1p3.application.exception.InvalidJwtTokenSignatureException
+import com.boclips.lti.v1p3.application.exception.JwtClaimValidationException
 import com.boclips.lti.v1p3.application.exception.NonceReusedException
 import com.boclips.lti.v1p3.application.exception.StatesDoNotMatchException
-import com.boclips.lti.v1p3.application.exception.JwtClaimValidationException
+import com.boclips.lti.v1p3.application.model.mapStateToTargetLinkUri
 import com.boclips.lti.v1p3.application.service.JwtService
-import com.boclips.lti.v1p3.domain.model.SessionKeys
+import com.boclips.lti.v1p3.domain.exception.TargetLinkUriMismatchException
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.within
@@ -27,14 +28,16 @@ class PerformSecurityChecksIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
     fun `does not throw and stores a nonce for future reference when checks pass`() {
         val state = "state"
-        val token = "this is a token"
         val nonceValue = "nonce"
+        val resourceUri = "https://tool.com/resource/123"
 
-        session.setAttribute(SessionKeys.state, state)
+        session.mapStateToTargetLinkUri(state, resourceUri)
         whenever(jwtService.isSignatureValid(token)).thenReturn(true)
         whenever(jwtService.decode(token)).thenReturn(
             DecodedJwtTokenFactory.sample(
-                nonceClaim = nonceValue
+                nonceClaim = nonceValue,
+                targetLinkUriClaim = resourceUri
+
             )
         )
 
@@ -47,7 +50,7 @@ class PerformSecurityChecksIntegrationTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `throws an exception when states do not match`() {
-        session.setAttribute(SessionKeys.state, "reality")
+        session.mapStateToTargetLinkUri("reality", "https://this-could-be-anythig.com")
 
         assertThrows<StatesDoNotMatchException> { performSecurityChecks("expectation", "token", session) }
     }
@@ -55,9 +58,9 @@ class PerformSecurityChecksIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
     fun `throws an exception when token signature does not match`() {
         val state = "state"
-        val token = "this is a token"
+        val resourceUri = "https://tool.com/resource/123"
 
-        session.setAttribute(SessionKeys.state, state)
+        session.mapStateToTargetLinkUri(state, resourceUri)
         whenever(jwtService.isSignatureValid(token)).thenReturn(false)
 
         assertThrows<InvalidJwtTokenSignatureException> { performSecurityChecks(state, token, session) }
@@ -66,13 +69,14 @@ class PerformSecurityChecksIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
     fun `throws an exception when nonce has already been used`() {
         val state = "state"
-        val token = "this is a token"
+        val resourceUri = "https://tool.com/resource/123"
 
-        session.setAttribute(SessionKeys.state, state)
+        session.mapStateToTargetLinkUri(state, resourceUri)
         whenever(jwtService.isSignatureValid(token)).thenReturn(true)
         whenever(jwtService.decode(token)).thenReturn(
             DecodedJwtTokenFactory.sample(
-                nonceClaim = "nonce"
+                nonceClaim = "nonce",
+                targetLinkUriClaim = resourceUri
             )
         )
 
@@ -84,18 +88,36 @@ class PerformSecurityChecksIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
     fun `throws an exception when nonce is not provided on the token`() {
         val state = "state"
-        val token = "this is a token"
+        val resourceUri = "https://tool.com/resource/123"
 
-        session.setAttribute(SessionKeys.state, state)
+        session.mapStateToTargetLinkUri(state, resourceUri)
         whenever(jwtService.isSignatureValid(token)).thenReturn(true)
         whenever(jwtService.decode(token)).thenReturn(
             DecodedJwtTokenFactory.sample(
-                nonceClaim = null
+                nonceClaim = null,
+                targetLinkUriClaim = resourceUri
             )
         )
 
         assertThrows<JwtClaimValidationException> { performSecurityChecks(state, token, session) }
     }
+
+    @Test
+    fun `throws an exception when target link URI does not match what's mapped to state`() {
+        val state = "state"
+
+        session.mapStateToTargetLinkUri(state, "https://tool.com/reality")
+        whenever(jwtService.isSignatureValid(token)).thenReturn(true)
+        whenever(jwtService.decode(token)).thenReturn(
+            DecodedJwtTokenFactory.sample(
+                targetLinkUriClaim = "https://tool.com/expectation"
+            )
+        )
+
+        assertThrows<TargetLinkUriMismatchException> { performSecurityChecks(state, token, session) }
+    }
+
+    private val token = "this is a token"
 
     @BeforeEach
     fun initialiseVariables() {

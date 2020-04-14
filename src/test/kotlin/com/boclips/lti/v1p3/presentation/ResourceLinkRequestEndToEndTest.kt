@@ -1,13 +1,11 @@
 package com.boclips.lti.v1p3.presentation
 
-import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
+import com.boclips.lti.testsupport.factories.JwtTokenFactory
 import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
-import com.boclips.lti.v1p3.domain.model.SessionKeys
 import com.github.tomakehurst.wiremock.WireMockServer
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.http.MediaType
@@ -16,9 +14,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import ru.lanwen.wiremock.ext.WiremockResolver
 import ru.lanwen.wiremock.ext.WiremockUriResolver
-import java.time.Instant.now
-import java.util.Date
-import java.util.UUID
 
 @ExtendWith(
     value = [
@@ -45,7 +40,7 @@ class ResourceLinkRequestEndToEndTest : AbstractSpringIntegrationTest() {
             )
         )
 
-        val session = mvc.perform(
+        val loginInitResult = mvc.perform(
             post("/v1p3/initiate-login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("iss", issuer)
@@ -53,35 +48,25 @@ class ResourceLinkRequestEndToEndTest : AbstractSpringIntegrationTest() {
                 .param("target_link_uri", resource)
         )
             .andExpect(status().isFound)
-            .andReturn().request.session
+            .andReturn()
 
-        val idToken = JWT.create()
-            .withKeyId(tokenSigningSetup.publicKeyId)
-            .withIssuer(issuer)
-            .withAudience("boclips")
-            .withExpiresAt(Date.from(now().plusSeconds(10)))
-            .withIssuedAt(Date.from(now().minusSeconds(10)))
-            .withClaim("nonce", UUID.randomUUID().toString())
-            .withClaim("https://purl.imsglobal.org/spec/lti/claim/deployment_id", "test-deployment-id")
-            .withClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri", resource)
-            .withClaim("https://purl.imsglobal.org/spec/lti/claim/message_type", "LtiResourceLinkRequest")
-            .withClaim("https://purl.imsglobal.org/spec/lti/claim/version", "1.3.0")
-            .withClaim(
-                "https://purl.imsglobal.org/spec/lti/claim/resource_link",
-                mapOf("id" to "test-resource-link-id")
+        val session = loginInitResult.request.session
+        val state = extractStateFromLocationHeader(loginInitResult.response)
+
+        val idToken = JwtTokenFactory.sample(
+            issuer = issuer,
+            targetLinkUri = resource,
+            signatureAlgorithm = Algorithm.RSA256(
+                tokenSigningSetup.keyPair.first,
+                tokenSigningSetup.keyPair.second
             )
-            .sign(
-                Algorithm.RSA256(
-                    tokenSigningSetup.keyPair.first,
-                    tokenSigningSetup.keyPair.second
-                )
-            )
+        )
 
         mvc.perform(
             post("/v1p3/authentication-response")
                 .session(session as MockHttpSession)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("state", session.getAttribute(SessionKeys.state) as String)
+                .param("state", state)
                 .param("id_token", idToken)
         )
             .andExpect(status().isFound)
@@ -97,9 +82,95 @@ class ResourceLinkRequestEndToEndTest : AbstractSpringIntegrationTest() {
             }
     }
 
-    @Disabled
     @Test
-    fun `is able to handle interweaving resource requests from the same platform`() {
-        TODO("Not yet implemented")
+    fun `is able to handle interweaving resource requests from the same platform`(
+        @WiremockResolver.Wiremock server: WireMockServer,
+        @WiremockUriResolver.WiremockUri uri: String
+    ) {
+        val issuer = "https://a-learning-platform.com"
+        val firstResource = "https://tool.com/resource/first"
+        val secondResource = "https://tool.com/resource/second"
+
+        val tokenSigningSetup = setupTokenSigning(server, uri)
+
+        mongoPlatformDocumentRepository.insert(
+            PlatformDocumentFactory.sample(
+                issuer = issuer,
+                authenticationEndpoint = "https://idp.a-learning-platform.com/auth",
+                jwksUrl = tokenSigningSetup.jwksUrl
+            )
+        )
+
+        val firstResult = mvc.perform(
+            post("/v1p3/initiate-login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("iss", issuer)
+                .param("login_hint", "a-user-login-hint")
+                .param("target_link_uri", firstResource)
+        )
+            .andExpect(status().isFound)
+            .andReturn()
+
+        val session = firstResult.request.session
+        val firstState = extractStateFromLocationHeader(firstResult.response)
+
+        val secondResult = mvc.perform(
+            post("/v1p3/initiate-login")
+                .session(session as MockHttpSession)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("iss", issuer)
+                .param("login_hint", "a-user-login-hint")
+                .param("target_link_uri", secondResource)
+        )
+            .andExpect(status().isFound)
+            .andReturn()
+
+        val secondState = extractStateFromLocationHeader(secondResult.response)
+
+        val firstResourceToken = JwtTokenFactory.sample(
+            issuer = issuer,
+            targetLinkUri = firstResource,
+            signatureAlgorithm = Algorithm.RSA256(
+                tokenSigningSetup.keyPair.first,
+                tokenSigningSetup.keyPair.second
+            )
+        )
+
+        mvc.perform(
+            post("/v1p3/authentication-response")
+                .session(session)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("state", firstState)
+                .param("id_token", firstResourceToken)
+        )
+            .andExpect(status().isFound)
+            .andDo { result ->
+                val location = result.response.getHeader("Location")
+
+                assertThat(location).isEqualTo(firstResource)
+            }
+
+        val secondResourceToken = JwtTokenFactory.sample(
+            issuer = issuer,
+            targetLinkUri = secondResource,
+            signatureAlgorithm = Algorithm.RSA256(
+                tokenSigningSetup.keyPair.first,
+                tokenSigningSetup.keyPair.second
+            )
+        )
+
+        mvc.perform(
+            post("/v1p3/authentication-response")
+                .session(session)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("state", secondState)
+                .param("id_token", secondResourceToken)
+        )
+            .andExpect(status().isFound)
+            .andDo { result ->
+                val location = result.response.getHeader("Location")
+
+                assertThat(location).isEqualTo(secondResource)
+            }
     }
 }

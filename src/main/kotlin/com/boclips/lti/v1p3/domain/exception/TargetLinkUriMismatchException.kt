@@ -4,7 +4,7 @@ import com.boclips.web.exceptions.BoclipsApiException
 import com.boclips.web.exceptions.ExceptionDetails
 import org.springframework.http.HttpStatus
 
-class ResourceDoesNotMatchException : BoclipsApiException(
+class TargetLinkUriMismatchException : BoclipsApiException(
     ExceptionDetails(
         error = "Unauthorised",
         message = "Requested and expected resource does not match",

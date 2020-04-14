@@ -1,6 +1,6 @@
 package com.boclips.lti.v1p3.application.service
 
-import com.boclips.lti.v1p3.domain.model.SessionKeys
+import com.boclips.lti.v1p3.application.model.mapStateToTargetLinkUri
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.mock.web.MockHttpSession
@@ -11,7 +11,7 @@ class CsrfServiceTest {
     @Test
     fun `returns false when given state does not match session state`() {
         val session = MockHttpSession()
-        session.setAttribute(SessionKeys.state, "expectation")
+        session.mapStateToTargetLinkUri("expectation", "https://tool.com/")
 
         val result = securityService.doesCsrfStateMatch(state = "reality", session = session)
 
@@ -21,7 +21,7 @@ class CsrfServiceTest {
     @Test
     fun `returns true when states match`() {
         val session = MockHttpSession()
-        session.setAttribute(SessionKeys.state, "state")
+        session.mapStateToTargetLinkUri("state", "https://tool.com/")
 
         val result = securityService.doesCsrfStateMatch(state = "state", session = session)
 

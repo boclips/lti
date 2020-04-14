@@ -1,8 +1,8 @@
 package com.boclips.lti.v1p3.infrastructure.service
 
-import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
+import com.boclips.lti.testsupport.factories.JwtTokenFactory
 import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
 import com.boclips.lti.v1p3.application.exception.UnsupportedSigningAlgorithmException
 import com.boclips.lti.v1p3.application.service.JwtService
@@ -33,8 +33,7 @@ class Auth0JwtServiceIntegrationTest : AbstractSpringIntegrationTest() {
     inner class SignatureVerification {
         @Test
         fun `throws an exception if the token is not signed using RS256`() {
-            val token = JWT.create()
-                .sign(Algorithm.HMAC256("super-secret"))
+            val token = JwtTokenFactory.sample(signatureAlgorithm = Algorithm.HMAC256("super-secret"))
 
             assertThrows<UnsupportedSigningAlgorithmException> { service.isSignatureValid(token) }
         }
@@ -53,11 +52,12 @@ class Auth0JwtServiceIntegrationTest : AbstractSpringIntegrationTest() {
                 )
             )
 
-            val token = JWT.create()
-                .withIssuer(issuer)
-                .sign(Algorithm.RSA256(tokenSigningSetup.keyPair.first, tokenSigningSetup.keyPair.second))
+            val token = JwtTokenFactory.sample(
+                issuer = issuer,
+                signatureAlgorithm = Algorithm.RSA256(tokenSigningSetup.keyPair.first, tokenSigningSetup.keyPair.second)
+            )
 
-            assertThat(service.isSignatureValid(token)).isTrue()
+            assertThat(service.isSignatureValid(token)).isEqualTo(true)
         }
 
         @Test
@@ -76,11 +76,12 @@ class Auth0JwtServiceIntegrationTest : AbstractSpringIntegrationTest() {
             )
 
             val keyPair = KeyPairGenerator.getInstance("RSA").genKeyPair()
-            val token = JWT.create()
-                .withIssuer(issuer)
-                .sign(Algorithm.RSA256(keyPair.public as RSAPublicKey, keyPair.private as RSAPrivateKey))
+            val token = JwtTokenFactory.sample(
+                issuer = issuer,
+                signatureAlgorithm = Algorithm.RSA256(keyPair.public as RSAPublicKey, keyPair.private as RSAPrivateKey)
+            )
 
-            assertThat(service.isSignatureValid(token)).isFalse()
+            assertThat(service.isSignatureValid(token)).isEqualTo(false)
         }
     }
 
@@ -151,7 +152,8 @@ PwIDAQAB
             }
 
             */
-             val encodedToken = "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczovL2xtcy5jb20iLCJhdWQiOlsiYm9jbGlwcyJdLCJhenAiOiJib2NsaXBzIiwiaWF0IjoxMzAwODE5MzgwLCJleHAiOjEzMDA4MTkzOTksIm5vbmNlIjoid29vZ2llLWJvb2dpZSIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL2RlcGxveW1lbnRfaWQiOiJ0ZXN0LWRlcGxveW1lbnQtaWQiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS90YXJnZXRfbGlua191cmkiOiJodHRwczovL3Rvb2wubmV0L3N1cGVyL3Jlc291cmNlIiwiaHR0cHM6Ly9wdXJsLmltc2dsb2JhbC5vcmcvc3BlYy9sdGkvY2xhaW0vbWVzc2FnZV90eXBlIjoiTHRpUmVzb3VyY2VMaW5rUmVxdWVzdCIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL3ZlcnNpb24iOiIxLjMuMCIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL3Jlc291cmNlX2xpbmsiOnsiaWQiOiJ0ZXN0LXJlc291cmNlLWxpbmstaWQifX0.CzAEt0L1mBD_TQ2wCQ0ytPCp2xGq9tzYC_EGHdR1HwwSsFsN6jPyzxjhIMMRHjtsIfSX958W0vFgIWFoLAsk6SdUY0Kshp9A9R-ld3Q99U6nlTMSPdFI52sPBlnp7Xf54SPG426xqOEEGmGOB6I57zoOBxqjgtgK7oQF3SB76xGPZqfPkaSKapV-c2kfi87rg_AmLCJ4HVPgeJFYRNBEg9675BPNL15dsn4zvmY7vnp0kezFds33RYNiiIDA_STGArHx7MFBOiIk033URDJ2ic8r05dbvi8O85TJnVLVE-bKqO0h66y4jmxP7aillN_hMgqwPuKn-zVSnDUIh60QNw"
+            val encodedToken =
+                "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczovL2xtcy5jb20iLCJhdWQiOlsiYm9jbGlwcyJdLCJhenAiOiJib2NsaXBzIiwiaWF0IjoxMzAwODE5MzgwLCJleHAiOjEzMDA4MTkzOTksIm5vbmNlIjoid29vZ2llLWJvb2dpZSIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL2RlcGxveW1lbnRfaWQiOiJ0ZXN0LWRlcGxveW1lbnQtaWQiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS90YXJnZXRfbGlua191cmkiOiJodHRwczovL3Rvb2wubmV0L3N1cGVyL3Jlc291cmNlIiwiaHR0cHM6Ly9wdXJsLmltc2dsb2JhbC5vcmcvc3BlYy9sdGkvY2xhaW0vbWVzc2FnZV90eXBlIjoiTHRpUmVzb3VyY2VMaW5rUmVxdWVzdCIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL3ZlcnNpb24iOiIxLjMuMCIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL3Jlc291cmNlX2xpbmsiOnsiaWQiOiJ0ZXN0LXJlc291cmNlLWxpbmstaWQifX0.CzAEt0L1mBD_TQ2wCQ0ytPCp2xGq9tzYC_EGHdR1HwwSsFsN6jPyzxjhIMMRHjtsIfSX958W0vFgIWFoLAsk6SdUY0Kshp9A9R-ld3Q99U6nlTMSPdFI52sPBlnp7Xf54SPG426xqOEEGmGOB6I57zoOBxqjgtgK7oQF3SB76xGPZqfPkaSKapV-c2kfi87rg_AmLCJ4HVPgeJFYRNBEg9675BPNL15dsn4zvmY7vnp0kezFds33RYNiiIDA_STGArHx7MFBOiIk033URDJ2ic8r05dbvi8O85TJnVLVE-bKqO0h66y4jmxP7aillN_hMgqwPuKn-zVSnDUIh60QNw"
 
             val decodedToken = service.decode(encodedToken)
 
@@ -178,7 +180,8 @@ PwIDAQAB
             }
 
             */
-            val encodedToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJib2NsaXBzIn0.K0xEAWCQ-StRkAvEortwfcACPmnJbCi3nHjwCR0cR3DJ8RotDu8t5e-I3vbIaQgCw2VBHxiCIVMw1fB_YSdgolgOxV19vrnP2VlT50xxQd6Sj_Ns0Wd-6_ofxLC3dXIDnbM0zaZamBu4oP1vqLXF1Ec9pDGItQ3JFhERvkswkpEXwCLxEBU4iF9zdRj1vnc1zdLp5Shi7AUyLxjYRL1PgGkNJxJikr4fBODayMHsVVCn-HVQMDkM3PjSsZ-gvoAvzHlhdt3CaBtBGUxJzEqQNm6BY3o6vp_dx9eLxMej8F6cMAprrAwSjr5GEUyT62Xs148Ub_aorYCGZAO7hh5zfg"
+            val encodedToken =
+                "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJib2NsaXBzIn0.K0xEAWCQ-StRkAvEortwfcACPmnJbCi3nHjwCR0cR3DJ8RotDu8t5e-I3vbIaQgCw2VBHxiCIVMw1fB_YSdgolgOxV19vrnP2VlT50xxQd6Sj_Ns0Wd-6_ofxLC3dXIDnbM0zaZamBu4oP1vqLXF1Ec9pDGItQ3JFhERvkswkpEXwCLxEBU4iF9zdRj1vnc1zdLp5Shi7AUyLxjYRL1PgGkNJxJikr4fBODayMHsVVCn-HVQMDkM3PjSsZ-gvoAvzHlhdt3CaBtBGUxJzEqQNm6BY3o6vp_dx9eLxMej8F6cMAprrAwSjr5GEUyT62Xs148Ub_aorYCGZAO7hh5zfg"
 
             val decodedToken = service.decode(encodedToken)
 
@@ -195,7 +198,8 @@ PwIDAQAB
             }
 
             */
-            val encodedToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.e30.hiK-vhXM0dc8OaDwosY03GsTjcEiYzrdZPXn16-sV-9m8-KfprDTI6SRcw_4JVER0VHOdnHLufKmDHWgQBu0D1lBdP56RhZ0gSjgvRgICM1k6-KBmeWCsCzr_asnfP0LwPXzOzqOOeeyCtUAUanU0PHvB-KU2Bglx6e2hoS1Eu5PUIIl0RB0EGMzSOTXPh-nppKbKcf6QZaJfT_R0NHO_Hi2IPLVAA_2PtdaEIyxrcI5_OBVTFIMnROGtWwdbc1aaTKc4i0zHy1xTWDZKfTgy6O2ty07n6SlnShlV1Sy3ykpS_pmkbsAOx-dfAkjdBJlU3XOT_MjbZtetFwNUSEAJQ"
+            val encodedToken =
+                "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.e30.hiK-vhXM0dc8OaDwosY03GsTjcEiYzrdZPXn16-sV-9m8-KfprDTI6SRcw_4JVER0VHOdnHLufKmDHWgQBu0D1lBdP56RhZ0gSjgvRgICM1k6-KBmeWCsCzr_asnfP0LwPXzOzqOOeeyCtUAUanU0PHvB-KU2Bglx6e2hoS1Eu5PUIIl0RB0EGMzSOTXPh-nppKbKcf6QZaJfT_R0NHO_Hi2IPLVAA_2PtdaEIyxrcI5_OBVTFIMnROGtWwdbc1aaTKc4i0zHy1xTWDZKfTgy6O2ty07n6SlnShlV1Sy3ykpS_pmkbsAOx-dfAkjdBJlU3XOT_MjbZtetFwNUSEAJQ"
 
             val decodedToken = service.decode(encodedToken)
 

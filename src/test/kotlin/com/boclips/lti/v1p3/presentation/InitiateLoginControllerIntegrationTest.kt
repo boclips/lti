@@ -2,7 +2,7 @@ package com.boclips.lti.v1p3.presentation
 
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
-import com.boclips.lti.v1p3.domain.model.SessionKeys
+import com.boclips.lti.v1p3.application.model.getTargetLinkUri
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
@@ -19,6 +19,7 @@ class InitiateLoginControllerIntegrationTest : AbstractSpringIntegrationTest() {
         val iss = "https://a-learning-platform.com"
         val authenticationEndpoint = "https://idp.a-learning-platform.com/auth"
         val loginHint = "a-user-login-hint"
+        val resource = "https://tool.com/resource/super-cool"
 
         mongoPlatformDocumentRepository.insert(
             PlatformDocumentFactory.sample(
@@ -32,7 +33,7 @@ class InitiateLoginControllerIntegrationTest : AbstractSpringIntegrationTest() {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("iss", iss)
                 .param("login_hint", loginHint)
-                .param("target_link_uri", "https://tool.com/resource/super-cool")
+                .param("target_link_uri", resource)
         )
             .andExpect(status().isFound)
             .andDo { result ->
@@ -49,13 +50,15 @@ class InitiateLoginControllerIntegrationTest : AbstractSpringIntegrationTest() {
                     "http://localhost/v1p3/authentication-response"
                 )
                 assertThat(locationUri).hasParameter("login_hint", loginHint)
-                assertThat(locationUri).hasParameter(
-                    "state",
-                    result.request.session?.getAttribute(SessionKeys.state) as? String
-                )
+
+                val stateParameterValue = extractStateFromLocationHeader(result.response)
+                val session = result.request.session!!
+                assertThat(session.getTargetLinkUri(stateParameterValue)).isEqualTo(resource)
                 assertThat(locationUri).hasParameter("response_mode", "form_post")
+
                 val nonceParameter = UriComponentsBuilder.fromUri(locationUri).build().queryParams["nonce"]
                 assertThat(nonceParameter).isNotEmpty
+
                 assertThat(locationUri).hasParameter("prompt", "none")
             }
     }
@@ -126,7 +129,7 @@ class InitiateLoginControllerIntegrationTest : AbstractSpringIntegrationTest() {
             )
         )
 
-        val session = mvc.perform(
+        val result = mvc.perform(
             post("/v1p3/initiate-login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("iss", issuer)
@@ -134,9 +137,12 @@ class InitiateLoginControllerIntegrationTest : AbstractSpringIntegrationTest() {
                 .param("target_link_uri", resource)
         )
             .andExpect(status().isFound)
-            .andReturn().request.session
+            .andReturn()
 
-        assertThat(session?.getAttribute(SessionKeys.targetLinkUri)).isEqualTo(resource)
+        val session = result.request.session
+        val state = extractStateFromLocationHeader(result.response)
+
+        assertThat(session!!.getTargetLinkUri(state)).isEqualTo(resource)
     }
 
     @Test

@@ -1,7 +1,7 @@
 package com.boclips.lti.v1p3.presentation
 
 import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
-import com.boclips.lti.v1p3.domain.model.SessionKeys
+import com.boclips.lti.v1p3.application.model.mapStateToTargetLinkUri
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
 import mu.KLogging
 import org.hibernate.validator.constraints.URL
@@ -43,8 +43,7 @@ class InitiateLoginController(
         val platform = platformRepository.getByIssuer(java.net.URL(issuer!!))
 
         val state = UUID.randomUUID().toString()
-        session.setAttribute(SessionKeys.state, state)
-        session.setAttribute(SessionKeys.targetLinkUri, targetLinkUri)
+        session.mapStateToTargetLinkUri(state, targetLinkUri!!)
 
         logger.info { "LTI 1.3 Initiate Login { iss: '$issuer', login_hint: '$loginHint', target_link_uri: '$targetLinkUri' }, state: '$state'" }
 

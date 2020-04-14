@@ -48,8 +48,7 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
         val state = UUID.randomUUID().toString()
         val session = LtiTestSessionFactory.unauthenticated(
             sessionAttributes = mapOf(
-                SessionKeys.state to state,
-                SessionKeys.targetLinkUri to resource
+                SessionKeys.statesToTargetLinkUris to mapOf(state to resource)
             )
         )
 
@@ -74,16 +73,10 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
         whenever(jwtService.isSignatureValid(jwtToken)).thenReturn(false)
 
         val state = UUID.randomUUID().toString()
-        val session = LtiTestSessionFactory.unauthenticated(
-            sessionAttributes = mapOf(
-                SessionKeys.state to state,
-                SessionKeys.targetLinkUri to "https://lti.resource/we-expose"
-            )
-        )
 
         mvc.perform(
             post("/v1p3/authentication-response")
-                .session(session as MockHttpSession)
+                .session(LtiTestSessionFactory.unauthenticated() as MockHttpSession)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("state", state)
                 .param("id_token", jwtToken)
@@ -95,8 +88,7 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
     fun `returns an unauthorised response when states do not match`() {
         val session = LtiTestSessionFactory.unauthenticated(
             sessionAttributes = mapOf(
-                SessionKeys.state to "a united state of lti",
-                SessionKeys.targetLinkUri to "https://lti.resource/we-expose"
+                SessionKeys.statesToTargetLinkUris to mapOf("a united state of lti" to "https://lti.resource/we-expose")
             )
         )
 
@@ -127,8 +119,7 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
 
         val session = LtiTestSessionFactory.unauthenticated(
             sessionAttributes = mapOf(
-                SessionKeys.state to state,
-                SessionKeys.targetLinkUri to "https://lti.resource/this-is-a-different-resource"
+                SessionKeys.statesToTargetLinkUris to mapOf(state to "https://lti.resource/this-is-a-different-resource")
             )
         )
 
@@ -145,12 +136,13 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
     @Test
     fun `returns a bad request response when a message type other than LtiResourceLinkRequest is used`() {
         val issuer = "https://platform.com/for-learning"
+        val resource = "https://lti.resource/we-expose"
 
         whenever(jwtService.isSignatureValid(jwtToken)).thenReturn(true)
         whenever(jwtService.decode(jwtToken)).thenReturn(
             DecodedJwtTokenFactory.sample(
                 issuerClaim = issuer,
-                targetLinkUriClaim = "https://lti.resource/we-expose",
+                targetLinkUriClaim = resource,
                 messageTypeClaim = "I can has cheezbureger?"
             )
         )
@@ -161,8 +153,7 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
 
         val session = LtiTestSessionFactory.unauthenticated(
             sessionAttributes = mapOf(
-                SessionKeys.state to state,
-                SessionKeys.targetLinkUri to "https://lti.resource/we-expose"
+                SessionKeys.statesToTargetLinkUris to mapOf(state to resource)
             )
         )
 
@@ -196,8 +187,7 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
 
         val session = LtiTestSessionFactory.unauthenticated(
             sessionAttributes = mapOf(
-                SessionKeys.state to state,
-                SessionKeys.targetLinkUri to resource
+                SessionKeys.statesToTargetLinkUris to mapOf(state to resource)
             )
         )
 
@@ -231,8 +221,7 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
 
         val session = LtiTestSessionFactory.unauthenticated(
             sessionAttributes = mapOf(
-                SessionKeys.state to state,
-                SessionKeys.targetLinkUri to resource
+                SessionKeys.statesToTargetLinkUris to mapOf(state to resource)
             )
         )
 
@@ -269,8 +258,7 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
 
         val session = LtiTestSessionFactory.unauthenticated(
             sessionAttributes = mapOf(
-                SessionKeys.state to state,
-                SessionKeys.targetLinkUri to resource
+                SessionKeys.statesToTargetLinkUris to mapOf(state to resource)
             )
         )
 

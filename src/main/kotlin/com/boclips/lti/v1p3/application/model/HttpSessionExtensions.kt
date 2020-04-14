@@ -4,13 +4,28 @@ import com.boclips.lti.v1p3.application.exception.MissingSessionAttributeExcepti
 import com.boclips.lti.v1p3.domain.model.SessionKeys
 import javax.servlet.http.HttpSession
 
-fun HttpSession.getState(): String =
-    (this.getAttribute(SessionKeys.state) ?: throw MissingSessionAttributeException("state")) as String
+fun HttpSession.mapStateToTargetLinkUri(state: String, targetLinkUri: String) {
+    this.getMapAttribute(SessionKeys.statesToTargetLinkUris)[state] = targetLinkUri
+}
 
-fun HttpSession.setTargetLinkUri(value: String) = this.setAttribute(SessionKeys.targetLinkUri, value)
+fun HttpSession.getTargetLinkUri(state: String): String {
+    return this.getMapAttribute(SessionKeys.statesToTargetLinkUris)[state]
+        ?: throw MissingSessionAttributeException("state")
+}
 
-fun HttpSession.getTargetLinkUri(): String =
-    (this.getAttribute(SessionKeys.targetLinkUri) ?: throw MissingSessionAttributeException("targetLinkUri")) as String
+fun HttpSession.containsMappingForState(state: String): Boolean =
+    this.getMapAttribute(SessionKeys.statesToTargetLinkUris).containsKey(state)
+
+private fun HttpSession.getMapAttribute(value: String): MutableMap<String, String> {
+    return this.getAttribute(value).let {
+        if (it == null) {
+            val newMap = mutableMapOf<String, String>()
+            this.setAttribute(value, newMap)
+            return@let newMap
+        }
+        it
+    } as MutableMap<String, String>
+}
 
 fun HttpSession.setIntegrationId(value: String) =
     this.setAttribute(com.boclips.lti.core.application.model.SessionKeys.integrationId, value)
