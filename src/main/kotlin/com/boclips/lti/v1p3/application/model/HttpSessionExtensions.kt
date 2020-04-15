@@ -19,13 +19,15 @@ fun HttpSession.containsMappingForState(state: String): Boolean =
 private fun HttpSession.getMapAttribute(value: String): MutableMap<String, String> {
     return this.getAttribute(value).let {
         if (it == null) {
-            val newMap = mutableMapOf<String, String>()
+            val newMap = serializableMapOf<String, String>()
             this.setAttribute(value, newMap)
             return@let newMap
         }
         it
     } as MutableMap<String, String>
 }
+
+private fun <K, V> serializableMapOf(): Map<K, V> = hashMapOf()
 
 fun HttpSession.setIntegrationId(value: String) =
     this.setAttribute(com.boclips.lti.core.application.model.SessionKeys.integrationId, value)
