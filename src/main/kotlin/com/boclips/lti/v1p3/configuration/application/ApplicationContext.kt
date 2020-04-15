@@ -1,5 +1,7 @@
 package com.boclips.lti.v1p3.configuration.application
 
+import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
+import com.boclips.lti.v1p3.application.command.AssembleLoginRequestUrl
 import com.boclips.lti.v1p3.application.command.HandlePlatformMessage
 import com.boclips.lti.v1p3.application.command.HandleResourceLinkMessage
 import com.boclips.lti.v1p3.application.command.PerformSecurityChecks
@@ -16,6 +18,12 @@ import org.springframework.context.annotation.Configuration
 class ApplicationContext {
     @Bean
     fun securityService() = CsrfService()
+
+    @Bean
+    fun assembleLoginRequestUrl(
+        platformRepository: PlatformRepository,
+        uriComponentsBuilderFactory: UriComponentsBuilderFactory
+    ) = AssembleLoginRequestUrl(platformRepository, uriComponentsBuilderFactory)
 
     @Bean
     fun performSecurityChecks(

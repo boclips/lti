@@ -30,6 +30,7 @@ import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.web.util.UriComponentsBuilder
+import java.net.URL
 import java.security.KeyPairGenerator
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
@@ -175,6 +176,12 @@ abstract class AbstractSpringIntegrationTest {
         val keyPair: Pair<RSAPublicKey, RSAPrivateKey>,
         val jwksUrl: String
     )
+
+    protected fun extractStateFromUrl(url: URL): String {
+        return UriComponentsBuilder.fromUri(url.toURI()).build()
+            .queryParams["state"]!!
+            .first()
+    }
 
     protected fun extractStateFromLocationHeader(response: MockHttpServletResponse): String {
         return UriComponentsBuilder.fromUriString(response.getHeader("Location")!!).build()
