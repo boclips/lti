@@ -30,7 +30,10 @@ class AssembleLoginRequestUrl(
             .queryParam("client_id", "boclips")
             .queryParam(
                 "redirect_uri",
-                uriComponentsBuilderFactory.getInstance().replacePath("/v1p3/authentication-response").toUriString()
+                uriComponentsBuilderFactory.getInstance()
+                    .replacePath("/v1p3/authentication-response")
+                    .replaceQuery(null)
+                    .toUriString()
             )
             .queryParam("login_hint", loginHint)
             .also {

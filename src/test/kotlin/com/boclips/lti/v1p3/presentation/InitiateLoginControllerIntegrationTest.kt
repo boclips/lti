@@ -65,6 +65,41 @@ class InitiateLoginControllerIntegrationTest : AbstractSpringIntegrationTest() {
     }
 
     @Test
+    fun `does not duplicate query parameters passed in the x-www-urlencoded format`() {
+        val iss = "https://a-learning-platform.com"
+        val authenticationEndpoint = "https://idp.a-learning-platform.com/auth"
+        val loginHint = "a-user-login-hint"
+        val ltiMessageHint = "an-lti-message-hint"
+        val resource = "https://tool.com/resource/super-cool"
+
+        mongoPlatformDocumentRepository.insert(
+            PlatformDocumentFactory.sample(
+                issuer = iss,
+                authenticationEndpoint = authenticationEndpoint
+            )
+        )
+
+        mvc.perform(
+            post("/v1p3/initiate-login?iss=$iss&login_hint=$loginHint&lti_message_hint=$ltiMessageHint&target_link_uri=$resource")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        )
+            .andExpect(status().isFound)
+            .andDo { result ->
+                val location = result.response.getHeader("Location")
+                val locationUri = URI(location!!)
+
+                assertThat(location).startsWith(authenticationEndpoint)
+
+                assertThat(locationUri).hasParameter(
+                    "redirect_uri",
+                    "http://localhost/v1p3/authentication-response"
+                )
+                assertThat(locationUri).hasParameter("login_hint", loginHint)
+                assertThat(locationUri).hasParameter("lti_message_hint", ltiMessageHint)
+            }
+    }
+
+    @Test
     fun `supports initiation by GET`() {
         val iss = "https://a-learning-platform.com"
         val authenticationEndpoint = "https://idp.a-learning-platform.com/auth"
