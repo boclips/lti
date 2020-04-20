@@ -32,6 +32,7 @@ class WebSecurityContext : HttpSecurityConfigurer {
 
             // LTI 1.3 Login endpoints
             .antMatchers(HttpMethod.POST, "/v1p3/initiate-login").permitAll()
+            .antMatchers(HttpMethod.GET, "/v1p3/initiate-login").permitAll()
             .antMatchers(HttpMethod.POST, "/v1p3/authentication-response").permitAll()
 
             .anyRequest().denyAll()

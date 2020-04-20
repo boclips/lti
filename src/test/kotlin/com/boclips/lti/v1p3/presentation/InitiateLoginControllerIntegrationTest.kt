@@ -7,6 +7,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -61,6 +62,30 @@ class InitiateLoginControllerIntegrationTest : AbstractSpringIntegrationTest() {
 
                 assertThat(locationUri).hasParameter("prompt", "none")
             }
+    }
+
+    @Test
+    fun `supports initiation by GET`() {
+        val iss = "https://a-learning-platform.com"
+        val authenticationEndpoint = "https://idp.a-learning-platform.com/auth"
+        val loginHint = "a-user-login-hint"
+        val resource = "https://tool.com/resource/super-cool"
+
+        mongoPlatformDocumentRepository.insert(
+            PlatformDocumentFactory.sample(
+                issuer = iss,
+                authenticationEndpoint = authenticationEndpoint
+            )
+        )
+
+        mvc.perform(
+            get("/v1p3/initiate-login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("iss", iss)
+                .param("login_hint", loginHint)
+                .param("target_link_uri", resource)
+        )
+            .andExpect(status().isFound)
     }
 
     @Test

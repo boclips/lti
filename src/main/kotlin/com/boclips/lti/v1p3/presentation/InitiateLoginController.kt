@@ -5,7 +5,10 @@ import mu.KLogging
 import org.hibernate.validator.constraints.URL
 import org.springframework.stereotype.Controller
 import org.springframework.validation.annotation.Validated
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import javax.servlet.http.HttpSession
 import javax.validation.constraints.NotBlank
@@ -18,7 +21,7 @@ class InitiateLoginController(
 ) {
     companion object : KLogging()
 
-    @PostMapping("/v1p3/initiate-login")
+    @RequestMapping(method = [RequestMethod.GET, RequestMethod.POST], path = ["/v1p3/initiate-login"])
     fun initiateLogin(
         @NotNull(message = "'iss' parameter must not be blank")
         @URL(protocol = "https", message = "'iss' parameter must be a valid HTTPS URL")
