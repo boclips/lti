@@ -44,6 +44,7 @@ class ApplicationContext {
 
     @Bean
     fun idTokenValidator(
+        platformRepository: PlatformRepository,
         @Value("\${boclips.lti.v1p3.maxTokenAgeInSeconds}") maxTokenAgeInSeconds: String
-    ) = IdTokenValidator(maxTokenAgeInSeconds = maxTokenAgeInSeconds.toLong())
+    ) = IdTokenValidator(platformRepository = platformRepository, maxTokenAgeInSeconds = maxTokenAgeInSeconds.toLong())
 }

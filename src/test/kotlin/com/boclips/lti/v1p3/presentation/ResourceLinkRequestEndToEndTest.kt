@@ -29,12 +29,14 @@ class ResourceLinkRequestEndToEndTest : AbstractSpringIntegrationTest() {
     ) {
         val issuer = "https://a-learning-platform.com"
         val resource = "https://tool.com/resource/super-cool"
+        val clientId = "test-client-id"
 
         val tokenSigningSetup = setupTokenSigning(server, uri)
 
         mongoPlatformDocumentRepository.insert(
             PlatformDocumentFactory.sample(
                 issuer = issuer,
+                clientId = clientId,
                 authenticationEndpoint = "https://idp.a-learning-platform.com/auth",
                 jwksUrl = tokenSigningSetup.jwksUrl
             )
@@ -55,6 +57,7 @@ class ResourceLinkRequestEndToEndTest : AbstractSpringIntegrationTest() {
 
         val idToken = JwtTokenFactory.sample(
             issuer = issuer,
+            audience = listOf(clientId),
             targetLinkUri = resource,
             signatureAlgorithm = Algorithm.RSA256(
                 tokenSigningSetup.keyPair.first,
@@ -90,12 +93,14 @@ class ResourceLinkRequestEndToEndTest : AbstractSpringIntegrationTest() {
         val issuer = "https://a-learning-platform.com"
         val firstResource = "https://tool.com/resource/first"
         val secondResource = "https://tool.com/resource/second"
+        val clientId = "test-client-id"
 
         val tokenSigningSetup = setupTokenSigning(server, uri)
 
         mongoPlatformDocumentRepository.insert(
             PlatformDocumentFactory.sample(
                 issuer = issuer,
+                clientId = clientId,
                 authenticationEndpoint = "https://idp.a-learning-platform.com/auth",
                 jwksUrl = tokenSigningSetup.jwksUrl
             )
@@ -129,6 +134,7 @@ class ResourceLinkRequestEndToEndTest : AbstractSpringIntegrationTest() {
 
         val firstResourceToken = JwtTokenFactory.sample(
             issuer = issuer,
+            audience = listOf(clientId),
             targetLinkUri = firstResource,
             signatureAlgorithm = Algorithm.RSA256(
                 tokenSigningSetup.keyPair.first,
@@ -152,6 +158,7 @@ class ResourceLinkRequestEndToEndTest : AbstractSpringIntegrationTest() {
 
         val secondResourceToken = JwtTokenFactory.sample(
             issuer = issuer,
+            audience = listOf(clientId),
             targetLinkUri = secondResource,
             signatureAlgorithm = Algorithm.RSA256(
                 tokenSigningSetup.keyPair.first,

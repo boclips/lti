@@ -8,6 +8,7 @@ object PlatformDocumentConverter {
     fun toDomainInstance(document: PlatformDocument) = Platform(
         issuer = URL(document.issuer),
         authenticationEndpoint = URL(document.authenticationEndpoint),
-        jwksEndpoint = URL(document.jwksUrl)
+        jwksEndpoint = URL(document.jwksUrl),
+        clientId = document.clientId
     )
 }

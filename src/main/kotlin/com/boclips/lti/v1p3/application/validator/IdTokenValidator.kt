@@ -2,17 +2,16 @@ package com.boclips.lti.v1p3.application.validator
 
 import com.boclips.lti.v1p3.application.exception.JwtClaimValidationException
 import com.boclips.lti.v1p3.application.model.DecodedJwtToken
+import com.boclips.lti.v1p3.domain.repository.PlatformRepository
+import java.net.URL
 import java.time.Instant
 import java.time.Instant.now
 
 class IdTokenValidator(
+    private val platformRepository: PlatformRepository,
     private val maxTokenAgeInSeconds: Long,
     private val currentTime: () -> Instant = ::now
 ) {
-    companion object {
-        const val clientId = "boclips"
-    }
-
     fun assertHasValidClaims(token: DecodedJwtToken) {
         if (token.issuerClaim.isNullOrBlank()) throw JwtClaimValidationException("'iss' was not provided")
         assertHasValidAudience(token)
@@ -36,13 +35,17 @@ class IdTokenValidator(
     }
 
     private fun assertHasValidAudience(token: DecodedJwtToken) {
-        token.audienceClaim?.find { it == clientId }
-            ?: throw JwtClaimValidationException("'aud' does not contain a valid value")
-        if (token.audienceClaim.size > 1) {
-            if (token.authorizedPartyClaim != clientId) throw JwtClaimValidationException("'azp' does not contain a valid value")
-        } else {
-            if (token.authorizedPartyClaim != null && token.authorizedPartyClaim != clientId) throw JwtClaimValidationException(
-                "'azp' does not contain a valid value"
+        val platform = platformRepository.getByIssuer(URL(token.issuerClaim))
+
+        val aud = token.audienceClaim
+        val azp = token.authorizedPartyClaim
+        when {
+            aud == null -> throw JwtClaimValidationException("No 'aud' provided.")
+            aud.contains(platform.clientId) -> return
+            aud.size == 1 && azp == platform.clientId -> return
+            else -> throw JwtClaimValidationException(
+                "Either 'aud' should contain '${platform.clientId}' or 'aud' " +
+                    "should have one value and 'azp' should be '${platform.clientId}.'"
             )
         }
     }

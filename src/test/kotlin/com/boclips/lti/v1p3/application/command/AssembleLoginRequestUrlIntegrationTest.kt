@@ -17,7 +17,8 @@ class AssembleLoginRequestUrlIntegrationTest : AbstractSpringIntegrationTest() {
         mongoPlatformDocumentRepository.insert(
             PlatformDocumentFactory.sample(
                 issuer = iss,
-                authenticationEndpoint = authenticationEndpoint
+                authenticationEndpoint = authenticationEndpoint,
+                clientId = "my client id"
             )
         )
 
@@ -37,7 +38,7 @@ class AssembleLoginRequestUrlIntegrationTest : AbstractSpringIntegrationTest() {
 
         assertThat(url).hasParameter("scope", "openid")
         assertThat(url).hasParameter("response_type", "id_token")
-        assertThat(url).hasParameter("client_id", "boclips")
+        assertThat(url).hasParameter("client_id", "my client id")
         assertThat(url).hasParameter(
             "redirect_uri",
             "http://localhost/v1p3/authentication-response"

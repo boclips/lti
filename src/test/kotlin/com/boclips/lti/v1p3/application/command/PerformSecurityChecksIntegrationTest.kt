@@ -3,6 +3,7 @@ package com.boclips.lti.v1p3.application.command
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.testsupport.factories.DecodedJwtTokenFactory
 import com.boclips.lti.testsupport.factories.NonceDocumentFactory
+import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
 import com.boclips.lti.v1p3.application.exception.InvalidJwtTokenSignatureException
 import com.boclips.lti.v1p3.application.exception.JwtClaimValidationException
 import com.boclips.lti.v1p3.application.exception.NonceReusedException
@@ -35,6 +36,8 @@ class PerformSecurityChecksIntegrationTest : AbstractSpringIntegrationTest() {
         whenever(jwtService.isSignatureValid(token)).thenReturn(true)
         whenever(jwtService.decode(token)).thenReturn(
             DecodedJwtTokenFactory.sample(
+                issuerClaim = testIssuer,
+                audienceClaim = listOf(testClientId),
                 nonceClaim = nonceValue,
                 targetLinkUriClaim = resourceUri
 
@@ -75,6 +78,8 @@ class PerformSecurityChecksIntegrationTest : AbstractSpringIntegrationTest() {
         whenever(jwtService.isSignatureValid(token)).thenReturn(true)
         whenever(jwtService.decode(token)).thenReturn(
             DecodedJwtTokenFactory.sample(
+                issuerClaim = testIssuer,
+                audienceClaim = listOf(testClientId),
                 nonceClaim = "nonce",
                 targetLinkUriClaim = resourceUri
             )
@@ -94,6 +99,8 @@ class PerformSecurityChecksIntegrationTest : AbstractSpringIntegrationTest() {
         whenever(jwtService.isSignatureValid(token)).thenReturn(true)
         whenever(jwtService.decode(token)).thenReturn(
             DecodedJwtTokenFactory.sample(
+                issuerClaim = testIssuer,
+                audienceClaim = listOf(testClientId),
                 nonceClaim = null,
                 targetLinkUriClaim = resourceUri
             )
@@ -110,6 +117,8 @@ class PerformSecurityChecksIntegrationTest : AbstractSpringIntegrationTest() {
         whenever(jwtService.isSignatureValid(token)).thenReturn(true)
         whenever(jwtService.decode(token)).thenReturn(
             DecodedJwtTokenFactory.sample(
+                issuerClaim = testIssuer,
+                audienceClaim = listOf(testClientId),
                 targetLinkUriClaim = "https://tool.com/expectation"
             )
         )
@@ -122,6 +131,20 @@ class PerformSecurityChecksIntegrationTest : AbstractSpringIntegrationTest() {
     @BeforeEach
     fun initialiseVariables() {
         session = MockHttpSession()
+    }
+
+    private val testIssuer = "https://platform.com"
+    private val testClientId = "tool-client-id"
+
+    @BeforeEach
+    fun insertPlatform() {
+        mongoPlatformDocumentRepository.insert(
+            PlatformDocumentFactory.sample(
+                issuer = testIssuer,
+                authenticationEndpoint = "https://platform.com/auth",
+                clientId = testClientId
+            )
+        )
     }
 
     private lateinit var session: HttpSession

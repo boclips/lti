@@ -9,7 +9,7 @@ object DecodedJwtTokenFactory {
     fun sample(
         issuerClaim: String? = "https://lms.com",
         audienceClaim: List<String>? = listOf("boclips"),
-        authorizedPartyClaim: String? = "boclips",
+        authorizedPartyClaim: String? = "0b300627-a87a-4b15-b748-ae1aa18ef3eb",
         expClaim: Long? = now().plusSeconds(10).epochSecond,
         issuedAtClaim: Long? = now().minusSeconds(10).epochSecond,
         nonceClaim: String? = UUID.randomUUID().toString(),

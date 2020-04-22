@@ -9,12 +9,13 @@ import java.util.UUID
 object JwtTokenFactory {
     fun sample(
         issuer: String = "https://lms.com",
+        audience: List<String> = listOf("some audience"),
         targetLinkUri: String = "https://tool.com/resource/123",
         signatureAlgorithm: Algorithm
     ): String {
         return JWT.create()
             .withIssuer(issuer)
-            .withAudience("boclips")
+            .withAudience(*audience.toTypedArray())
             .withExpiresAt(Date.from(Instant.now().plusSeconds(10)))
             .withIssuedAt(Date.from(Instant.now().minusSeconds(10)))
             .withClaim("nonce", UUID.randomUUID().toString())

@@ -13,7 +13,8 @@ class PlatformDocumentConverterTest {
             id = ObjectId(),
             issuer = "trololo",
             authenticationEndpoint = "https://valid.com/auth",
-            jwksUrl = "https://valid.com/.well-known/jwks.json"
+            jwksUrl = "https://valid.com/.well-known/jwks.json",
+            clientId = "client id"
         )
 
         assertThrows<MalformedURLException> { PlatformDocumentConverter.toDomainInstance(document) }
@@ -25,7 +26,8 @@ class PlatformDocumentConverterTest {
             id = ObjectId(),
             issuer = "https://platform.com/lms",
             authenticationEndpoint = "whoa",
-            jwksUrl = "https://valid.com/.well-known/jwks.json"
+            jwksUrl = "https://valid.com/.well-known/jwks.json",
+            clientId = "client id"
         )
 
         assertThrows<MalformedURLException> { PlatformDocumentConverter.toDomainInstance(document) }
@@ -37,7 +39,8 @@ class PlatformDocumentConverterTest {
             id = ObjectId(),
             issuer = "https://platform.com/lms",
             authenticationEndpoint = "https://valid.com/auth",
-            jwksUrl = "hey ho"
+            jwksUrl = "hey ho",
+            clientId = "client id"
         )
 
         assertThrows<MalformedURLException> { PlatformDocumentConverter.toDomainInstance(document) }

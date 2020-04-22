@@ -32,18 +32,20 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
         val issuer = "https://platform.com/for-learning"
         val resource = "https://lti.resource/we-expose"
         val nonce = "super-random-nonce"
+        val clientId = "test-client-id"
 
         whenever(jwtService.isSignatureValid(jwtToken)).thenReturn(true)
         whenever(jwtService.decode(jwtToken)).thenReturn(
             DecodedJwtTokenFactory.sample(
                 issuerClaim = issuer,
+                audienceClaim = listOf(clientId),
                 nonceClaim = nonce,
                 targetLinkUriClaim = resource,
                 messageTypeClaim = "LtiResourceLinkRequest"
             )
         )
 
-        mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer))
+        mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer, clientId = clientId))
 
         val state = UUID.randomUUID().toString()
         val session = LtiTestSessionFactory.unauthenticated(
@@ -137,17 +139,19 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
     fun `returns a bad request response when a message type other than LtiResourceLinkRequest is used`() {
         val issuer = "https://platform.com/for-learning"
         val resource = "https://lti.resource/we-expose"
+        val clientId = "test-client-id"
 
         whenever(jwtService.isSignatureValid(jwtToken)).thenReturn(true)
         whenever(jwtService.decode(jwtToken)).thenReturn(
             DecodedJwtTokenFactory.sample(
                 issuerClaim = issuer,
+                audienceClaim = listOf(clientId),
                 targetLinkUriClaim = resource,
                 messageTypeClaim = "I can has cheezbureger?"
             )
         )
 
-        mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer))
+        mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer, clientId = clientId))
 
         val state = UUID.randomUUID().toString()
 
@@ -205,17 +209,19 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
     fun `returns a bad request response when the token is missing required LTI message claims`() {
         val issuer = "https://platform.com/for-learning"
         val resource = "https://lti.resource/we-expose"
+        val clientId = "test client id"
 
         whenever(jwtService.isSignatureValid(jwtToken)).thenReturn(true)
         whenever(jwtService.decode(jwtToken)).thenReturn(
             DecodedJwtTokenFactory.sample(
                 issuerClaim = issuer,
+                audienceClaim = listOf(clientId),
                 targetLinkUriClaim = resource,
                 ltiVersionClaim = null
             )
         )
 
-        mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer))
+        mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer, clientId = clientId))
 
         val state = UUID.randomUUID().toString()
 

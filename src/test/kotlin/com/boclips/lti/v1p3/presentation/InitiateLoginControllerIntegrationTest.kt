@@ -21,11 +21,13 @@ class InitiateLoginControllerIntegrationTest : AbstractSpringIntegrationTest() {
         val authenticationEndpoint = "https://idp.a-learning-platform.com/auth"
         val loginHint = "a-user-login-hint"
         val resource = "https://tool.com/resource/super-cool"
+        val clientId = "a random client id issued by the platform"
 
         mongoPlatformDocumentRepository.insert(
             PlatformDocumentFactory.sample(
                 issuer = iss,
-                authenticationEndpoint = authenticationEndpoint
+                authenticationEndpoint = authenticationEndpoint,
+                clientId = clientId
             )
         )
 
@@ -45,7 +47,7 @@ class InitiateLoginControllerIntegrationTest : AbstractSpringIntegrationTest() {
 
                 assertThat(locationUri).hasParameter("scope", "openid")
                 assertThat(locationUri).hasParameter("response_type", "id_token")
-                assertThat(locationUri).hasParameter("client_id", "boclips")
+                assertThat(locationUri).hasParameter("client_id", clientId)
                 assertThat(locationUri).hasParameter(
                     "redirect_uri",
                     "http://localhost/v1p3/authentication-response"

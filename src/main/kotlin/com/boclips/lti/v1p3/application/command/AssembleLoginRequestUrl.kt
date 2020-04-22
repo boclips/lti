@@ -27,7 +27,7 @@ class AssembleLoginRequestUrl(
         val authenticationRequestUri = UriComponentsBuilder.fromUri(platform.authenticationEndpoint.toURI())
             .queryParam("scope", "openid")
             .queryParam("response_type", "id_token")
-            .queryParam("client_id", "boclips")
+            .queryParam("client_id", platform.clientId)
             .queryParam(
                 "redirect_uri",
                 uriComponentsBuilderFactory.getInstance()
