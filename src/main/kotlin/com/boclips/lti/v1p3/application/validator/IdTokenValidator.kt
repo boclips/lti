@@ -40,12 +40,11 @@ class IdTokenValidator(
         val aud = token.audienceClaim
         val azp = token.authorizedPartyClaim
         when {
-            aud == null -> throw JwtClaimValidationException("No 'aud' provided.")
+            aud == null -> throw JwtClaimValidationException("No 'aud' provided")
             aud.contains(platform.clientId) -> return
             aud.size == 1 && azp == platform.clientId -> return
             else -> throw JwtClaimValidationException(
-                "Either 'aud' should contain '${platform.clientId}' or 'aud' " +
-                    "should have one value and 'azp' should be '${platform.clientId}.'"
+                "Either 'aud' should contain '${platform.clientId}' or 'aud' should have one value and 'azp' should be '${platform.clientId}'"
             )
         }
     }
