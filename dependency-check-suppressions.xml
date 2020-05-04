@@ -60,4 +60,13 @@
     <cve>CVE-2019-10172</cve>
     <cve>CVE-2019-14540</cve>
   </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jackson-mapper-asl-1.9.3.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.codehaus\.jackson/jackson\-mapper\-asl@.*$</packageUrl>
+    <vulnerabilityName>CVE-2019-14893</vulnerabilityName>
+    <vulnerabilityName>CVE-2020-10672</vulnerabilityName>
+    <vulnerabilityName>CVE-2020-10673</vulnerabilityName>
+  </suppress>
 </suppressions>
