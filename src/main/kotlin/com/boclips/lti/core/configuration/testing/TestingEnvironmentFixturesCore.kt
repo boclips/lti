@@ -13,6 +13,7 @@ import javax.annotation.PostConstruct
 class TestingEnvironmentFixturesCore(
     private val integrationDocumentRepository: MongoIntegrationDocumentRepository,
     @Value("\${fixtures.ltiOnePointOne.consumerKey}") private val testingConsumerKey: String,
+    @Value("\${fixtures.ltiOnePointThree.issuer}") private val issuer: String,
     @Value("\${fixtures.apiClient.id}") private val testingClientId: String,
     @Value("\${fixtures.apiClient.secret}") private val testingClientSecret: String
 ) {
@@ -22,6 +23,15 @@ class TestingEnvironmentFixturesCore(
             IntegrationDocument(
                 id = ObjectId(),
                 integrationId = testingConsumerKey,
+                clientId = testingClientId,
+                clientSecret = testingClientSecret
+            )
+        )
+
+        integrationDocumentRepository.insert(
+            IntegrationDocument(
+                id = ObjectId(),
+                integrationId = issuer,
                 clientId = testingClientId,
                 clientSecret = testingClientSecret
             )
