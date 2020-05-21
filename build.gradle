@@ -79,17 +79,25 @@ node  {
 
 def frontendDir = 'frontend'
 
+npm_install {
+  inputs.file file("$frontendDir/package.json")
+  inputs.file file("$frontendDir/package-lock.json")
+
+  outputs.dir file("$frontendDir/node_modules")
+
+  workingDir = file(frontendDir)
+}
+
 npm_run_build {
   inputs.files fileTree("$frontendDir/src")
   inputs.files fileTree("$frontendDir/public")
-  inputs.file file("$frontendDir/package.json")
-  inputs.file file("$frontendDir/package-lock.json")
   inputs.file file("$frontendDir/tsconfig.json")
 
   workingDir = file(frontendDir)
 
   outputs.dir file("$frontendDir/build")
 }
+npm_run_build.dependsOn npm_install
 
 task copyFrontendOutput(type: Copy) {
   from npm_run_build.outputs
