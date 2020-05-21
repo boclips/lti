@@ -14,12 +14,19 @@ class WebSecurityContext : HttpSecurityConfigurer {
 
             .and()
             .authorizeRequests()
-            
+
             // Infrastructure
             .antMatchers(HttpMethod.GET, "/actuator/health").permitAll()
 
             // Assets
             .antMatchers(HttpMethod.GET, "/styles/*.css").permitAll()
+
+            .antMatchers(HttpMethod.GET, "/static/**").permitAll()
+            .antMatchers(HttpMethod.GET, "/index.html").permitAll()
+            .antMatchers(HttpMethod.GET, "/manifest.json").permitAll()
+            .antMatchers(HttpMethod.GET, "/favicon.ico").permitAll()
+            .antMatchers(HttpMethod.GET, "/robots.txt").permitAll()
+            .antMatchers(HttpMethod.GET, "/*.png").permitAll()
 
             // Exposed resources
             .antMatchers(HttpMethod.GET, "/videos/*").permitAll()

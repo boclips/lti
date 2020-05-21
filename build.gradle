@@ -16,6 +16,7 @@ buildscript {
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
     classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
     classpath("com.github.ben-manes:gradle-versions-plugin:0.27.0")
+    classpath("com.moowork.gradle:gradle-node-plugin:1.2.0")
   }
 }
 
@@ -34,6 +35,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.owasp.dependencycheck'
 apply plugin: 'com.github.ben-manes.versions'
+apply plugin: 'com.moowork.node'
 
 group = 'com.boclips.lti'
 version = '0.0.1-SNAPSHOT'
@@ -68,6 +70,38 @@ configurations {
     extendsFrom developmentOnly
   }
 }
+
+node  {
+  version = '12.16.3'
+  npmVersion = '6.13.4'
+  download = true
+}
+
+def frontendDir = 'frontend'
+
+npm_run_build {
+  inputs.files fileTree("$frontendDir/src")
+  inputs.files fileTree("$frontendDir/public")
+  inputs.file file("$frontendDir/package.json")
+  inputs.file file("$frontendDir/package-lock.json")
+  inputs.file file("$frontendDir/tsconfig.json")
+
+  workingDir = file(frontendDir)
+
+  outputs.dir file("$frontendDir/build")
+}
+
+task copyFrontendOutput(type: Copy) {
+  from npm_run_build.outputs
+  into "$buildDir/resources/main/static"
+}
+bootJar.dependsOn copyFrontendOutput
+copyFrontendOutput.dependsOn npm_run_build
+
+task cleanFrontendOutput(type: Delete) {
+  delete "$frontendDir/build"
+}
+clean.dependsOn cleanFrontendOutput
 
 dependencies {
   implementation 'org.springframework.boot:spring-boot-starter'
@@ -142,3 +176,4 @@ task bootRunLocal(type: BootRun) {
   systemProperty 'boclips.api.tokenUrl', 'https://api.staging-boclips.com/token'
   systemProperty 'boclips.api.baseUrl', 'https://api.staging-boclips.com/v1'
 }
+bootRunLocal.dependsOn copyFrontendOutput
