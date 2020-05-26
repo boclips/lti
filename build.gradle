@@ -88,6 +88,12 @@ npm_install {
   workingDir = file(frontendDir)
 }
 
+npm_test {
+  workingDir = file(frontendDir)
+}
+npm_test.dependsOn npm_install
+test.dependsOn npm_test
+
 npm_run_build {
   inputs.files fileTree("$frontendDir/src")
   inputs.files fileTree("$frontendDir/public")
