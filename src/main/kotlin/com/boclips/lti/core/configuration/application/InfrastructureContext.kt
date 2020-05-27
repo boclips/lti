@@ -11,9 +11,13 @@ import com.boclips.lti.core.infrastructure.service.KeycloakClientFactory
 import com.boclips.lti.core.infrastructure.service.MongoBackedCollectionsClientFactory
 import com.boclips.lti.core.infrastructure.service.MongoBackedVideosClientFactory
 import com.boclips.lti.core.infrastructure.service.VideosClientFactory
+import mu.KLogging
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
+import org.thymeleaf.templatemode.TemplateMode
+import org.thymeleaf.templateresolver.AbstractConfigurableTemplateResolver
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 
 @Configuration("coreInfrastructureContext")
 class InfrastructureContext(
@@ -51,5 +55,18 @@ class InfrastructureContext(
     @Bean
     fun keycloakClientFactory(): KeycloakClientFactory {
         return KeycloakClientFactory(integrationDocumentRepository)
+    }
+
+    @Bean
+    fun templateResolver(): ClassLoaderTemplateResolver {
+        val templateResolver = ClassLoaderTemplateResolver()
+        templateResolver.prefix = "static/"
+        templateResolver.suffix = ".html"
+        templateResolver.templateMode = TemplateMode.HTML
+        templateResolver.characterEncoding = "UTF-8"
+        templateResolver.order = 1
+        templateResolver.checkExistence = true
+
+        return templateResolver
     }
 }
