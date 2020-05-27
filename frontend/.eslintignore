@@ -1,0 +1,5 @@
+node_modules
+build
+__mocks__
+jest.config.js
+.eslintrc.js
