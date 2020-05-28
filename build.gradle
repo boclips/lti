@@ -196,5 +196,6 @@ task bootRunLocal(type: BootRun) {
   systemProperty 'boclips.api.tokenUrl', 'https://api.staging-boclips.com/token'
   systemProperty 'boclips.api.baseUrl', 'https://api.staging-boclips.com/v1'
   systemProperty 'boclips.frontend.ltiTokenUrl', 'http://localhost:8080/auth/token'
+  systemProperty 'boclips.frontend.apiBaseUrl', 'https://api.staging-boclips.com'
 }
 bootRunLocal.dependsOn copyFrontendOutput

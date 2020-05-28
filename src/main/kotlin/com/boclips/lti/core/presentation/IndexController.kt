@@ -16,7 +16,10 @@ class IndexController(
          * Gradle will compile frontend files and move them /resources/static in the jar at build time
          */
         return ModelAndView(
-            "index", mapOf("ltiTokenUrl" to frontendProperties.ltiTokenUrl)
+            "index", mapOf(
+                "ltiTokenUrl" to frontendProperties.ltiTokenUrl,
+                "apiBaseUrl" to frontendProperties.apiBaseUrl
+            )
         )
     }
 }

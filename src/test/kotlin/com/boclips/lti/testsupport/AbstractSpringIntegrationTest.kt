@@ -45,7 +45,8 @@ import java.util.UUID
     properties = [
         "boclips.api.baseUrl=http://localhost:${ApiAccessTokenProviderTest.API_SERVER_PORT}/v1",
         "boclips.api.tokenUrl=http://localhost:${ApiAccessTokenProviderTest.API_SERVER_PORT}/v1/token",
-        "boclips.frontend.ltiTokenUrl=http://localhost:${ApiAccessTokenProviderTest.API_SERVER_PORT}/"
+        "boclips.frontend.ltiTokenUrl=http://localhost:${ApiAccessTokenProviderTest.API_SERVER_PORT}/",
+        "boclips.frontend.apiBaseUrl=http://api.base.url"
     ]
 )
 abstract class AbstractSpringIntegrationTest {

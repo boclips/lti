@@ -18,5 +18,11 @@ class IndexControllerIntegrationTest : AbstractSpringIntegrationTest() {
                     "http://localhost:${ApiAccessTokenProviderTest.API_SERVER_PORT}/"
                 )
             )
+            .andExpect(
+                model().attribute(
+                    "apiBaseUrl",
+                    "http://api.base.url"
+                )
+            )
     }
 }

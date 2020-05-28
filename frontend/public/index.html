@@ -12,11 +12,12 @@
     <title>Boclips LTI</title>
   </head>
   <body>
-  <script>
-    window.Environment = {
-      LTI_TOKEN_URL: '[[${ltiTokenUrl}]]'
-    }
-  </script>
+    <script>
+      window.Environment = {
+        LTI_TOKEN_URL: '[[${ltiTokenUrl}]]',
+        API_BASE_URL: '[[${apiBaseUrl}]]',
+      };
+    </script>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
   </body>

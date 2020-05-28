@@ -11,4 +11,7 @@ import javax.validation.constraints.NotBlank
 class FrontendProperties {
     @NotBlank
     var ltiTokenUrl: String = ""
+
+    @NotBlank
+    var apiBaseUrl: String = ""
 }
