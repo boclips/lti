@@ -1,6 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-
-declare const window: any;
+import { AppConstants } from '../../types/AppConstants';
 
 export class AuthService {
   public static configureAxios(
@@ -19,7 +18,7 @@ export class AuthService {
 
   public static ltiTokenFactory(axiosInstance: AxiosInstance): Promise<string> {
     return axiosInstance
-      .get(window.Environment.LTI_TOKEN_URL)
+      .get(AppConstants.LTI_TOKEN_URL)
       .then((response: AxiosResponse<string>) => response.data)
       .catch(() => 'Cannot retrieve token');
   }

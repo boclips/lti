@@ -1,14 +1,18 @@
+import { AppConstantsFactory } from './../../../testSupport/AppConstantsFactory';
+import { ConifgurableConstants } from './../../types/AppConstants';
 import axios from 'axios';
 import { AuthService } from './AuthService';
 import MockAdapter from 'axios-mock-adapter';
 
-declare const window: any;
-
-beforeEach(() => {
-  window.Environment = {
-    LTI_TOKEN_URL: 'https://lti/token',
-  };
-});
+jest.mock('../../types/AppConstants', () => ({
+  get AppConstants(): ConifgurableConstants {
+    {
+      return AppConstantsFactory.sample({
+        LTI_TOKEN_URL: 'https://lti/token',
+      });
+    }
+  },
+}));
 
 describe('AuthService', () => {
   it('axios calls invoke given token factory on requests', async () => {

@@ -5,6 +5,7 @@ import { ApiClient } from './service/client/ApiClient';
 import { VideoService } from './service/video/VideoService';
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
+import { AppConstants } from './types/AppConstants';
 
 const store = configureStore({
   reducer: {},
@@ -28,11 +29,9 @@ function App(): React.ReactElement {
 }
 
 const test = () => {
-  new ApiClient((window as any).Environment.API_BASE_URL)
-    .getClient()
-    .then((client) => {
-      new VideoService(client).searchVideos({ query: 'hello' });
-    });
+  new ApiClient(AppConstants.API_BASE_URL).getClient().then((client) => {
+    new VideoService(client).searchVideos({ query: 'hello' });
+  });
 };
 
 export default App;
