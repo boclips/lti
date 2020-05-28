@@ -6,6 +6,7 @@ import { VideoService } from './service/video/VideoService';
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { AppConstants } from './types/AppConstants';
+import { Button } from 'antd';
 
 const store = configureStore({
   reducer: {},
@@ -22,6 +23,7 @@ function App(): React.ReactElement {
       <div className="App">
         <header className="App-header">
           <p>Hello, World!</p>
+          <Button type="primary">Button</Button>
         </header>
       </div>
     </Provider>
