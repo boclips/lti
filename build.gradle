@@ -189,5 +189,6 @@ task bootRunLocal(type: BootRun) {
   systemProperty 'keycloak.url', 'https://login.staging-boclips.com/auth'
   systemProperty 'boclips.api.tokenUrl', 'https://api.staging-boclips.com/token'
   systemProperty 'boclips.api.baseUrl', 'https://api.staging-boclips.com/v1'
+  systemProperty 'boclips.frontend.ltiTokenUrl', 'http://localhost:8080/auth/token'
 }
 bootRunLocal.dependsOn copyFrontendOutput

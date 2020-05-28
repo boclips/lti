@@ -1,7 +1,10 @@
 import React from 'react';
 import './App.css';
+import {AuthService} from "./service/AuthService";
 
 function App(): React.ReactElement {
+  AuthService.configureAxios()
+
   return (
     <div className="App">
       <header className="App-header">

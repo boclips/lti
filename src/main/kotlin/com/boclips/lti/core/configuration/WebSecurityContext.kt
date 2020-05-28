@@ -15,6 +15,8 @@ class WebSecurityContext : HttpSecurityConfigurer {
             .and()
             .authorizeRequests()
 
+            .antMatchers(HttpMethod.GET, "/").permitAll()
+
             // Infrastructure
             .antMatchers(HttpMethod.GET, "/actuator/health").permitAll()
 
