@@ -1,9 +1,9 @@
 import React from 'react';
 import './App.css';
-import {AuthService} from "./service/AuthService";
+import { AuthService } from './service/AuthService';
 
 function App(): React.ReactElement {
-  AuthService.configureAxios()
+  AuthService.configureAxios();
 
   return (
     <div className="App">

@@ -88,10 +88,16 @@ npm_install {
   workingDir = file(frontendDir)
 }
 
+npm_run_lint {
+  workingDir = file(frontendDir)
+}
+npm_run_lint.dependsOn npm_install
+
 npm_test {
   workingDir = file(frontendDir)
 }
 npm_test.dependsOn npm_install
+npm_test.dependsOn npm_run_lint
 test.dependsOn npm_test
 
 npm_run_build {
