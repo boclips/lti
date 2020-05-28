@@ -44,6 +44,9 @@ class WebSecurityContext : HttpSecurityConfigurer {
             .antMatchers(HttpMethod.GET, "/v1p3/initiate-login").permitAll()
             .antMatchers(HttpMethod.POST, "/v1p3/authentication-response").permitAll()
 
+            // Dev support
+            .antMatchers(HttpMethod.POST, "/dev-support/initialise-session").permitAll()
+
             .anyRequest().denyAll()
     }
 }

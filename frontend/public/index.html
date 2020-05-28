@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -12,6 +13,9 @@
     <title>Boclips LTI</title>
   </head>
   <body>
+  <script th:if="${initialiseDevelopmentSession}">
+    fetch('[[${developmentSessionUrl}]]', {method: "POST"})
+  </script>
     <script>
       window.Environment = {
         LTI_TOKEN_URL: '[[${ltiTokenUrl}]]',

@@ -23,6 +23,16 @@ class IndexControllerIntegrationTest : AbstractSpringIntegrationTest() {
                     "apiBaseUrl",
                     "http://api.base.url"
                 )
+            ).andExpect(
+                model().attribute(
+                    "initialiseDevelopmentSession",
+                    false
+                )
+            ).andExpect(
+                model().attribute(
+                    "developmentSessionUrl",
+                    ""
+                )
             )
     }
 }

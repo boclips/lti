@@ -193,9 +193,13 @@ task bootRunLocal(type: BootRun) {
   systemProperty 'spring.profiles.active', 'local'
   systemProperty 'keycloak.realm', 'boclips'
   systemProperty 'keycloak.url', 'https://login.staging-boclips.com/auth'
-  systemProperty 'boclips.api.tokenUrl', 'https://api.staging-boclips.com/token'
+  systemProperty 'boclips.api.tokenUrl', 'https://api.staging-boclips.com/v1/token'
   systemProperty 'boclips.api.baseUrl', 'https://api.staging-boclips.com/v1'
   systemProperty 'boclips.frontend.ltiTokenUrl', 'http://localhost:8080/auth/token'
   systemProperty 'boclips.frontend.apiBaseUrl', 'https://api.staging-boclips.com'
+  systemProperty 'boclips.dev-support.initialiseDevelopmentSession', "true"
+  systemProperty 'boclips.dev-support.developmentSessionUrl', "http://localhost:8080/dev-support/initialise-session"
+  systemProperty 'boclips.dev-support.integrationId', "sandbox"
 }
+
 bootRunLocal.dependsOn copyFrontendOutput
