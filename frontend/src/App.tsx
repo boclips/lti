@@ -1,12 +1,12 @@
 import React from 'react';
-import './App.css';
 import { AuthService } from './service/auth/AuthService';
 import { ApiClient } from './service/client/ApiClient';
 import { VideoService } from './service/video/VideoService';
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { AppConstants } from './types/AppConstants';
-import { Button } from 'antd';
+
+import { PageLayout } from './components/common/PageLayout';
 
 const store = configureStore({
   reducer: {},
@@ -20,12 +20,7 @@ function App(): React.ReactElement {
 
   return (
     <Provider store={store}>
-      <div className="App">
-        <header className="App-header">
-          <p>Hello, World!</p>
-          <Button type="primary">Button</Button>
-        </header>
-      </div>
+      <PageLayout>Hello World</PageLayout>
     </Provider>
   );
 }
