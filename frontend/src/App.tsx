@@ -5,7 +5,6 @@ import { VideoService } from './service/video/VideoService';
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { AppConstants } from './types/AppConstants';
-
 import { PageLayout } from './components/common/PageLayout';
 
 const store = configureStore({
@@ -20,7 +19,7 @@ function App(): React.ReactElement {
 
   return (
     <Provider store={store}>
-      <PageLayout>Hello World</PageLayout>
+      <PageLayout>Hello, World!</PageLayout>
     </Provider>
   );
 }

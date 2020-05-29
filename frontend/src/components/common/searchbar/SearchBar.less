@@ -1,0 +1,25 @@
+.ant-input-search-enter-button
+  + .ant-input-group-addon
+  .ant-input-search-button,
+.ant-input-search-enter-button
+  input
+  + .ant-input-group-addon
+  .ant-input-search-button {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.ant-input-group > .ant-input:first-child,
+.ant-input-group-addon:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  background-color: white;
+  border-right: none;
+}
+
+.ant-input-group-addon:not(:first-child):not(:last-child),
+.ant-input-group-wrap:not(:first-child):not(:last-child),
+.ant-input-group > .ant-input:not(:first-child):not(:last-child) {
+  border-left: none;
+  border-right: none;
+}
