@@ -15,19 +15,13 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-redux": "^7.1.9",
-    "@typescript-eslint/eslint-plugin": "3.0.0",
-    "@typescript-eslint/eslint-plugin-tslint": "3.0.0",
-    "@typescript-eslint/parser": "3.0.0",
     "antd": "^4.2.5",
     "axios": "^0.19.2",
     "axios-mock-adapter": "^1.18.1",
+    "bit-bin": "^14.7.6",
     "boclips-api-client": "^10.5.4",
     "classnames": "^2.2.6",
-    "craco-less": "^1.16.0",
-    "eslint": "^6.6.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-prettier": "^3.1.3",
-    "eslint-plugin-react": "^7.20.0",
+    "craco-less": "1.16.0",
     "jest": "^24.9.0",
     "prettier": "^2.0.5",
     "react": "^16.13.1",
@@ -36,7 +30,15 @@
     "react-scripts": "3.4.1",
     "ts-jest": "^26.0.0",
     "typescript": "~3.7.2",
-    "urijs": "^1.19.2"
+    "urijs": "^1.19.2",
+    "@typescript-eslint/eslint-plugin": "^2.28.0",
+    "@typescript-eslint/parser": "^2.28.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-prefer-arrow": "^1.2.0",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-react-hooks": "^3.0.0",
+    "@bit/boclips.boclips-ui.components.video-card": "1.0.3"
   },
   "scripts": {
     "dev": "craco start",
@@ -60,5 +62,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "bit": {
+    "env": {
+      "compiler": "boclips.compilers/compiler"
+    },
+    "componentsDefaultDirectory": "src/bits/{name}",
+    "packageManager": "npm"
   }
 }
