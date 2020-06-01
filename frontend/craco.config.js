@@ -13,5 +13,19 @@ module.exports = {
         },
       },
     },
+    {
+      plugin: CracoLessPlugin,
+      options: {
+        modifyLessRule: function (lessRule) {
+          lessRule.test = /\.(module)\.(less)$/;
+          lessRule.exclude = /node_modules/;
+
+          return lessRule;
+        },
+        cssLoaderOptions: {
+          modules: true,
+        },
+      },
+    },
   ],
 };
