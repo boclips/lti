@@ -42,7 +42,7 @@
     "dev": "craco start",
     "build": "craco build",
     "test": "jest",
-    "eject": "craco eject",
+    "eject": "react-scripts eject",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "npm run lint -- --fix"
   },
