@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <html lang="en">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <meta name="theme-color" content="#000000" />
+      <meta
+        name="description"
+        content="Boclips makes accessing the best educational videos simple, seamless, and safe"
+      />
+      <title>Boclips LTI</title>
+    </head>
+    <body>
+      <script>
+        fetch('http://localhost:8080/dev-support/initialise-session', {
+          method: 'POST',
+        });
+      </script>
+      <script>
+        window.Environment = {
+          LTI_TOKEN_URL: 'http://localhost:8080/auth/token',
+          API_BASE_URL: 'https://api.staging-boclips.com',
+        };
+      </script>
+      <noscript>You need to enable JavaScript to run this app.</noscript>
+      <div id="root"></div>
+    </body>
+  </html>
+</html>

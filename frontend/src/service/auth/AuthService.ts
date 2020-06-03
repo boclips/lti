@@ -8,6 +8,7 @@ export class AuthService {
     ) => Promise<string> = AuthService.ltiTokenFactory,
   ): void {
     const nonModifiedAxiosInstance = axios.create();
+
     axios.interceptors.request.use((config: AxiosRequestConfig) => {
       return tokenFactory(nonModifiedAxiosInstance).then((token) => {
         config.headers['Authorization'] = `Bearer ${token}`;
@@ -15,10 +16,11 @@ export class AuthService {
       });
     });
   }
-
   public static ltiTokenFactory(axiosInstance: AxiosInstance): Promise<string> {
     return axiosInstance
-      .get(AppConstants.LTI_TOKEN_URL)
+      .get(AppConstants.LTI_TOKEN_URL, {
+        withCredentials: true,
+      })
       .then((response: AxiosResponse<string>) => response.data)
       .catch(() => 'Cannot retrieve token');
   }

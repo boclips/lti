@@ -5,27 +5,28 @@ import { VideoService } from './service/video/VideoService';
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { AppConstants } from './types/AppConstants';
-import { PageLayout } from './components/common/PageLayout';
+import { LtiView } from './views/LtiView';
 
 const store = configureStore({
   reducer: {},
   middleware: [...getDefaultMiddleware()],
 });
 
-function App(): React.ReactElement {
+const App = () => {
   AuthService.configureAxios();
 
   test();
 
   return (
     <Provider store={store}>
-      <PageLayout>Hello, World!</PageLayout>
+      <LtiView />
     </Provider>
   );
-}
+};
 
 const test = () => {
   new ApiClient(AppConstants.API_BASE_URL).getClient().then((client) => {
+    console.log(client);
     new VideoService(client).searchVideos({ query: 'hello' });
   });
 };

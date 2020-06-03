@@ -4,6 +4,7 @@ import com.boclips.lti.core.application.model.SessionKeys
 import com.boclips.lti.core.configuration.properties.DevSupportProperties
 import mu.KLogging
 import org.springframework.context.annotation.Profile
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpSession
 class DevelopmentSupportController(private val devSupportProperties: DevSupportProperties) {
     companion object : KLogging()
 
+    @CrossOrigin(origins = ["http://localhost:3000"])
     @PostMapping("/initialise-session")
     fun handleLtiLaunchRequest(
         request: HttpServletRequest,
