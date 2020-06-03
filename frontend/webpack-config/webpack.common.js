@@ -57,13 +57,23 @@ module.exports = {
         test: /^((?!\.module).)*less$/,
         use: [
           MiniCssExtractPlugin.loader,
-          'css-loader',
+          {
+            loader: 'css-loader',
+          },
           {
             loader: 'less-loader',
             options: {
-              javascriptEnabled: true,
+              lessOptions: {
+                javascriptEnabled: true,
+              },
             },
           },
+          // {
+          //   loader: 'less-loader',
+          //   options: {
+          //     javascript
+          //   }
+          // },
         ],
       },
       {
@@ -77,6 +87,7 @@ module.exports = {
             options: {
               sourceMap: true,
               modules: true,
+
             },
           },
           {

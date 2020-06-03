@@ -6,7 +6,7 @@ import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { AppConstants } from './types/AppConstants';
 import { LtiView } from './views/LtiView';
-
+import './index.less';
 const store = configureStore({
   reducer: {},
   middleware: [...getDefaultMiddleware()],
@@ -26,7 +26,6 @@ const App = () => {
 
 const test = () => {
   new ApiClient(AppConstants.API_BASE_URL).getClient().then((client) => {
-    console.log(client);
     new VideoService(client).searchVideos({ query: 'hello' });
   });
 };
