@@ -9,7 +9,7 @@ import { AppConstants } from '../../types/AppConstants';
 import { VideoService } from '../../service/video/VideoService';
 
 interface Props {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export const LtiView = (props: Props) => {
@@ -17,7 +17,9 @@ export const LtiView = (props: Props) => {
 
   const onSearch = (value: string) => {
     new ApiClient(AppConstants.API_BASE_URL).getClient().then((client) => {
-      new VideoService(client).searchVideos({ query: value });
+      new VideoService(client)
+        .searchVideos({ query: value })
+        .then((videos) => setVideos(videos));
     });
   };
 

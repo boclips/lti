@@ -1,6 +1,6 @@
 node_modules
 components
-bits
+src/bits
 dist
 *.iml
 .idea
