@@ -1,6 +1,6 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import { ConifgurableConstants } from '../../types/AppConstants';
+import ConifgurableConstants from '../../types/AppConstants';
 import AuthService from './AuthService';
 import AppConstantsFactory from '../../testSupport/AppConstantsFactory';
 

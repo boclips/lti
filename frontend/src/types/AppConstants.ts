@@ -4,7 +4,7 @@ declare global {
   }
 }
 
-export interface ConifgurableConstants {
+export default interface ConifgurableConstants {
   LTI_TOKEN_URL: string;
   API_BASE_URL: string;
 }

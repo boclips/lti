@@ -5,7 +5,9 @@ import ApiClient from '../client/ApiClient';
 import VideoService from './VideoService';
 
 describe('VideoService', () => {
-  const apiClientPromise = new ApiClient('https://api.example.com').getClient();
+  const apiClientPromise = new ApiClient(
+    'https://api.example.com',
+  ).getClient() as Promise<FakeBoclipsClient>;
 
   it('Can search videos by query', async () => {
     const apiVideos = [];

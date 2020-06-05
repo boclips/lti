@@ -1,12 +1,13 @@
 .DS_Store
-
+node_modules
 .idea
 *.iml
 
 .gradle
 build
 out
-
 dependency-check-cache
 security-report
 
+*.js
+*.js.map

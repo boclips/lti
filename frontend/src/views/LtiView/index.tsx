@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Col, Layout, Row } from 'antd';
-import Search from 'antd/es/input/Search';
 import { VideoCard } from '@bit/boclips.boclips-ui.components.video-card';
 import { Video } from '@bit/boclips.boclips-ui.types.video';
 import { Player } from 'boclips-player-react';
+import Search from 'antd/lib/input/Search';
+import { Video as ClientVideo } from 'boclips-api-client/dist/sub-clients/videos/model/Video';
+import Pageable from 'boclips-api-client/dist/sub-clients/common/model/Pageable';
 import Header from '../../components/Header';
 import BoclipsLogo from '../../resources/images/boclips-logo.svg';
 import ApiClient from '../../service/client/ApiClient';
@@ -16,7 +18,7 @@ const LtiView = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const convertVideos = (videosResponse) => {
+  const convertVideos = (videosResponse: Pageable<ClientVideo>) => {
     const convertedVideos = videosResponse.page.map((v) =>
       convertApiClientVideo(v),
     );
@@ -55,12 +57,8 @@ const LtiView = () => {
                 loading={loading}
                 authenticated
                 videoPlayer={
-                  <Player videoUri={it.links.self.getOriginalLink()} />
+                  <Player videoUri={it.links?.self?.getOriginalLink()} />
                 }
-                // videoActionButtons={
-                //   <VideoButtons video={video} mode={'card'} />
-                // }
-                // analytics={() => emitVideoLinkClickEvent(video)}
               />
             ))}
           </Col>

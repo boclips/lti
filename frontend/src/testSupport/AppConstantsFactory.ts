@@ -1,4 +1,4 @@
-import { ConifgurableConstants } from '../types/AppConstants';
+import ConifgurableConstants from '../types/AppConstants';
 
 class AppConstantsFactory {
   public static sample(

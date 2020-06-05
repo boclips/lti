@@ -1,11 +1,13 @@
 import { Video as ClientVideo } from 'boclips-api-client/dist/sub-clients/videos/model/Video';
 import { convertFromApiClientLink } from '@bit/boclips.boclips-ui.types.link';
-import { Video } from '@bit/boclips.boclips-ui.types.video';
 import AgeRange from '@bit/boclips.boclips-ui.types.age-range';
+import { Video } from '@bit/boclips.boclips-ui.types.video';
+import { AgeRange as ClientAgeRange } from 'boclips-api-client/dist/sub-clients/common/model/AgeRange';
 import { getEffectiveThumbnailUrl } from './convertVideoResource';
 
 function convertApiClientVideo(clientVideo: ClientVideo): Video {
-  const { ageRange, bestFor, links } = clientVideo;
+  const { bestFor, links } = clientVideo;
+  const clientAgeRange: ClientAgeRange = clientVideo.ageRange;
 
   const convertedProperties: Partial<Video> = {
     thumbnailUrl: clientVideo.playback?.links?.thumbnail
@@ -13,8 +15,9 @@ function convertApiClientVideo(clientVideo: ClientVideo): Video {
         convertFromApiClientLink(clientVideo.playback.links.thumbnail),
       )
       : undefined,
-    ageRange: ageRange && new AgeRange(ageRange.min, ageRange.max),
-    bestFor: bestFor?.[0]?.label || null,
+    ageRange:
+      clientAgeRange && new AgeRange(clientAgeRange.min, clientAgeRange.max),
+    bestFor: bestFor?.[0]?.label || undefined,
     links: {
       self: convertFromApiClientLink(links.self),
       rate: convertFromApiClientLink(links.rate),
@@ -24,6 +27,9 @@ function convertApiClientVideo(clientVideo: ClientVideo): Video {
   };
 
   if (links.transcript) {
+    if (convertedProperties?.links === undefined) {
+      throw Error('convertedProperties is undefined');
+    }
     convertedProperties.links.transcript = convertFromApiClientLink(
       links.transcript,
     );
@@ -43,10 +49,12 @@ function convertApiClientVideo(clientVideo: ClientVideo): Video {
     yourRating: clientVideo.yourRating,
     promoted: clientVideo.promoted,
     thumbnailUrl: convertedProperties.thumbnailUrl,
-    ageRange: convertedProperties.ageRange,
+    ageRange: convertedProperties.ageRange!!,
     bestFor: convertedProperties.bestFor,
     attachments: clientVideo.attachments,
     contentWarnings: clientVideo.contentWarnings,
+    language: clientVideo.language,
+    legalRestrictions: clientVideo.legalRestrictions,
     links: convertedProperties.links,
   };
 }

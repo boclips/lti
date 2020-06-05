@@ -6,7 +6,11 @@ import { Video } from '@bit/boclips.boclips-ui.types.video';
 
 const DEFAULT_THUMBNAIL_WIDTH = 500;
 
-export function getEffectiveThumbnailUrl(thumbnailLink: Link) {
+export function getEffectiveThumbnailUrl(thumbnailLink?: Link) {
+  if (thumbnailLink === undefined) {
+    throw new Error('Received a null thumbnail link');
+  }
+
   return thumbnailLink.isTemplated
     ? thumbnailLink.getTemplatedLink({
       thumbnailWidth: DEFAULT_THUMBNAIL_WIDTH,
@@ -38,18 +42,19 @@ export default function convertVideoResource(resource: any): Video {
       null,
     promoted: resource.promoted,
     attachments: resource.attachments,
+    legalRestrictions: resource.legalRestrictions,
     links: {
       self: new Link(resource._links.self),
-      rate: resource._links.rate ? new Link(resource._links.rate) : null,
-      tag: resource._links.tag ? new Link(resource._links.tag) : null,
+      rate: resource._links.rate ? new Link(resource._links.rate) : undefined,
+      tag: resource._links.tag ? new Link(resource._links.tag) : undefined,
       logInteraction: resource._links.logInteraction
         ? new Link(resource._links.logInteraction)
-        : null,
+        : undefined,
     },
   };
 
   if (resource._links.transcript) {
-    video.links.transcript = new Link(resource._links.transcript);
+    video.links!!.transcript = new Link(resource._links.transcript);
   }
 
   return video;
