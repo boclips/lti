@@ -1,16 +1,14 @@
-import { AppConstantsFactory } from './../../../testSupport/AppConstantsFactory';
-import { ConifgurableConstants } from './../../types/AppConstants';
 import axios from 'axios';
-import { AuthService } from './AuthService';
 import MockAdapter from 'axios-mock-adapter';
+import { ConifgurableConstants } from '../../types/AppConstants';
+import AuthService from './AuthService';
+import AppConstantsFactory from '../../testSupport/AppConstantsFactory';
 
 jest.mock('../../types/AppConstants', () => ({
   get AppConstants(): ConifgurableConstants {
-    {
-      return AppConstantsFactory.sample({
-        LTI_TOKEN_URL: 'https://lti/token',
-      });
-    }
+    return AppConstantsFactory.sample({
+      LTI_TOKEN_URL: 'https://lti/token',
+    });
   },
 }));
 
@@ -39,7 +37,7 @@ describe('AuthService', () => {
 
     const response = await axios.get('https://api.example.com/v1/resource');
 
-    expect(response.config.headers['Authorization']).toEqual(
+    expect(response.config.headers.Authorization).toEqual(
       'Bearer i-am-a-token',
     );
   });
@@ -54,9 +52,7 @@ describe('AuthService', () => {
 
     await factory(axiosInstance);
 
-    expect(
-      axiosMock.history['get'][0].headers['Authorization'],
-    ).toBeUndefined();
+    expect(axiosMock.history.get[0].headers.Authorization).toBeUndefined();
   });
 
   describe('ltiTokenFactory', () => {

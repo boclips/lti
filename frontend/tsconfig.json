@@ -11,8 +11,6 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "incremental": true,
-    "baseUrl": "./components",
-    "outDir": "./dist"
+    "incremental": true
   }
 }

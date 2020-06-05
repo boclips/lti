@@ -1,26 +1,38 @@
 import React, { useState } from 'react';
-import s from './styles.module.less';
 import { Col, Layout, Row } from 'antd';
-import { Header } from '../../components/Header';
-import BoclipsLogo from '../../resources/images/boclips-logo.svg';
 import Search from 'antd/es/input/Search';
-import { ApiClient } from '../../service/client/ApiClient';
+import { VideoCard } from '@bit/boclips.boclips-ui.components.video-card';
+import { Video } from '@bit/boclips.boclips-ui.types.video';
+import { Player } from 'boclips-player-react';
+import Header from '../../components/Header';
+import BoclipsLogo from '../../resources/images/boclips-logo.svg';
+import ApiClient from '../../service/client/ApiClient';
 import { AppConstants } from '../../types/AppConstants';
-import { VideoService } from '../../service/video/VideoService';
+import VideoService from '../../service/video/VideoService';
+import convertApiClientVideo from '../../service/video/convertVideoFromApi';
+// import s from './styles.module.less';
 
-interface Props {
-  children?: React.ReactNode;
-}
+const LtiView = () => {
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-export const LtiView = (props: Props) => {
-  const [videos, setVideos] = useState();
+  const convertVideos = (videosResponse) => {
+    const convertedVideos = videosResponse.page.map((v) =>
+      convertApiClientVideo(v),
+    );
+    setVideos(convertedVideos);
+  };
 
   const onSearch = (value: string) => {
-    new ApiClient(AppConstants.API_BASE_URL).getClient().then((client) => {
-      new VideoService(client)
-        .searchVideos({ query: value })
-        .then((videos) => setVideos(videos));
-    });
+    setLoading(true);
+    new ApiClient(AppConstants.API_BASE_URL)
+      .getClient()
+      .then((client) => {
+        new VideoService(client)
+          .searchVideos({ query: value })
+          .then((videosResponse) => convertVideos(videosResponse));
+      })
+      .then(() => setLoading(false));
   };
 
   return (
@@ -33,13 +45,29 @@ export const LtiView = (props: Props) => {
           onSearch={onSearch}
         />
       </Header>
-      <Layout.Content className="page-layout page-layout__content  ">
+      <Layout.Content>
         <Row>
           <Col sm={{ span: 24 }} md={{ span: 24 }}>
-            {props.children}
+            {videos.map((it: Video) => (
+              <VideoCard
+                key={it.id}
+                video={it}
+                loading={loading}
+                authenticated
+                videoPlayer={
+                  <Player videoUri={it.links.self.getOriginalLink()} />
+                }
+                // videoActionButtons={
+                //   <VideoButtons video={video} mode={'card'} />
+                // }
+                // analytics={() => emitVideoLinkClickEvent(video)}
+              />
+            ))}
           </Col>
         </Row>
       </Layout.Content>
     </Layout>
   );
 };
+
+export default LtiView;

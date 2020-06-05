@@ -1,7 +1,7 @@
-jest.mock('axios');
-
 import axios from 'axios';
-import { AuthService } from './AuthService';
+import AuthService from './AuthService';
+
+jest.mock('axios');
 
 describe('AuthService', () => {
   it('adds a request interceptor to axios', () => {

@@ -1,8 +1,8 @@
-import { VideoService } from './VideoService';
-import { ApiClient } from '../client/ApiClient';
 import { FakeVideosClient } from 'boclips-api-client/dist/sub-clients/videos/client/FakeVideosClient';
 import { VideoWithBoclipsProjectionFactory as VideoFactory } from 'boclips-api-client/dist/test-support/VideosFactory';
 import { FakeBoclipsClient } from 'boclips-api-client/dist/test-support';
+import ApiClient from '../client/ApiClient';
+import VideoService from './VideoService';
 
 describe('VideoService', () => {
   const apiClientPromise = new ApiClient('https://api.example.com').getClient();
