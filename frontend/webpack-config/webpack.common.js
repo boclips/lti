@@ -1,7 +1,6 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const tsImportPluginFactory = require('ts-import-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
 const srcPath = path.resolve(__dirname, '../src');
@@ -126,9 +125,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(srcPath, 'index.html'),
       ga: 'replaced-by-profile',
-    }),
-    new CopyWebpackPlugin([
-      { from: staticPath, to: distPath }
-    ]),
+    })
   ],
 };

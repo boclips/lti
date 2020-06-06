@@ -81,7 +81,6 @@ def frontendDir = 'frontend'
 
 npm_install {
   inputs.file file("$frontendDir/package.json")
-  inputs.file file("$frontendDir/package-lock.json")
 
   outputs.dir file("$frontendDir/node_modules")
 
