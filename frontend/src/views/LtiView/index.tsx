@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Col, Layout, List, Row 
-} from 'antd';
+import { Col, Layout, List, Row } from 'antd';
 import { VideoCard } from '@bit/boclips.boclips-ui.components.video-card';
 import { Video } from '@bit/boclips.boclips-ui.types.video';
 import { Player } from 'boclips-player-react';
@@ -52,26 +50,28 @@ const LtiView = () => {
       <Layout.Content>
         <Row>
           <Col sm={{ span: 24 }} md={{ span: 24 }}>
-            <List
-              itemLayout="vertical"
-              size="large"
-              pagination={{
-                pageSize: 10,
-              }}
-              dataSource={videos}
-              loading={loading}
-              renderItem={(video: Video) => (
-                <VideoCard
-                  key={video.id}
-                  video={video}
-                  loading={loading}
-                  authenticated
-                  videoPlayer={
-                    <Player videoUri={video.links?.self?.getOriginalLink()} />
-                  }
-                />
-              )}
-            />
+            {videos.length > 0 ? (
+              <List
+                itemLayout="vertical"
+                size="large"
+                pagination={{
+                  pageSize: 10,
+                }}
+                dataSource={videos}
+                loading={loading}
+                renderItem={(video: Video) => (
+                  <VideoCard
+                    key={video.id}
+                    video={video}
+                    loading={loading}
+                    authenticated
+                    videoPlayer={
+                      <Player videoUri={video.links?.self?.getOriginalLink()} />
+                    }
+                  />
+                )}
+              />
+            ) : null}
           </Col>
         </Row>
       </Layout.Content>
