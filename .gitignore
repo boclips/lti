@@ -8,6 +8,6 @@ build
 out
 dependency-check-cache
 security-report
-
+frontend/package-lock.json
 *.js
 *.js.map

@@ -11,6 +11,9 @@ inputs:
 - name: source
 - name: version
 
+params:
+  BIT_TOKEN:
+
 outputs:
   - name: dist
 
