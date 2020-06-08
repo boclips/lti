@@ -7,3 +7,4 @@ dist
 ts-compiler-dump.*
 .env
 .bit
+.npmrc
