@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Col, Layout, List, Row } from 'antd';
+import {
+  Col, Layout, List, Row 
+} from 'antd';
 import { VideoCard } from '@bit/boclips.boclips-ui.components.video-card';
 import { Video } from '@bit/boclips.boclips-ui.types.video';
 import { Player } from 'boclips-player-react';
@@ -58,10 +60,6 @@ const LtiView = () => {
               }}
               dataSource={videos}
               loading={loading}
-              rowKey={(key) => {
-                console.log(key);
-                return ''
-              }}
               renderItem={(video: Video) => (
                 <VideoCard
                   key={video.id}
