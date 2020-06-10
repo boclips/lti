@@ -106,7 +106,7 @@ npm_run_build {
 
   workingDir = file(frontendDir)
 
-  outputs.dir file("$frontendDir/build")
+  outputs.dir file("$frontendDir/dist")
 }
 npm_run_build.dependsOn npm_install
 
@@ -118,7 +118,7 @@ bootJar.dependsOn copyFrontendOutput
 copyFrontendOutput.dependsOn npm_run_build
 
 task cleanFrontendOutput(type: Delete) {
-  delete "$frontendDir/build"
+  delete "$frontendDir/dist"
 }
 clean.dependsOn cleanFrontendOutput
 
