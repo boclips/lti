@@ -35,4 +35,19 @@ class IndexControllerIntegrationTest : AbstractSpringIntegrationTest() {
                 )
             )
     }
+
+    @Test
+    fun `is allowed to retrieve static js anc css resources`() {
+        // These assets are compiled and copied into resources/static at build time
+        mvc.perform(get("/main.js"))
+            .andExpect(status().isNotFound)
+        mvc.perform(get("/main.js.gz"))
+            .andExpect(status().isNotFound)
+        mvc.perform(get("/main.js.map"))
+            .andExpect(status().isNotFound)
+        mvc.perform(get("/main.css"))
+            .andExpect(status().isNotFound)
+        mvc.perform(get("/main.css.gz"))
+            .andExpect(status().isNotFound)
+    }
 }

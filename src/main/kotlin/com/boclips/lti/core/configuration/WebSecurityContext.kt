@@ -22,6 +22,10 @@ class WebSecurityContext : HttpSecurityConfigurer {
 
             // Assets
             .antMatchers(HttpMethod.GET, "/styles/*.css").permitAll()
+            .antMatchers(HttpMethod.GET, "/*.js").permitAll()
+            .antMatchers(HttpMethod.GET, "/*.js.*").permitAll()
+            .antMatchers(HttpMethod.GET, "/*.css").permitAll()
+            .antMatchers(HttpMethod.GET, "/*.css.*").permitAll()
 
             .antMatchers(HttpMethod.GET, "/static/**").permitAll()
             .antMatchers(HttpMethod.GET, "/index.html").permitAll()
