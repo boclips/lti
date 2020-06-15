@@ -19,8 +19,6 @@
     "@bit/boclips.boclips-ui.types.age-range": "1.0.5",
     "@bit/boclips.boclips-ui.types.link": "1.0.4",
     "@bit/boclips.boclips-ui.types.video": "1.0.12",
-    "@bit/dev-boclips.boclips-ui.components.video-card": "file:./src/bits/components/video-card",
-    "@bit/dev-boclips.boclips-ui.types.video": "^1.0.12",
     "@reduxjs/toolkit": "1.3.6",
     "@testing-library/jest-dom": "5.7.0",
     "@testing-library/react": "10.0.4",
