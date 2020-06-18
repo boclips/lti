@@ -1,6 +1,7 @@
 package com.boclips.lti.testsupport.factories
 
 import com.boclips.lti.v1p3.application.model.DecodedJwtToken
+import com.boclips.lti.v1p3.application.model.DeepLinkingSettingsClaim
 import com.boclips.lti.v1p3.application.model.ResourceLinkClaim
 import java.time.Instant.now
 import java.util.UUID
@@ -14,10 +15,11 @@ object DecodedJwtTokenFactory {
         issuedAtClaim: Long? = now().minusSeconds(10).epochSecond,
         nonceClaim: String? = UUID.randomUUID().toString(),
         deploymentIdClaim: String? = UUID.randomUUID().toString(),
-        targetLinkUriClaim: String? = "https://tool.com/resource/1",
+        targetLinkUriClaim: String? = null,
         messageTypeClaim: String? = "LtiResourceLinkRequest",
         ltiVersionClaim: String? = "1.3.0",
-        resourceLinkClaim: ResourceLinkClaim? = sampleResourceLinkClaim()
+        resourceLinkClaim: ResourceLinkClaim? = sampleResourceLinkClaim(),
+        deepLinkingSettingsClaim: DeepLinkingSettingsClaim? = null
     ) = DecodedJwtToken(
         issuerClaim = issuerClaim,
         audienceClaim = audienceClaim,
@@ -33,4 +35,7 @@ object DecodedJwtTokenFactory {
     )
 
     fun sampleResourceLinkClaim(id: String? = UUID.randomUUID().toString()) = ResourceLinkClaim(id)
+
+    fun sampleDeepLinkingSettingsClaim(deepLinkReturnUrl: String? = "https://platform.com/deep-link-return") =
+        DeepLinkingSettingsClaim(deepLinkReturnUrl)
 }

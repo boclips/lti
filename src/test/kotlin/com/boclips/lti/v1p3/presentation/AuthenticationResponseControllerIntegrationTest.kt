@@ -142,6 +142,51 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
     }
 
     @Nested
+    inner class DeepLinkingRequests {
+        @Test
+        fun `initiates a user session and redirects to the deep linking page`() {
+            val issuer = "https://platform.com/for-learning"
+            val nonce = "super-random-nonce"
+            val clientId = "test-client-id"
+
+            whenever(jwtService.isSignatureValid(jwtToken)).thenReturn(true)
+            whenever(jwtService.decode(jwtToken)).thenReturn(
+                DecodedJwtTokenFactory.sample(
+                    issuerClaim = issuer,
+                    audienceClaim = listOf(clientId),
+                    nonceClaim = nonce,
+                    messageTypeClaim = "LtiDeepLinkingRequest",
+                    deepLinkingSettingsClaim = DecodedJwtTokenFactory.sampleDeepLinkingSettingsClaim(deepLinkReturnUrl = "https://platform.com/return")
+                )
+            )
+
+            mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer, clientId = clientId))
+
+            val state = UUID.randomUUID().toString()
+            val session = LtiTestSessionFactory.unauthenticated(
+                sessionAttributes = mapOf(
+                    SessionKeys.statesToTargetLinkUris to mapOf(state to "deep linking request")
+                )
+            )
+
+            mvc.perform(
+                post("/v1p3/authentication-response")
+                    .session(session as MockHttpSession)
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .param("state", state)
+                    .param("id_token", jwtToken)
+            )
+                .andExpect(status().isFound)
+                .andDo { result ->
+                    val location = result.response.getHeader("Location")
+
+                    assertThat(location).isEqualTo("http://localhost/search-and-embed")
+                    assertThat(result.request.session?.getAttribute(CoreSessionKeys.integrationId)).isEqualTo(issuer)
+                }
+        }
+    }
+
+    @Nested
     inner class ResponseVerification {
         @Test
         fun `returns an unauthorised response when JWT signature verification fails`() {

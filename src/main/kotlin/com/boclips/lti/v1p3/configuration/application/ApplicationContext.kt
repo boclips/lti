@@ -2,6 +2,7 @@ package com.boclips.lti.v1p3.configuration.application
 
 import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
 import com.boclips.lti.v1p3.application.command.AssembleLoginRequestUrl
+import com.boclips.lti.v1p3.application.command.HandleDeepLinkingMessage
 import com.boclips.lti.v1p3.application.command.HandlePlatformMessage
 import com.boclips.lti.v1p3.application.command.HandleResourceLinkMessage
 import com.boclips.lti.v1p3.application.command.PerformSecurityChecks
@@ -34,13 +35,23 @@ class ApplicationContext {
     ) = PerformSecurityChecks(csrfService, jwtService, nonceService, idTokenValidator)
 
     @Bean
-    fun handlePlatformMessage(handleResourceLinkMessage: HandleResourceLinkMessage): HandlePlatformMessage {
-        return HandlePlatformMessage(handleResourceLinkMessage)
+    fun handlePlatformMessage(
+        handleResourceLinkMessage: HandleResourceLinkMessage,
+        handleDeepLinkingMessage: HandleDeepLinkingMessage
+    ): HandlePlatformMessage {
+        return HandlePlatformMessage(handleResourceLinkMessage, handleDeepLinkingMessage)
     }
 
     @Bean
     fun handleResourceLinkMessage(platformRepository: PlatformRepository) =
         HandleResourceLinkMessage(platformRepository)
+
+    @Bean
+    fun handleDeepLinkingMessage(
+        platformRepository: PlatformRepository,
+        uriComponentsBuilderFactory: UriComponentsBuilderFactory
+    ) =
+        HandleDeepLinkingMessage(platformRepository, uriComponentsBuilderFactory)
 
     @Bean
     fun idTokenValidator(

@@ -19,7 +19,8 @@ class HandlePlatformMessageIntegrationTest : AbstractSpringIntegrationTest() {
                 idToken = DecodedJwtTokenFactory.sample(
                     messageTypeClaim = "this won't work"
                 ),
-                session = MockHttpSession()
+                session = MockHttpSession(),
+                state = "state"
             )
         }
     }
@@ -31,7 +32,8 @@ class HandlePlatformMessageIntegrationTest : AbstractSpringIntegrationTest() {
                 idToken = DecodedJwtTokenFactory.sample(
                     messageTypeClaim = null
                 ),
-                session = MockHttpSession()
+                session = MockHttpSession(),
+                state = "state"
             )
         }
     }

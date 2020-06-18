@@ -8,20 +8,25 @@ import java.net.URL
 import javax.servlet.http.HttpSession
 
 class HandlePlatformMessage(
-    private val handleResourceLinkMessage: HandleResourceLinkMessage
+    private val handleResourceLinkMessage: HandleResourceLinkMessage,
+    private val handleDeepLinkingMessage: HandleDeepLinkingMessage
 ) {
-    operator fun invoke(idToken: DecodedJwtToken, session: HttpSession): URL {
-        when (idToken.messageTypeClaim) {
-            "LtiResourceLinkRequest" -> return ResourceLinkMessageValidator
-                .assertContainsAllRequiredClaims(idToken)
+    operator fun invoke(idToken: DecodedJwtToken, session: HttpSession, state: String): URL {
+        return when (idToken.messageTypeClaim) {
+            "LtiResourceLinkRequest" -> ResourceLinkMessageValidator
+                .assertIsValid(token = idToken, state = state, session = session)
                 .let {
                     handleResourceLinkMessage(
-                        MessageConverter.toResourceLinkMessage(
+                        message = MessageConverter.toResourceLinkMessage(
                             idToken
                         ),
-                        session
+                        session = session
                     )
                 }
+            "LtiDeepLinkingRequest" -> handleDeepLinkingMessage(
+                message = MessageConverter.toDeepLinkingMessage(idToken),
+                session = session
+            )
             else -> throw UnsupportedMessageTypeException(idToken.messageTypeClaim ?: "<null>")
         }
     }

@@ -10,7 +10,6 @@ import com.boclips.lti.v1p3.application.exception.NonceReusedException
 import com.boclips.lti.v1p3.application.exception.StatesDoNotMatchException
 import com.boclips.lti.v1p3.application.model.mapStateToTargetLinkUri
 import com.boclips.lti.v1p3.application.service.JwtService
-import com.boclips.lti.v1p3.domain.exception.TargetLinkUriMismatchException
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.within
@@ -107,23 +106,6 @@ class PerformSecurityChecksIntegrationTest : AbstractSpringIntegrationTest() {
         )
 
         assertThrows<JwtClaimValidationException> { performSecurityChecks(state, token, session) }
-    }
-
-    @Test
-    fun `throws an exception when target link URI does not match what's mapped to state`() {
-        val state = "state"
-
-        session.mapStateToTargetLinkUri(state, "https://tool.com/reality")
-        whenever(jwtService.isSignatureValid(token)).thenReturn(true)
-        whenever(jwtService.decode(token)).thenReturn(
-            DecodedJwtTokenFactory.sample(
-                issuerClaim = testIssuer,
-                audienceClaim = listOf(testClientId),
-                targetLinkUriClaim = "https://tool.com/expectation"
-            )
-        )
-
-        assertThrows<TargetLinkUriMismatchException> { performSecurityChecks(state, token, session) }
     }
 
     private val token = "this is a token"

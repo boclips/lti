@@ -35,7 +35,7 @@ class AuthenticationResponseController(
 
         logger.info { "LTI 1.3 Authentication Response from iss: '${decodedToken.issuerClaim}' for '${decodedToken.targetLinkUriClaim}' }" }
 
-        val resourceUrl = handlePlatformMessage(decodedToken, httpSession)
+        val resourceUrl = handlePlatformMessage(decodedToken, httpSession, state)
 
         return "redirect:$resourceUrl"
     }
