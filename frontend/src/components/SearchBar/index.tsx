@@ -67,7 +67,6 @@ const SearchBar = ({ onSearch }: Props): ReactElement => {
       >
         <Input
           size="middle"
-          // enterButton="Search"
           onChange={getInputValue}
           placeholder="Search for videos"
           data-qa="search-input"
@@ -75,7 +74,11 @@ const SearchBar = ({ onSearch }: Props): ReactElement => {
           prefix={<SearchOutlined />}
         />
       </AutoComplete>
-      <Button onClick={handleSearchButton} type="primary" className={s.searchButton}>
+      <Button
+        onClick={handleSearchButton}
+        type="primary"
+        className={s.searchButton}
+      >
         Search
       </Button>
     </>
