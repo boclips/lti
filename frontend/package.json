@@ -15,7 +15,7 @@
   "dependencies": {
     "@ant-design/icons": "4.1.0",
     "@bit/boclips.boclips-ui.components.header-with-logo": "1.0.7",
-    "@bit/boclips.boclips-ui.components.video-card": "^1.0.38",
+    "@bit/boclips.boclips-ui.components.video-card": "^1.0.42",
     "@bit/boclips.boclips-ui.types.age-range": "^1.0.7",
     "@bit/boclips.boclips-ui.types.link": "^1.0.10",
     "@bit/boclips.boclips-ui.types.video": "^1.0.19",
