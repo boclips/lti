@@ -14,8 +14,13 @@ module.exports = {
       version: 'detect', // Tells eslint-plugin-react to automatically detect the version of React to use
     },
   },
-  extends: ['airbnb-typescript', 'prettier/react'],
+  extends: [
+    'airbnb-typescript',
+    'prettier/react',
+    'plugin:you-dont-need-lodash-underscore/compatible',
+  ],
   rules: {
+    'no-restricted-syntax': 'off',
     'react/jsx-filename-extension': [
       1,
       { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
