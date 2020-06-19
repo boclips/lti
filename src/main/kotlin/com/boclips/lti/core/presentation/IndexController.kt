@@ -11,7 +11,7 @@ class IndexController(
     private val frontendProperties: FrontendProperties,
     private val devSupportProperties: DevSupportProperties
 ) {
-    @GetMapping("/")
+    @GetMapping("/search")
     fun getIndex(): ModelAndView {
         /*
          * Index here points to index.html in the front end repo

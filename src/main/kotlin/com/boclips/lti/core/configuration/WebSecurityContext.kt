@@ -15,8 +15,6 @@ class WebSecurityContext : HttpSecurityConfigurer {
             .and()
             .authorizeRequests()
 
-            .antMatchers(HttpMethod.GET, "/").permitAll()
-
             // Infrastructure
             .antMatchers(HttpMethod.GET, "/actuator/health").permitAll()
 
@@ -38,6 +36,7 @@ class WebSecurityContext : HttpSecurityConfigurer {
             .antMatchers(HttpMethod.GET, "/videos/*").permitAll()
             .antMatchers(HttpMethod.GET, "/collections").permitAll()
             .antMatchers(HttpMethod.GET, "/collections/*").permitAll()
+            .antMatchers(HttpMethod.GET, "/search").permitAll()
             .antMatchers(HttpMethod.GET, "/auth/token").permitAll()
 
             // LTI 1.1 Launch endpoint

@@ -6,12 +6,14 @@ import org.junit.jupiter.api.Test
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.model
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
 
 class IndexControllerIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
     fun `passes frontend url to the view`() {
-        mvc.perform(get("/"))
+        mvc.perform(get("/search"))
             .andExpect(status().isOk)
+            .andExpect(view().name("index"))
             .andExpect(
                 model().attribute(
                     "ltiTokenUrl",
