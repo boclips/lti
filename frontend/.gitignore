@@ -8,3 +8,4 @@ ts-compiler-dump.*
 .env
 .bit
 .npmrc
+.bitmap

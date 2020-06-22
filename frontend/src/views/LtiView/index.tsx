@@ -9,12 +9,12 @@ import { Video as ClientVideo } from 'boclips-api-client/dist/sub-clients/videos
 import Pageable from 'boclips-api-client/dist/sub-clients/common/model/Pageable';
 import HeaderWithLogo from '@bit/boclips.boclips-ui.components.header-with-logo';
 import c from 'classnames';
+import SearchBar from '@bit/boclips.boclips-ui.components.search-bar';
 import ApiClient from '../../service/client/ApiClient';
 import { AppConstants } from '../../types/AppConstants';
 import VideoService from '../../service/video/VideoService';
 import convertApiClientVideo from '../../service/video/convertVideoFromApi';
 import s from './styles.module.less';
-import SearchBar from '../../components/SearchBar';
 import EmptySVG from '../../resources/images/empty.svg';
 
 const LtiView = () => {
@@ -72,7 +72,10 @@ const LtiView = () => {
                 showSizeChanger: false,
               }}
               dataSource={videos}
-              loading={loading}
+              loading={{
+                wrapperClassName: s.spinner,
+                spinning: loading,
+              }}
               renderItem={(video: Video) => (
                 <VideoCard
                   key={video.id}

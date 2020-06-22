@@ -4,6 +4,7 @@
   position: relative;
   z-index: 1;
   background: @shade-1;
+  min-height: 100%;
 }
 
 .pagination {
@@ -14,29 +15,46 @@
   align-content: center;
   padding: 12px 0;
   li {
-    color: @shade-6;
     font-size: 16px;
     font-weight: bold;
-    border: 2px solid #6471a9;
+    border: 2px solid @shade-6;
     background: transparent;
     border-radius: 8px;
     a {
       border: 0 !important;
       background: transparent !important;
+      color: @shade-6;
     }
     svg {
       position: relative;
       top: -4px;
       height: 11px;
-      fill: #6471a9;
+      fill: @shade-6;
     }
   }
   :global .ant-pagination-disabled {
     opacity: 0.5;
   }
-  :global .ant-pagination-item-active {
-    border-color: #1890ff;
+  :global .ant-pagination-next,
+  :global .ant-pagination-prev,
+  :global .ant-pagination-item-ellipsis {
+    &:hover {
+      border-color: @blue-shade-4;
+      svg {
+        fill: @blue-shade-4;
+      }
+    }
   }
+  :global .ant-pagination-item-active {
+    border-color: @blue-shade-4;
+    a {
+      color: @blue-shade-4;
+    }
+  }
+}
+
+.spinner {
+  min-height: 480px;
 }
 
 .paginationEmpty {
@@ -63,7 +81,7 @@
   font-weight: 600;
 }
 .emptyInfo {
-  padding-top:24px;
+  padding-top: 24px;
   font-size: 20px;
   font-weight: 600;
 }

@@ -14,7 +14,8 @@
   "license": "ISC",
   "dependencies": {
     "@ant-design/icons": "4.1.0",
-    "@bit/boclips.boclips-ui.components.header-with-logo": "1.0.7",
+    "@bit/boclips.boclips-ui.components.header-with-logo": "1.0.8",
+    "@bit/boclips.boclips-ui.components.search-bar": "^1.0.1",
     "@bit/boclips.boclips-ui.components.video-card": "^1.0.42",
     "@bit/boclips.boclips-ui.types.age-range": "^1.0.7",
     "@bit/boclips.boclips-ui.types.link": "^1.0.10",
@@ -84,7 +85,7 @@
   },
   "bit": {
     "env": {
-      "compiler": "boclips.compilers/compiler"
+      "compiler": "boclips.compilers/compiler@2.0.4"
     },
     "componentsDefaultDirectory": "src/bits/{name}",
     "packageManager": "npm"
