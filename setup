@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
 
 # This assumes you have provisioned the machine
-ktlint --apply-to-idea-project
-
-# Generate local development configuration
-pushd src/main/resources/
-./setup-local-development
-popd
+ktlint --apply-to-idea-project -y
 
 pushd frontend/
 echo "Adding bit.dev to npm registry"

@@ -1,0 +1,20 @@
+server:
+  port: 8080
+
+boclips:
+  api:
+    baseUrl: 'https://api.staging-boclips.com'
+    tokenUrl: 'https://api.staging-boclips.com/v1/token'
+
+keycloak:
+  configurationFile: 'classpath:keycloak-staging.json'
+
+spring:
+  thymeleaf:
+    cache: false
+  mvc:
+    favicon:
+      enabled: false
+  data:
+    mongodb:
+      uri: 'mongodb://localhost:27017/lti-db'
