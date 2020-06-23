@@ -1,9 +1,9 @@
-package com.boclips.lti.v1p3.application.command
+package com.boclips.lti.v1p3.domain.service
 
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.testsupport.factories.MessageFactory
 import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
-import com.boclips.lti.v1p3.application.model.getIntegrationId
+import com.boclips.lti.v1p3.domain.model.getIntegrationId
 import com.boclips.lti.v1p3.domain.exception.PlatformNotFoundException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach

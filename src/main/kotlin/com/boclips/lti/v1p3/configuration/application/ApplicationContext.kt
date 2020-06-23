@@ -1,16 +1,16 @@
 package com.boclips.lti.v1p3.configuration.application
 
-import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
+import com.boclips.lti.core.domain.service.ResourceLinkService
 import com.boclips.lti.v1p3.application.command.AssembleLoginRequestUrl
-import com.boclips.lti.v1p3.application.command.HandleDeepLinkingMessage
-import com.boclips.lti.v1p3.application.command.HandlePlatformMessage
-import com.boclips.lti.v1p3.application.command.HandleResourceLinkMessage
+import com.boclips.lti.v1p3.application.command.HandlePlatformRequest
 import com.boclips.lti.v1p3.application.command.PerformSecurityChecks
 import com.boclips.lti.v1p3.application.service.CsrfService
 import com.boclips.lti.v1p3.application.service.JwtService
 import com.boclips.lti.v1p3.application.service.NonceService
 import com.boclips.lti.v1p3.application.validator.IdTokenValidator
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
+import com.boclips.lti.v1p3.domain.service.HandleDeepLinkingMessage
+import com.boclips.lti.v1p3.domain.service.HandleResourceLinkMessage
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -23,8 +23,8 @@ class ApplicationContext {
     @Bean
     fun assembleLoginRequestUrl(
         platformRepository: PlatformRepository,
-        uriComponentsBuilderFactory: UriComponentsBuilderFactory
-    ) = AssembleLoginRequestUrl(platformRepository, uriComponentsBuilderFactory)
+        resourceLinkService: ResourceLinkService
+    ) = AssembleLoginRequestUrl(platformRepository, resourceLinkService)
 
     @Bean
     fun performSecurityChecks(
@@ -38,8 +38,8 @@ class ApplicationContext {
     fun handlePlatformMessage(
         handleResourceLinkMessage: HandleResourceLinkMessage,
         handleDeepLinkingMessage: HandleDeepLinkingMessage
-    ): HandlePlatformMessage {
-        return HandlePlatformMessage(handleResourceLinkMessage, handleDeepLinkingMessage)
+    ): HandlePlatformRequest {
+        return HandlePlatformRequest(handleResourceLinkMessage, handleDeepLinkingMessage)
     }
 
     @Bean
@@ -49,9 +49,12 @@ class ApplicationContext {
     @Bean
     fun handleDeepLinkingMessage(
         platformRepository: PlatformRepository,
-        uriComponentsBuilderFactory: UriComponentsBuilderFactory
+        resourceLinkService: ResourceLinkService
     ) =
-        HandleDeepLinkingMessage(platformRepository, uriComponentsBuilderFactory)
+        HandleDeepLinkingMessage(
+            platformRepository,
+            resourceLinkService
+        )
 
     @Bean
     fun idTokenValidator(

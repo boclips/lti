@@ -1,7 +1,8 @@
 package com.boclips.lti.core.presentation.service
 
-import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
+import com.boclips.lti.core.infrastructure.service.UriComponentsBuilderFactory
 import com.boclips.lti.core.domain.model.Collection
+import com.boclips.lti.core.infrastructure.service.SpringRequestAwareResourceLinkService
 import com.boclips.lti.testsupport.factories.CollectionFactory
 import com.boclips.lti.testsupport.factories.VideoFactory
 import com.nhaarman.mockitokotlin2.whenever
@@ -68,18 +69,15 @@ class ToCollectionViewModelTest {
 
     private val videos = 1.until(10).map { VideoFactory.sample(thumbnailUrl = "http://thumbnails.com/$it") }
 
-    private lateinit var uriComponentsBuilderFactory: UriComponentsBuilderFactory
     private lateinit var toCollectionViewModel: ToCollectionViewModel
 
     @BeforeEach
     private fun setup(
         @Mock uriComponentsBuilderFactory: UriComponentsBuilderFactory
     ) {
-        this.uriComponentsBuilderFactory = uriComponentsBuilderFactory
-
         toCollectionViewModel =
             ToCollectionViewModel(
-                uriComponentsBuilderFactory
+                SpringRequestAwareResourceLinkService(uriComponentsBuilderFactory)
             )
 
         whenever(uriComponentsBuilderFactory.getInstance()).thenReturn(

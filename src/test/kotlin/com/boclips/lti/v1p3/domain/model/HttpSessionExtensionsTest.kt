@@ -1,7 +1,6 @@
-package com.boclips.lti.v1p3.application.model
+package com.boclips.lti.v1p3.domain.model
 
 import com.boclips.lti.v1p3.application.exception.MissingSessionAttributeException
-import com.boclips.lti.v1p3.domain.model.SessionKeys
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

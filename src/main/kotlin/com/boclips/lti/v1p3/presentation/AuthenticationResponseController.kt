@@ -1,6 +1,6 @@
 package com.boclips.lti.v1p3.presentation
 
-import com.boclips.lti.v1p3.application.command.HandlePlatformMessage
+import com.boclips.lti.v1p3.application.command.HandlePlatformRequest
 import com.boclips.lti.v1p3.application.command.PerformSecurityChecks
 import com.boclips.lti.v1p3.application.service.JwtService
 import mu.KLogging
@@ -15,7 +15,7 @@ import javax.validation.constraints.NotBlank
 @Controller
 class AuthenticationResponseController(
     private val jwtService: JwtService,
-    private val handlePlatformMessage: HandlePlatformMessage,
+    private val handlePlatformRequest: HandlePlatformRequest,
     private val performSecurityChecks: PerformSecurityChecks
 ) {
     companion object : KLogging()
@@ -35,7 +35,7 @@ class AuthenticationResponseController(
 
         logger.info { "LTI 1.3 Authentication Response from iss: '${decodedToken.issuerClaim}' for '${decodedToken.targetLinkUriClaim}' }" }
 
-        val resourceUrl = handlePlatformMessage(decodedToken, httpSession, state)
+        val resourceUrl = handlePlatformRequest(decodedToken, httpSession, state)
 
         return "redirect:$resourceUrl"
     }

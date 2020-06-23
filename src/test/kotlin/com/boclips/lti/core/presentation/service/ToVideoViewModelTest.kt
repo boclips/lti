@@ -1,6 +1,7 @@
 package com.boclips.lti.core.presentation.service
 
-import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
+import com.boclips.lti.core.infrastructure.service.SpringRequestAwareResourceLinkService
+import com.boclips.lti.core.infrastructure.service.UriComponentsBuilderFactory
 import com.boclips.lti.core.presentation.service.ToVideoViewModel.Companion.mobileDescriptionLength
 import com.boclips.lti.core.presentation.service.ToVideoViewModel.Companion.shortDescriptionLength
 import com.boclips.lti.testsupport.factories.VideoFactory
@@ -111,7 +112,7 @@ class ToVideoViewModelTest {
         this.uriComponentsBuilderFactory = uriComponentsBuilderFactory
         toVideoViewModel =
             ToVideoViewModel(
-                uriComponentsBuilderFactory,
+                SpringRequestAwareResourceLinkService(uriComponentsBuilderFactory),
                 FormatDuration()
             )
     }

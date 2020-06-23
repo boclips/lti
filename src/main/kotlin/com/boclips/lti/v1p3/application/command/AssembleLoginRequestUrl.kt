@@ -1,7 +1,7 @@
 package com.boclips.lti.v1p3.application.command
 
-import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
-import com.boclips.lti.v1p3.application.model.mapStateToTargetLinkUri
+import com.boclips.lti.core.domain.service.ResourceLinkService
+import com.boclips.lti.v1p3.domain.model.mapStateToTargetLinkUri
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
 import org.springframework.web.util.UriComponentsBuilder
 import java.net.URL
@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession
 
 class AssembleLoginRequestUrl(
     private val platformRepository: PlatformRepository,
-    private val uriComponentsBuilderFactory: UriComponentsBuilderFactory
+    private val resourceLinkService: ResourceLinkService
 ) {
     operator fun invoke(
         issuer: String,
@@ -28,13 +28,7 @@ class AssembleLoginRequestUrl(
             .queryParam("scope", "openid")
             .queryParam("response_type", "id_token")
             .queryParam("client_id", platform.clientId)
-            .queryParam(
-                "redirect_uri",
-                uriComponentsBuilderFactory.getInstance()
-                    .replacePath("/v1p3/authentication-response")
-                    .replaceQuery(null)
-                    .toUriString()
-            )
+            .queryParam("redirect_uri", resourceLinkService.getOnePointThreeAuthResponseLink().toString())
             .queryParam("login_hint", loginHint)
             .also {
                 if (!ltiMessageHint.isNullOrBlank()) it.queryParam("lti_message_hint", ltiMessageHint)

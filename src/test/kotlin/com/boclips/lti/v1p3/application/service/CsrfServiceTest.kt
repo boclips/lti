@@ -1,6 +1,6 @@
 package com.boclips.lti.v1p3.application.service
 
-import com.boclips.lti.v1p3.application.model.mapStateToTargetLinkUri
+import com.boclips.lti.v1p3.domain.model.mapStateToTargetLinkUri
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.mock.web.MockHttpSession

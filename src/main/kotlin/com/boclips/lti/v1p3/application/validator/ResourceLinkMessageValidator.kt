@@ -2,7 +2,7 @@ package com.boclips.lti.v1p3.application.validator
 
 import com.boclips.lti.v1p3.application.exception.LtiMessageClaimValidationException
 import com.boclips.lti.v1p3.application.model.DecodedJwtToken
-import com.boclips.lti.v1p3.application.model.getTargetLinkUri
+import com.boclips.lti.v1p3.domain.model.getTargetLinkUri
 import com.boclips.lti.v1p3.domain.exception.TargetLinkUriMismatchException
 import java.net.URL
 import javax.servlet.http.HttpSession

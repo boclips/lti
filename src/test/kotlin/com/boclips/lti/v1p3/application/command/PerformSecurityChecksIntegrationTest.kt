@@ -8,7 +8,7 @@ import com.boclips.lti.v1p3.application.exception.InvalidJwtTokenSignatureExcept
 import com.boclips.lti.v1p3.application.exception.JwtClaimValidationException
 import com.boclips.lti.v1p3.application.exception.NonceReusedException
 import com.boclips.lti.v1p3.application.exception.StatesDoNotMatchException
-import com.boclips.lti.v1p3.application.model.mapStateToTargetLinkUri
+import com.boclips.lti.v1p3.domain.model.mapStateToTargetLinkUri
 import com.boclips.lti.v1p3.application.service.JwtService
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat

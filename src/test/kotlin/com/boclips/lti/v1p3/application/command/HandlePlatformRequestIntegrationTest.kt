@@ -8,14 +8,14 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.mock.web.MockHttpSession
 
-class HandlePlatformMessageIntegrationTest : AbstractSpringIntegrationTest() {
+class HandlePlatformRequestIntegrationTest : AbstractSpringIntegrationTest() {
     @Autowired
-    private lateinit var handlePlatformMessage: HandlePlatformMessage
+    private lateinit var handlePlatformRequest: HandlePlatformRequest
 
     @Test
     fun `throws an exception when the message is not of a supported type`() {
         assertThrows<UnsupportedMessageTypeException> {
-            handlePlatformMessage(
+            handlePlatformRequest(
                 idToken = DecodedJwtTokenFactory.sample(
                     messageTypeClaim = "this won't work"
                 ),
@@ -28,7 +28,7 @@ class HandlePlatformMessageIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
     fun `throws an exception when the message type is null`() {
         assertThrows<UnsupportedMessageTypeException> {
-            handlePlatformMessage(
+            handlePlatformRequest(
                 idToken = DecodedJwtTokenFactory.sample(
                     messageTypeClaim = null
                 ),

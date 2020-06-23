@@ -1,19 +1,15 @@
 package com.boclips.lti.core.presentation.service
 
-import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
 import com.boclips.lti.core.domain.model.Collection
 import com.boclips.lti.core.domain.model.Video
+import com.boclips.lti.core.domain.service.ResourceLinkService
 import com.boclips.lti.core.presentation.model.CollectionViewModel
 
-class ToCollectionViewModel(private val uriComponentsBuilderFactory: UriComponentsBuilderFactory) {
+class ToCollectionViewModel(private val resourceLinkService: ResourceLinkService) {
     operator fun invoke(collection: Collection): CollectionViewModel {
         return CollectionViewModel(
             collection.title,
-            uriComponentsBuilderFactory.getInstance()
-                .replacePath(
-                    "/collections/${collection.collectionId.uri.toString().substringAfterLast("/")}"
-                )
-                .toUriString(),
+            resourceLinkService.getCollectionLink(collection).toString(),
             getVideosCountLabel(collection.videos),
             getPreviewThumbnails(collection.videos)
         )

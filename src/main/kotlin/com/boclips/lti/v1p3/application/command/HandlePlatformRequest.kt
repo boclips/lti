@@ -4,10 +4,12 @@ import com.boclips.lti.v1p3.application.converter.MessageConverter
 import com.boclips.lti.v1p3.application.model.DecodedJwtToken
 import com.boclips.lti.v1p3.application.validator.ResourceLinkMessageValidator
 import com.boclips.lti.v1p3.domain.exception.UnsupportedMessageTypeException
+import com.boclips.lti.v1p3.domain.service.HandleDeepLinkingMessage
+import com.boclips.lti.v1p3.domain.service.HandleResourceLinkMessage
 import java.net.URL
 import javax.servlet.http.HttpSession
 
-class HandlePlatformMessage(
+class HandlePlatformRequest(
     private val handleResourceLinkMessage: HandleResourceLinkMessage,
     private val handleDeepLinkingMessage: HandleDeepLinkingMessage
 ) {

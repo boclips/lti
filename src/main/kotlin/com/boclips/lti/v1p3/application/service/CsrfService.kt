@@ -1,6 +1,6 @@
 package com.boclips.lti.v1p3.application.service
 
-import com.boclips.lti.v1p3.application.model.containsMappingForState
+import com.boclips.lti.v1p3.domain.model.containsMappingForState
 import javax.servlet.http.HttpSession
 
 class CsrfService {

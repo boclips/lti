@@ -1,4 +1,4 @@
-package com.boclips.lti.core.application.service
+package com.boclips.lti.core.infrastructure.service
 
 import org.springframework.http.server.ServletServerHttpRequest
 import org.springframework.stereotype.Service

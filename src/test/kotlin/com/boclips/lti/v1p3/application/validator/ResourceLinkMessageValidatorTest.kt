@@ -2,7 +2,7 @@ package com.boclips.lti.v1p3.application.validator
 
 import com.boclips.lti.testsupport.factories.DecodedJwtTokenFactory
 import com.boclips.lti.v1p3.application.exception.LtiMessageClaimValidationException
-import com.boclips.lti.v1p3.application.model.mapStateToTargetLinkUri
+import com.boclips.lti.v1p3.domain.model.mapStateToTargetLinkUri
 import com.boclips.lti.v1p3.domain.exception.TargetLinkUriMismatchException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow

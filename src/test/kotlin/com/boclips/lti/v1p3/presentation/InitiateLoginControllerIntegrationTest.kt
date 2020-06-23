@@ -2,7 +2,7 @@ package com.boclips.lti.v1p3.presentation
 
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
-import com.boclips.lti.v1p3.application.model.getTargetLinkUri
+import com.boclips.lti.v1p3.domain.model.getTargetLinkUri
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test

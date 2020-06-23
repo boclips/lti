@@ -1,12 +1,12 @@
 package com.boclips.lti.core.presentation.service
 
-import com.boclips.lti.core.application.service.UriComponentsBuilderFactory
 import com.boclips.lti.core.domain.model.Video
+import com.boclips.lti.core.domain.service.ResourceLinkService
 import com.boclips.lti.core.presentation.model.VideoViewModel
 import mu.KLogging
 
 class ToVideoViewModel(
-    private val uriComponentsBuilderFactory: UriComponentsBuilderFactory,
+    private val resourceLinkService: ResourceLinkService,
     private val formatDuration: FormatDuration
 ) {
     companion object : KLogging() {
@@ -15,15 +15,10 @@ class ToVideoViewModel(
     }
 
     operator fun invoke(video: Video): VideoViewModel {
-        val uriComponentsBuilder = uriComponentsBuilderFactory.getInstance()
         return VideoViewModel(
-            videoPageUrl = uriComponentsBuilder
-                .replacePath("/videos/${video.videoId.value}")
-                .toUriString(),
+            videoPageUrl = resourceLinkService.getVideoLink(video).toString(),
             playbackUrl = video.videoId.uri.toString(),
-            playerAuthUrl = uriComponentsBuilder
-                .replacePath("/auth/token")
-                .toUriString(),
+            playerAuthUrl = resourceLinkService.getAccessTokenLink().toString(),
             title = video.title,
             description = video.description ?: "",
             shortDescription = trimDescription(

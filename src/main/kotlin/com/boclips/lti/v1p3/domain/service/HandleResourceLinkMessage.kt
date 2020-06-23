@@ -1,6 +1,6 @@
-package com.boclips.lti.v1p3.application.command
+package com.boclips.lti.v1p3.domain.service
 
-import com.boclips.lti.v1p3.application.model.setIntegrationId
+import com.boclips.lti.v1p3.domain.model.setIntegrationId
 import com.boclips.lti.v1p3.domain.model.ResourceLinkMessage
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
 import java.net.URL

@@ -1,7 +1,6 @@
-package com.boclips.lti.v1p3.application.model
+package com.boclips.lti.v1p3.domain.model
 
 import com.boclips.lti.v1p3.application.exception.MissingSessionAttributeException
-import com.boclips.lti.v1p3.domain.model.SessionKeys
 import javax.servlet.http.HttpSession
 
 fun HttpSession.mapStateToTargetLinkUri(state: String, targetLinkUri: String) {
