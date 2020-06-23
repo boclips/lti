@@ -17,6 +17,7 @@ class WebSecurityContext : HttpSecurityConfigurer {
 
             // Infrastructure
             .antMatchers(HttpMethod.GET, "/actuator/health").permitAll()
+            .antMatchers(HttpMethod.GET, "/actuator/prometheus").permitAll()
 
             // Assets
             .antMatchers(HttpMethod.GET, "/styles/*.css").permitAll()
