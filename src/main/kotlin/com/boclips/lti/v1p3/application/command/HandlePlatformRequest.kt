@@ -1,34 +1,18 @@
 package com.boclips.lti.v1p3.application.command
 
-import com.boclips.lti.v1p3.application.converter.MessageConverter
 import com.boclips.lti.v1p3.application.model.DecodedJwtToken
-import com.boclips.lti.v1p3.application.validator.ResourceLinkMessageValidator
 import com.boclips.lti.v1p3.domain.exception.UnsupportedMessageTypeException
-import com.boclips.lti.v1p3.domain.service.HandleDeepLinkingMessage
-import com.boclips.lti.v1p3.domain.service.HandleResourceLinkMessage
 import java.net.URL
 import javax.servlet.http.HttpSession
 
 class HandlePlatformRequest(
-    private val handleResourceLinkMessage: HandleResourceLinkMessage,
-    private val handleDeepLinkingMessage: HandleDeepLinkingMessage
+    private val handleResourceLinkRequest: HandleResourceLinkRequest,
+    private val handleDeepLinkingRequest: HandleDeepLinkingRequest
 ) {
     operator fun invoke(idToken: DecodedJwtToken, session: HttpSession, state: String): URL {
         return when (idToken.messageTypeClaim) {
-            "LtiResourceLinkRequest" -> ResourceLinkMessageValidator
-                .assertIsValid(token = idToken, state = state, session = session)
-                .let {
-                    handleResourceLinkMessage(
-                        message = MessageConverter.toResourceLinkMessage(
-                            idToken
-                        ),
-                        session = session
-                    )
-                }
-            "LtiDeepLinkingRequest" -> handleDeepLinkingMessage(
-                message = MessageConverter.toDeepLinkingMessage(idToken),
-                session = session
-            )
+            "LtiResourceLinkRequest" -> handleResourceLinkRequest(idToken, session, state)
+            "LtiDeepLinkingRequest" -> handleDeepLinkingRequest(idToken, session)
             else -> throw UnsupportedMessageTypeException(idToken.messageTypeClaim ?: "<null>")
         }
     }

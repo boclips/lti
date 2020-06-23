@@ -2,7 +2,9 @@ package com.boclips.lti.v1p3.configuration.application
 
 import com.boclips.lti.core.domain.service.ResourceLinkService
 import com.boclips.lti.v1p3.application.command.AssembleLoginRequestUrl
+import com.boclips.lti.v1p3.application.command.HandleDeepLinkingRequest
 import com.boclips.lti.v1p3.application.command.HandlePlatformRequest
+import com.boclips.lti.v1p3.application.command.HandleResourceLinkRequest
 import com.boclips.lti.v1p3.application.command.PerformSecurityChecks
 import com.boclips.lti.v1p3.application.service.CsrfService
 import com.boclips.lti.v1p3.application.service.JwtService
@@ -35,26 +37,20 @@ class ApplicationContext {
     ) = PerformSecurityChecks(csrfService, jwtService, nonceService, idTokenValidator)
 
     @Bean
-    fun handlePlatformMessage(
-        handleResourceLinkMessage: HandleResourceLinkMessage,
-        handleDeepLinkingMessage: HandleDeepLinkingMessage
+    fun handlePlatformRequest(
+        handleResourceLinkRequest: HandleResourceLinkRequest,
+        handleDeepLinkingRequest: HandleDeepLinkingRequest
     ): HandlePlatformRequest {
-        return HandlePlatformRequest(handleResourceLinkMessage, handleDeepLinkingMessage)
+        return HandlePlatformRequest(handleResourceLinkRequest, handleDeepLinkingRequest)
     }
 
     @Bean
-    fun handleResourceLinkMessage(platformRepository: PlatformRepository) =
-        HandleResourceLinkMessage(platformRepository)
+    fun handleResourceLinkRequest(handleResourceLinkMessage: HandleResourceLinkMessage) =
+        HandleResourceLinkRequest(handleResourceLinkMessage)
 
     @Bean
-    fun handleDeepLinkingMessage(
-        platformRepository: PlatformRepository,
-        resourceLinkService: ResourceLinkService
-    ) =
-        HandleDeepLinkingMessage(
-            platformRepository,
-            resourceLinkService
-        )
+    fun handleDeepLinkingRequest(handleDeepLinkingMessage: HandleDeepLinkingMessage) =
+        HandleDeepLinkingRequest(handleDeepLinkingMessage)
 
     @Bean
     fun idTokenValidator(
