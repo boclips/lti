@@ -14,12 +14,12 @@
   "license": "ISC",
   "dependencies": {
     "@ant-design/icons": "4.1.0",
-    "@bit/boclips.boclips-ui.components.header-with-logo": "^1.0.9",
-    "@bit/boclips.boclips-ui.components.search-bar": "^1.0.2",
-    "@bit/boclips.boclips-ui.components.video-card": "^1.0.43",
-    "@bit/boclips.boclips-ui.types.age-range": "^1.0.8",
-    "@bit/boclips.boclips-ui.types.link": "^1.0.11",
-    "@bit/boclips.boclips-ui.types.video": "^1.0.20",
+    "@bit/boclips.boclips-ui.components.header-with-logo": "^1.0.11",
+    "@bit/boclips.boclips-ui.components.search-bar": "^1.0.4",
+    "@bit/boclips.boclips-ui.components.video-card": "^1.0.47",
+    "@bit/boclips.boclips-ui.types.age-range": "^1.0.10",
+    "@bit/boclips.boclips-ui.types.link": "^1.0.13",
+    "@bit/boclips.boclips-ui.types.video": "^1.0.22",
     "@reduxjs/toolkit": "1.3.6",
     "@testing-library/jest-dom": "5.7.0",
     "@testing-library/react": "10.0.4",
@@ -85,7 +85,7 @@
   },
   "bit": {
     "env": {
-      "compiler": "boclips.compilers/compiler@2.0.4"
+      "compiler": "boclips.compilers/compiler"
     },
     "componentsDefaultDirectory": "src/bits/{name}",
     "packageManager": "npm"

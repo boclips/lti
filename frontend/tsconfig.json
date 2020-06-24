@@ -9,6 +9,7 @@
     "noUnusedParameters": true,
     "module": "esnext",
     "moduleResolution": "node",
+    "noImplicitAny": false,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "allowJs": true,
