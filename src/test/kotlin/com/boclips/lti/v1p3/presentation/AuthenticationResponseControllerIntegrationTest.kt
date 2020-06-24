@@ -151,11 +151,10 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
 
             whenever(jwtService.isSignatureValid(jwtToken)).thenReturn(true)
             whenever(jwtService.decode(jwtToken)).thenReturn(
-                DecodedJwtTokenFactory.sample(
+                DecodedJwtTokenFactory.sampleDeepLinkingToken(
                     issuerClaim = issuer,
                     audienceClaim = listOf(clientId),
                     nonceClaim = nonce,
-                    messageTypeClaim = "LtiDeepLinkingRequest",
                     deepLinkingSettingsClaim = DecodedJwtTokenFactory.sampleDeepLinkingSettingsClaim(deepLinkReturnUrl = "https://platform.com/return")
                 )
             )
@@ -183,6 +182,41 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
                     assertThat(location).isEqualTo("http://localhost/search-and-embed")
                     assertThat(result.request.session?.getAttribute(CoreSessionKeys.integrationId)).isEqualTo(issuer)
                 }
+        }
+
+        @Test
+        fun `returns a bad request when invalid deep linking claims are sent over`() {
+            val issuer = "https://platform.com/for-learning"
+            val nonce = "super-random-nonce"
+            val clientId = "test-client-id"
+
+            whenever(jwtService.isSignatureValid(jwtToken)).thenReturn(true)
+            whenever(jwtService.decode(jwtToken)).thenReturn(
+                DecodedJwtTokenFactory.sampleDeepLinkingToken(
+                    issuerClaim = issuer,
+                    audienceClaim = listOf(clientId),
+                    nonceClaim = nonce,
+                    deepLinkingSettingsClaim = null
+                )
+            )
+
+            mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer, clientId = clientId))
+
+            val state = UUID.randomUUID().toString()
+            val session = LtiTestSessionFactory.unauthenticated(
+                sessionAttributes = mapOf(
+                    SessionKeys.statesToTargetLinkUris to mapOf(state to "deep linking request")
+                )
+            )
+
+            mvc.perform(
+                post("/v1p3/authentication-response")
+                    .session(session as MockHttpSession)
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .param("state", state)
+                    .param("id_token", jwtToken)
+            )
+                .andExpect(status().isBadRequest)
         }
     }
 

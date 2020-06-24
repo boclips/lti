@@ -9,14 +9,14 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.springframework.mock.web.MockHttpSession
 
-class ResourceLinkMessageValidatorTest {
+class ResourceLinkRequestValidatorTest {
     @Test
     fun `does not throw when token contains all required claims`() {
         val validToken = DecodedJwtTokenFactory.sample(targetLinkUriClaim = "https://tool.com/resource/1")
         session.mapStateToTargetLinkUri(state, validToken.targetLinkUriClaim!!)
 
         assertDoesNotThrow {
-            ResourceLinkMessageValidator.assertIsValid(
+            ResourceLinkRequestValidator.assertIsValid(
                 state = state,
                 token = validToken,
                 session = session
@@ -33,7 +33,7 @@ class ResourceLinkMessageValidatorTest {
         session.mapStateToTargetLinkUri(state, token.targetLinkUriClaim!!)
 
         assertThrows<LtiMessageClaimValidationException> {
-            ResourceLinkMessageValidator.assertIsValid(
+            ResourceLinkRequestValidator.assertIsValid(
                 state = state,
                 token = token,
                 session = session
@@ -48,7 +48,7 @@ class ResourceLinkMessageValidatorTest {
         session.mapStateToTargetLinkUri(state, token.targetLinkUriClaim!!)
 
         assertThrows<LtiMessageClaimValidationException> {
-            ResourceLinkMessageValidator.assertIsValid(
+            ResourceLinkRequestValidator.assertIsValid(
                 state = state,
                 token = token,
                 session = session
@@ -63,7 +63,7 @@ class ResourceLinkMessageValidatorTest {
         session.mapStateToTargetLinkUri(state, token.targetLinkUriClaim!!)
 
         assertThrows<LtiMessageClaimValidationException> {
-            ResourceLinkMessageValidator.assertIsValid(
+            ResourceLinkRequestValidator.assertIsValid(
                 state = state,
                 token = token,
                 session = session
@@ -76,7 +76,7 @@ class ResourceLinkMessageValidatorTest {
         val token = DecodedJwtTokenFactory.sample(targetLinkUriClaim = null)
 
         assertThrows<LtiMessageClaimValidationException> {
-            ResourceLinkMessageValidator.assertIsValid(
+            ResourceLinkRequestValidator.assertIsValid(
                 state = state,
                 token = token,
                 session = session
@@ -90,7 +90,7 @@ class ResourceLinkMessageValidatorTest {
         session.mapStateToTargetLinkUri(state, token.targetLinkUriClaim!!)
 
         assertThrows<LtiMessageClaimValidationException> {
-            ResourceLinkMessageValidator.assertIsValid(
+            ResourceLinkRequestValidator.assertIsValid(
                 state = state,
                 token = token,
                 session = session
@@ -105,7 +105,7 @@ class ResourceLinkMessageValidatorTest {
         session.mapStateToTargetLinkUri(state, token.targetLinkUriClaim!!)
 
         assertThrows<LtiMessageClaimValidationException> {
-            ResourceLinkMessageValidator.assertIsValid(
+            ResourceLinkRequestValidator.assertIsValid(
                 state = state,
                 token = token,
                 session = session
@@ -123,7 +123,7 @@ class ResourceLinkMessageValidatorTest {
         session.mapStateToTargetLinkUri(state, token.targetLinkUriClaim!!)
 
         assertThrows<LtiMessageClaimValidationException> {
-            ResourceLinkMessageValidator.assertIsValid(
+            ResourceLinkRequestValidator.assertIsValid(
                 state = state,
                 token = token,
                 session = session
@@ -141,7 +141,7 @@ class ResourceLinkMessageValidatorTest {
         session.mapStateToTargetLinkUri(state, token.targetLinkUriClaim!!)
 
         assertThrows<LtiMessageClaimValidationException> {
-            ResourceLinkMessageValidator.assertIsValid(
+            ResourceLinkRequestValidator.assertIsValid(
                 state = state,
                 token = token,
                 session = session
@@ -159,7 +159,7 @@ class ResourceLinkMessageValidatorTest {
         session.mapStateToTargetLinkUri(state, "https://tool.com/reality")
 
         assertThrows<TargetLinkUriMismatchException> {
-            ResourceLinkMessageValidator.assertIsValid(
+            ResourceLinkRequestValidator.assertIsValid(
                 state = state,
                 token = token,
                 session = session

@@ -58,7 +58,9 @@ class Auth0JwtService(
                 messageTypeClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/message_type").asString(),
                 ltiVersionClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/version").asString(),
                 resourceLinkClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/resource_link").asMap()
-                    ?.let { claim -> ResourceLinkClaim(claim["id"].toString()) }
+                    ?.let { claim -> ResourceLinkClaim(claim["id"].toString()) },
+                // TODO Deserialize deep linking settings properly
+                deepLinkingSettingsClaim = null
             )
         }
 }

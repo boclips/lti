@@ -8,6 +8,7 @@ import com.boclips.lti.core.infrastructure.service.CollectionsClientFactory
 import com.boclips.lti.core.infrastructure.service.VideosClientFactory
 import com.boclips.lti.core.presentation.service.ToVideoViewModel
 import com.boclips.lti.testsupport.configuration.FakeClientsConfig
+import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
 import com.boclips.lti.v1p1.infrastructure.repository.LtiOnePointOneConsumerRepository
 import com.boclips.lti.v1p3.infrastructure.repository.MongoNonceDocumentRepository
 import com.boclips.lti.v1p3.infrastructure.repository.MongoPlatformDocumentRepository
@@ -191,5 +192,9 @@ abstract class AbstractSpringIntegrationTest {
         return UriComponentsBuilder.fromUriString(response.getHeader("Location")!!).build()
             .queryParams["state"]!!
             .first()
+    }
+
+    protected fun insertPlatform(issuer: String) {
+        mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer))
     }
 }

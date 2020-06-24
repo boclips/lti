@@ -31,11 +31,34 @@ object DecodedJwtTokenFactory {
         messageTypeClaim = messageTypeClaim,
         ltiVersionClaim = ltiVersionClaim,
         resourceLinkClaim = resourceLinkClaim,
-        nonceClaim = nonceClaim
+        nonceClaim = nonceClaim,
+        deepLinkingSettingsClaim = deepLinkingSettingsClaim
+    )
+
+    fun sampleDeepLinkingToken(
+        issuerClaim: String? = "https://lms.com",
+        audienceClaim: List<String>? = listOf("boclips"),
+        nonceClaim: String? = UUID.randomUUID().toString(),
+        deepLinkingSettingsClaim: DeepLinkingSettingsClaim? = sampleDeepLinkingSettingsClaim()
+    ) = sample(
+        issuerClaim = issuerClaim,
+        audienceClaim = audienceClaim,
+        nonceClaim = nonceClaim,
+        messageTypeClaim = "LtiDeepLinkingRequest",
+        deepLinkingSettingsClaim = deepLinkingSettingsClaim
     )
 
     fun sampleResourceLinkClaim(id: String? = UUID.randomUUID().toString()) = ResourceLinkClaim(id)
 
-    fun sampleDeepLinkingSettingsClaim(deepLinkReturnUrl: String? = "https://platform.com/deep-link-return") =
-        DeepLinkingSettingsClaim(deepLinkReturnUrl)
+    fun sampleDeepLinkingSettingsClaim(
+        deepLinkReturnUrl: String? = "https://platform.com/deep-link-return",
+        acceptTypes: List<String>? = listOf("ltiResourceLink"),
+        acceptPresentationDocumentTargets: List<String>? = emptyList(),
+        data: String? = "an opaque value that has to be sent back to the caller"
+    ) = DeepLinkingSettingsClaim(
+        deepLinkReturnUrl = deepLinkReturnUrl,
+        acceptTypes = acceptTypes,
+        acceptPresentationDocumentTargets = acceptPresentationDocumentTargets,
+        data = data
+    )
 }
