@@ -164,7 +164,9 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
             val state = UUID.randomUUID().toString()
             val session = LtiTestSessionFactory.unauthenticated(
                 sessionAttributes = mapOf(
-                    SessionKeys.statesToTargetLinkUris to mapOf(state to "deep linking request")
+                    SessionKeys.statesToTargetLinkUris to mapOf(
+                        state to resourceLinkService.getDeepLinkingLink().toString()
+                    )
                 )
             )
 

@@ -1,6 +1,5 @@
 package com.boclips.lti.v1p3.domain.service
 
-import com.boclips.lti.core.domain.service.ResourceLinkService
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.v1p3.domain.model.DeepLinkingMessage
 import com.boclips.lti.v1p3.domain.model.getIntegrationId
@@ -39,7 +38,4 @@ class HandleDeepLinkingMessageIntegrationTest : AbstractSpringIntegrationTest() 
 
     @Autowired
     private lateinit var handleDeepLinkingMessage: HandleDeepLinkingMessage
-
-    @Autowired
-    private lateinit var resourceLinkService: ResourceLinkService
 }

@@ -9,6 +9,7 @@ import com.boclips.lti.v1p3.application.command.PerformSecurityChecks
 import com.boclips.lti.v1p3.application.service.CsrfService
 import com.boclips.lti.v1p3.application.service.JwtService
 import com.boclips.lti.v1p3.application.service.NonceService
+import com.boclips.lti.v1p3.application.validator.DeepLinkingRequestValidator
 import com.boclips.lti.v1p3.application.validator.IdTokenValidator
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
 import com.boclips.lti.v1p3.domain.service.HandleDeepLinkingMessage
@@ -49,12 +50,18 @@ class ApplicationContext {
         HandleResourceLinkRequest(handleResourceLinkMessage)
 
     @Bean
-    fun handleDeepLinkingRequest(handleDeepLinkingMessage: HandleDeepLinkingMessage) =
-        HandleDeepLinkingRequest(handleDeepLinkingMessage)
+    fun handleDeepLinkingRequest(
+        deepLinkingRequestValidator: DeepLinkingRequestValidator,
+        handleDeepLinkingMessage: HandleDeepLinkingMessage
+    ) = HandleDeepLinkingRequest(deepLinkingRequestValidator, handleDeepLinkingMessage)
 
     @Bean
     fun idTokenValidator(
         platformRepository: PlatformRepository,
         @Value("\${boclips.lti.v1p3.maxTokenAgeInSeconds}") maxTokenAgeInSeconds: String
     ) = IdTokenValidator(platformRepository = platformRepository, maxTokenAgeInSeconds = maxTokenAgeInSeconds.toLong())
+
+    @Bean
+    fun deepLinkingRequestValidator(resourceLinkService: ResourceLinkService) =
+        DeepLinkingRequestValidator(resourceLinkService)
 }

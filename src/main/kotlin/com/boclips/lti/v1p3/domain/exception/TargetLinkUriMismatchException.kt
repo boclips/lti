@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus
 class TargetLinkUriMismatchException : BoclipsApiException(
     ExceptionDetails(
         error = "Unauthorised",
-        message = "Requested and expected resource does not match",
+        message = "Requested resource does not match target_link_uri value requested on login",
         status = HttpStatus.UNAUTHORIZED
     )
 )

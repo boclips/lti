@@ -3,6 +3,7 @@ package com.boclips.lti.testsupport
 import com.boclips.lti.core.application.service.ApiAccessTokenProviderTest
 import com.boclips.lti.core.domain.repository.CollectionRepository
 import com.boclips.lti.core.domain.repository.VideoRepository
+import com.boclips.lti.core.domain.service.ResourceLinkService
 import com.boclips.lti.core.infrastructure.repository.MongoIntegrationDocumentRepository
 import com.boclips.lti.core.infrastructure.service.CollectionsClientFactory
 import com.boclips.lti.core.infrastructure.service.VideosClientFactory
@@ -70,6 +71,9 @@ abstract class AbstractSpringIntegrationTest {
 
     @Autowired
     protected lateinit var collectionRepository: CollectionRepository
+
+    @Autowired
+    protected lateinit var resourceLinkService: ResourceLinkService
 
     @Autowired
     protected lateinit var mongoClient: MongoClient
