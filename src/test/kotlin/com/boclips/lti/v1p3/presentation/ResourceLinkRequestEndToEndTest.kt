@@ -55,7 +55,7 @@ class ResourceLinkRequestEndToEndTest : AbstractSpringIntegrationTest() {
         val session = loginInitResult.request.session
         val state = extractStateFromLocationHeader(loginInitResult.response)
 
-        val idToken = JwtTokenFactory.sample(
+        val idToken = JwtTokenFactory.sampleResourceLinkRequestJwt(
             issuer = issuer,
             audience = listOf(clientId),
             targetLinkUri = resource,
@@ -132,7 +132,7 @@ class ResourceLinkRequestEndToEndTest : AbstractSpringIntegrationTest() {
 
         val secondState = extractStateFromLocationHeader(secondResult.response)
 
-        val firstResourceToken = JwtTokenFactory.sample(
+        val firstResourceToken = JwtTokenFactory.sampleResourceLinkRequestJwt(
             issuer = issuer,
             audience = listOf(clientId),
             targetLinkUri = firstResource,
@@ -156,7 +156,7 @@ class ResourceLinkRequestEndToEndTest : AbstractSpringIntegrationTest() {
                 assertThat(location).isEqualTo(firstResource)
             }
 
-        val secondResourceToken = JwtTokenFactory.sample(
+        val secondResourceToken = JwtTokenFactory.sampleResourceLinkRequestJwt(
             issuer = issuer,
             audience = listOf(clientId),
             targetLinkUri = secondResource,

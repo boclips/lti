@@ -6,6 +6,7 @@ import com.boclips.lti.testsupport.factories.LtiTestSessionFactory
 import com.boclips.lti.testsupport.factories.NonceDocumentFactory
 import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
 import com.boclips.lti.v1p3.application.service.JwtService
+import com.boclips.lti.v1p3.domain.model.MessageTypes
 import com.boclips.lti.v1p3.domain.model.SessionKeys
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -44,7 +45,7 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
                     audienceClaim = listOf(clientId),
                     nonceClaim = nonce,
                     targetLinkUriClaim = resource,
-                    messageTypeClaim = "LtiResourceLinkRequest"
+                    messageTypeClaim = MessageTypes.ResourceLinkRequest
                 )
             )
 

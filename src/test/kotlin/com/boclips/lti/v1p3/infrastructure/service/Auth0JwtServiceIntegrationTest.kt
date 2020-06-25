@@ -33,7 +33,8 @@ class Auth0JwtServiceIntegrationTest : AbstractSpringIntegrationTest() {
     inner class SignatureVerification {
         @Test
         fun `throws an exception if the token is not signed using RS256`() {
-            val token = JwtTokenFactory.sample(signatureAlgorithm = Algorithm.HMAC256("super-secret"))
+            val token =
+                JwtTokenFactory.sampleResourceLinkRequestJwt(signatureAlgorithm = Algorithm.HMAC256("super-secret"))
 
             assertThrows<UnsupportedSigningAlgorithmException> { service.isSignatureValid(token) }
         }
@@ -52,7 +53,7 @@ class Auth0JwtServiceIntegrationTest : AbstractSpringIntegrationTest() {
                 )
             )
 
-            val token = JwtTokenFactory.sample(
+            val token = JwtTokenFactory.sampleResourceLinkRequestJwt(
                 issuer = issuer,
                 signatureAlgorithm = Algorithm.RSA256(tokenSigningSetup.keyPair.first, tokenSigningSetup.keyPair.second)
             )
@@ -76,7 +77,7 @@ class Auth0JwtServiceIntegrationTest : AbstractSpringIntegrationTest() {
             )
 
             val keyPair = KeyPairGenerator.getInstance("RSA").genKeyPair()
-            val token = JwtTokenFactory.sample(
+            val token = JwtTokenFactory.sampleResourceLinkRequestJwt(
                 issuer = issuer,
                 signatureAlgorithm = Algorithm.RSA256(keyPair.public as RSAPublicKey, keyPair.private as RSAPrivateKey)
             )
@@ -131,7 +132,7 @@ PwIDAQAB
 */
 
         @Test
-        fun `can decode an id_token JWT string with expected data`() {
+        fun `can decode an resource link id_token JWT string with expected data`() {
             /*
             Payload is:
 
@@ -168,6 +169,57 @@ PwIDAQAB
             assertThat(decodedToken.messageTypeClaim).isEqualTo("LtiResourceLinkRequest")
             assertThat(decodedToken.ltiVersionClaim).isEqualTo("1.3.0")
             assertThat(decodedToken.resourceLinkClaim?.id).isEqualTo("test-resource-link-id")
+        }
+
+        @Test
+        fun `can decode an deep linking id_token JWT string with expected data`() {
+            /*
+            Payload is:
+
+            {
+              "iss": "https://lms.com",
+              "aud": ["boclips"],
+              "azp": "boclips",
+              "iat": 1300819380,
+              "exp": 1300819399,
+              "nonce": "woogie-boogie",
+              "https://purl.imsglobal.org/spec/lti/claim/deployment_id": "test-deployment-id",
+              "https://purl.imsglobal.org/spec/lti/claim/message_type": "LtiDeepLinkingRequest",
+              "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0",
+              "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings": {
+                "deep_link_return_url": "https://lms.com/return-here",
+                "accept_types": ["ltiResourceLink", "link"],
+                "accept_presentation_document_targets": ["iframe", "window", "embed"],
+                "data": "opaque-value-to-be-passed-back-on-linking"
+              }
+            }
+
+            */
+            val encodedToken =
+                "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2xtcy5jb20iLCJhdWQiOlsiYm9jbGlwcyJdLCJhenAiOiJib2NsaXBzIiwiaWF0IjoxMzAwODE5MzgwLCJleHAiOjEzMDA4MTkzOTksIm5vbmNlIjoid29vZ2llLWJvb2dpZSIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL2RlcGxveW1lbnRfaWQiOiJ0ZXN0LWRlcGxveW1lbnQtaWQiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS9tZXNzYWdlX3R5cGUiOiJMdGlEZWVwTGlua2luZ1JlcXVlc3QiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS92ZXJzaW9uIjoiMS4zLjAiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS1kbC9jbGFpbS9kZWVwX2xpbmtpbmdfc2V0dGluZ3MiOnsiZGVlcF9saW5rX3JldHVybl91cmwiOiJodHRwczovL2xtcy5jb20vcmV0dXJuLWhlcmUiLCJhY2NlcHRfdHlwZXMiOlsibHRpUmVzb3VyY2VMaW5rIiwibGluayJdLCJhY2NlcHRfcHJlc2VudGF0aW9uX2RvY3VtZW50X3RhcmdldHMiOlsiaWZyYW1lIiwid2luZG93IiwiZW1iZWQiXSwiZGF0YSI6Im9wYXF1ZS12YWx1ZS10by1iZS1wYXNzZWQtYmFjay1vbi1saW5raW5nIn19.L96sdRhUrzegxnH_nmaPvWGokrP1YQ_lBlPwrd2AjR_g5VJJRQ0tVWKWarrgUoabN98pUxKO2ueJPgWU80sPX_8HLT5Ar15XYL2XMSWd8y4c0THldrNrrzEisuE5Iij6HKRSSoFtz50SjN3GBcFecaEAFLPzt9Xef9QySOSfuNqt4u0yV91m6Ucf_jaDnlJ7JIcc8kCyGpplaJdt-k2SrdmxaoLTIZzEVbAmIPSfYC0N4rWm5vp3Hi2aDsRQti8so6ImvkD88xyY11pIc4qjUM69aILnvlGTLeUW-09GxsKdh0_eIXncfbEedS7tnaxbuOE4DEINV9ywFdPOphLcRA"
+
+            val decodedToken = service.decode(encodedToken)
+
+            assertThat(decodedToken.issuerClaim).isEqualTo("https://lms.com")
+            assertThat(decodedToken.audienceClaim).isEqualTo(listOf("boclips"))
+            assertThat(decodedToken.authorizedPartyClaim).isEqualTo("boclips")
+            assertThat(decodedToken.issuedAtClaim).isEqualTo(1300819380L)
+            assertThat(decodedToken.expClaim).isEqualTo(1300819399L)
+            assertThat(decodedToken.nonceClaim).isEqualTo("woogie-boogie")
+            assertThat(decodedToken.deploymentIdClaim).isEqualTo("test-deployment-id")
+            assertThat(decodedToken.messageTypeClaim).isEqualTo("LtiDeepLinkingRequest")
+            assertThat(decodedToken.ltiVersionClaim).isEqualTo("1.3.0")
+            assertThat(decodedToken.deepLinkingSettingsClaim?.deepLinkReturnUrl).isEqualTo("https://lms.com/return-here")
+            assertThat(decodedToken.deepLinkingSettingsClaim?.acceptTypes).containsExactlyInAnyOrder(
+                "ltiResourceLink",
+                "link"
+            )
+            assertThat(decodedToken.deepLinkingSettingsClaim?.acceptPresentationDocumentTargets).containsExactlyInAnyOrder(
+                "iframe",
+                "window",
+                "embed"
+            )
+            assertThat(decodedToken.deepLinkingSettingsClaim?.data).isEqualTo("opaque-value-to-be-passed-back-on-linking")
         }
 
         @Test
@@ -214,6 +266,7 @@ PwIDAQAB
             assertThat(decodedToken.ltiVersionClaim).isNull()
             assertThat(decodedToken.resourceLinkClaim).isNull()
             assertThat(decodedToken.nonceClaim).isNull()
+            assertThat(decodedToken.deepLinkingSettingsClaim).isNull()
         }
     }
 }

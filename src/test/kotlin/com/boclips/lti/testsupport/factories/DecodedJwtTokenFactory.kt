@@ -3,6 +3,7 @@ package com.boclips.lti.testsupport.factories
 import com.boclips.lti.v1p3.application.model.DecodedJwtToken
 import com.boclips.lti.v1p3.application.model.DeepLinkingSettingsClaim
 import com.boclips.lti.v1p3.application.model.ResourceLinkClaim
+import com.boclips.lti.v1p3.domain.model.MessageTypes
 import java.time.Instant.now
 import java.util.UUID
 
@@ -16,7 +17,7 @@ object DecodedJwtTokenFactory {
         nonceClaim: String? = UUID.randomUUID().toString(),
         deploymentIdClaim: String? = UUID.randomUUID().toString(),
         targetLinkUriClaim: String? = null,
-        messageTypeClaim: String? = "LtiResourceLinkRequest",
+        messageTypeClaim: String? = MessageTypes.ResourceLinkRequest,
         ltiVersionClaim: String? = "1.3.0",
         resourceLinkClaim: ResourceLinkClaim? = sampleResourceLinkClaim(),
         deepLinkingSettingsClaim: DeepLinkingSettingsClaim? = null
@@ -44,7 +45,7 @@ object DecodedJwtTokenFactory {
         issuerClaim = issuerClaim,
         audienceClaim = audienceClaim,
         nonceClaim = nonceClaim,
-        messageTypeClaim = "LtiDeepLinkingRequest",
+        messageTypeClaim = MessageTypes.DeepLinkingRequest,
         deepLinkingSettingsClaim = deepLinkingSettingsClaim
     )
 

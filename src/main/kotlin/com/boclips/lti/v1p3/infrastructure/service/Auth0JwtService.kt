@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.SignatureVerificationException
 import com.boclips.lti.v1p3.application.exception.UnsupportedSigningAlgorithmException
 import com.boclips.lti.v1p3.application.model.DecodedJwtToken
+import com.boclips.lti.v1p3.application.model.DeepLinkingSettingsClaim
 import com.boclips.lti.v1p3.application.model.ResourceLinkClaim
 import com.boclips.lti.v1p3.application.service.JwtService
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
@@ -59,8 +60,16 @@ class Auth0JwtService(
                 ltiVersionClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/version").asString(),
                 resourceLinkClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/resource_link").asMap()
                     ?.let { claim -> ResourceLinkClaim(claim["id"].toString()) },
-                // TODO Deserialize deep linking settings properly
-                deepLinkingSettingsClaim = null
+                deepLinkingSettingsClaim = it.getClaim("https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings")
+                    .asMap()
+                    ?.let { claim ->
+                        DeepLinkingSettingsClaim(
+                            deepLinkReturnUrl = claim["deep_link_return_url"].toString(),
+                            acceptTypes = claim["accept_types"].toNullableListOfStrings(),
+                            acceptPresentationDocumentTargets = claim["accept_presentation_document_targets"].toNullableListOfStrings(),
+                            data = claim["data"].toString()
+                        )
+                    }
             )
         }
 }

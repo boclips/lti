@@ -2,6 +2,7 @@ package com.boclips.lti.v1p3.application.command
 
 import com.boclips.lti.v1p3.application.model.DecodedJwtToken
 import com.boclips.lti.v1p3.domain.exception.UnsupportedMessageTypeException
+import com.boclips.lti.v1p3.domain.model.MessageTypes
 import java.net.URL
 import javax.servlet.http.HttpSession
 
@@ -11,8 +12,8 @@ class HandlePlatformRequest(
 ) {
     operator fun invoke(idToken: DecodedJwtToken, session: HttpSession, state: String): URL {
         return when (idToken.messageTypeClaim) {
-            "LtiResourceLinkRequest" -> handleResourceLinkRequest(idToken, session, state)
-            "LtiDeepLinkingRequest" -> handleDeepLinkingRequest(idToken, session, state)
+            MessageTypes.ResourceLinkRequest -> handleResourceLinkRequest(idToken, session, state)
+            MessageTypes.DeepLinkingRequest -> handleDeepLinkingRequest(idToken, session, state)
             else -> throw UnsupportedMessageTypeException(idToken.messageTypeClaim ?: "<null>")
         }
     }
