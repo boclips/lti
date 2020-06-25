@@ -48,6 +48,9 @@ class WebSecurityContext : HttpSecurityConfigurer {
             .antMatchers(HttpMethod.GET, "/v1p3/initiate-login").permitAll()
             .antMatchers(HttpMethod.POST, "/v1p3/authentication-response").permitAll()
 
+            // LTI 1.3 Deep Linking Response endpoint
+            .antMatchers(HttpMethod.POST, "/v1p3/deep-linking-response").permitAll()
+
             // Dev support
             .antMatchers(HttpMethod.POST, "/dev-support/initialise-session").permitAll()
 
