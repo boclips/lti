@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Col, Layout, List, Row 
 } from 'antd';
@@ -20,8 +20,13 @@ import EmptySVG from '../../resources/images/empty.svg';
 const LtiView = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>();
+  const [searchPageNumber, setPageNumber] = useState<number>(0);
+
+  const [totalVideoElements, setTotalVideoElements] = useState<number>(0);
 
   const convertVideos = (videosResponse: Pageable<ClientVideo>) => {
+    setTotalVideoElements(videosResponse.pageSpec.totalElements);
     const convertedVideos = videosResponse.page.map((v) =>
       convertApiClientVideo(v),
     );
@@ -29,13 +34,20 @@ const LtiView = () => {
     setLoading(false);
   };
 
-  const onSearch = (query: string) => {
-    setLoading(true);
+  useEffect(() => {
     new ApiClient(AppConstants.API_BASE_URL).getClient().then((client) => {
       new VideoService(client)
-        .searchVideos({ query })
+        .searchVideos({ query: searchQuery, page: searchPageNumber, size: 10 })
         .then((videosResponse) => convertVideos(videosResponse));
     });
+  }, [searchQuery, searchPageNumber]);
+
+  const onSearch = (query?: string, page: number = 0) => {
+    if (query) {
+      setSearchQuery(query);
+      setPageNumber(page!!);
+    }
+    setLoading(true);
   };
 
   const EmptyList = () => (
@@ -52,24 +64,43 @@ const LtiView = () => {
     </div>
   );
 
+  const scrollToTop = () => {
+    window.scrollTo(0, 0);
+  };
+
   return (
-    <Layout>
+    <Layout className={s.layout}>
       <HeaderWithLogo>
         <SearchBar onSearch={onSearch} />
       </HeaderWithLogo>
       <Layout.Content>
-        <Row className={s.videoCardWrapper}>
-          <Col sm={{ span: 24 }} md={{ span: 24 }}>
+        <Row gutter={[16, 16]} className={s.videoCardWrapper}>
+          <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }}>
+            {videos.length > 0 && (
+              <section className={s.numberOfResults}>
+                <span>
+                  {`${
+                    totalVideoElements > 500 ? '500+' : totalVideoElements
+                  } result${videos.length > 1 ? 's' : ''} found:`}
+                </span>
+              </section>
+            )}
             <List
               itemLayout="vertical"
               size="large"
+              className={s.listWarpper}
               locale={{ emptyText: EmptyList() }}
               pagination={{
+                total: totalVideoElements,
                 pageSize: 10,
                 className: c(s.pagination, {
                   [s.paginationEmpty]: !videos.length,
                 }),
                 showSizeChanger: false,
+                onChange: (page) => {
+                  scrollToTop();
+                  onSearch(searchQuery, page - 1);
+                },
               }}
               dataSource={videos}
               loading={{
@@ -78,6 +109,7 @@ const LtiView = () => {
               }}
               renderItem={(video: Video) => (
                 <VideoCard
+                  hideBadges
                   key={video.id}
                   video={video}
                   loading={loading}

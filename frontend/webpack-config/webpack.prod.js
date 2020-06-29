@@ -44,11 +44,6 @@ module.exports = merge(common, {
       name: 'manifest',
     },
   },
-  performance: {
-    hints: 'error',
-    maxAssetSize: 6 * oneMegaByte,
-    maxEntrypointSize: 6 * oneMegaByte,
-  },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(srcPath, 'index.html'),

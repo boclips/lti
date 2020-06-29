@@ -14,6 +14,9 @@ module.exports = {
     filename: '[name]-[hash:20].js',
     publicPath: '/',
   },
+  performance :{
+      hints: process.env.NODE_ENV === 'production' ? "warning" : false
+  },
   // Allows ts(x) and js files to be imported without extension
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
