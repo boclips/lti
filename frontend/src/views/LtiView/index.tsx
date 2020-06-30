@@ -35,17 +35,23 @@ const LtiView = () => {
   };
 
   useEffect(() => {
-    new ApiClient(AppConstants.API_BASE_URL).getClient().then((client) => {
-      new VideoService(client)
-        .searchVideos({ query: searchQuery, page: searchPageNumber, size: 10 })
-        .then((videosResponse) => convertVideos(videosResponse));
-    });
+    if (searchQuery || searchPageNumber) {
+      new ApiClient(AppConstants.API_BASE_URL).getClient().then((client) => {
+        new VideoService(client)
+          .searchVideos({
+            query: searchQuery,
+            page: searchPageNumber,
+            size: 10,
+          })
+          .then((videosResponse) => convertVideos(videosResponse));
+      });
+    }
   }, [searchQuery, searchPageNumber]);
 
   const onSearch = (query?: string, page: number = 0) => {
     if (query) {
       setSearchQuery(query);
-      setPageNumber(page!!);
+      setPageNumber(page);
     }
     setLoading(true);
   };
@@ -71,10 +77,10 @@ const LtiView = () => {
   return (
     <Layout className={s.layout}>
       <HeaderWithLogo>
-        <SearchBar onSearch={onSearch} />
+        <SearchBar onSearch={onSearch} placeholder="Search for videos" />
       </HeaderWithLogo>
       <Layout.Content>
-        <Row gutter={[16, 16]} className={s.videoCardWrapper}>
+        <Row className={s.videoCardWrapper}>
           <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }}>
             {videos.length > 0 && (
               <section className={s.numberOfResults}>
@@ -91,6 +97,7 @@ const LtiView = () => {
               locale={{ emptyText: EmptyList() }}
               pagination={{
                 total: totalVideoElements,
+                current: searchPageNumber + 1,
                 pageSize: 10,
                 className: c(s.pagination, {
                   [s.paginationEmpty]: !videos.length,
