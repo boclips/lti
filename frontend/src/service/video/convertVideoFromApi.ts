@@ -12,8 +12,8 @@ function convertApiClientVideo(clientVideo: ClientVideo): Video {
   const convertedProperties: Partial<Video> = {
     thumbnailUrl: clientVideo.playback?.links?.thumbnail
       ? getEffectiveThumbnailUrl(
-          convertFromApiClientLink(clientVideo.playback.links.thumbnail),
-        )
+        convertFromApiClientLink(clientVideo.playback.links.thumbnail),
+      )
       : undefined,
     ageRange:
       clientAgeRange && new AgeRange(clientAgeRange.min, clientAgeRange.max),

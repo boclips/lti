@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Layout, List, Row } from 'antd';
+import {
+  Col, Layout, List, Row 
+} from 'antd';
 import { VideoCard } from '@bit/boclips.boclips-ui.components.video-card';
 import { Video } from '@bit/boclips.boclips-ui.types.video';
 import { Player } from 'boclips-player-react';
@@ -33,23 +35,17 @@ const LtiView = () => {
   };
 
   useEffect(() => {
-    if (searchQuery || searchPageNumber) {
-      new ApiClient(AppConstants.API_BASE_URL).getClient().then((client) => {
-        new VideoService(client)
-          .searchVideos({
-            query: searchQuery,
-            page: searchPageNumber,
-            size: 10,
-          })
-          .then((videosResponse) => convertVideos(videosResponse));
-      });
-    }
+    new ApiClient(AppConstants.API_BASE_URL).getClient().then((client) => {
+      new VideoService(client)
+        .searchVideos({ query: searchQuery, page: searchPageNumber, size: 10 })
+        .then((videosResponse) => convertVideos(videosResponse));
+    });
   }, [searchQuery, searchPageNumber]);
 
   const onSearch = (query?: string, page: number = 0) => {
     if (query) {
       setSearchQuery(query);
-      setPageNumber(page);
+      setPageNumber(page!!);
     }
     setLoading(true);
   };
@@ -75,10 +71,10 @@ const LtiView = () => {
   return (
     <Layout className={s.layout}>
       <HeaderWithLogo>
-        <SearchBar onSearch={onSearch} placeholder="Search for videos" />
+        <SearchBar onSearch={onSearch} />
       </HeaderWithLogo>
       <Layout.Content>
-        <Row className={s.videoCardWrapper}>
+        <Row gutter={[16, 16]} className={s.videoCardWrapper}>
           <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }}>
             {videos.length > 0 && (
               <section className={s.numberOfResults}>
@@ -92,10 +88,10 @@ const LtiView = () => {
             <List
               itemLayout="vertical"
               size="large"
+              className={s.listWarpper}
               locale={{ emptyText: EmptyList() }}
               pagination={{
                 total: totalVideoElements,
-                current: searchPageNumber + 1,
                 pageSize: 10,
                 className: c(s.pagination, {
                   [s.paginationEmpty]: !videos.length,

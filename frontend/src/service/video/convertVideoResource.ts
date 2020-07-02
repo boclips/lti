@@ -13,8 +13,8 @@ export function getEffectiveThumbnailUrl(thumbnailLink?: Link) {
 
   return thumbnailLink.isTemplated
     ? thumbnailLink.getTemplatedLink({
-        thumbnailWidth: DEFAULT_THUMBNAIL_WIDTH,
-      })
+      thumbnailWidth: DEFAULT_THUMBNAIL_WIDTH,
+    })
     : thumbnailLink.getOriginalLink();
 }
 
