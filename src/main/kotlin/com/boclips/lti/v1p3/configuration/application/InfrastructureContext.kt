@@ -21,8 +21,11 @@ class InfrastructureContext {
     }
 
     @Bean
-    fun jwtService(platformRepository: PlatformRepository, retrier: Auth0UrlJwkProviderRetrier): JwtService =
-        Auth0JwtService(platformRepository, retrier)
+    fun jwtService(
+        platformRepository: PlatformRepository,
+        retrier: Auth0UrlJwkProviderRetrier,
+        @Value("\${boclips.lti.v1p3.maxTokenAgeInSeconds}") maxTokenAgeInSeconds: String
+    ): JwtService = Auth0JwtService(platformRepository, retrier, maxTokenAgeInSeconds.toLong())
 
     @Bean
     fun nonceService(

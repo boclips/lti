@@ -1,13 +1,18 @@
 package com.boclips.lti.v1p3.infrastructure.service
 
+import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
+import com.boclips.lti.testsupport.factories.DeepLinkingSelectionFactory
 import com.boclips.lti.testsupport.factories.JwtTokenFactory
 import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
+import com.boclips.lti.testsupport.factories.PlatformFactory
 import com.boclips.lti.v1p3.application.exception.UnsupportedSigningAlgorithmException
+import com.boclips.lti.v1p3.application.model.SelectedVideo
 import com.boclips.lti.v1p3.application.service.JwtService
 import com.github.tomakehurst.wiremock.WireMockServer
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.within
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -15,9 +20,12 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import ru.lanwen.wiremock.ext.WiremockResolver
 import ru.lanwen.wiremock.ext.WiremockUriResolver
+import java.net.URL
 import java.security.KeyPairGenerator
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 @ExtendWith(
     value = [
@@ -267,6 +275,74 @@ PwIDAQAB
             assertThat(decodedToken.resourceLinkClaim).isNull()
             assertThat(decodedToken.nonceClaim).isNull()
             assertThat(decodedToken.deepLinkingSettingsClaim).isNull()
+        }
+    }
+
+    @Nested
+    inner class CreatingDeepLinkingResponseToken {
+        private val platformIdentifier = "https://platform.com"
+        private val platform = PlatformFactory.sample(issuer = URL(platformIdentifier))
+
+        @Test
+        fun `creates a token with selected LTI links`() {
+            val selection = listOf(SelectedVideo(url = URL("https://tool.com/videos/123")))
+
+            val token = service.createDeepLinkingResponseToken(
+                platform,
+                DeepLinkingSelectionFactory.sample(selectedVideos = selection)
+            )
+
+            val contentItemsClaim =
+                JWT.decode(token).getClaim("https://purl.imsglobal.org/spec/lti-dl/claim/content_items")
+                    .asArray(HashMap::class.java)
+
+            assertThat(contentItemsClaim).hasSize(1)
+            val item = contentItemsClaim[0]
+            assertThat(item["url"]).isEqualTo("https://tool.com/videos/123")
+        }
+
+        @Test
+        fun `creates a token with empty selection`() {
+            val selection = emptyList<SelectedVideo>()
+
+            val token = service.createDeepLinkingResponseToken(
+                platform,
+                DeepLinkingSelectionFactory.sample(selectedVideos = selection)
+            )
+
+            val contentItemsClaim =
+                JWT.decode(token).getClaim("https://purl.imsglobal.org/spec/lti-dl/claim/content_items")
+                    .asArray(HashMap::class.java)
+
+            assertThat(contentItemsClaim).isEmpty()
+        }
+
+        @Test
+        fun `sets all JWT claims required by LTI specification`() {
+            val deepLinkingSelection = DeepLinkingSelectionFactory.sample(deploymentId = "123", data = "some data")
+            val clientId = "i-am-a-client"
+            val platform = PlatformFactory.sample(issuer = URL(platformIdentifier), clientId = clientId)
+            val token = service.createDeepLinkingResponseToken(platform, deepLinkingSelection)
+
+            val decodedToken = JWT.decode(token)
+
+            assertThat(decodedToken.audience).contains(platformIdentifier)
+            assertThat(decodedToken.issuer).isEqualTo(clientId)
+            assertThat(decodedToken.expiresAt.toInstant()).isAfter(Instant.now())
+            assertThat(decodedToken.issuedAt.toInstant()).isCloseTo(Instant.now(), within(1, ChronoUnit.SECONDS))
+            assertThat(decodedToken.getClaim("nonce").asString()).isNotBlank()
+            assertThat(
+                decodedToken.getClaim("https://purl.imsglobal.org/spec/lti/claim/message_type").asString()
+            ).isEqualTo("LtiDeepLinkingResponse")
+            assertThat(decodedToken.getClaim("https://purl.imsglobal.org/spec/lti/claim/version").asString()).isEqualTo(
+                "1.3.0"
+            )
+            assertThat(
+                decodedToken.getClaim("https://purl.imsglobal.org/spec/lti/claim/deployment_id").asString()
+            ).isEqualTo("123")
+            assertThat(decodedToken.getClaim("https://purl.imsglobal.org/spec/lti-dl/claim/data").asString()).isEqualTo(
+                "some data"
+            )
         }
     }
 }

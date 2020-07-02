@@ -6,15 +6,21 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.SignatureVerificationException
 import com.boclips.lti.v1p3.application.exception.UnsupportedSigningAlgorithmException
 import com.boclips.lti.v1p3.application.model.DecodedJwtToken
+import com.boclips.lti.v1p3.application.model.DeepLinkingSelection
 import com.boclips.lti.v1p3.application.model.DeepLinkingSettingsClaim
 import com.boclips.lti.v1p3.application.model.ResourceLinkClaim
 import com.boclips.lti.v1p3.application.service.JwtService
+import com.boclips.lti.v1p3.domain.model.Platform
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
 import java.net.URL
+import java.sql.Date
+import java.time.Instant
+import java.util.UUID
 
 class Auth0JwtService(
     private val platformRepository: PlatformRepository,
-    private val retrier: Auth0UrlJwkProviderRetrier
+    private val retrier: Auth0UrlJwkProviderRetrier,
+    private val maxTokenAgeInSeconds: Long
 ) : JwtService {
     companion object {
         const val connectTimeoutInMillis = 5_000
@@ -72,4 +78,27 @@ class Auth0JwtService(
                     }
             )
         }
+
+    override fun createDeepLinkingResponseToken(
+        platform: Platform,
+        deepLinkingSelection: DeepLinkingSelection
+    ): String {
+        val now = Instant.now()
+
+        return JWT.create()
+            .withClaim(
+                "https://purl.imsglobal.org/spec/lti-dl/claim/content_items",
+                deepLinkingSelection.selectedVideos.map { hashMapOf("url" to it.url.toString()) }
+            )
+            .withIssuer(platform.clientId)
+            .withAudience(platform.issuer.toString())
+            .withExpiresAt(Date.from(now.plusSeconds(maxTokenAgeInSeconds)))
+            .withIssuedAt(Date.from(now))
+            .withClaim("nonce", UUID.randomUUID().toString())
+            .withClaim("https://purl.imsglobal.org/spec/lti/claim/message_type", "LtiDeepLinkingResponse")
+            .withClaim("https://purl.imsglobal.org/spec/lti/claim/version", "1.3.0")
+            .withClaim("https://purl.imsglobal.org/spec/lti/claim/deployment_id", deepLinkingSelection.deploymentId)
+            .withClaim("https://purl.imsglobal.org/spec/lti-dl/claim/data", deepLinkingSelection.data)
+            .sign(Algorithm.none())
+    }
 }
