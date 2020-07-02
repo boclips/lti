@@ -5,4 +5,5 @@ import java.net.URL
 
 interface PlatformRepository {
     fun getByIssuer(issuer: URL): Platform
+    fun getByClientId(clientId: String): Platform
 }

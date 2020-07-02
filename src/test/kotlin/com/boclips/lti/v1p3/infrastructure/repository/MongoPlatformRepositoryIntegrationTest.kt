@@ -32,6 +32,22 @@ class MongoPlatformRepositoryIntegrationTest : AbstractSpringIntegrationTest() {
     }
 
     @Test
+    fun `can retrieve a platform by client`() {
+        val authenticationEndpoint = URL("https://idp.lms.com/auth")
+        mongoPlatformDocumentRepository.insert(
+            PlatformDocumentFactory.sample(
+                clientId = "123",
+                authenticationEndpoint = authenticationEndpoint.toString()
+            )
+        )
+
+        val platform = platformRepository.getByClientId("123")
+
+        assertThat(platform.clientId).isEqualTo("123")
+        assertThat(platform.authenticationEndpoint).isEqualTo(authenticationEndpoint)
+    }
+
+    @Test
     fun `throws a PlatformNotFoundException when document is not found by issuer`() {
         val ninjaIssuer = "https://this.does/not/exist"
 
