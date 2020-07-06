@@ -6,7 +6,6 @@ import com.boclips.lti.testsupport.factories.VideoResourcesFactory
 import com.boclips.lti.v1p1.domain.exception.LaunchRequestInvalidException
 import com.boclips.lti.v1p1.infrastructure.model.LtiOnePointOneConsumerDocument
 import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
-import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
 import org.assertj.core.api.Assertions.assertThat
 import org.bson.types.ObjectId
 import org.junit.jupiter.api.BeforeEach
@@ -27,10 +26,10 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
     @Test
     fun `launch redirects user to requested resource if it receives a correct request`() {
         mvc.perform(
-                post("/v1p1/collections")
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .params(validLaunchRequestParameters("/v1p1/collections"))
-            )
+            post("/v1p1/collections")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .params(validLaunchRequestParameters("/v1p1/collections"))
+        )
             .andExpect(status().isSeeOther)
             .andExpect(header().string("Location", "/collections"))
     }
@@ -40,7 +39,7 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
         @Test
         fun `can launch into a video page`() {
             val video = VideoResourcesFactory.sampleVideo()
-            (videosClientFactory.getClient(consumerKey) as VideosClientFake).add(video)
+            saveVideo(video, consumerKey)
 
             val session = executeLtiLaunch(
                 launchRequestPath = "/v1p1/videos/${video.id}"
@@ -82,21 +81,21 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
         @Test
         fun `returns an error if request misses resource_link_id`() {
             mvc.perform(
-                    post("/v1p1/collections")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .params(
-                            sign(
-                                launchRequestPath = "/v1p1/collections",
-                                parameters = mapOf(
-                                    "lti_message_type" to "basic-lti-launch-request",
-                                    "lti_version" to "LTI-1p0",
-                                    "oauth_consumer_key" to consumerKey
-                                ),
-                                key = consumerKey,
-                                secret = consumerSecret
-                            )
+                post("/v1p1/collections")
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .params(
+                        sign(
+                            launchRequestPath = "/v1p1/collections",
+                            parameters = mapOf(
+                                "lti_message_type" to "basic-lti-launch-request",
+                                "lti_version" to "LTI-1p0",
+                                "oauth_consumer_key" to consumerKey
+                            ),
+                            key = consumerKey,
+                            secret = consumerSecret
                         )
-                )
+                    )
+            )
                 .andExpect(status().isBadRequest)
                 .andDo { result: MvcResult ->
                     assertThat(result.resolvedException)
@@ -108,15 +107,15 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
         @Test
         fun `returns an error when request misses consumer key`() {
             mvc.perform(
-                    post("/v1p1/collections")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .params(
-                            validLaunchRequestParameters(
-                                launchRequestPath = "/v1p1/collections"
-                            )
-                                .apply { remove("oauth_consumer_key") }
+                post("/v1p1/collections")
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .params(
+                        validLaunchRequestParameters(
+                            launchRequestPath = "/v1p1/collections"
                         )
-                )
+                            .apply { remove("oauth_consumer_key") }
+                    )
+            )
                 .andExpect(status().isBadRequest)
                 .andDo { result: MvcResult ->
                     assertThat(result.resolvedException)
@@ -128,15 +127,15 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
         @Test
         fun `returns an error when signature is invalid`() {
             mvc.perform(
-                    post("/v1p1/collections")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .params(
-                            validLaunchRequestParameters(
-                                launchRequestPath = "/v1p1/collections"
-                            )
-                                .apply { set("oauth_signature", listOf("this is not a valid signature")) }
+                post("/v1p1/collections")
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .params(
+                        validLaunchRequestParameters(
+                            launchRequestPath = "/v1p1/collections"
                         )
-                )
+                            .apply { set("oauth_signature", listOf("this is not a valid signature")) }
+                    )
+            )
                 .andExpect(status().isBadRequest)
                 .andDo { result: MvcResult ->
                     assertThat(result.resolvedException)
@@ -148,9 +147,9 @@ class LtiOnePointOneControllerIntegrationTest : AbstractSpringIntegrationTest() 
         @Test
         fun `returns an error if it receives a blank request`() {
             mvc.perform(
-                    post("/v1p1/collections")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                )
+                post("/v1p1/collections")
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            )
                 .andExpect(status().isBadRequest)
                 .andDo { result: MvcResult ->
                     assertThat(result.resolvedException)

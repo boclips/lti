@@ -9,6 +9,6 @@ class MongoPlatformRepository(private val documentRepository: MongoPlatformDocum
     override fun getByIssuer(issuer: URL): Platform {
         return documentRepository.findByIssuer(issuer.toString())
             ?.let { PlatformDocumentConverter.toDomainInstance(it) }
-            ?: throw PlatformNotFoundException(issuer)
+            ?: throw PlatformNotFoundException("Platform not found for issuer $issuer")
     }
 }

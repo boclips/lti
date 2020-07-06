@@ -14,6 +14,8 @@ import com.boclips.lti.v1p1.infrastructure.repository.LtiOnePointOneConsumerRepo
 import com.boclips.lti.v1p3.infrastructure.repository.MongoNonceDocumentRepository
 import com.boclips.lti.v1p3.infrastructure.repository.MongoPlatformDocumentRepository
 import com.boclips.lti.v1p3.infrastructure.service.Auth0UrlJwkProviderRetrier
+import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
+import com.boclips.videos.api.response.video.VideoResource
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.mongodb.MongoClient
@@ -200,5 +202,9 @@ abstract class AbstractSpringIntegrationTest {
 
     protected fun insertPlatform(issuer: String) {
         mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer))
+    }
+
+    protected fun saveVideo(video: VideoResource, integrationId: String): VideoResource {
+        return (videosClientFactory.getClient(integrationId) as VideosClientFake).add(video)
     }
 }

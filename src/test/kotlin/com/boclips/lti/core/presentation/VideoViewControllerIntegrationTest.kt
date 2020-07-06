@@ -111,6 +111,6 @@ class VideoViewControllerIntegrationTest : AbstractSpringIntegrationTest() {
     @BeforeEach
     fun insertVideoFixture() {
         videoResource = VideoResourcesFactory.sampleVideo()
-        (videosClientFactory.getClient(integrationId) as VideosClientFake).add(videoResource)
+        saveVideo(videoResource, integrationId)
     }
 }

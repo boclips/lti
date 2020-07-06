@@ -3,11 +3,10 @@ package com.boclips.lti.core.presentation
 import com.boclips.lti.core.application.model.SessionKeys
 import com.boclips.lti.core.presentation.model.VideoViewModel
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
-import com.boclips.lti.testsupport.factories.LtiTestSessionFactory
 import com.boclips.lti.testsupport.factories.CollectionResourceFactory
+import com.boclips.lti.testsupport.factories.LtiTestSessionFactory
 import com.boclips.lti.testsupport.factories.VideoResourcesFactory
 import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
-import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
 import com.boclips.videos.api.response.collection.CollectionResource
 import com.boclips.videos.api.response.video.VideoResource
 import org.assertj.core.api.Assertions.assertThat
@@ -91,9 +90,9 @@ class CollectionViewControllerIntegrationTest : AbstractSpringIntegrationTest() 
     @Test
     fun `returns a 404 response when requested collection is not found`() {
         mvc.perform(
-                get("/collections/this-does-not-exit")
-                    .session(LtiTestSessionFactory.authenticated(integrationId = integrationId) as MockHttpSession)
-            )
+            get("/collections/this-does-not-exit")
+                .session(LtiTestSessionFactory.authenticated(integrationId = integrationId) as MockHttpSession)
+        )
             .andExpect(status().isNotFound)
     }
 
@@ -107,12 +106,9 @@ class CollectionViewControllerIntegrationTest : AbstractSpringIntegrationTest() 
 
     @BeforeEach
     fun populateCollection() {
-        firstVideo =
-            (videosClientFactory.getClient(integrationId) as VideosClientFake).add(VideoResourcesFactory.sampleVideo())
-        secondVideo =
-            (videosClientFactory.getClient(integrationId) as VideosClientFake).add(VideoResourcesFactory.sampleVideo())
-        thirdVideo =
-            (videosClientFactory.getClient(integrationId) as VideosClientFake).add(VideoResourcesFactory.sampleVideo())
+        firstVideo = saveVideo(VideoResourcesFactory.sampleVideo(), integrationId)
+        secondVideo = saveVideo(VideoResourcesFactory.sampleVideo(), integrationId)
+        thirdVideo = saveVideo(VideoResourcesFactory.sampleVideo(), integrationId)
 
         collection = (collectionsClientFactory.getClient(integrationId) as CollectionsClientFake).add(
             CollectionResourceFactory.sample(videos = listOf(firstVideo, secondVideo, thirdVideo))

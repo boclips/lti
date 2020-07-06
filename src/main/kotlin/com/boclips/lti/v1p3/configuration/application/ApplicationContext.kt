@@ -1,7 +1,10 @@
 package com.boclips.lti.v1p3.configuration.application
 
+import com.boclips.lti.core.domain.repository.VideoRepository
 import com.boclips.lti.core.domain.service.ResourceLinkService
 import com.boclips.lti.v1p3.application.command.AssembleLoginRequestUrl
+import com.boclips.lti.v1p3.application.command.GetPlatformForIntegration
+import com.boclips.lti.v1p3.application.command.GetSelectedItems
 import com.boclips.lti.v1p3.application.command.HandleDeepLinkingRequest
 import com.boclips.lti.v1p3.application.command.HandlePlatformRequest
 import com.boclips.lti.v1p3.application.command.HandleResourceLinkRequest
@@ -64,4 +67,13 @@ class ApplicationContext {
     @Bean
     fun deepLinkingRequestValidator(resourceLinkService: ResourceLinkService) =
         DeepLinkingRequestValidator(resourceLinkService)
+
+    @Bean
+    fun getPlatformFromIntegration(
+        platformRepository: PlatformRepository
+    ) = GetPlatformForIntegration(platformRepository)
+
+    @Bean
+    fun getSelectedItems(resourceLinkService: ResourceLinkService, videoRepository: VideoRepository) =
+        GetSelectedItems(videoRepository = videoRepository, resourceLinkService = resourceLinkService)
 }

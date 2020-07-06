@@ -3,7 +3,6 @@ package com.boclips.lti.core.presentation
 import com.boclips.lti.core.configuration.properties.DevSupportProperties
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.testsupport.factories.VideoResourcesFactory
-import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
 import com.boclips.videos.api.response.video.VideoResource
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -31,9 +30,6 @@ class DevelopmentSupportControllerTest : AbstractSpringIntegrationTest() {
 
     @BeforeEach
     fun populateCollection() {
-        video =
-            (videosClientFactory.getClient(devSupportProperties.integrationId) as VideosClientFake).add(
-                VideoResourcesFactory.sampleVideo()
-            )
+        video = saveVideo(VideoResourcesFactory.sampleVideo(), devSupportProperties.integrationId)
     }
 }

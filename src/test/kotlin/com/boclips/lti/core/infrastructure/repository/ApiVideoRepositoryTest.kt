@@ -4,7 +4,6 @@ import com.boclips.lti.core.domain.exception.ResourceNotFoundException
 import com.boclips.lti.core.domain.model.VideoRequest
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.testsupport.factories.VideoResourcesFactory
-import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Nested
@@ -17,14 +16,16 @@ private class ApiVideoRepositoryTest : AbstractSpringIntegrationTest() {
         fun `returns a domain object corresponding to returned resource`() {
             val id = "test-id"
             val resource = VideoResourcesFactory.sampleVideo(videoId = id)
-            (videosClientFactory.getClient("integration-one") as VideosClientFake).add(resource)
+            saveVideo(resource, "integration-one")
 
-            assertThat(videoRepository.get(
-                VideoRequest(
-                    videoId = id,
-                    integrationId = "integration-one"
+            assertThat(
+                videoRepository.get(
+                    VideoRequest(
+                        videoId = id,
+                        integrationId = "integration-one"
+                    )
                 )
-            )).isEqualTo(
+            ).isEqualTo(
                 VideoResourceConverter.toVideo(
                     resource
                 )
@@ -33,12 +34,14 @@ private class ApiVideoRepositoryTest : AbstractSpringIntegrationTest() {
 
         @Test
         fun `throws a not found error when requested video is not found`() {
-            assertThatThrownBy { videoRepository.get(
-                VideoRequest(
-                    videoId = "123",
-                    integrationId = "integration-one"
+            assertThatThrownBy {
+                videoRepository.get(
+                    VideoRequest(
+                        videoId = "123",
+                        integrationId = "integration-one"
+                    )
                 )
-            ) }
+            }
                 .isInstanceOf(ResourceNotFoundException::class.java)
                 .hasMessage("Video with id 123 not found")
         }
