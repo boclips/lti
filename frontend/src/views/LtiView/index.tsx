@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Col, Layout, List, Row 
-} from 'antd';
+import { Col, Layout, List, Row } from 'antd';
 import { VideoCard } from '@bit/boclips.boclips-ui.components.video-card';
 import { Video } from '@bit/boclips.boclips-ui.types.video';
 import { Player } from 'boclips-player-react';
@@ -35,11 +33,17 @@ const LtiView = () => {
   };
 
   useEffect(() => {
-    new ApiClient(AppConstants.API_BASE_URL).getClient().then((client) => {
-      new VideoService(client)
-        .searchVideos({ query: searchQuery, page: searchPageNumber, size: 10 })
-        .then((videosResponse) => convertVideos(videosResponse));
-    });
+    if (searchQuery || searchPageNumber) {
+      new ApiClient(AppConstants.API_BASE_URL).getClient().then((client) => {
+        new VideoService(client)
+          .searchVideos({
+            query: searchQuery,
+            page: searchPageNumber,
+            size: 10,
+          })
+          .then((videosResponse) => convertVideos(videosResponse));
+      });
+    }
   }, [searchQuery, searchPageNumber]);
 
   const onSearch = (query?: string, page: number = 0) => {
