@@ -46,6 +46,14 @@ module.exports = merge(common, {
   },
   plugins: [
     new HtmlWebpackPlugin({
+      chunks: ['search'],
+      filename: 'search.html',
+      template: path.resolve(srcPath, 'index.html'),
+      ga: googleAnalyticsId,
+    }),
+    new HtmlWebpackPlugin({
+      chunks: ['searchAndEmbed'],
+      filename: 'search-and-embed.html',
       template: path.resolve(srcPath, 'index.html'),
       ga: googleAnalyticsId,
     }),

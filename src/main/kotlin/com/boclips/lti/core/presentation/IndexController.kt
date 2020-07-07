@@ -12,13 +12,29 @@ class IndexController(
     private val devSupportProperties: DevSupportProperties
 ) {
     @GetMapping("/search")
-    fun getIndex(): ModelAndView {
+    fun getSearch(): ModelAndView {
         /*
-         * Index here points to index.html in the front end repo
+         * Search here points to search.html in the front end repo
          * Gradle will compile frontend files and move them /resources/static in the jar at build time
          */
         return ModelAndView(
-            "index", mapOf(
+            "search", mapOf(
+                "ltiTokenUrl" to frontendProperties.ltiTokenUrl,
+                "apiBaseUrl" to frontendProperties.apiBaseUrl,
+                "initialiseDevelopmentSession" to devSupportProperties.initialiseDevelopmentSession,
+                "developmentSessionUrl" to devSupportProperties.developmentSessionUrl
+            )
+        )
+    }
+
+    @GetMapping("/search-and-embed")
+    fun getSearchAndEmbed(): ModelAndView {
+        /*
+         * search-and-embed here points to search-and-embed.html in the front end repo
+         * Gradle will compile frontend files and move them /resources/static in the jar at build time
+         */
+        return ModelAndView(
+            "search-and-embed", mapOf(
                 "ltiTokenUrl" to frontendProperties.ltiTokenUrl,
                 "apiBaseUrl" to frontendProperties.apiBaseUrl,
                 "initialiseDevelopmentSession" to devSupportProperties.initialiseDevelopmentSession,

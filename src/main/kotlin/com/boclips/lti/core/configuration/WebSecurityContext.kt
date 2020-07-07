@@ -27,7 +27,6 @@ class WebSecurityContext : HttpSecurityConfigurer {
             .antMatchers(HttpMethod.GET, "/*.css.*").permitAll()
 
             .antMatchers(HttpMethod.GET, "/static/**").permitAll()
-            .antMatchers(HttpMethod.GET, "/index.html").permitAll()
             .antMatchers(HttpMethod.GET, "/manifest.json").permitAll()
             .antMatchers(HttpMethod.GET, "/favicon.ico").permitAll()
             .antMatchers(HttpMethod.GET, "/robots.txt").permitAll()
@@ -38,6 +37,7 @@ class WebSecurityContext : HttpSecurityConfigurer {
             .antMatchers(HttpMethod.GET, "/collections").permitAll()
             .antMatchers(HttpMethod.GET, "/collections/*").permitAll()
             .antMatchers(HttpMethod.GET, "/search").permitAll()
+            .antMatchers(HttpMethod.GET, "/search-and-embed").permitAll()
             .antMatchers(HttpMethod.GET, "/auth/token").permitAll()
 
             // LTI 1.1 Launch endpoint

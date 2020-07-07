@@ -10,10 +10,39 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
 
 class IndexControllerIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
-    fun `passes frontend url to the view`() {
+    fun `passes frontend url to the search view`() {
         mvc.perform(get("/search"))
             .andExpect(status().isOk)
-            .andExpect(view().name("index"))
+            .andExpect(view().name("search"))
+            .andExpect(
+                model().attribute(
+                    "ltiTokenUrl",
+                    "http://localhost:${ApiAccessTokenProviderTest.API_SERVER_PORT}/"
+                )
+            )
+            .andExpect(
+                model().attribute(
+                    "apiBaseUrl",
+                    "http://api.base.url"
+                )
+            ).andExpect(
+                model().attribute(
+                    "initialiseDevelopmentSession",
+                    false
+                )
+            ).andExpect(
+                model().attribute(
+                    "developmentSessionUrl",
+                    ""
+                )
+            )
+    }
+
+    @Test
+    fun `passes frontend url to the search and embed view`() {
+        mvc.perform(get("/search-and-embed"))
+            .andExpect(status().isOk)
+            .andExpect(view().name("search-and-embed"))
             .andExpect(
                 model().attribute(
                     "ltiTokenUrl",
