@@ -75,7 +75,7 @@ const LtiView = () => {
   return (
     <Layout className={s.layout}>
       <HeaderWithLogo>
-        <SearchBar onSearch={onSearch} placeholder="search for videos" />
+        <SearchBar onSearch={onSearch} placeholder="Search for videos..." />
       </HeaderWithLogo>
       <Layout.Content>
         <Row gutter={[16, 16]} className={s.videoCardWrapper}>
