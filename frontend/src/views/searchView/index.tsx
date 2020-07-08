@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   Col, Layout, List, Row 
 } from 'antd';
@@ -24,7 +24,11 @@ const LtiView = ({ renderVideoCard }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>();
   const [searchPageNumber, setPageNumber] = useState<number>(0);
-  // const apiClient = useMemo(() => new ApiClient(AppConstants.API_BASE_URL).getClient(), []);
+  const videoServicePromise = useMemo(() => 
+    new ApiClient(AppConstants.API_BASE_URL)
+      .getClient()
+      .then((client) => new VideoService(client)), []
+  );
 
   const [totalVideoElements, setTotalVideoElements] = useState<number>(0);
 
@@ -39,15 +43,12 @@ const LtiView = ({ renderVideoCard }: Props) => {
 
   useEffect(() => {
     if (searchQuery || searchPageNumber) {
-      new ApiClient(AppConstants.API_BASE_URL).getClient().then((client) => {
-        new VideoService(client)
-          .searchVideos({
-            query: searchQuery,
-            page: searchPageNumber,
-            size: 10,
-          })
-          .then((videosResponse) => convertVideos(videosResponse));
-      });
+      videoServicePromise.then((videoService) => videoService.searchVideos({
+        query: searchQuery,
+        page: searchPageNumber,
+        size: 10,
+      })
+        .then((videosResponse) => convertVideos(videosResponse)));
     }
   }, [searchQuery, searchPageNumber]);
 
