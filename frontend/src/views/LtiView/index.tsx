@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import {
   Col, Layout, List, Row 
 } from 'antd';
-import { VideoCard } from '@bit/boclips.boclips-ui.components.video-card';
-import { Video } from '@bit/boclips.boclips-ui.types.video';
+import { VideoCard } from '@bit/dev-boclips.boclips-ui.components.video-card';
+import { Video } from '@bit/dev-boclips.boclips-ui.types.video';
 import { Player } from 'boclips-player-react';
 import { Video as ClientVideo } from 'boclips-api-client/dist/sub-clients/videos/model/Video';
 import Pageable from 'boclips-api-client/dist/sub-clients/common/model/Pageable';
-import HeaderWithLogo from '@bit/boclips.boclips-ui.components.header-with-logo';
+import HeaderWithLogo from '@bit/dev-boclips.boclips-ui.components.header-with-logo';
 import c from 'classnames';
-import SearchBar from '@bit/boclips.boclips-ui.components.search-bar';
+import SearchBar from '@bit/dev-boclips.boclips-ui.components.search-bar';
 import ApiClient from '../../service/client/ApiClient';
 import { AppConstants } from '../../types/AppConstants';
 import VideoService from '../../service/video/VideoService';

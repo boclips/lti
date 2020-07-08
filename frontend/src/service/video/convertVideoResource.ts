@@ -1,8 +1,8 @@
 import moment from 'moment';
-import AgeRange from '@bit/boclips.boclips-ui.types.age-range';
+import AgeRange from '@bit/dev-boclips.boclips-ui.types.age-range';
 import { PlaybackConverter } from 'boclips-api-client/dist/sub-clients/common/model/PlaybackConverter';
-import { Link } from '@bit/boclips.boclips-ui.types.link';
-import { Video } from '@bit/boclips.boclips-ui.types.video';
+import { Link } from '@bit/dev-boclips.boclips-ui.types.link';
+import { Video } from '@bit/dev-boclips.boclips-ui.types.video';
 
 const DEFAULT_THUMBNAIL_WIDTH = 500;
 
