@@ -1,16 +1,30 @@
-import React from "react";
-import {Layout} from "antd";
-import HeaderWithLogo from '@bit/boclips.boclips-ui.components.header-with-logo';
-import Title from "antd/lib/typography/Title";
-import '../../index.less'
+import React from 'react';
+import '../../index.less';
+import { Video } from '@bit/boclips.boclips-ui.types.video';
+import { VideoCard } from '@bit/boclips.boclips-ui.components.video-card';
+import { Player } from 'boclips-player-react';
+import { Button } from 'antd';
+import SearchView from '../../views/searchView';
+import AuthService from '../../service/auth/AuthService';
 
-export const App = () => (
-  <Layout>
-    <HeaderWithLogo>
-      <div></div>
-    </HeaderWithLogo>
-    <Layout.Content>
-      <Title>HELLO - Search And Embed</Title>
-    </Layout.Content>
-  </Layout>
-)
+const renderVideoCard = (video: Video, loading: boolean) => (
+  <VideoCard
+    hideBadges
+    key={video.id}
+    video={video}
+    loading={loading}
+    videoActionButtons={<Button type="primary">+ Add to lesson</Button>}
+    authenticated
+    videoPlayer={
+      <Player videoUri={video.links?.self?.getOriginalLink()} />
+    }
+  />
+);
+
+const App = () => {
+  AuthService.configureAxios();
+
+  return <SearchView renderVideoCard={renderVideoCard}/>;
+};
+
+export default App;
