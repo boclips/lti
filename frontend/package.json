@@ -33,7 +33,7 @@
     "babel-jest": "26.0.1",
     "babel-loader": "8.1.0",
     "bit-bin": "^14.7.6",
-    "boclips-api-client": "11.0.0",
+    "boclips-api-client": "16.1.2",
     "boclips-player": "4.2.0",
     "boclips-player-react": "1.1.3",
     "classnames": "2.2.6",

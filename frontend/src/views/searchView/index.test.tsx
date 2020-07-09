@@ -29,13 +29,15 @@ describe('LTI test', () => {
     ).toBeInTheDocument();
   });
 
-  it('uses provided function to render video cards', async () => {
+
+  it('uses provided function to render videos on search', async () => {
     const fakeApiClient = (await new ApiClient(
       'https://api.example.com',
     ).getClient()) as FakeBoclipsClient;
 
-    fakeApiClient.videos.insertVideo(VideoFactory.sample({ id: '123', contentPartner: 'Hi' }));
-    fakeApiClient.videos.insertVideo(VideoFactory.sample({ id: '456', contentPartner: 'Hi' }));
+
+    fakeApiClient.videos.insertVideo(VideoFactory.sample({ id: '123', title: 'Hi' }));
+    fakeApiClient.videos.insertVideo(VideoFactory.sample({ id: '456', title: 'Hi' }));
 
     render(
       <LtiView
@@ -44,7 +46,7 @@ describe('LTI test', () => {
     );
 
     const searchBar = screen.getByTestId("search-input");
-    fireEvent.change(searchBar, { target: { value: 'Hi' } })
+    fireEvent.change(searchBar, { target: { value: 'Hi' } });
 
     const searchButton = screen.getByText('Search');
     fireEvent.click(searchButton);
