@@ -7,8 +7,8 @@ const distPath = path.resolve(__dirname, '../dist');
 
 module.exports = {
   entry: {
-    'search': path.resolve(srcPath, 'entries/search/index.tsx'),
-    'searchAndEmbed': path.resolve(srcPath, 'entries/searchAndEmbed/index.tsx')
+    'search': path.resolve(srcPath, 'entryPoints/search/index.tsx'),
+    'searchAndEmbed': path.resolve(srcPath, 'entryPoints/searchAndEmbed/index.tsx')
   },
   output: {
     path: distPath,
