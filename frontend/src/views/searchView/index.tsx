@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   Col, Layout, List, Row 
 } from 'antd';
-import { VideoCard } from '@bit/dev-boclips.boclips-ui.components.video-card';
 import { Video } from '@bit/dev-boclips.boclips-ui.types.video';
-import { Player } from 'boclips-player-react';
 import { Video as ClientVideo } from 'boclips-api-client/dist/sub-clients/videos/model/Video';
 import Pageable from 'boclips-api-client/dist/sub-clients/common/model/Pageable';
 import HeaderWithLogo from '@bit/dev-boclips.boclips-ui.components.header-with-logo';
@@ -17,11 +15,22 @@ import convertApiClientVideo from '../../service/video/convertVideoFromApi';
 import s from './styles.module.less';
 import EmptySVG from '../../resources/images/empty.svg';
 
-const LtiView = () => {
+interface Props {
+  renderVideoCard: (video: Video, isLoading: boolean) => React.ReactNode;
+}
+
+const LtiView = ({ renderVideoCard }: Props) => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>();
   const [searchPageNumber, setPageNumber] = useState<number>(0);
+  const videoServicePromise = useMemo(
+    () =>
+      new ApiClient(AppConstants.API_BASE_URL)
+        .getClient()
+        .then((client) => new VideoService(client)),
+    [],
+  );
 
   const [totalVideoElements, setTotalVideoElements] = useState<number>(0);
 
@@ -36,15 +45,15 @@ const LtiView = () => {
 
   useEffect(() => {
     if (searchQuery || searchPageNumber) {
-      new ApiClient(AppConstants.API_BASE_URL).getClient().then((client) => {
-        new VideoService(client)
+      videoServicePromise.then((videoService) =>
+        videoService
           .searchVideos({
             query: searchQuery,
             page: searchPageNumber,
             size: 10,
           })
-          .then((videosResponse) => convertVideos(videosResponse));
-      });
+          .then((videosResponse) => convertVideos(videosResponse)),
+      );
     }
   }, [searchQuery, searchPageNumber]);
 
@@ -52,8 +61,8 @@ const LtiView = () => {
     if (query) {
       setSearchQuery(query);
       setPageNumber(page!!);
+      setLoading(true);
     }
-    setLoading(true);
   };
 
   const EmptyList = () => (
@@ -113,18 +122,7 @@ const LtiView = () => {
                 wrapperClassName: s.spinner,
                 spinning: loading,
               }}
-              renderItem={(video: Video) => (
-                <VideoCard
-                  hideBadges
-                  key={video.id}
-                  video={video}
-                  loading={loading}
-                  authenticated
-                  videoPlayer={
-                    <Player videoUri={video.links?.self?.getOriginalLink()} />
-                  }
-                />
-              )}
+              renderItem={(video: Video) => renderVideoCard(video, loading)}
             />
           </Col>
         </Row>

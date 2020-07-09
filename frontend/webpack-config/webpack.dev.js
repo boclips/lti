@@ -6,7 +6,6 @@ const DynamicCdnWebpackPlugin = require('dynamic-cdn-webpack-plugin');
 
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
-const webpack = require('webpack');
 
 const googleAnalyticsId = 'does-not-matter';
 
@@ -25,6 +24,14 @@ module.exports = merge(common, {
   },
   plugins: [
     new HtmlWebpackPlugin({
+      chunks: ['search'],
+      filename: 'search.html',
+      template: path.resolve(srcPath, 'index-dev.html'),
+      ga: googleAnalyticsId,
+    }),
+    new HtmlWebpackPlugin({
+      chunks: ['searchAndEmbed'],
+      filename: 'search-and-embed.html',
       template: path.resolve(srcPath, 'index-dev.html'),
       ga: googleAnalyticsId,
     }),

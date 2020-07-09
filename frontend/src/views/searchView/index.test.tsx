@@ -4,13 +4,13 @@ import LtiView from './index';
 
 describe('LTI test', () => {
   it('render search header', async () => {
-    render(<LtiView />);
+    render(<LtiView renderVideoCard={() => <div/>}/>);
     expect(await screen.findByTestId('header-with-logo')).toBeInTheDocument();
     expect(await screen.findByTitle('Boclips logo')).toBeInTheDocument();
     expect(await screen.findByTestId('search-input')).toBeInTheDocument();
   });
   it('displays empty render with welcome message', async () => {
-    render(<LtiView />);
+    render(<LtiView renderVideoCard={() => <div/>}/>);
     expect(
       await screen.findByText('Welcome to BoClips Video Library'),
     ).toBeInTheDocument();
