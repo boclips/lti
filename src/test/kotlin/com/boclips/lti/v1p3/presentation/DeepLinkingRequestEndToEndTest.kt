@@ -76,7 +76,7 @@ class DeepLinkingRequestEndToEndTest : AbstractSpringIntegrationTest() {
             .andDo { result ->
                 val location = result.response.getHeader("Location")
 
-                assertThat(location).isEqualTo(deepLinkingUrl)
+                assertThat(location).startsWith(deepLinkingUrl)
                 assertThat(
                     result.request.session?.getAttribute(
                         SessionKeys.integrationId

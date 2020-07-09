@@ -3,6 +3,7 @@ package com.boclips.lti.core.infrastructure.service
 import com.boclips.lti.core.domain.model.Collection
 import com.boclips.lti.core.domain.model.Video
 import com.boclips.lti.core.domain.service.ResourceLinkService
+import com.boclips.lti.v1p3.domain.model.DeepLinkingMessage
 import java.net.URL
 
 class SpringRequestAwareResourceLinkService(
@@ -35,11 +36,18 @@ class SpringRequestAwareResourceLinkService(
         )
     }
 
-    override fun getDeepLinkingLink(): URL {
+    override fun getDeepLinkingLink(message: DeepLinkingMessage?): URL {
         return URL(
             uriComponentsBuilderFactory.getInstance()
                 .replacePath("/search-and-embed")
                 .replaceQuery(null)
+                .apply {
+                    if (message != null) {
+                        queryParam("deep_link_return_url", message.returnUrl.toString())
+                        queryParam("deployment_id", message.deploymentId)
+                        message.data?.let { queryParam("data", it) }
+                    }
+                }
                 .toUriString()
         )
     }

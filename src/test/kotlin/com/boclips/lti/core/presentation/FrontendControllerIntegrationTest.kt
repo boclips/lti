@@ -16,8 +16,8 @@ class FrontendControllerIntegrationTest : AbstractSpringIntegrationTest() {
             .andExpect(view().name("search"))
             .andExpect(
                 model().attribute(
-                    "ltiTokenUrl",
-                    "http://localhost:${ApiAccessTokenProviderTest.API_SERVER_PORT}/"
+                    "ltiBaseUrl",
+                    "http://localhost:${ApiAccessTokenProviderTest.API_SERVER_PORT}"
                 )
             )
             .andExpect(
@@ -45,8 +45,8 @@ class FrontendControllerIntegrationTest : AbstractSpringIntegrationTest() {
             .andExpect(view().name("search-and-embed"))
             .andExpect(
                 model().attribute(
-                    "ltiTokenUrl",
-                    "http://localhost:${ApiAccessTokenProviderTest.API_SERVER_PORT}/"
+                    "ltiBaseUrl",
+                    "http://localhost:${ApiAccessTokenProviderTest.API_SERVER_PORT}"
                 )
             )
             .andExpect(

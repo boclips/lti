@@ -1,13 +1,13 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import ConifgurableConstants from '../../types/AppConstants';
+import ConfigurableConstants, { AppConstants } from '../../types/AppConstants';
 import AuthService from './AuthService';
 import AppConstantsFactory from '../../testSupport/AppConstantsFactory';
 
 jest.mock('../../types/AppConstants', () => ({
-  get AppConstants(): ConifgurableConstants {
+  get AppConstants(): ConfigurableConstants {
     return AppConstantsFactory.sample({
-      LTI_TOKEN_URL: 'https://lti/token',
+      LTI_BASE_URL: 'https://lti/token',
     });
   },
 }));
@@ -60,7 +60,7 @@ describe('AuthService', () => {
 
     it('returns the token from specified endpoint', async () => {
       const axiosMock = new MockAdapter(axiosInstance);
-      axiosMock.onGet('https://lti/token').reply(200, 'valid-jwt-token');
+      axiosMock.onGet(`${AppConstants.LTI_BASE_URL}/auth/token`).reply(200, 'valid-jwt-token');
 
       const token = await AuthService.ltiTokenFactory(axiosInstance);
 

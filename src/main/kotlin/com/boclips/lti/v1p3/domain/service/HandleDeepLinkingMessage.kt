@@ -15,6 +15,6 @@ class HandleDeepLinkingMessage(
         val platform = platformRepository.getByIssuer(message.issuer)
         session.setIntegrationId(platform.issuer.toString())
 
-        return resourceLinkService.getDeepLinkingLink()
+        return resourceLinkService.getDeepLinkingLink(message)
     }
 }

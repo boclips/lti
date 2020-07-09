@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank
 @ConfigurationProperties(prefix = "boclips.frontend")
 class FrontendProperties {
     @NotBlank
-    var ltiTokenUrl: String = ""
+    var ltiBaseUrl: String = ""
 
     @NotBlank
     var apiBaseUrl: String = ""

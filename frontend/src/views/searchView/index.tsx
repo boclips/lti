@@ -3,7 +3,6 @@ import {
   Col, Layout, List, Row 
 } from 'antd';
 import { Video } from '@bit/dev-boclips.boclips-ui.types.video';
-import { Video as ClientVideo } from 'boclips-api-client/dist/sub-clients/videos/model/Video';
 import Pageable from 'boclips-api-client/dist/sub-clients/common/model/Pageable';
 import HeaderWithLogo from '@bit/dev-boclips.boclips-ui.components.header-with-logo';
 import c from 'classnames';
@@ -11,7 +10,6 @@ import SearchBar from '@bit/dev-boclips.boclips-ui.components.search-bar';
 import ApiClient from '../../service/client/ApiClient';
 import { AppConstants } from '../../types/AppConstants';
 import VideoService from '../../service/video/VideoService';
-import convertApiClientVideo from '../../service/video/convertVideoFromApi';
 import s from './styles.module.less';
 import EmptySVG from '../../resources/images/empty.svg';
 
@@ -24,6 +22,7 @@ const LtiView = ({ renderVideoCard }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>();
   const [searchPageNumber, setPageNumber] = useState<number>(0);
+
   const videoServicePromise = useMemo(
     () =>
       new ApiClient(AppConstants.API_BASE_URL)
@@ -34,12 +33,9 @@ const LtiView = ({ renderVideoCard }: Props) => {
 
   const [totalVideoElements, setTotalVideoElements] = useState<number>(0);
 
-  const convertVideos = (videosResponse: Pageable<ClientVideo>) => {
-    setTotalVideoElements(videosResponse.pageSpec.totalElements);
-    const convertedVideos = videosResponse.page.map((v) =>
-      convertApiClientVideo(v),
-    );
-    setVideos(convertedVideos);
+  const handleSearchResults = (searchResults: Pageable<Video>) => {
+    setTotalVideoElements(searchResults.pageSpec.totalElements);
+    setVideos(searchResults.page);
     setLoading(false);
   };
 
@@ -52,7 +48,7 @@ const LtiView = ({ renderVideoCard }: Props) => {
             page: searchPageNumber,
             size: 10,
           })
-          .then((videosResponse) => convertVideos(videosResponse)),
+          .then((videosResponse) => handleSearchResults(videosResponse)),
       );
     }
   }, [searchQuery, searchPageNumber]);
