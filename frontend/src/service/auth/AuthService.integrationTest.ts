@@ -1,13 +1,13 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import ConifgurableConstants from '../../types/AppConstants';
+import ConfigurableConstants from '../../types/AppConstants';
 import AuthService from './AuthService';
 import AppConstantsFactory from '../../testSupport/AppConstantsFactory';
 
 jest.mock('../../types/AppConstants', () => ({
-  get AppConstants(): ConifgurableConstants {
+  get AppConstants(): ConfigurableConstants {
     return AppConstantsFactory.sample({
-      LTI_TOKEN_URL: 'https://lti/token',
+      LTI_BASE_URL: 'https://lti/token',
     });
   },
 }));

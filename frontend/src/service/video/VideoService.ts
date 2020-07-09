@@ -1,7 +1,9 @@
 import { BoclipsClient } from 'boclips-api-client';
 import { VideoSearchRequest } from 'boclips-api-client/dist/sub-clients/videos/model/VideoSearchRequest';
 import Pageable from 'boclips-api-client/dist/sub-clients/common/model/Pageable';
-import { Video } from 'boclips-api-client/dist/types';
+import { Video } from '@bit/dev-boclips.boclips-ui.types.video/index';
+import { Video as ClientVideo } from 'boclips-api-client/dist/sub-clients/videos/model/Video';
+import convertApiClientVideo from '../../service/video/convertVideoFromApi';
 
 class VideoService {
   // In other webapps we pass a promise to the service
@@ -12,7 +14,10 @@ class VideoService {
   public searchVideos(
     searchRequest: VideoSearchRequest,
   ): Promise<Pageable<Video>> {
-    return this.client.videos.search(searchRequest);
+    return this.client.videos.search(searchRequest).then((response: Pageable<ClientVideo>) => ({
+      page: response.page.map(convertApiClientVideo),
+      pageSpec: response.pageSpec
+    }));
   }
 }
 export default VideoService;

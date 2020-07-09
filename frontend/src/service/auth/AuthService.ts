@@ -19,7 +19,7 @@ class AuthService {
 
   public static ltiTokenFactory(axiosInstance: AxiosInstance): Promise<string> {
     return axiosInstance
-      .get(AppConstants.LTI_TOKEN_URL, {
+      .get(`${AppConstants.LTI_BASE_URL}/auth/token`, {
         withCredentials: true,
       })
       .then((response: AxiosResponse<string>) => response.data)

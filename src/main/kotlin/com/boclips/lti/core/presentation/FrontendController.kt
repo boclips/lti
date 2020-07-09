@@ -19,7 +19,7 @@ class FrontendController(
          */
         return ModelAndView(
             "search", mapOf(
-                "ltiTokenUrl" to frontendProperties.ltiTokenUrl,
+                "ltiBaseUrl" to frontendProperties.ltiBaseUrl,
                 "apiBaseUrl" to frontendProperties.apiBaseUrl,
                 "initialiseDevelopmentSession" to devSupportProperties.initialiseDevelopmentSession,
                 "developmentSessionUrl" to devSupportProperties.developmentSessionUrl
@@ -35,7 +35,7 @@ class FrontendController(
          */
         return ModelAndView(
             "search-and-embed", mapOf(
-                "ltiTokenUrl" to frontendProperties.ltiTokenUrl,
+                "ltiBaseUrl" to frontendProperties.ltiBaseUrl,
                 "apiBaseUrl" to frontendProperties.apiBaseUrl,
                 "initialiseDevelopmentSession" to devSupportProperties.initialiseDevelopmentSession,
                 "developmentSessionUrl" to devSupportProperties.developmentSessionUrl
