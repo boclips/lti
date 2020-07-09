@@ -1,11 +1,11 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import LtiView from './index';
 import { Video } from '@bit/dev-boclips.boclips-ui.types.video/index';
 import { VideoFactory } from 'boclips-api-client/dist/test-support/VideosFactory';
-import ApiClient from '../../service/client/ApiClient';
 import { FakeBoclipsClient } from 'boclips-api-client/dist/test-support';
 import { fireEvent } from '@testing-library/dom';
+import ApiClient from '../../service/client/ApiClient';
+import LtiView from './index';
 
 describe('LTI test', () => {
   it('render search header', async () => {

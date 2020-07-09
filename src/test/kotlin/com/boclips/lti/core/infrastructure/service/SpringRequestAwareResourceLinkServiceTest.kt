@@ -1,6 +1,7 @@
 package com.boclips.lti.core.infrastructure.service
 
 import com.boclips.lti.testsupport.factories.CollectionFactory
+import com.boclips.lti.testsupport.factories.DeepLinkingMessageFactory
 import com.boclips.lti.testsupport.factories.VideoFactory
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.web.util.UriComponentsBuilder
+import java.net.URL
 
 @ExtendWith(MockitoExtension::class)
 class SpringRequestAwareResourceLinkServiceTest {
@@ -34,9 +36,44 @@ class SpringRequestAwareResourceLinkServiceTest {
     }
 
     @Test
-    fun `returns a deep linking link`() {
+    fun `returns a deep linking link with query params when given a message`() {
+        val deepLinkingLink = resourceLinkService.getDeepLinkingLink(
+            message = DeepLinkingMessageFactory.sample(
+                returnUrl = URL("https://returnurl.com"),
+                data = "data",
+                deploymentId = "id"
+            )
+        )
+
+        assertThat(deepLinkingLink.toString()).startsWith("http://localhost/search-and-embed")
+        assertThat(deepLinkingLink).hasParameter("deep_link_return_url", "https://returnurl.com")
+        assertThat(deepLinkingLink).hasParameter("data", "data")
+        assertThat(deepLinkingLink).hasParameter("deployment_id", "id")
+    }
+
+    @Test
+    fun `does not preserve unexpected query parameters`() {
+        val deepLinkingLink = resourceLinkService.getDeepLinkingLink(
+            message = DeepLinkingMessageFactory.sample(data = null)
+        )
+
+        assertThat(deepLinkingLink).hasNoParameter("with")
+    }
+
+    @Test
+    fun `does not add data parameter if no data is given`() {
+        val deepLinkingLink = resourceLinkService.getDeepLinkingLink(
+            message = DeepLinkingMessageFactory.sample(data = null)
+        )
+
+        assertThat(deepLinkingLink).hasNoParameter("data")
+    }
+
+    @Test
+    fun `returns a vanilla deep link url when not given a message`() {
         val deepLinkingLink = resourceLinkService.getDeepLinkingLink()
-        assertThat(deepLinkingLink.toString()).isEqualTo("http://localhost/search-and-embed")
+
+        assertThat(deepLinkingLink.toString()).startsWith("http://localhost/search-and-embed")
     }
 
     @Test

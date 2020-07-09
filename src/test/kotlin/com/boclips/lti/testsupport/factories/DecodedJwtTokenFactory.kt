@@ -40,11 +40,13 @@ object DecodedJwtTokenFactory {
         issuerClaim: String? = "https://lms.com",
         audienceClaim: List<String>? = listOf("boclips"),
         nonceClaim: String? = UUID.randomUUID().toString(),
+        deploymentIdClaim: String? = UUID.randomUUID().toString(),
         deepLinkingSettingsClaim: DeepLinkingSettingsClaim? = sampleDeepLinkingSettingsClaim()
     ) = sample(
         issuerClaim = issuerClaim,
         audienceClaim = audienceClaim,
         nonceClaim = nonceClaim,
+        deploymentIdClaim = deploymentIdClaim,
         messageTypeClaim = MessageTypes.DeepLinkingRequest,
         deepLinkingSettingsClaim = deepLinkingSettingsClaim
     )

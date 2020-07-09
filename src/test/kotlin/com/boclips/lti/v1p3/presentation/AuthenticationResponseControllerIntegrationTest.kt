@@ -19,6 +19,7 @@ import org.springframework.mock.web.MockHttpSession
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.net.URL
 import java.time.Instant.now
 import java.util.UUID
 import com.boclips.lti.core.application.model.SessionKeys as CoreSessionKeys
@@ -149,6 +150,9 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
             val issuer = "https://platform.com/for-learning"
             val nonce = "super-random-nonce"
             val clientId = "test-client-id"
+            val deepLinkReturnUrl = "https://platform.com/return"
+            val deploymentId = "test-deployment-id"
+            val data = "hello, world!"
 
             whenever(jwtService.isSignatureValid(jwtToken)).thenReturn(true)
             whenever(jwtService.decode(jwtToken)).thenReturn(
@@ -156,7 +160,11 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
                     issuerClaim = issuer,
                     audienceClaim = listOf(clientId),
                     nonceClaim = nonce,
-                    deepLinkingSettingsClaim = DecodedJwtTokenFactory.sampleDeepLinkingSettingsClaim(deepLinkReturnUrl = "https://platform.com/return")
+                    deploymentIdClaim = deploymentId,
+                    deepLinkingSettingsClaim = DecodedJwtTokenFactory.sampleDeepLinkingSettingsClaim(
+                        deepLinkReturnUrl = deepLinkReturnUrl,
+                        data = data
+                    )
                 )
             )
 
@@ -182,7 +190,13 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
                 .andDo { result ->
                     val location = result.response.getHeader("Location")
 
-                    assertThat(location).isEqualTo("http://localhost/search-and-embed")
+                    assertThat(location).startsWith("http://localhost/search-and-embed")
+
+                    val locationUrl = URL(location)
+                    assertThat(locationUrl).hasParameter("deep_link_return_url", deepLinkReturnUrl)
+                    assertThat(locationUrl).hasParameter("data", data)
+                    assertThat(locationUrl).hasParameter("deployment_id", deploymentId)
+
                     assertThat(result.request.session?.getAttribute(CoreSessionKeys.integrationId)).isEqualTo(issuer)
                 }
         }

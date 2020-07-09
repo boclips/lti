@@ -12,6 +12,9 @@ object MessageConverter {
     )
 
     fun toDeepLinkingMessage(token: DecodedJwtToken): DeepLinkingMessage = DeepLinkingMessage(
-        issuer = URL(token.issuerClaim)
+        issuer = URL(token.issuerClaim),
+        returnUrl = URL(token.deepLinkingSettingsClaim!!.deepLinkReturnUrl),
+        data = token.deepLinkingSettingsClaim.data,
+        deploymentId = token.deploymentIdClaim!!
     )
 }

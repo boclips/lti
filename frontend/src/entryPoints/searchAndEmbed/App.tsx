@@ -13,7 +13,12 @@ const renderVideoCard = (video: Video, loading: boolean) => (
     key={video.id}
     video={video}
     loading={loading}
-    videoActionButtons={<EmbedVideoButton />}
+    videoActionButtons={
+      <EmbedVideoButton
+        videoId={video.id}
+        onSubmit={(form) => form?.submit()}
+      />
+    }
     authenticated
     videoPlayer={<Player videoUri={video.links?.self?.getOriginalLink()} />}
   />

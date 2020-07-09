@@ -1,21 +1,17 @@
-import {ContentSelectionService} from "./ContentSelectionService";
-import MockAdapter from "axios-mock-adapter";
-import axios from "axios";
+import ContentSelectionService from './ContentSelectionService';
+import MockApi from '../../testSupport/mockApi';
 
 describe('ContentSelectionService', () => {
   describe('getContentSelectionJwt', () => {
     it('returns an object with a JWT string in it', async () => {
-      const axiosMock = new MockAdapter(axios);
-      axiosMock
-        .onPost('http://lti-service.com/v1p3/deep-linking-response')
-        .reply(200, JSON.stringify({ jwt: 'a jwt string'}));
+      const videoIds = ['123', '456'];
+      MockApi.deepLinkingResponse('data', 'deployment-id', videoIds, 'a jwt string');
 
-      const service = new ContentSelectionService()
-      const videoIds = ['123', '456']
+      const service = new ContentSelectionService();
 
-      const jwt = await service.getContentSelectionJwt(videoIds)
+      const jwt = await service.getContentSelectionJwt(videoIds, 'deployment-id', 'data');
 
-      expect(jwt).toEqual('a jwt string')
-    })
-  })
-})
+      expect(jwt).toEqual('a jwt string');
+    });
+  });
+});

@@ -1,7 +1,7 @@
 package com.boclips.lti.v1p3.domain.service
 
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
-import com.boclips.lti.v1p3.domain.model.DeepLinkingMessage
+import com.boclips.lti.testsupport.factories.DeepLinkingMessageFactory
 import com.boclips.lti.v1p3.domain.model.getIntegrationId
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -15,10 +15,10 @@ class HandleDeepLinkingMessageIntegrationTest : AbstractSpringIntegrationTest() 
         val issuer = "https://lms.com"
         insertPlatform(issuer)
 
-        val message = DeepLinkingMessage(issuer = URL(issuer))
+        val message = DeepLinkingMessageFactory.sample(issuer = URL(issuer))
 
         val returnedUrl = handleDeepLinkingMessage(message, session)
-        val deepLinkingURl = resourceLinkService.getDeepLinkingLink()
+        val deepLinkingURl = resourceLinkService.getDeepLinkingLink(message)
 
         assertThat(returnedUrl).isEqualTo(deepLinkingURl)
     }
@@ -27,7 +27,7 @@ class HandleDeepLinkingMessageIntegrationTest : AbstractSpringIntegrationTest() 
     fun `sets up a session`() {
         val issuer = "https://lms.com"
         insertPlatform(issuer)
-        val message = DeepLinkingMessage(issuer = URL(issuer))
+        val message = DeepLinkingMessageFactory.sample(issuer = URL(issuer))
 
         handleDeepLinkingMessage(message, session)
 

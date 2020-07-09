@@ -23,7 +23,7 @@ class AuthService {
         withCredentials: true,
       })
       .then((response: AxiosResponse<string>) => response.data)
-      .catch(() => 'Cannot retrieve token');
+      .catch((e) => `Cannot retrieve token ${e}`);
   }
 }
 

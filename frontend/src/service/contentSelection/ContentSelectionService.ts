@@ -1,16 +1,16 @@
 import axios, { AxiosResponse } from 'axios';
 import { AppConstants } from '../../types/AppConstants';
 
-export class ContentSelectionService {
-  async getContentSelectionJwt(
+export default class ContentSelectionService {
+  getContentSelectionJwt = async (
     videoIds: string[],
-  ): Promise<string | undefined> {
-    return axios
-      .post(`${AppConstants.LTI_BASE_URL}/v1p3/deep-linking-response`, {
-        selectedItems: videoIds,
-        data: 'i-am-data',
-        deploymentId: 'deployment-id',
-      })
-      .then((response: AxiosResponse) => response.data?.jwt);
-  }
+    deploymentId: string,
+    data: string,
+  ): Promise<string | undefined> => axios
+    .post(`${AppConstants.LTI_BASE_URL}/v1p3/deep-linking-response`, {
+      selectedItems: videoIds.map((it) => ({ id: it })),
+      data,
+      deploymentId,
+    })
+    .then((response: AxiosResponse) => response.data?.jwt);
 }
