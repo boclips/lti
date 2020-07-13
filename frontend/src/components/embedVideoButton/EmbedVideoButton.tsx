@@ -39,10 +39,11 @@ const EmbedVideoButton = ({ videoId, onSubmit }: Props) => {
       </Button>
       {jwt && (
         <form
-          method="post"
-          name="hidden-form"
           ref={formRef}
+          name="hidden-form"
+          method="post"
           action={DeepLinkingParameterService.getReturnUrl()}
+          target="_parent"
         >
           <input type="hidden" aria-label="jwt" value={jwt} name="JWT" />
         </form>
