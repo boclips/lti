@@ -39,7 +39,7 @@ describe('EmbedVideoButton', () => {
 
     const form: HTMLFormElement = onSubmitMock.mock.calls[0][0];
     expect(form.action).toEqual('https://return_url.com/');
-    const jwt = getByLabelText(form, 'jwt');
+    const jwt = getByLabelText(form, 'jwt') as HTMLInputElement;
     expect(jwt.value).toEqual('i am jwt');
   });
 });
