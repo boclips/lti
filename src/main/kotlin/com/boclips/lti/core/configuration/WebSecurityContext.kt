@@ -51,6 +51,9 @@ class WebSecurityContext : HttpSecurityConfigurer {
             // LTI 1.3 Deep Linking Response endpoint
             .antMatchers(HttpMethod.POST, "/v1p3/deep-linking-response").permitAll()
 
+            // JWKS endpoint
+            .antMatchers(HttpMethod.GET, "/.well-known/jwks").permitAll()
+
             // Dev support
             .antMatchers(HttpMethod.POST, "/dev-support/initialise-session").permitAll()
 

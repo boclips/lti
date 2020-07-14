@@ -10,6 +10,7 @@ import com.boclips.lti.v1p3.application.model.DeepLinkingSelection
 import com.boclips.lti.v1p3.application.model.DeepLinkingSettingsClaim
 import com.boclips.lti.v1p3.application.model.ResourceLinkClaim
 import com.boclips.lti.v1p3.application.service.JwtService
+import com.boclips.lti.v1p3.application.service.KeyPairService
 import com.boclips.lti.v1p3.domain.model.Platform
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
 import java.net.URL
@@ -20,7 +21,8 @@ import java.util.UUID
 class Auth0JwtService(
     private val platformRepository: PlatformRepository,
     private val retrier: Auth0UrlJwkProviderRetrier,
-    private val maxTokenAgeInSeconds: Long
+    private val maxTokenAgeInSeconds: Long,
+    private val keyPairService: KeyPairService
 ) : JwtService {
     companion object {
         const val connectTimeoutInMillis = 5_000
@@ -85,6 +87,8 @@ class Auth0JwtService(
     ): String {
         val now = Instant.now()
 
+        val signingKeyPair = keyPairService.getLatestKeyPair()
+
         return JWT.create()
             .withClaim(
                 "https://purl.imsglobal.org/spec/lti-dl/claim/content_items",
@@ -99,6 +103,8 @@ class Auth0JwtService(
             .withClaim("https://purl.imsglobal.org/spec/lti/claim/version", "1.3.0")
             .withClaim("https://purl.imsglobal.org/spec/lti/claim/deployment_id", deepLinkingSelection.deploymentId)
             .withClaim("https://purl.imsglobal.org/spec/lti-dl/claim/data", deepLinkingSelection.data)
-            .sign(Algorithm.none())
+            .withKeyId(signingKeyPair.generationTimestamp.toString())
+            .sign(Algorithm.RSA256(signingKeyPair.publicKey, signingKeyPair.privateKey))
+
     }
 }

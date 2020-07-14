@@ -1,6 +1,7 @@
 package com.boclips.lti.v1p3.configuration.application
 
 import com.boclips.lti.v1p3.application.service.JwtService
+import com.boclips.lti.v1p3.application.service.KeyPairService
 import com.boclips.lti.v1p3.application.service.NonceService
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
 import com.boclips.lti.v1p3.infrastructure.repository.MongoNonceDocumentRepository
@@ -24,8 +25,9 @@ class InfrastructureContext {
     fun jwtService(
         platformRepository: PlatformRepository,
         retrier: Auth0UrlJwkProviderRetrier,
-        @Value("\${boclips.lti.v1p3.maxTokenAgeInSeconds}") maxTokenAgeInSeconds: String
-    ): JwtService = Auth0JwtService(platformRepository, retrier, maxTokenAgeInSeconds.toLong())
+        @Value("\${boclips.lti.v1p3.maxTokenAgeInSeconds}") maxTokenAgeInSeconds: String,
+        keyPairService: KeyPairService
+    ): JwtService = Auth0JwtService(platformRepository, retrier, maxTokenAgeInSeconds.toLong(), keyPairService)
 
     @Bean
     fun nonceService(

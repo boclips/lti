@@ -32,7 +32,7 @@ class Auth0JwksKeyProviderIntegrationTest : AbstractSpringIntegrationTest() {
     ) {
         stubJwksResponse(server, publicKeyId, encodedModulus, encodedExponent)
 
-        val keyProvider = Auth0JwksKeyProvider(UrlJwkProvider(URL("$uri/.well-known/jwks.json")), retrier)
+        val keyProvider = Auth0JwksKeyProvider(UrlJwkProvider(URL("$uri/jwks")), retrier)
 
         val publicKey = keyProvider.getPublicKeyById(publicKeyId)
 
@@ -45,14 +45,14 @@ class Auth0JwksKeyProviderIntegrationTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `throws UnsupportedOperationException when retrieving a private key`() {
-        val keyProvider = Auth0JwksKeyProvider(UrlJwkProvider(URL("https://idp.com/.well-known/jwks.json")), retrier)
+        val keyProvider = Auth0JwksKeyProvider(UrlJwkProvider(URL("https://idp.com/jwks")), retrier)
 
         assertThrows<UnsupportedOperationException> { keyProvider.privateKey }
     }
 
     @Test
     fun `throws UnsupportedOperationException when retrieving a private key id `() {
-        val keyProvider = Auth0JwksKeyProvider(UrlJwkProvider(URL("https://idp.com/.well-known/jwks.json")), retrier)
+        val keyProvider = Auth0JwksKeyProvider(UrlJwkProvider(URL("https://idp.com/jwks")), retrier)
 
         assertThrows<UnsupportedOperationException> { keyProvider.privateKeyId }
     }

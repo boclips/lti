@@ -1,11 +1,9 @@
 package com.boclips.lti.v1p3.presentation
 
-import com.auth0.jwt.JWT
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.testsupport.factories.LtiTestSessionFactory
 import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
 import com.boclips.lti.testsupport.factories.VideoResourcesFactory
-import com.jayway.jsonpath.JsonPath
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
@@ -114,8 +112,7 @@ class DeepLinkingResponseControllerIntegrationTest : AbstractSpringIntegrationTe
             .andExpect(status().isOk)
             .andReturn().response.contentAsString
 
-        val jwtToken = JsonPath.parse(response).read<String>("$.jwt")
-        val decodedJwt = JWT.decode(jwtToken)
+        val decodedJwt = extractJwtTokenFromDeepLinkingResponseBody(response)
 
         assertThat(
             decodedJwt.getClaim("https://purl.imsglobal.org/spec/lti-dl/claim/data").asString()
@@ -127,6 +124,8 @@ class DeepLinkingResponseControllerIntegrationTest : AbstractSpringIntegrationTe
             decodedJwt.getClaim("https://purl.imsglobal.org/spec/lti-dl/claim/content_items")
                 .asArray(String::class.java)
         ).isEmpty()
+
+        assertThat(decodedJwt.keyId).isEqualTo(keyPairService.getLatestKeyPair().generationTimestamp.toString())
     }
 
     @Test
@@ -158,8 +157,7 @@ class DeepLinkingResponseControllerIntegrationTest : AbstractSpringIntegrationTe
             .andExpect(status().isOk)
             .andReturn().response.contentAsString
 
-        val jwtToken = JsonPath.parse(response).read<String>("$.jwt")
-        val decodedJwt = JWT.decode(jwtToken)
+        val decodedJwt = extractJwtTokenFromDeepLinkingResponseBody(response)
 
         val returnedData = decodedJwt.getClaim("https://purl.imsglobal.org/spec/lti-dl/claim/data").asString()
         val returnedDeploymentId = decodedJwt
