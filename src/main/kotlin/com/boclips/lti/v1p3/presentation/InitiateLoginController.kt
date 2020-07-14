@@ -1,5 +1,6 @@
 package com.boclips.lti.v1p3.presentation
 
+import com.boclips.lti.core.application.service.withLogging
 import com.boclips.lti.v1p3.application.command.AssembleLoginRequestUrl
 import mu.KLogging
 import org.hibernate.validator.constraints.URL
@@ -39,16 +40,18 @@ class InitiateLoginController(
         ltiMessageHint: String?,
         session: HttpSession
     ): String {
-        logger.info { "LTI 1.3 Login Initiation Request from $issuer for $targetLinkUri" }
+        return withLogging {
+            logger.info { "LTI 1.3 Login Initiation Request from $issuer for $targetLinkUri" }
 
-        val authenticationRequestUrl = assembleLoginRequestUrl(
-            issuer = issuer!!,
-            loginHint = loginHint!!,
-            targetLinkUri = targetLinkUri!!,
-            ltiMessageHint = ltiMessageHint,
-            session = session
-        )
+            val authenticationRequestUrl = assembleLoginRequestUrl(
+                issuer = issuer!!,
+                loginHint = loginHint!!,
+                targetLinkUri = targetLinkUri!!,
+                ltiMessageHint = ltiMessageHint,
+                session = session
+            )
 
-        return "redirect:$authenticationRequestUrl"
+            "redirect:$authenticationRequestUrl"
+        }
     }
 }
