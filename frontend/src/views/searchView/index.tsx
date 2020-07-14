@@ -2,11 +2,11 @@ import React, { useEffect, useState, useMemo } from 'react';
 import {
   Col, Layout, List, Row 
 } from 'antd';
-import { Video } from '@bit/dev-boclips.boclips-ui.types.video';
+import { Video } from '@bit/boclips.boclips-ui.types.video';
 import Pageable from 'boclips-api-client/dist/sub-clients/common/model/Pageable';
-import HeaderWithLogo from '@bit/dev-boclips.boclips-ui.components.header-with-logo';
+import HeaderWithLogo from '@bit/boclips.boclips-ui.components.header-with-logo';
 import c from 'classnames';
-import SearchBar from '@bit/dev-boclips.boclips-ui.components.search-bar';
+import SearchBar from '@bit/boclips.boclips-ui.components.search-bar';
 import ApiClient from '../../service/client/ApiClient';
 import { AppConstants } from '../../types/AppConstants';
 import VideoService from '../../service/video/VideoService';
@@ -99,7 +99,7 @@ const LtiView = ({ renderVideoCard }: Props) => {
             <List
               itemLayout="vertical"
               size="large"
-              className={s.listWarpper}
+              className={s.listWrapper}
               locale={{ emptyText: EmptyList() }}
               pagination={{
                 total: totalVideoElements,

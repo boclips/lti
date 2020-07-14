@@ -1,8 +1,8 @@
 import moment from 'moment';
-import AgeRange from '@bit/dev-boclips.boclips-ui.types.age-range';
+import AgeRange from '@bit/boclips.boclips-ui.types.age-range';
 import { PlaybackConverter } from 'boclips-api-client/dist/sub-clients/common/model/PlaybackConverter';
-import { Link } from '@bit/dev-boclips.boclips-ui.types.link';
-import { Video } from '@bit/dev-boclips.boclips-ui.types.video';
+import { Link } from '@bit/boclips.boclips-ui.types.link';
+import { ExtendedVideo } from '@bit/boclips.boclips-ui.types.video';
 
 const DEFAULT_THUMBNAIL_WIDTH = 500;
 
@@ -18,8 +18,8 @@ export function getEffectiveThumbnailUrl(thumbnailLink?: Link) {
     : thumbnailLink.getOriginalLink();
 }
 
-export default function convertVideoResource(resource: any): Video {
-  const video: Video = {
+export function convertVideoResource(resource: any): Partial<ExtendedVideo> {
+  const video: Partial<ExtendedVideo> = {
     id: resource.id,
     title: resource.title,
     description: resource.description,
@@ -47,9 +47,7 @@ export default function convertVideoResource(resource: any): Video {
       self: new Link(resource._links.self),
       rate: resource._links.rate ? new Link(resource._links.rate) : undefined,
       tag: resource._links.tag ? new Link(resource._links.tag) : undefined,
-      logInteraction: resource._links.logInteraction
-        ? new Link(resource._links.logInteraction)
-        : undefined,
+      logInteraction: new Link(resource._links.logInteraction),
     },
   };
 

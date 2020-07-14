@@ -1,15 +1,15 @@
 import { Video as ClientVideo } from 'boclips-api-client/dist/sub-clients/videos/model/Video';
-import { convertFromApiClientLink } from '@bit/dev-boclips.boclips-ui.types.link';
-import AgeRange from '@bit/dev-boclips.boclips-ui.types.age-range';
-import { Video } from '@bit/dev-boclips.boclips-ui.types.video';
+import { convertFromApiClientLink } from '@bit/boclips.boclips-ui.types.link';
+import AgeRange from '@bit/boclips.boclips-ui.types.age-range';
 import { AgeRange as ClientAgeRange } from 'boclips-api-client/dist/sub-clients/common/model/AgeRange';
+import { ExtendedVideo } from '@bit/boclips.boclips-ui.types.video';
 import { getEffectiveThumbnailUrl } from './convertVideoResource';
 
-function convertApiClientVideo(clientVideo: ClientVideo): Video {
+function convertApiClientVideo(clientVideo: ClientVideo): ExtendedVideo {
   const { bestFor, links } = clientVideo;
   const clientAgeRange: ClientAgeRange = clientVideo.ageRange;
 
-  const convertedProperties: Partial<Video> = {
+  const convertedProperties: Partial<ExtendedVideo> = {
     thumbnailUrl: clientVideo.playback?.links?.thumbnail
       ? getEffectiveThumbnailUrl(
         convertFromApiClientLink(clientVideo.playback.links.thumbnail),
@@ -17,12 +17,12 @@ function convertApiClientVideo(clientVideo: ClientVideo): Video {
       : undefined,
     ageRange:
       clientAgeRange && new AgeRange(clientAgeRange.min, clientAgeRange.max),
-    bestFor: bestFor?.[0]?.label || undefined,
+    bestFor: bestFor || undefined,
     links: {
-      self: convertFromApiClientLink(links.self),
+      self: convertFromApiClientLink(links.self)!!,
       rate: convertFromApiClientLink(links.rate),
       tag: convertFromApiClientLink(links.tag),
-      logInteraction: convertFromApiClientLink(links.logInteraction),
+      logInteraction: convertFromApiClientLink(links.logInteraction)!!,
     },
   };
 
@@ -55,7 +55,7 @@ function convertApiClientVideo(clientVideo: ClientVideo): Video {
     contentWarnings: clientVideo.contentWarnings,
     language: clientVideo.language,
     legalRestrictions: clientVideo.legalRestrictions,
-    links: convertedProperties.links,
+    links: convertedProperties.links!!,
   };
 }
 

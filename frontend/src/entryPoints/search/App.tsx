@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
-import { Video } from '@bit/dev-boclips.boclips-ui.types.video';
-import { VideoCard } from '@bit/dev-boclips.boclips-ui.components.video-card';
+import { Video } from '@bit/boclips.boclips-ui.types.video';
+import { VideoCard } from '@bit/boclips.boclips-ui.components.video-card';
 import { Player } from 'boclips-player-react';
 import AxiosService from '../../service/axios/AxiosService';
 import SearchView from '../../views/searchView';
