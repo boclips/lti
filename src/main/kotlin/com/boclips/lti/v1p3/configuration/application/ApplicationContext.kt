@@ -9,11 +9,14 @@ import com.boclips.lti.v1p3.application.command.HandleDeepLinkingRequest
 import com.boclips.lti.v1p3.application.command.HandlePlatformRequest
 import com.boclips.lti.v1p3.application.command.HandleResourceLinkRequest
 import com.boclips.lti.v1p3.application.command.PerformSecurityChecks
+import com.boclips.lti.v1p3.application.converter.RsaKeyPairConverter
 import com.boclips.lti.v1p3.application.service.CsrfService
 import com.boclips.lti.v1p3.application.service.JwtService
+import com.boclips.lti.v1p3.application.service.KeyPairService
 import com.boclips.lti.v1p3.application.service.NonceService
 import com.boclips.lti.v1p3.application.validator.DeepLinkingRequestValidator
 import com.boclips.lti.v1p3.application.validator.IdTokenValidator
+import com.boclips.lti.v1p3.configuration.properties.SigningKeysProperties
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
 import com.boclips.lti.v1p3.domain.service.HandleDeepLinkingMessage
 import com.boclips.lti.v1p3.domain.service.HandleResourceLinkMessage
@@ -76,4 +79,9 @@ class ApplicationContext {
     @Bean
     fun getSelectedItems(resourceLinkService: ResourceLinkService, videoRepository: VideoRepository) =
         GetSelectedItems(videoRepository = videoRepository, resourceLinkService = resourceLinkService)
+
+    @Bean
+    fun keyPairService(signingKeysProperties: SigningKeysProperties) = KeyPairService(
+        keyPairs = signingKeysProperties.signingKeys.map(RsaKeyPairConverter::toSigningKeyPair)
+    )
 }
