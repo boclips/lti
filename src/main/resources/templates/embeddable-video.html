@@ -30,7 +30,7 @@
       var player = Boclips.PlayerFactory.get(container, {
         api: {
           tokenFactory: function () {
-            return fetch("https://api.staging-boclips.com/videos/v1").then(
+            return fetch(playerAuthUrl).then(
               function (response) {
                 return response.text();
               }
@@ -39,7 +39,7 @@
           userIdFactory: userId ? () => Promise.resolve(userId) : undefined,
         },
       });
-      player.loadVideo("https://api.staging-boclips.com/videos/v1/123");
+      player.loadVideo(videoUrl);
       /*]]>*/
     </script>
   </body>
