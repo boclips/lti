@@ -18,7 +18,9 @@ class HttpSessionContext {
     @Bean
     fun cookieSerializer(): CookieSerializer {
         val cookieSerializer = DefaultCookieSerializer()
-        cookieSerializer.setSameSite(null)
+        cookieSerializer.setSameSite("None")
+        cookieSerializer.setUseSecureCookie(true)
+        cookieSerializer.setUseHttpOnlyCookie(true)
         return cookieSerializer
     }
 }
