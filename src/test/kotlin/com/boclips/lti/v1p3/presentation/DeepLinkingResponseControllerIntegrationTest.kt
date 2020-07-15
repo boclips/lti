@@ -162,15 +162,18 @@ class DeepLinkingResponseControllerIntegrationTest : AbstractSpringIntegrationTe
         val returnedData = decodedJwt.getClaim("https://purl.imsglobal.org/spec/lti-dl/claim/data").asString()
         val returnedDeploymentId = decodedJwt
             .getClaim("https://purl.imsglobal.org/spec/lti/claim/deployment_id").asString()
-        val returnedVideoUrls = decodedJwt.getClaim("https://purl.imsglobal.org/spec/lti-dl/claim/content_items")
+        val returnedVideos = decodedJwt.getClaim("https://purl.imsglobal.org/spec/lti-dl/claim/content_items")
             .asArray(HashMap::class.java)
-            .map { it["url"].toString() }
 
         assertThat(returnedData).isEqualTo("i-am-data")
         assertThat(returnedDeploymentId).isEqualTo("deployment-123")
-        assertThat(returnedVideoUrls).containsExactlyInAnyOrder(
+        assertThat(returnedVideos.map { it["url"].toString() }).containsExactlyInAnyOrder(
             "http://localhost/videos/abc123",
             "http://localhost/videos/def456"
+        )
+        assertThat(returnedVideos.map { it["type"].toString() }).containsExactlyInAnyOrder(
+            "ltiResourceLink",
+            "ltiResourceLink"
         )
     }
 }

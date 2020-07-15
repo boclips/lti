@@ -299,6 +299,7 @@ PwIDAQAB
             assertThat(contentItemsClaim).hasSize(1)
             val item = contentItemsClaim[0]
             assertThat(item["url"]).isEqualTo("https://tool.com/videos/123")
+            assertThat(item["type"]).isEqualTo("ltiResourceLink")
         }
 
         @Test

@@ -92,7 +92,10 @@ class Auth0JwtService(
         return JWT.create()
             .withClaim(
                 "https://purl.imsglobal.org/spec/lti-dl/claim/content_items",
-                deepLinkingSelection.selectedVideos.map { hashMapOf("url" to it.url.toString()) }
+                deepLinkingSelection.selectedVideos.map { hashMapOf(
+                    "url" to it.url.toString(),
+                    "type" to it.type
+                ) }
             )
             .withIssuer(platform.clientId)
             .withAudience(platform.issuer.toString())

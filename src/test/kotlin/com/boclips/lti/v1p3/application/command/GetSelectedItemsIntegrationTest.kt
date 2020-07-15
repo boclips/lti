@@ -30,6 +30,7 @@ class GetSelectedItemsIntegrationTest : AbstractSpringIntegrationTest() {
             "http://localhost/videos/123",
             "http://localhost/videos/456"
         )
+        assertThat(selectedItems.map { it.type }).containsExactlyInAnyOrder("ltiResourceLink", "ltiResourceLink")
     }
 
     @Test
