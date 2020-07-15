@@ -2,6 +2,9 @@ import { VideoWithBoclipsProjectionFactory as VideoFactory } from 'boclips-api-c
 import { FakeBoclipsClient } from 'boclips-api-client/dist/test-support';
 import ApiClient from '../client/ApiClient';
 import VideoService from './VideoService';
+import AxiosService from '../axios/AxiosService';
+
+AxiosService.configureAxios();
 
 describe('VideoService', () => {
   const apiClientPromise = new ApiClient(

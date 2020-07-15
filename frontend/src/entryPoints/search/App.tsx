@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 import { Video } from '@bit/dev-boclips.boclips-ui.types.video';
 import { VideoCard } from '@bit/dev-boclips.boclips-ui.components.video-card';
 import { Player } from 'boclips-player-react';
-import AuthService from '../../service/auth/AuthService';
+import AxiosService from '../../service/axios/AxiosService';
 import SearchView from '../../views/searchView';
 import '../../index.less';
 
@@ -20,7 +20,7 @@ const renderVideoCard = (video: Video, loading: boolean) => (
 );
 
 const App = (): ReactElement => {
-  AuthService.configureAxios();
+  AxiosService.configureAxios();
 
   return (
     <SearchView renderVideoCard={renderVideoCard}/>  

@@ -6,10 +6,13 @@ import { FakeBoclipsClient } from 'boclips-api-client/dist/test-support';
 import { fireEvent } from '@testing-library/dom';
 import ApiClient from '../../service/client/ApiClient';
 import LtiView from './index';
+import AxiosService from '../../service/axios/AxiosService';
+
+AxiosService.configureAxios();
 
 describe('LTI test', () => {
   it('render search header', async () => {
-    render(<LtiView renderVideoCard={() => <div />} />);
+    render(<LtiView renderVideoCard={() => <div/>}/>);
 
     expect(await screen.findByTestId('header-with-logo')).toBeInTheDocument();
     expect(await screen.findByTitle('Boclips logo')).toBeInTheDocument();
@@ -17,34 +20,34 @@ describe('LTI test', () => {
   });
 
   it('displays empty render with welcome message', async () => {
-    render(<LtiView renderVideoCard={() => <div />} />);
+    render(<LtiView renderVideoCard={() => <div/>}/>);
 
     expect(
-      await screen.findByText('Welcome to BoClips Video Library'),
+      await screen.findByText('Welcome to BoClips Video Library')
     ).toBeInTheDocument();
     expect(
       await screen.findByText(
-        'Use the search on top to find interesting videos',
-      ),
+        'Use the search on top to find interesting videos'
+      )
     ).toBeInTheDocument();
   });
 
   it('uses provided function to render videos on search', async () => {
     const fakeApiClient = (await new ApiClient(
-      'https://api.example.com',
+      'https://api.example.com'
     ).getClient()) as FakeBoclipsClient;
 
     fakeApiClient.videos.insertVideo(
-      VideoFactory.sample({ id: '123', title: 'Hi' }),
+      VideoFactory.sample({ id: '123', title: 'Hi' })
     );
     fakeApiClient.videos.insertVideo(
-      VideoFactory.sample({ id: '456', title: 'Hi' }),
+      VideoFactory.sample({ id: '456', title: 'Hi' })
     );
 
     render(
       <LtiView
         renderVideoCard={(video: Video) => <div>Hello, video {video.id}</div>}
-      />,
+      />
     );
 
     const searchBar = screen.getByTestId('search-input');
