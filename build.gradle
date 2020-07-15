@@ -196,7 +196,7 @@ task bootRunLocal(type: BootRun) {
   systemProperty 'keycloak.realm', 'boclips'
   systemProperty 'keycloak.url', 'https://login.staging-boclips.com/auth'
   systemProperty 'boclips.api.tokenUrl', 'https://api.staging-boclips.com/v1/token'
-  systemProperty 'boclips.api.baseUrl', 'https://api.staging-boclips.com/v1'
+  systemProperty 'boclips.api.baseUrl', 'https://api.staging-boclips.com/'
   systemProperty 'boclips.frontend.ltiBaseUrl', 'http://localhost:8080'
   systemProperty 'boclips.frontend.apiBaseUrl', 'https://api.staging-boclips.com'
   systemProperty 'boclips.lti.v1p3.signingKeys[0].generationTimestamp', '123456'
