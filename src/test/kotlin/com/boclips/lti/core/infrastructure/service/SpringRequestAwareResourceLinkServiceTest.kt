@@ -36,6 +36,13 @@ class SpringRequestAwareResourceLinkServiceTest {
     }
 
     @Test
+    fun `returns an embeddable video link`() {
+        val video = VideoFactory.sample(videoId = "abc")
+        val videoLink = resourceLinkService.getEmbeddableVideoLink(video)
+        assertThat(videoLink.toString()).isEqualTo("http://localhost/embeddable-videos/abc")
+    }
+
+    @Test
     fun `returns a deep linking link with query params when given a message`() {
         val deepLinkingLink = resourceLinkService.getDeepLinkingLink(
             message = DeepLinkingMessageFactory.sample(

@@ -27,8 +27,8 @@ class GetSelectedItemsIntegrationTest : AbstractSpringIntegrationTest() {
         val selectedItems = getSelectedItems(selectionRequest, integrationId)
 
         assertThat(selectedItems.map { it.url.toString() }).containsExactlyInAnyOrder(
-            "http://localhost/videos/123",
-            "http://localhost/videos/456"
+            "http://localhost/embeddable-videos/123",
+            "http://localhost/embeddable-videos/456"
         )
         assertThat(selectedItems.map { it.type }).containsExactlyInAnyOrder("ltiResourceLink", "ltiResourceLink")
     }

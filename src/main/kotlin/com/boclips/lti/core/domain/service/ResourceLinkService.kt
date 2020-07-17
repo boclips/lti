@@ -7,6 +7,7 @@ import java.net.URL
 
 interface ResourceLinkService {
     fun getVideoLink(video: Video): URL
+    fun getEmbeddableVideoLink(video: Video): URL
     fun getCollectionLink(collection: Collection): URL
     fun getCollectionsLink(): URL
     fun getDeepLinkingLink(message: DeepLinkingMessage? = null): URL

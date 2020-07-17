@@ -168,8 +168,8 @@ class DeepLinkingResponseControllerIntegrationTest : AbstractSpringIntegrationTe
         assertThat(returnedData).isEqualTo("i-am-data")
         assertThat(returnedDeploymentId).isEqualTo("deployment-123")
         assertThat(returnedVideos.map { it["url"].toString() }).containsExactlyInAnyOrder(
-            "http://localhost/videos/abc123",
-            "http://localhost/videos/def456"
+            "http://localhost/embeddable-videos/abc123",
+            "http://localhost/embeddable-videos/def456"
         )
         assertThat(returnedVideos.map { it["type"].toString() }).containsExactlyInAnyOrder(
             "ltiResourceLink",

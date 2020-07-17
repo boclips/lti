@@ -18,6 +18,15 @@ class SpringRequestAwareResourceLinkService(
         )
     }
 
+    override fun getEmbeddableVideoLink(video: Video): URL {
+        return URL(
+            uriComponentsBuilderFactory.getInstance()
+                .replacePath("/embeddable-videos/${video.videoId.value}")
+                .replaceQuery(null)
+                .toUriString()
+        )
+    }
+
     override fun getCollectionLink(collection: Collection): URL {
         return URL(
             uriComponentsBuilderFactory.getInstance()
