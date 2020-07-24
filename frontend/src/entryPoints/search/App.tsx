@@ -5,6 +5,7 @@ import { Player } from 'boclips-player-react';
 import AxiosService from '../../service/axios/AxiosService';
 import SearchView from '../../views/searchView';
 import '../../index.less';
+import playerOptions from '../../Player/playerOptions';
 
 const renderVideoCard = (video: Video, loading: boolean) => (
   <VideoCard
@@ -14,7 +15,10 @@ const renderVideoCard = (video: Video, loading: boolean) => (
     loading={loading}
     authenticated
     videoPlayer={
-      <Player videoUri={video.links?.self?.getOriginalLink()} />
+      <Player
+        options={playerOptions}
+        videoUri={video.links?.self?.getOriginalLink()}
+      />
     }
   />
 );
@@ -22,9 +26,7 @@ const renderVideoCard = (video: Video, loading: boolean) => (
 const App = (): ReactElement => {
   AxiosService.configureAxios();
 
-  return (
-    <SearchView renderVideoCard={renderVideoCard}/>  
-  );
+  return <SearchView renderVideoCard={renderVideoCard} />;
 };
 
 export default App;

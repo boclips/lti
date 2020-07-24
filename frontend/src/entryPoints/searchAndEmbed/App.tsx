@@ -6,6 +6,7 @@ import { Player } from 'boclips-player-react';
 import SearchView from '../../views/searchView';
 import AxiosService from '../../service/axios/AxiosService';
 import EmbedVideoButton from '../../components/embedVideoButton/EmbedVideoButton';
+import playerOptions from '../../Player/playerOptions';
 
 const renderVideoCard = (video: Video, loading: boolean) => (
   <VideoCard
@@ -13,14 +14,19 @@ const renderVideoCard = (video: Video, loading: boolean) => (
     key={video.id}
     video={video}
     loading={loading}
-    videoActionButtons={
+    videoActionButtons={[
       <EmbedVideoButton
         videoId={video.id}
         onSubmit={(form) => form?.submit()}
+      />,
+    ]}
+    authenticated
+    videoPlayer={
+      <Player
+        options={playerOptions}
+        videoUri={video.links?.self?.getOriginalLink()}
       />
     }
-    authenticated
-    videoPlayer={<Player videoUri={video.links?.self?.getOriginalLink()} />}
   />
 );
 
