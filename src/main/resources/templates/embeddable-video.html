@@ -23,6 +23,21 @@
 
     <script th:inline="javascript">
       /*<![CDATA[*/
+      const playerOptions = {
+        interface: {
+          controls: [
+            'play-large',
+            'play',
+            'progress',
+            'current-time',
+            'mute',
+            'volume',
+            'captions',
+            'fullscreen',
+            'settings',
+          ],
+        },
+      };
       var videoUrl = [[${video.playbackUrl}]];
       var userId = [[${userId}]];
       var playerAuthUrl = [[${video.playerAuthUrl}]] ;
@@ -38,6 +53,7 @@
           },
           userIdFactory: userId ? () => Promise.resolve(userId) : undefined,
         },
+        interface : playerOptions,
       });
       player.loadVideo(videoUrl);
       /*]]>*/
