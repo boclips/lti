@@ -1,5 +1,6 @@
 package com.boclips.lti.core.configuration
 
+import com.boclips.lti.core.configuration.properties.HttpSessionProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
 import org.springframework.session.data.mongo.JacksonMongoSessionConverter
@@ -9,7 +10,7 @@ import org.springframework.session.web.http.DefaultCookieSerializer
 
 @Profile("!test")
 @EnableMongoHttpSession(maxInactiveIntervalInSeconds = 3600)
-class HttpSessionContext {
+class HttpSessionContext(private val httpSessionProperties: HttpSessionProperties) {
     @Bean
     fun mongoSessionConverter(): JacksonMongoSessionConverter {
         return JacksonMongoSessionConverter()
@@ -19,7 +20,7 @@ class HttpSessionContext {
     fun cookieSerializer(): CookieSerializer {
         val cookieSerializer = DefaultCookieSerializer()
         cookieSerializer.setSameSite("None")
-        cookieSerializer.setUseSecureCookie(true)
+        cookieSerializer.setUseSecureCookie(httpSessionProperties.useSecureCookie)
         cookieSerializer.setUseHttpOnlyCookie(true)
         return cookieSerializer
     }

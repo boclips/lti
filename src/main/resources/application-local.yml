@@ -1,10 +1,12 @@
 server:
-  port: 8080
+  port: 8081
 
 boclips:
   api:
     baseUrl: 'https://api.staging-boclips.com'
     tokenUrl: 'https://api.staging-boclips.com/v1/token'
+  session:
+    useSecureCookie: false
 
 keycloak:
   configurationFile: 'classpath:keycloak-staging.json'
