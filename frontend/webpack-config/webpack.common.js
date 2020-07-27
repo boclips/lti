@@ -1,22 +1,21 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const tsImportPluginFactory = require('ts-import-plugin');
 const path = require('path');
 
 const srcPath = path.resolve(__dirname, '../src');
 const distPath = path.resolve(__dirname, '../dist');
+const staticPath = path.resolve(__dirname, '../static');
 
 module.exports = {
-  entry: {
-    'search': path.resolve(srcPath, 'entryPoints/search/index.tsx'),
-    'searchAndEmbed': path.resolve(srcPath, 'entryPoints/searchAndEmbed/index.tsx')
-  },
+  entry: path.resolve(srcPath, 'index.tsx'),
   output: {
     path: distPath,
     filename: '[name]-[hash:20].js',
     publicPath: '/',
   },
-  performance: {
-    hints: process.env.NODE_ENV === 'production' ? "warning" : false
+  performance :{
+      hints: process.env.NODE_ENV === 'production' ? "warning" : false
   },
   // Allows ts(x) and js files to be imported without extension
   resolve: {
@@ -125,6 +124,10 @@ module.exports = {
     ],
   },
   plugins: [
-    new MiniCssExtractPlugin({filename: '[name]-[hash:20].css'}),
+    new MiniCssExtractPlugin({ filename: '[name]-[hash:20].css' }),
+    new HtmlWebpackPlugin({
+      template: path.resolve(srcPath, 'index.html'),
+      ga: 'replaced-by-profile',
+    })
   ],
 };

@@ -13,7 +13,7 @@ declare const window: any;
 window.open = jest.fn();
 
 window.Environment = {
-  LTI_BASE_URL: 'http://lti-service.com',
+  LTI_TOKEN_URL: 'http://lti-service.com/token',
   API_BASE_URL: 'http://api.com/v1',
 };
 

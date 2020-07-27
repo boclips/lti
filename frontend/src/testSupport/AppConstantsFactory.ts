@@ -1,11 +1,11 @@
-import ConfigurableConstants from '../types/AppConstants';
+import ConifgurableConstants from '../types/AppConstants';
 
 class AppConstantsFactory {
   public static sample(
-    appConstants: Partial<ConfigurableConstants>,
-  ): ConfigurableConstants {
+    appConstants: Partial<ConifgurableConstants>,
+  ): ConifgurableConstants {
     return {
-      LTI_BASE_URL: 'http://localhost/auth/token',
+      LTI_TOKEN_URL: 'http://localhost/auth/token',
       API_BASE_URL: 'http://localhost/v1',
       ...appConstants,
     };
