@@ -24,6 +24,7 @@
     <script th:inline="javascript">
       /*<![CDATA[*/
       const playerOptions = {
+        interface: {
           controls: [
             'play-large',
             'play',
@@ -35,6 +36,7 @@
             'fullscreen',
             'settings',
           ],
+        },
       };
       var videoUrl = [[${video.playbackUrl}]];
       var userId = [[${userId}]];
