@@ -37,6 +37,12 @@ Running the app locally with the `local` Spring profile activated:
 $ ./gradlew bootRunLocal
 ```
 
+#### Selecting a dev server
+
+You can switch between the LTI views. 
+
+Go to `webpack-config/webpack.dev.js` and change the devServer index file name.
+
 ### Testing
 
 Running tests:

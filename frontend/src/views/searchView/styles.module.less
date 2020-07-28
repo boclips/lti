@@ -26,27 +26,33 @@
 
 .pagination {
   display: flex;
-  flex-direction: row;
   justify-content: center;
-  align-items: center;
-  align-content: center;
-  padding: 12px 0;
+  padding-bottom: 12px;
   li {
     font-size: 16px;
     font-weight: bold;
     border: 2px solid @shade-6;
     background: transparent;
     border-radius: 8px;
-    a {
-      border: 0 !important;
-      background: transparent !important;
-      color: @shade-6;
+    :global .ant-pagination-item-link {
+      border: 0;
+      background: none;
     }
     svg {
       position: relative;
       top: -4px;
       height: 11px;
       fill: @shade-6;
+    }
+  }
+
+  :global .ant-pagination-jump-next,
+  :global .ant-pagination-jump-prev {
+    border: none;
+    :hover {
+      svg {
+        fill: @blue-shade-4;
+      }
     }
   }
   :global .ant-pagination-disabled {
@@ -76,29 +82,4 @@
 
 .paginationEmpty {
   display: none;
-}
-
-.emptyWrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 600px;
-  color: black;
-  svg {
-    zoom: 1.5;
-  }
-}
-.svgWrapper {
-  padding: 24px 0;
-}
-.emptyWelcome {
-  font-size: 26px;
-  font-weight: 600;
-}
-.emptyInfo {
-  padding-top: 24px;
-  font-size: 20px;
-  font-weight: 600;
 }

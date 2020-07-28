@@ -16,6 +16,7 @@ module.exports = merge(common, {
   mode: 'development',
   devtool: 'eval-source-map',
   devServer: {
+    index: 'search.html',  // <-- change LTI view here
     historyApiFallback: true,
     port: localPort,
     host: '0.0.0.0',

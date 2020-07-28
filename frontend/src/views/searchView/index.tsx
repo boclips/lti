@@ -11,7 +11,7 @@ import ApiClient from '../../service/client/ApiClient';
 import { AppConstants } from '../../types/AppConstants';
 import VideoService from '../../service/video/VideoService';
 import s from './styles.module.less';
-import EmptySVG from '../../resources/images/empty.svg';
+import EmptyList from '../../components/EmptyList';
 
 interface Props {
   renderVideoCard: (video: Video, isLoading: boolean) => React.ReactNode;
@@ -22,6 +22,7 @@ const LtiView = ({ renderVideoCard }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>();
   const [searchPageNumber, setPageNumber] = useState<number>(0);
+  const [totalVideoElements, setTotalVideoElements] = useState<number>(0);
 
   const videoServicePromise = useMemo(
     () =>
@@ -31,7 +32,13 @@ const LtiView = ({ renderVideoCard }: Props) => {
     [],
   );
 
-  const [totalVideoElements, setTotalVideoElements] = useState<number>(0);
+  const onSearch = (query?: string, page: number = 0) => {
+    if (query) {
+      setSearchQuery(query);
+      setPageNumber(page!!);
+      setLoading(true);
+    }
+  };
 
   const handleSearchResults = (searchResults: Pageable<Video>) => {
     setTotalVideoElements(searchResults.pageSpec.totalElements);
@@ -52,28 +59,6 @@ const LtiView = ({ renderVideoCard }: Props) => {
       );
     }
   }, [searchQuery, searchPageNumber]);
-
-  const onSearch = (query?: string, page: number = 0) => {
-    if (query) {
-      setSearchQuery(query);
-      setPageNumber(page!!);
-      setLoading(true);
-    }
-  };
-
-  const EmptyList = () => (
-    <div className={s.emptyWrapper}>
-      <div className={s.svgWrapper}>
-        <EmptySVG />
-      </div>
-      <div className={s.emptyWelcome}>
-        Welcome to <br /> BoClips Video Library
-      </div>
-      <div className={s.emptyInfo}>
-        Use the search on top to find interesting videos
-      </div>
-    </div>
-  );
 
   const scrollToTop = () => {
     window.scrollTo(0, 0);
@@ -100,7 +85,7 @@ const LtiView = ({ renderVideoCard }: Props) => {
               itemLayout="vertical"
               size="large"
               className={s.listWrapper}
-              locale={{ emptyText: EmptyList() }}
+              locale={{ emptyText: <EmptyList /> }}
               pagination={{
                 total: totalVideoElements,
                 pageSize: 10,

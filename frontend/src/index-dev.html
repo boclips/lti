@@ -13,14 +13,14 @@
     </head>
     <body>
       <script>
-        fetch('http://localhost:8080/dev-support/initialise-session', {
+        fetch('http://localhost:8081/dev-support/initialise-session', {
           method: 'POST',
           credentials: 'include',
         });
       </script>
       <script>
         window.Environment = {
-          LTI_BASE_URL: 'http://localhost:8080',
+          LTI_BASE_URL: 'http://localhost:8081',
           API_BASE_URL: 'https://api.staging-boclips.com',
         };
       </script>

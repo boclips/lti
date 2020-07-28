@@ -7,8 +7,11 @@ const distPath = path.resolve(__dirname, '../dist');
 
 module.exports = {
   entry: {
-    'search': path.resolve(srcPath, 'entryPoints/search/index.tsx'),
-    'searchAndEmbed': path.resolve(srcPath, 'entryPoints/searchAndEmbed/index.tsx')
+    search: path.resolve(srcPath, 'entryPoints/search/index.tsx'),
+    searchAndEmbed: path.resolve(
+      srcPath,
+      'entryPoints/searchAndEmbed/index.tsx',
+    ),
   },
   output: {
     path: distPath,
@@ -16,7 +19,7 @@ module.exports = {
     publicPath: '/',
   },
   performance: {
-    hints: process.env.NODE_ENV === 'production' ? "warning" : false
+    hints: process.env.NODE_ENV === 'production' ? 'warning' : false,
   },
   // Allows ts(x) and js files to be imported without extension
   resolve: {
@@ -124,7 +127,5 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new MiniCssExtractPlugin({filename: '[name]-[hash:20].css'}),
-  ],
+  plugins: [new MiniCssExtractPlugin({ filename: '[name]-[hash:20].css' })],
 };
