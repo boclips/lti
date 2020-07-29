@@ -1,7 +1,6 @@
 package com.boclips.lti.v1p3.presentation
 
 import com.boclips.lti.core.application.service.AssertHasValidSession
-import com.boclips.lti.core.application.service.withLogging
 import com.boclips.lti.v1p3.application.command.GetPlatformForIntegration
 import com.boclips.lti.v1p3.application.command.GetSelectedItems
 import com.boclips.lti.v1p3.application.model.DeepLinkingSelection
@@ -30,22 +29,20 @@ class DeepLinkingResponseController(
         @RequestBody contentSelection: ContentSelectionRequest,
         httpSession: HttpSession
     ): ResponseEntity<DeepLinkingResponse> {
-        return withLogging {
-            assertHasValidSession(httpSession)
+        assertHasValidSession(httpSession)
 
-            val platform = getPlatformForIntegration(httpSession.getIntegrationId())
-            val selectedItems = getSelectedItems(contentSelection.selectedItems, httpSession.getIntegrationId())
+        val platform = getPlatformForIntegration(httpSession.getIntegrationId())
+        val selectedItems = getSelectedItems(contentSelection.selectedItems, httpSession.getIntegrationId())
 
-            val jwt = jwtService.createDeepLinkingResponseToken(
-                platform,
-                DeepLinkingSelection(
-                    deploymentId = contentSelection.deploymentId,
-                    selectedVideos = selectedItems,
-                    data = contentSelection.data
-                )
+        val jwt = jwtService.createDeepLinkingResponseToken(
+            platform,
+            DeepLinkingSelection(
+                deploymentId = contentSelection.deploymentId,
+                selectedVideos = selectedItems,
+                data = contentSelection.data
             )
+        )
 
-            ResponseEntity(DeepLinkingResponse(jwt), HttpStatus.OK)
-        }
+        return ResponseEntity(DeepLinkingResponse(jwt), HttpStatus.OK)
     }
 }

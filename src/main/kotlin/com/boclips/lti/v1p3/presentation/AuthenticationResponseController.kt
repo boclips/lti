@@ -1,6 +1,5 @@
 package com.boclips.lti.v1p3.presentation
 
-import com.boclips.lti.core.application.service.withLogging
 import com.boclips.lti.v1p3.application.command.HandlePlatformRequest
 import com.boclips.lti.v1p3.application.command.PerformSecurityChecks
 import com.boclips.lti.v1p3.application.service.JwtService
@@ -30,16 +29,14 @@ class AuthenticationResponseController(
         idToken: String?,
         httpSession: HttpSession
     ): String {
-        return withLogging {
-            performSecurityChecks(state!!, idToken!!, httpSession)
+        performSecurityChecks(state!!, idToken!!, httpSession)
 
-            val decodedToken = jwtService.decode(idToken)
+        val decodedToken = jwtService.decode(idToken)
 
-            logger.info { "LTI 1.3 Authentication Response from iss: '${decodedToken.issuerClaim}' for '${decodedToken.targetLinkUriClaim}' }" }
+        logger.info { "LTI 1.3 Authentication Response from iss: '${decodedToken.issuerClaim}' for '${decodedToken.targetLinkUriClaim}' }" }
 
-            val resourceUrl = handlePlatformRequest(decodedToken, httpSession, state)
+        val resourceUrl = handlePlatformRequest(decodedToken, httpSession, state)
 
-            "redirect:$resourceUrl"
-        }
+        return "redirect:$resourceUrl"
     }
 }
