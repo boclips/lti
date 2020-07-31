@@ -11,7 +11,8 @@ Exposes endpoints that make our content consumable via [Learning Tools Interoper
 
 ### LTI 1.3
 
-- [`LtiResourceLinkRequest`](http://www.imsglobal.org/spec/lti/v1p3/): videos and collection exposed through the resource link message.
+- [`LtiResourceLinkRequest`](http://www.imsglobal.org/spec/lti/v1p3): video, collection and search UIs exposed through the resource link message,
+- [`LtiDeepLinkingRequest`](http://www.imsglobal.org/spec/lti-dl/v2p0): the LTI Advantage Deep Linking flow.
 
 ## Development
 
