@@ -9,11 +9,13 @@ import playerOptions from '../../Player/playerOptions';
 
 const renderVideoCard = (video: Video, loading: boolean) => (
   <VideoCard
-    hideBadges
     key={video.id}
     video={video}
     loading={loading}
     authenticated
+    hideAttachments
+    hideBestFor
+    theme="lti"
     videoPlayer={
       <Player
         options={playerOptions}

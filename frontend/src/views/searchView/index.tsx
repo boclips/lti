@@ -4,7 +4,6 @@ import {
 } from 'antd';
 import { Video } from '@bit/boclips.boclips-ui.types.video';
 import Pageable from 'boclips-api-client/dist/sub-clients/common/model/Pageable';
-import HeaderWithLogo from '@bit/boclips.boclips-ui.components.header-with-logo';
 import c from 'classnames';
 import SearchBar from '@bit/boclips.boclips-ui.components.search-bar';
 import ApiClient from '../../service/client/ApiClient';
@@ -12,6 +11,7 @@ import { AppConstants } from '../../types/AppConstants';
 import VideoService from '../../service/video/VideoService';
 import s from './styles.module.less';
 import EmptyList from '../../components/EmptyList';
+import TitleHeader from '../../components/TitleHeader';
 
 interface Props {
   renderVideoCard: (video: Video, isLoading: boolean) => React.ReactNode;
@@ -65,12 +65,25 @@ const LtiView = ({ renderVideoCard }: Props) => {
   };
 
   return (
-    <Layout className={s.layout}>
-      <HeaderWithLogo>
-        <SearchBar onSearch={onSearch} placeholder="Search for videos..." />
-      </HeaderWithLogo>
-      <Layout.Content>
-        <Row gutter={[16, 16]} className={s.videoCardWrapper}>
+    <>
+      <Layout.Header className={s.layoutHeader}>
+        <Row>
+          <Col xs={24}>
+            <TitleHeader title="Video Library" />
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={16} push={4} className={s.searchBar}>
+            <SearchBar
+              onSearch={onSearch}
+              placeholder="Search for videos..."
+              theme="lti"
+            />
+          </Col>
+        </Row>
+      </Layout.Header>
+      <Layout.Content className={s.main}>
+        <Row>
           <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }}>
             {videos.length > 0 && (
               <section className={s.numberOfResults}>
@@ -85,7 +98,7 @@ const LtiView = ({ renderVideoCard }: Props) => {
               itemLayout="vertical"
               size="large"
               className={s.listWrapper}
-              locale={{ emptyText: <EmptyList /> }}
+              locale={{ emptyText: <EmptyList theme="lti" /> }}
               pagination={{
                 total: totalVideoElements,
                 pageSize: 10,
@@ -108,7 +121,7 @@ const LtiView = ({ renderVideoCard }: Props) => {
           </Col>
         </Row>
       </Layout.Content>
-    </Layout>
+    </>
   );
 };
 

@@ -7,10 +7,25 @@
   min-height: 100%;
   padding: 0 50px;
 }
-.layout {
-  background: none;
+
+.layoutHeader {
+  padding: 0 20px 20px 20px;
+  line-height: 24px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 4px 13px 0 rgba(204, 219, 237, 0.5);
 }
+
+.searchBar {
+  margin-top: 40px;
+}
+
 .numberOfResults {
+  font-family: var(--fontFamily);
   display: flex;
   justify-content: center;
   span {
@@ -20,7 +35,8 @@
     letter-spacing: 0;
     line-height: 24px;
     color: #434557;
-    margin-top: 52px;
+    margin-top: 20px;
+    margin-bottom: 13px;
   }
 }
 

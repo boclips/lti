@@ -1,24 +1,37 @@
+@import '~@bit/boclips.boclips-ui.styles.styles/_colours';
+
+:root {
+  --fontFamily: 'Work Sans', Heebo, Helvetica Neue, Helvetica, Arial, sans-serif;
+
+  --emptyPlaceholderText: @empty-placeholder-text;
+}
+
 .emptyWrapper {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
   height: 600px;
-  color: black;
   svg {
-    zoom: 1.5;
+    width: 380px;
   }
 }
 
-.emptyWelcome {
-  font-size: 26px;
-  font-weight: 600;
+.emptyWrapper.lti {
+  color: var(--emptyPlaceholderText);
+  font-family: var(--fontFamily);
 }
+
+.emptyWrapper.custom {
+  color: var(--emptyPlaceholderText);
+  font-family: var(--fontFamily);
+}
+
 .emptyInfo {
   padding-top: 24px;
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .svgWrapper {
