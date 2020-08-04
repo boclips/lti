@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="8px" height="5px" viewBox="0 0 8 5" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 55.2 (78181) - https://sketchapp.com -->
+    <title>Up</title>
+    <desc>Created with sketchtool.</desc>
+    <g id="desktop" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icons" transform="translate(-88.000000, -55.000000)" fill="#0E69FF" fill-rule="nonzero">
+            <g id="up" transform="translate(86.000000, 51.000000)">
+                <g id="down" transform="translate(6.000000, 7.000000) scale(1, -1) translate(-6.000000, -7.000000) translate(0.000000, 1.000000)">
+                    <g id="Rounded" transform="translate(2.000000, 4.000000)">
+                        <path d="M6.20954512,0.207289294 L3.66338553,2.95697292 L1.11722595,0.207289294 C0.861297539,-0.0690964313 0.44787472,-0.0690964313 0.191946309,0.207289294 L0.191946309,0.207289294 C-0.0639821029,0.483675019 -0.0639821029,0.930144267 0.191946309,1.20652999 L3.20402685,4.45937737 C3.45995526,4.7357631 3.87337808,4.7357631 4.12930649,4.45937737 L7.14138702,1.20652999 C7.39731544,0.930144267 7.39731544,0.483675019 7.14138702,0.207289294 L7.14138702,0.207289294 C6.88545861,-0.0620096178 6.46547353,-0.0690964313 6.20954512,0.207289294 Z" id="Shape"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
