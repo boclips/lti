@@ -1,0 +1,213 @@
+.selectWrapper {
+  box-sizing: border-box;
+  border-radius: 4px;
+  width:100%;
+  height: 40px;
+  color: #434656;
+  font-family: 'Work Sans';
+  font-size: 14px;
+  letter-spacing: 0;
+  line-height: 16px;
+  cursor: pointer;
+  border: 1.5px solid #cfd1d2;
+  position: relative;
+
+  &.filtersSelected {
+    border: 1.5px solid #3370b6 !important;
+  }
+
+  &:hover {
+    background: #f5f8fb;
+  }
+
+  &:global.ant-select-focused {
+    width:100%;
+    box-shadow: 0 0 4px 1px rgba(109, 114, 120, 0.5) !important;
+  }
+
+  // remove outline on focus
+  &:global.ant-select-focused.ant-select-focused.ant-select-open .ant-select-selector {
+    box-shadow: none;
+  }
+
+  :global .ant-select-arrow {
+    color: #346fb6;
+  }
+
+  :global .ant-select-selector {
+    height: 100%;
+    width:100%;
+  }
+
+  :global .ant-select-selector {
+    border: 0;
+    background-color: transparent;
+  }
+
+  :global .ant-select-selection-item {
+    all: initial;
+    width: 100%;
+    height: 100%;
+    display: flex;
+
+    :global .ant-select-selection-item-content {
+      display: flex;
+      width: 100%;
+    }
+
+    :global .ant-select-selection-item-remove {
+      display: none;
+    }
+  }
+}
+
+.optionsWrapper {
+  padding: 13px 0;
+}
+
+.inputValueWrapper {
+  height: 100%;
+  width: 100%;
+  color: #434656;
+  font-family: 'Work Sans';
+  font-weight: lighter;
+  font-size: 14px;
+  line-height: 16px;
+  padding-left: 8px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.countWrapper {
+  height: 20px;
+  width: 20px;
+  background-color: #3370b6;
+  color: white;
+  border-radius: 100%;
+  font-size: 13px;
+  font-weight: bold;
+  position: relative;
+  left: 8px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.checkboxWrapper {
+  width: 100%;
+  padding: 5px 12px;
+
+  &:hover {
+    :global .ant-checkbox-inner {
+      border: 2px solid #3370b6;
+    }
+  }
+
+  :global .ant-checkbox {
+    width: 18px;
+    height: 18px;
+
+    &:after {
+      border-color: #3370b6;
+    }
+
+    :global .ant-checkbox-inner {
+      border-color: #3370b6;
+      width: 18px;
+      height: 18px;
+    }
+
+    input[type='checkbox'] {
+      border-color: #3370b6;
+    }
+  }
+
+  :global .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: #3370b6;
+    border-color: #3370b6;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.checkboxLabel {
+  color: #434656;
+  font-family: 'Work Sans';
+  font-size: 16px;
+  letter-spacing: 0;
+  line-height: 20px;
+}
+
+.checkboxLabelSelected {
+  font-weight: 600;
+  color: #434656;
+  font-family: 'Work Sans';
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.buttonWrapper {
+  border-top: 1px solid #e8efff;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding: 9px 18px 13px 18px;
+}
+
+.applyButton {
+  height: 40px;
+  width: 90px;
+  border: 0;
+  border-radius: 4px;
+  background-color: #3370b6;
+  color: white;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 19px;
+
+  &:hover,
+  &:focus {
+    background-color: #3370b6;
+    color: white;
+  }
+}
+
+.filterSelectWrapper {
+  padding-top: 0;
+  padding-bottom: 0;
+  border: 1.5px solid #cdcecf;
+  border-radius: 4px;
+  box-shadow: 2px 2px 5px 1px #e8e8e8;
+  :global .ant-select-item {
+    width: 100%;
+    padding: 0;
+  }
+}
+
+.main{
+  padding-bottom: 12px;
+  position:relative;
+  width:25%;
+
+  &:not(:first-child){
+    padding-left:12px;
+  }
+  &:nth-child(4n+1){
+    padding-left:0;
+  }
+}
+
+.arrowIconWrapper{
+  position: absolute;
+  top:8px;
+  right:15px;
+  width:12px;
+  pointer-events: none;
+}
+
+.open{
+  transform: rotate(180deg);
+  top:10px;
+}

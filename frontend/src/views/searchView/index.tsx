@@ -1,17 +1,18 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Col, Layout, List, Row 
 } from 'antd';
 import { Video } from '@bit/boclips.boclips-ui.types.video';
-import Pageable from 'boclips-api-client/dist/sub-clients/common/model/Pageable';
 import c from 'classnames';
 import SearchBar from '@bit/boclips.boclips-ui.components.search-bar';
+import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 import ApiClient from '../../service/client/ApiClient';
 import { AppConstants } from '../../types/AppConstants';
-import VideoService from '../../service/video/VideoService';
+import VideoService, { ExtendedClientVideo, } from '../../service/video/VideoService';
 import s from './styles.module.less';
 import EmptyList from '../../components/EmptyList';
 import TitleHeader from '../../components/TitleHeader';
+import SelectFilter from '../../components/Select';
 
 interface Props {
   renderVideoCard: (video: Video, isLoading: boolean) => React.ReactNode;
@@ -23,6 +24,8 @@ const LtiView = ({ renderVideoCard }: Props) => {
   const [searchQuery, setSearchQuery] = useState<string>();
   const [searchPageNumber, setPageNumber] = useState<number>(0);
   const [totalVideoElements, setTotalVideoElements] = useState<number>(0);
+  const [facets, setFacets] = useState<VideoFacets>();
+  const [ageRangeFilter, setAgeRangeFilter] = useState<string[]>([]);
 
   const videoServicePromise = useMemo(
     () =>
@@ -40,13 +43,14 @@ const LtiView = ({ renderVideoCard }: Props) => {
     }
   };
 
-  const handleSearchResults = (searchResults: Pageable<Video>) => {
+  const handleSearchResults = (searchResults: ExtendedClientVideo<Video>) => {
+    setFacets(searchResults.facets);
     setTotalVideoElements(searchResults.pageSpec.totalElements);
     setVideos(searchResults.page);
     setLoading(false);
   };
 
-  useEffect(() => {
+  const search = (ageRange?: string[]) => {
     if (searchQuery || searchPageNumber) {
       videoServicePromise.then((videoService) =>
         videoService
@@ -54,11 +58,22 @@ const LtiView = ({ renderVideoCard }: Props) => {
             query: searchQuery,
             page: searchPageNumber,
             size: 10,
+            age_range: ageRange,
           })
-          .then((videosResponse) => handleSearchResults(videosResponse)),
+          .then((videosResponse) => {
+            handleSearchResults(videosResponse);
+          }),
       );
     }
+  };
+
+  useEffect(() => {
+    search();
   }, [searchQuery, searchPageNumber]);
+
+  useEffect(() => {
+    search(ageRangeFilter);
+  }, [ageRangeFilter]);
 
   const scrollToTop = () => {
     window.scrollTo(0, 0);
@@ -79,6 +94,24 @@ const LtiView = ({ renderVideoCard }: Props) => {
               placeholder="Search for videos..."
               theme="lti"
             />
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={16} push={4}>
+            <div className={s.filters}>
+              <div className={s.filtersTitle}>
+                FILTER BY:
+              </div>
+              <div className={s.filtersWrapper}>
+                {facets?.ageRanges && (
+                  <SelectFilter
+                    options={facets?.ageRanges!}
+                    title="Age"
+                    onApply={setAgeRangeFilter}
+                  />
+                )}
+              </div>
+            </div>
           </Col>
         </Row>
       </Layout.Header>
