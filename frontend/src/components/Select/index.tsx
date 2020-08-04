@@ -19,18 +19,16 @@ const SelectFilter = ({ options, onApply }: Props) => {
     onApply(selected);
   };
 
-  const options = () => {
-    return values.map((it) => ({ label: it, value: it }));
-  };
-
   return (
     <Select
       onChange={(value) => {
         console.log(value);
-
       }}
       showArrow
-      options={options}
+      options={values.map((it) => ({
+        label: <Checkbox> {it} </Checkbox>,
+        value: it,
+      }))}
       placeholder="Ages"
       data-qa="select-dropdown"
       className={s.selectWrapper}
@@ -53,11 +51,7 @@ const SelectFilter = ({ options, onApply }: Props) => {
           </div>
         );
       }}
-    >
-      {values.map((it) => (
-        <Checkbox key={it}>{it}</Checkbox>
-      ))}
-    </Select>
+    />
   );
 };
 
