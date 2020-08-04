@@ -7,6 +7,9 @@ import SearchView from '../../views/searchView';
 import '../../index.less';
 import playerOptions from '../../Player/playerOptions';
 
+
+// document.documentElement.style.setProperty('--titleHeaderTextColor', '#fff')
+
 const renderVideoCard = (video: Video, loading: boolean) => (
   <VideoCard
     key={video.id}
