@@ -26,7 +26,7 @@ const LtiView = ({ renderVideoCard }: Props) => {
   const [searchPageNumber, setPageNumber] = useState<number>(0);
   const [totalVideoElements, setTotalVideoElements] = useState<number>(0);
   const [facets, setFacets] = useState<VideoFacets>();
-
+  const [ageRangeFilter, setAgeRangeFilter] = useState<string[]>([]);
 
   const videoServicePromise = useMemo(
     () =>
@@ -92,9 +92,8 @@ const LtiView = ({ renderVideoCard }: Props) => {
           <Col xs={24}>
             {facets?.ageRanges && (
               <SelectFilter
-                ageRanges={facets?.ageRanges!}
-                  onApply={setAgeRanges}
-
+                options={facets?.ageRanges!}
+                onApply={setAgeRangeFilter}
               />
             )}
           </Col>

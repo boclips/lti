@@ -1,22 +1,36 @@
-import React from 'react';
-import { Select } from 'antd';
+import React, { ReactHTMLElement, useState } from 'react';
+import { Button, Select } from 'antd';
 import { Facet } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 
 import s from './styles.module.less';
 
 interface Props {
-  ageRanges: { [id: string]: Facet };
-  onApply?: () => void;
+  options: { [id: string]: Facet };
+  onApply: (ageRanges: string[]) => void;
 }
 
-const SelectFilter = ({ ageRanges }: Props) => {
-  const values = Object.keys(ageRanges);
+const SelectFilter = ({ options, onApply }: Props) => {
+  const [selected, setSelected] = useState<string[]>([]);
+  const values = Object.keys(options);
+
+  const onClick = () => {
+    console.log('selected: '+selected);
+    onApply(selected);
+  }
 
   return (
-    <Select data-qa="select-dropdown" className={s.selectWrapper}>
+    <Select
+      onChange={(e) => {
+        console.log(e);
+        // setSelected(e.target.value);
+      }}
+      data-qa="select-dropdown"
+      className={s.selectWrapper}
+    >
       {values.map((it) => (
         <Select.Option key={it} data-qa={`filter-${it}`} value={it}> {it} </Select.Option>
       ))}
+      <Button onClick={onClick}/>
     </Select>
   );
 };
