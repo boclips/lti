@@ -5,24 +5,27 @@ import s from './styles.module.less';
 
 interface Props {
   options: { [id: string]: Facet };
+  title: string;
   onApply: (ageRanges: string[]) => void;
 }
 
-const SelectFilter = ({ options, onApply }: Props) => {
+const SelectFilter = ({ options, title, onApply }: Props) => {
   const [selected, setSelected] = useState<string[]>([]);
-  const [showCount, setShowCount] = useState<number>();
+  const [showCount, setShowCount] = useState<number>(0);
 
   const values = Object.keys(options);
 
   const onClick = () => {
+    console.log(selected);
     setShowCount(selected.length);
-    console.log(`selected: ${selected}`);
     onApply(selected);
   };
 
   const getOptions = () =>
     values.map((it) => ({
-      label: <Checkbox tabIndex={0} 
+      label: <Checkbox
+        tabIndex={0}
+        data-qa={`filter-${it}`}
         onClick={(e) => e.stopPropagation()}
         className={s.checkboxWrapper}>
         {it}
@@ -31,6 +34,7 @@ const SelectFilter = ({ options, onApply }: Props) => {
     }));
 
   const manageSelected = (selectedValue: any) => {
+    // console.log(selectedValue);
     const { value } = selectedValue;
     if (selected.includes(value)) {
       const newSelected = selected.filter((v) => v !== value);
@@ -46,12 +50,17 @@ const SelectFilter = ({ options, onApply }: Props) => {
         showArrow
         onChange={() => null}
         options={getOptions()}
-        placeholder="Ages"
+        placeholder={title}
         data-qa="select-dropdown"
         className={s.selectWrapper}
         dropdownClassName={s.filterSelectWrapper}
         labelInValue
-        value={{ value: '', label: <div className={s.inputValueWrapper}> Ages {showCount && showCount} </div> }}
+        value={{
+          value: '',
+          label: <div className={s.inputValueWrapper}>
+            {title} {showCount > 0 ? showCount : ''}
+          </div>
+        }}
         mode="multiple"
         showSearch={false}
         onSelect={(valueWithLabel) => {
@@ -61,7 +70,7 @@ const SelectFilter = ({ options, onApply }: Props) => {
           <div>
             {i}
             <hr/>
-            <Button onClick={onClick}> Apply </Button>
+            <Button data-qa="apply-button" onClick={onClick}> Apply </Button>
           </div>
         )}
       />

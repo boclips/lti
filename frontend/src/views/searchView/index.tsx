@@ -1,16 +1,18 @@
-import React, {useEffect, useMemo, useState} from 'react';
-import {Col, Layout, List, Row} from 'antd';
-import {Video} from '@bit/boclips.boclips-ui.types.video';
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  Col, Layout, List, Row 
+} from 'antd';
+import { Video } from '@bit/boclips.boclips-ui.types.video';
 import c from 'classnames';
 import SearchBar from '@bit/boclips.boclips-ui.components.search-bar';
+import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 import ApiClient from '../../service/client/ApiClient';
-import {AppConstants} from '../../types/AppConstants';
-import VideoService, {ExtendedClientVideo,} from '../../service/video/VideoService';
+import { AppConstants } from '../../types/AppConstants';
+import VideoService, { ExtendedClientVideo, } from '../../service/video/VideoService';
 import s from './styles.module.less';
 import EmptyList from '../../components/EmptyList';
 import TitleHeader from '../../components/TitleHeader';
 import SelectFilter from '../../components/Select';
-import {VideoFacets} from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';s
 
 interface Props {
   renderVideoCard: (video: Video, isLoading: boolean) => React.ReactNode;
@@ -63,7 +65,7 @@ const LtiView = ({ renderVideoCard }: Props) => {
           }),
       );
     }
-  }
+  };
 
   useEffect(() => {
     search();
@@ -99,6 +101,7 @@ const LtiView = ({ renderVideoCard }: Props) => {
             {facets?.ageRanges && (
               <SelectFilter
                 options={facets?.ageRanges!}
+                title="Ages"
                 onApply={setAgeRangeFilter}
               />
             )}
