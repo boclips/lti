@@ -28,14 +28,18 @@ const SelectFilter = ({ options, title, onApply }: Props) => {
         onClick={(e) => e.stopPropagation()}
         className={s.checkboxWrapper}
       >
-        {it}
+        <span
+          className={selected.includes(it) ? s.checkboxLabelSelected : s.checkboxLabel}>{it}
+        </span>
       </Checkbox>,
       value: it,
       title: it
     }));
-  
+
   const manageSelected = (selectedValue: any) => {
+    console.log(selectedValue);
     const { value } = selectedValue;
+    console.log(value);
     if (selected.includes(value)) {
       const newSelected = selected.filter((v) => v !== value);
       setSelected(newSelected);
@@ -55,10 +59,11 @@ const SelectFilter = ({ options, title, onApply }: Props) => {
         className={s.selectWrapper}
         dropdownClassName={s.filterSelectWrapper}
         labelInValue
+        dropdownMatchSelectWidth={false}
         value={{
           value: 'Ages',
           label: <div className={s.inputValueWrapper}>
-            {title} {showCount > 0 ? showCount : ''}
+            {title} {showCount > 0 ? <span className={s.countWrapper}>{showCount}</span> : ''}
           </div>
         }}
         mode="multiple"
@@ -69,8 +74,16 @@ const SelectFilter = ({ options, title, onApply }: Props) => {
         dropdownRender={(i) => (
           <div>
             {i}
-            <hr/>
-            <Button data-qa="apply-button" onClick={onClick}> Apply </Button>
+            <div className={s.buttonWrapper}>
+              <Button
+                type="primary"
+                className={s.applyButton}
+                data-qa="apply-button"
+                disabled={!selected.length}
+                onClick={onClick}
+              > APPLY
+              </Button>
+            </div>
           </div>
         )}
       />

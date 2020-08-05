@@ -101,7 +101,7 @@ const LtiView = ({ renderVideoCard }: Props) => {
             {facets?.ageRanges && (
               <SelectFilter
                 options={facets?.ageRanges!}
-                title="Ages"
+                title="Age"
                 onApply={setAgeRangeFilter}
               />
             )}
