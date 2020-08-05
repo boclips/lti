@@ -16,7 +16,6 @@ const SelectFilter = ({ options, title, onApply }: Props) => {
   const values = Object.keys(options);
 
   const onClick = () => {
-    console.log(selected);
     setShowCount(selected.length);
     onApply(selected);
   };
@@ -26,17 +25,17 @@ const SelectFilter = ({ options, title, onApply }: Props) => {
       label: <Checkbox
         tabIndex={0}
         data-qa={`filter-${it}`}
-        // onClick={(e) => e.stopPropagation()}
-        className={s.checkboxWrapper}>
+        onClick={(e) => e.stopPropagation()}
+        className={s.checkboxWrapper}
+      >
         {it}
       </Checkbox>,
       value: it,
+      title: it
     }));
-
+  
   const manageSelected = (selectedValue: any) => {
-    console.log(selectedValue);
     const { value } = selectedValue;
-    console.log(value);
     if (selected.includes(value)) {
       const newSelected = selected.filter((v) => v !== value);
       setSelected(newSelected);
@@ -49,15 +48,15 @@ const SelectFilter = ({ options, title, onApply }: Props) => {
     <>
       <Select
         showArrow
-        onChange={() => null}
         options={getOptions()}
-        placeholder={title}
+        optionLabelProp="data-qa"
+        menuItemSelectedIcon={null}
         data-qa="select-dropdown"
         className={s.selectWrapper}
         dropdownClassName={s.filterSelectWrapper}
         labelInValue
         value={{
-          value: '',
+          value: 'Ages',
           label: <div className={s.inputValueWrapper}>
             {title} {showCount > 0 ? showCount : ''}
           </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  fireEvent, render, screen, waitFor 
+  fireEvent, render, screen
 } from '@testing-library/react';
 import SelectFilter from './index';
 
@@ -56,15 +56,10 @@ describe('Select dropdown', () => {
 
     await fireEvent.mouseDown(selectFilter);
 
-    // console.log(screen.debug())
-
-    // const option1 = screen.('5-9');
-    // const option2 = screen.getByText('11-14');
-
     const option1 = screen
-      .getByTestId(`filter-${Object.keys(filters)[1]}`);
+      .getByTitle('5-9');
     const option2 = screen
-      .getByTestId(`filter-${Object.keys(filters)[3]}`);
+      .getByTitle('11-14');
 
     await fireEvent.click(option1);
     await fireEvent.click(option2);
