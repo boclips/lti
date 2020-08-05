@@ -1,7 +1,5 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import {
-  Col, Layout, List, Row 
-} from 'antd';
+import React, { useState, useMemo } from 'react';
+import { Col, Layout, List, Row } from 'antd';
 import { Video } from '@bit/boclips.boclips-ui.types.video';
 import Pageable from 'boclips-api-client/dist/sub-clients/common/model/Pageable';
 import c from 'classnames';
@@ -37,6 +35,16 @@ const LtiView = ({ renderVideoCard }: Props) => {
       setSearchQuery(query);
       setPageNumber(page!!);
       setLoading(true);
+
+      videoServicePromise.then((videoService) =>
+        videoService
+          .searchVideos({
+            query,
+            page,
+            size: 10,
+          })
+          .then((videosResponse) => handleSearchResults(videosResponse)),
+      );
     }
   };
 
@@ -45,20 +53,6 @@ const LtiView = ({ renderVideoCard }: Props) => {
     setVideos(searchResults.page);
     setLoading(false);
   };
-
-  useEffect(() => {
-    if (searchQuery || searchPageNumber) {
-      videoServicePromise.then((videoService) =>
-        videoService
-          .searchVideos({
-            query: searchQuery,
-            page: searchPageNumber,
-            size: 10,
-          })
-          .then((videosResponse) => handleSearchResults(videosResponse)),
-      );
-    }
-  }, [searchQuery, searchPageNumber]);
 
   const scrollToTop = () => {
     window.scrollTo(0, 0);
@@ -83,43 +77,48 @@ const LtiView = ({ renderVideoCard }: Props) => {
         </Row>
       </Layout.Header>
       <Layout.Content className={s.main}>
-        <Row>
-          <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }}>
-            {videos.length > 0 && (
-              <section className={s.numberOfResults}>
-                <span>
-                  {`${
-                    totalVideoElements > 500 ? '500+' : totalVideoElements
-                  } result${videos.length > 1 ? 's' : ''} found:`}
-                </span>
-              </section>
-            )}
-            <List
-              itemLayout="vertical"
-              size="large"
-              className={s.listWrapper}
-              locale={{ emptyText: <EmptyList theme="lti" /> }}
-              pagination={{
-                total: totalVideoElements,
-                pageSize: 10,
-                className: c(s.pagination, {
-                  [s.paginationEmpty]: !videos.length,
-                }),
-                showSizeChanger: false,
-                onChange: (page) => {
-                  scrollToTop();
-                  onSearch(searchQuery, page - 1);
-                },
-              }}
-              dataSource={videos}
-              loading={{
-                wrapperClassName: s.spinner,
-                spinning: loading,
-              }}
-              renderItem={(video: Video) => renderVideoCard(video, loading)}
-            />
-          </Col>
-        </Row>
+        {!loading && videos.length === 0 && !!searchQuery ? (
+          <p>{`We couldn\'t anything for \"${searchQuery}\" with your filters`}</p>
+        ) : (
+          <Row>
+            <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }}>
+              {videos.length > 0 && (
+                <section className={s.numberOfResults}>
+                  <span>
+                    {`${
+                      totalVideoElements > 500 ? '500+' : totalVideoElements
+                    } result${videos.length > 1 ? 's' : ''} found:`}
+                  </span>
+                </section>
+              )}
+              <List
+                itemLayout="vertical"
+                size="large"
+                className={s.listWrapper}
+                locale={{ emptyText: <EmptyList theme="lti" /> }}
+                pagination={{
+                  total: totalVideoElements,
+                  pageSize: 10,
+                  className: c(s.pagination, {
+                    [s.paginationEmpty]: !videos.length,
+                  }),
+                  showSizeChanger: false,
+                  current: searchPageNumber + 1,
+                  onChange: (page) => {
+                    scrollToTop();
+                    onSearch(searchQuery, page - 1);
+                  },
+                }}
+                dataSource={videos}
+                loading={{
+                  wrapperClassName: s.spinner,
+                  spinning: loading,
+                }}
+                renderItem={(video: Video) => renderVideoCard(video, loading)}
+              />
+            </Col>
+          </Row>
+        )}
       </Layout.Content>
     </>
   );

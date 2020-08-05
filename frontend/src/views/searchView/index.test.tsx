@@ -15,7 +15,9 @@ describe('LTI test', () => {
     render(<LtiView renderVideoCard={() => <div />} />);
 
     expect(
-      await screen.findByText('Use the search on top to discover inspiring videos'),
+      await screen.findByText(
+        'Use the search on top to discover inspiring videos',
+      ),
     ).toBeInTheDocument();
   });
 
@@ -45,5 +47,21 @@ describe('LTI test', () => {
 
     await screen.findByText('Hello, video 123');
     await screen.findByText('Hello, video 456');
+  });
+
+  it('renders empty results view when no video results', async () => {
+    render(
+      <LtiView
+        renderVideoCard={(video: Video) => <div>Hello, video {video.id}</div>}
+      />,
+    );
+
+    const searchBar = screen.getByTestId('search-input');
+    fireEvent.change(searchBar, { target: { value: 'Hi' } });
+
+    const searchButton = screen.getByText('Search');
+    fireEvent.click(searchButton);
+
+    await screen.findByText('We couldn\'t anything for "Hi" with your filters');
   });
 });
