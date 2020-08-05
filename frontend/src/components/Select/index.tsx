@@ -23,7 +23,7 @@ const SelectFilter = ({ options, onApply }: Props) => {
   const getOptions = () =>
     values.map((it) => ({
       label: <Checkbox tabIndex={0} 
-        onClick={(e) => e.stopPropagation()} 
+        onClick={(e) => e.stopPropagation()}
         className={s.checkboxWrapper}>
         {it}
       </Checkbox>,
