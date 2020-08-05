@@ -26,7 +26,7 @@ const SelectFilter = ({ options, title, onApply }: Props) => {
       label: <Checkbox
         tabIndex={0}
         data-qa={`filter-${it}`}
-        onClick={(e) => e.stopPropagation()}
+        // onClick={(e) => e.stopPropagation()}
         className={s.checkboxWrapper}>
         {it}
       </Checkbox>,
@@ -34,8 +34,9 @@ const SelectFilter = ({ options, title, onApply }: Props) => {
     }));
 
   const manageSelected = (selectedValue: any) => {
-    // console.log(selectedValue);
+    console.log(selectedValue);
     const { value } = selectedValue;
+    console.log(value);
     if (selected.includes(value)) {
       const newSelected = selected.filter((v) => v !== value);
       setSelected(newSelected);
