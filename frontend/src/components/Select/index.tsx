@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Checkbox, Select } from 'antd';
 import { Facet } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
+import c from 'classnames';
+import IconOpen from './resources/icon-down.svg';
 import s from './styles.module.less';
 
 interface Props {
@@ -12,6 +14,7 @@ interface Props {
 const SelectFilter = ({ options, title, onApply }: Props) => {
   const [selected, setSelected] = useState<string[]>([]);
   const [showCount, setShowCount] = useState<number>(0);
+  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
 
   const values = Object.keys(options);
 
@@ -37,9 +40,7 @@ const SelectFilter = ({ options, title, onApply }: Props) => {
     }));
 
   const manageSelected = (selectedValue: any) => {
-    console.log(selectedValue);
     const { value } = selectedValue;
-    console.log(value);
     if (selected.includes(value)) {
       const newSelected = selected.filter((v) => v !== value);
       setSelected(newSelected);
@@ -49,17 +50,15 @@ const SelectFilter = ({ options, title, onApply }: Props) => {
   };
 
   return (
-    <>
+    <div className={s.main}>
       <Select
-        showArrow
+        showSearch={false}
         options={getOptions()}
-        optionLabelProp="data-qa"
         menuItemSelectedIcon={null}
         data-qa="select-dropdown"
-        className={s.selectWrapper}
+        className={c(s.selectWrapper, { [s.filtersSelected]: showCount > 0 })}
         dropdownClassName={s.filterSelectWrapper}
         labelInValue
-        dropdownMatchSelectWidth={false}
         value={{
           value: 'Ages',
           label: <div className={s.inputValueWrapper}>
@@ -67,13 +66,18 @@ const SelectFilter = ({ options, title, onApply }: Props) => {
           </div>
         }}
         mode="multiple"
-        showSearch={false}
+        onDropdownVisibleChange={(open) => {
+          setDropdownOpen(open);
+        }}
         onSelect={(valueWithLabel) => {
           manageSelected(valueWithLabel);
         }}
+
         dropdownRender={(i) => (
           <div>
-            {i}
+            <div className={s.optionsWrapper}>
+              {i}
+            </div>
             <div className={s.buttonWrapper}>
               <Button
                 type="primary"
@@ -87,7 +91,8 @@ const SelectFilter = ({ options, title, onApply }: Props) => {
           </div>
         )}
       />
-    </>
+      <div className={c(s.arrowIconWrapper, { [s.open]: dropdownOpen })}><IconOpen /></div>
+    </div>
   );
 };
 

@@ -97,7 +97,7 @@ const LtiView = ({ renderVideoCard }: Props) => {
           </Col>
         </Row>
         <Row>
-          <Col xs={24}>
+          <Col xs={16} push={4} className={s.filtersWrapper}>
             {facets?.ageRanges && (
               <SelectFilter
                 options={facets?.ageRanges!}
