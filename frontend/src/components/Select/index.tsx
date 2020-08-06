@@ -74,7 +74,7 @@ const SelectFilter = ({ options, title, onApply }: Props) => {
         }}
 
         dropdownRender={(i) => (
-          <div>
+          <>
             <div className={s.optionsWrapper}>
               {i}
             </div>
@@ -88,7 +88,7 @@ const SelectFilter = ({ options, title, onApply }: Props) => {
               > APPLY
               </Button>
             </div>
-          </div>
+          </>
         )}
       />
       <div className={c(s.arrowIconWrapper, { [s.open]: dropdownOpen })}><IconOpen /></div>

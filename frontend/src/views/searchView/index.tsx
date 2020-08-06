@@ -88,7 +88,7 @@ const LtiView = ({ renderVideoCard }: Props) => {
           </Col>
         </Row>
         <Row>
-          <Col xs={16} push={4} className={s.searchBar}>
+          <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }} className={s.searchBar}>
             <SearchBar
               onSearch={onSearch}
               placeholder="Search for videos..."
@@ -96,9 +96,9 @@ const LtiView = ({ renderVideoCard }: Props) => {
             />
           </Col>
         </Row>
-        <Row>
-          <Col xs={16} push={4}>
-            <div className={s.filters}>
+        <Row >
+          <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }} className={s.filtersAlign}>
+            {videos.length > 0 && <div className={s.filters}>
               <div className={s.filtersTitle}>
                 FILTER BY:
               </div>
@@ -112,6 +112,7 @@ const LtiView = ({ renderVideoCard }: Props) => {
                 )}
               </div>
             </div>
+            }
           </Col>
         </Row>
       </Layout.Header>

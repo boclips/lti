@@ -8,22 +8,34 @@
   padding: 0 50px;
 }
 
-.filters{
-  margin-top:16px;
-  .filtersTitle{
+.filtersAlign{
+  display: flex;
+  justify-content: center;
+}
+
+.filters {
+  max-width: 975px;
+  width: 100%;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+
+  .filtersTitle {
     font-weight: bolder;
-    color:#231F20;
-    padding-bottom:4px;
+    color: #231F20;
+    padding-bottom: 4px;
   }
-  .filtersWrapper{
-    display:flex;
+
+  .filtersWrapper {
+    display: flex;
     flex-direction: row;
-    flex-wrap:wrap;
+    flex-wrap: wrap;
   }
 }
 
 .layoutHeader {
-  padding: 0 20px 20px 20px;
+  padding: 0 0 20px 0;
   line-height: 24px;
   height: auto;
   display: flex;
@@ -42,6 +54,7 @@
   font-family: var(--fontFamily);
   display: flex;
   justify-content: center;
+
   span {
     width: 977px;
     font-size: 18px;
@@ -58,16 +71,19 @@
   display: flex;
   justify-content: center;
   padding-bottom: 12px;
+
   li {
     font-size: 16px;
     font-weight: bold;
     border: 2px solid @shade-6;
     background: transparent;
     border-radius: 8px;
+
     :global .ant-pagination-item-link {
       border: 0;
       background: none;
     }
+
     svg {
       position: relative;
       top: -4px;
@@ -79,27 +95,33 @@
   :global .ant-pagination-jump-next,
   :global .ant-pagination-jump-prev {
     border: none;
+
     :hover {
       svg {
         fill: @blue-shade-4;
       }
     }
   }
+
   :global .ant-pagination-disabled {
     opacity: 0.5;
   }
+
   :global .ant-pagination-next,
   :global .ant-pagination-prev,
   :global .ant-pagination-item-ellipsis {
     &:hover {
       border-color: @blue-shade-4;
+
       svg {
         fill: @blue-shade-4;
       }
     }
   }
+
   :global .ant-pagination-item-active {
     border-color: @blue-shade-4;
+
     a {
       color: @blue-shade-4;
     }
