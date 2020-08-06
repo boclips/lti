@@ -19,6 +19,7 @@
     "@bit/boclips.boclips-ui.types.age-range": "1.0.0",
     "@bit/boclips.boclips-ui.types.link": "1.0.2",
     "@bit/boclips.boclips-ui.types.video": "1.0.4",
+    "@bit/boclips.boclips-ui.components.select": "1.0.2",
     "@testing-library/jest-dom": "5.7.0",
     "@testing-library/react": "10.4.8",
     "@types/classnames": "^2.2.10",
