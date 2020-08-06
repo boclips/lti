@@ -13,6 +13,7 @@ import s from './styles.module.less';
 import EmptyList from '../../components/EmptyList';
 import TitleHeader from '../../components/TitleHeader';
 import SelectFilter from '../../components/Select';
+import NoResults from '../../components/NoResults/NoResults';
 
 interface Props {
   renderVideoCard: (video: Video, isLoading: boolean) => React.ReactNode;
@@ -118,41 +119,44 @@ const LtiView = ({ renderVideoCard }: Props) => {
       </Layout.Header>
       <Layout.Content className={s.main}>
         <Row>
-          <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }}>
-            {videos.length > 0 && (
-              <section className={s.numberOfResults}>
-                <span>
-                  {`${
-                    totalVideoElements > 500 ? '500+' : totalVideoElements
-                  } result${videos.length > 1 ? 's' : ''} found:`}
-                </span>
-              </section>
-            )}
-            <List
-              itemLayout="vertical"
-              size="large"
-              className={s.listWrapper}
-              locale={{ emptyText: <EmptyList theme="lti" /> }}
-              pagination={{
-                total: totalVideoElements,
-                pageSize: 10,
-                className: c(s.pagination, {
-                  [s.paginationEmpty]: !videos.length,
-                }),
-                showSizeChanger: false,
-                onChange: (page) => {
-                  scrollToTop();
-                  onSearch(searchQuery, page - 1);
-                },
-              }}
-              dataSource={videos}
-              loading={{
-                wrapperClassName: s.spinner,
-                spinning: loading,
-              }}
-              renderItem={(video: Video) => renderVideoCard(video, loading)}
-            />
-          </Col>
+          {!loading && videos.length === 0 && !!searchQuery ? (
+            <NoResults searchQuery={searchQuery}/>
+          ) : (
+            <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }}>
+              {videos.length > 0 && (
+                <section className={s.numberOfResults}>
+                  <span>
+                    {`${
+                      totalVideoElements > 500 ? '500+' : totalVideoElements
+                    } result${videos.length > 1 ? 's' : ''} found:`}
+                  </span>
+                </section>
+              )}
+              <List
+                itemLayout="vertical"
+                size="large"
+                className={s.listWrapper}
+                locale={{ emptyText: <EmptyList theme="lti" /> }}
+                pagination={{
+                  total: totalVideoElements,
+                  pageSize: 10,
+                  className: c(s.pagination, {
+                    [s.paginationEmpty]: !videos.length,
+                  }),
+                  showSizeChanger: false,
+                  onChange: (page) => {
+                    scrollToTop();
+                    onSearch(searchQuery, page - 1);
+                  },
+                }}
+                dataSource={videos}
+                loading={{
+                  wrapperClassName: s.spinner,
+                  spinning: loading,
+                }}
+                renderItem={(video: Video) => renderVideoCard(video, loading)}
+              />
+            </Col>)}
         </Row>
       </Layout.Content>
     </>
