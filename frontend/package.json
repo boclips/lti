@@ -20,7 +20,7 @@
     "@bit/boclips.boclips-ui.types.link": "1.0.2",
     "@bit/boclips.boclips-ui.types.video": "1.0.4",
     "@testing-library/jest-dom": "5.7.0",
-    "@testing-library/react": "^10.4.7",
+    "@testing-library/react": "10.4.8",
     "@types/classnames": "^2.2.10",
     "@types/enzyme": "3.10.5",
     "@types/enzyme-adapter-react-16": "1.0.6",
