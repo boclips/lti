@@ -36,7 +36,7 @@ const LtiView = ({ renderVideoCard }: Props) => {
   );
 
   const onSearch = (query?: string, page: number = 0) => {
-    if (query) {
+    if (query && searchQuery !== query) {
       setSearchQuery(query);
       setPageNumber(page!!);
       setLoading(true);
