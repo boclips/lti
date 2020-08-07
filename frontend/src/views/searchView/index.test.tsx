@@ -11,6 +11,14 @@ import AxiosService from '../../service/axios/AxiosService';
 AxiosService.configureAxios();
 
 describe('LTI test', () => {
+  const searchFor = (query: string) => {
+    const searchBar = screen.getByTestId('search-input');
+    fireEvent.change(searchBar, { target: { value: query } });
+
+    const searchButton = screen.getByText('Search');
+    fireEvent.click(searchButton);
+  };
+  
   it('displays empty render with welcome message', async () => {
     render(<LtiView renderVideoCard={() => <div />} />);
 
@@ -46,6 +54,7 @@ describe('LTI test', () => {
     await screen.findByText('Hello, video 123');
     await screen.findByText('Hello, video 456');
   });
+
   it('renders empty results view when no video results', async () => {
     render(
       <LtiView
@@ -60,5 +69,38 @@ describe('LTI test', () => {
     fireEvent.click(searchButton);
 
     await screen.findByText('We couldn\'t anything for "yay" with your filters');
+  });
+
+  it('shows filter panel only when there are videos and facets returned', async () => {
+    const fakeApiClient = (await new ApiClient(
+      'https://api.example.com',
+    ).getClient()) as FakeBoclipsClient;
+
+    fakeApiClient.videos.insertVideo(
+      VideoFactory.sample({ id: '123', title: 'Hi' }),
+    );
+    fakeApiClient.videos.setFacets({
+      durations: {},
+      resourceTypes: {},
+      subjects: {},
+      ageRanges: {
+        '3-5': {
+          hits: 3,
+        },
+      }
+    });
+
+    render(
+      <LtiView
+        renderVideoCard={(video: Video) => <div>Hello, video {video.id}</div>}
+      />,
+    );
+
+    searchFor('find nothing');
+    await screen.findByText('We couldn\'t anything for "find nothing" with your filters');
+    expect(screen.queryByText('FILTER BY:')).toBeNull();
+
+    searchFor('Hi');
+    expect(await screen.findByText('FILTER BY:')).toBeInTheDocument();
   });
 });
