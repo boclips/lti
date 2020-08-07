@@ -10,10 +10,12 @@ interface Props {
 }
 
 const FilterPanel = ({ facets, onApply }: Props) => {
-  const [ageRangeFilter, setAgeRangeFilter] = useState<string[]>([]);
+  const [ageRangeFilter, setAgeRangeFilter] = useState<string[]>();
 
   useEffect(() => {
-    onApply({ ageRanges: ageRangeFilter });
+    if (ageRangeFilter) {
+      onApply({ ageRanges: ageRangeFilter });
+    }
   }, [ageRangeFilter]);
 
   return (
