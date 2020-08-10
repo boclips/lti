@@ -9,17 +9,10 @@ describe('Duration converter', () => {
     'PT10M-PT20M': { hits: 48 },
     'PT20M-PT24H': { hits: 45 }
   };
-  const defaultOptions = [
-    { min: 0, max: 120 },
-    { min: 120, max: 300 },
-    { min: 300, max: 600 },
-    { min: 600, max: 1200 },
-    { min: 1200, max: 86400 },
-  ];
 
   it('can convert "duration" facet into SelectOption', () => {
     const selectOptions: SelectOption[] =
-      DurationConverter.convertToSelectOptions(durationFacet, defaultOptions);
+      DurationConverter.toSelectOptions(durationFacet);
 
     expect(selectOptions).toHaveLength(5);
     expect(selectOptions[0]).toEqual({ id: 'PT0S-PT2M', label: '0m - 2m', count: 53 });

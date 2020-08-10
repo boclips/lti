@@ -8,17 +8,25 @@ interface DurationFacet {
 }
 
 export default class DurationConverter {
-  static convertToSelectOptions(
-    durationFacet: DurationFacet,
-    defaultOptions: Range[]
-  ): SelectOption[] {
-    return defaultOptions.map((duration) => ({
-      id: this.toIso(duration),
-      label: this.getLabel(duration),
-      count: this.extractFacetHits(this.toIso(duration), durationFacet),
-    }));
+  static toSelectOptions(durationFacet: DurationFacet): SelectOption[] {
+    return Object.keys(durationFacet).map((duration) => ({
+      id: duration,
+      label: this.getLabelFromIso(duration),
+      count: this.extractFacetHits(duration, durationFacet),
+    }))
+      .filter((option) => option.label?.length > 0);
   }
-
+  
+  private static getLabelFromIso(iso: string) {
+    const values = iso.split('-');
+    return values.length === 2 
+      ? this.getLabel({
+        min: moment.duration(values[0]).asSeconds(),
+        max: moment.duration(values[1]).asSeconds()
+      })
+      : '';
+  }
+  
   private static getLabel = (range: Range) => {
     const formatter = (seconds) => `${seconds / 60}m`;
 
@@ -28,12 +36,6 @@ export default class DurationConverter {
 
     return `> ${formatter(range.min)}`;
   };
-
-  private static toIso(range: Range) {
-    return `${this.secondsToIso(
-      range.min,
-    )}-${this.secondsToIso(range.max)}`;
-  }
 
   private static extractFacetHits = (
     id: string,
@@ -47,13 +49,5 @@ export default class DurationConverter {
       return 0;
     }
     return facet[id].hits > MaxElementCount ? MaxElementCount : facet[id].hits;
-  };
-
-  private static secondsToIso = (seconds: number): string => {
-    if (seconds === 0) {
-      return 'PT0S';
-    }
-
-    return moment.duration(seconds, 'seconds').toISOString();
   };
 }

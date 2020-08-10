@@ -6,15 +6,6 @@ import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subj
 import s from './style.module.less';
 import { Filters } from '../../types/filters';
 import DurationConverter from './converters/DurationConverter';
-import Range from '../../types/range';
-
-const durationFilterOptions: Range[] = [
-  { min: 0, max: 120 },
-  { min: 120, max: 300 },
-  { min: 300, max: 600 },
-  { min: 600, max: 1200 },
-  { min: 1200, max: 86400 },
-];
 
 interface Props {
   facets: VideoFacets | undefined;
@@ -69,10 +60,7 @@ const FilterPanel = ({ facets, onApply, subjects }: Props) => {
             onApply={setAgeRangeFilter}
           />
           <SelectFilter
-            options={DurationConverter.convertToSelectOptions(
-              facets?.durations!!,
-              durationFilterOptions
-            )}
+            options={DurationConverter.toSelectOptions(facets?.durations!!)}
             title="Duration"
             onApply={setDurationFilter}
           />
