@@ -26,6 +26,6 @@ describe('Duration converter', () => {
     expect(selectOptions[1]).toEqual({ id: 'PT2M-PT5M', label: '2m - 5m', count: 94 });
     expect(selectOptions[2]).toEqual({ id: 'PT5M-PT10M', label: '5m - 10m', count: 44 });
     expect(selectOptions[3]).toEqual({ id: 'PT10M-PT20M', label: '10m - 20m', count: 48 });
-    expect(selectOptions[4]).toEqual({ id: 'PT20M-PT24H', label: '20m +', count: 45 });
+    expect(selectOptions[4]).toEqual({ id: 'PT20M-PT24H', label: '> 20m', count: 45 });
   });
 });

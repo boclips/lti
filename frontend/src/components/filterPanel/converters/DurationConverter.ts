@@ -26,7 +26,7 @@ export default class DurationConverter {
       return `${formatter(range.min)} - ${formatter(range.max)}`;
     }
 
-    return `${formatter(range.min)} +`;
+    return `> ${formatter(range.min)}`;
   };
 
   private static toIso(range: Range) {

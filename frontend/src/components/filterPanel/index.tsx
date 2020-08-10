@@ -8,12 +8,12 @@ import DurationConverter from './converters/DurationConverter';
 import Range from '../../types/range';
 
 const durationFilterOptions: Range[] = [
-    { min: 0, max: 120 },
-    { min: 120, max: 300 },
-    { min: 300, max: 600 },
-    { min: 600, max: 1200 },
-    { min: 1200, max: 86400 },
-  ];
+  { min: 0, max: 120 },
+  { min: 120, max: 300 },
+  { min: 300, max: 600 },
+  { min: 600, max: 1200 },
+  { min: 1200, max: 86400 },
+];
 
 interface Props {
   facets: VideoFacets | undefined;
