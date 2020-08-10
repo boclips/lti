@@ -35,8 +35,8 @@ describe('VideoService', () => {
 
   it('Can load all subjects', async () => {
     const fakeApiClient = (await apiClientPromise) as FakeBoclipsClient;
-    fakeApiClient.subjects.insertSubject({id: "1", name: "test"});
-    fakeApiClient.subjects.insertSubject({id: "2", name: "test2"});
+    fakeApiClient.subjects.insertSubject({ id: '1', name: 'test' });
+    fakeApiClient.subjects.insertSubject({ id: '2', name: 'test2' });
 
     const service = new VideoService(fakeApiClient);
     const subjects = await service.getSubjects();
@@ -44,5 +44,5 @@ describe('VideoService', () => {
     expect(subjects.length).toEqual(2);
     expect(subjects[0].id).toEqual('1');
     expect(subjects[1].id).toEqual('2');
-  })
+  });
 });

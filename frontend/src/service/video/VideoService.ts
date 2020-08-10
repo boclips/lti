@@ -4,8 +4,8 @@ import Pageable from 'boclips-api-client/dist/sub-clients/common/model/Pageable'
 import { Video } from '@bit/boclips.boclips-ui.types.video/index';
 import { Video as ClientVideo } from 'boclips-api-client/dist/sub-clients/videos/model/Video';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
+import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subject';
 import convertApiClientVideo from './convertVideoFromApi';
-import {Subject} from "boclips-api-client/dist/sub-clients/subjects/model/Subject";
 
 export interface ExtendedClientVideo<T> extends Pageable<T> {
   facets?: VideoFacets;
@@ -30,7 +30,7 @@ class VideoService {
   }
 
   public getSubjects(): Promise<Subject[]> {
-    return this.client.subjects.getAll()
+    return this.client.subjects.getAll();
   }
 }
 
