@@ -1,9 +1,9 @@
 module.exports = {
   clearMocks: true,
-  setupFilesAfterEnv: ['./setupTests.ts'],
+  setupFilesAfterEnv: ['<rootDir>setupTests.ts'],
   globals: {
     'ts-jest': {
-      tsConfig: 'tsconfig.jest.json',
+      tsConfig: '<rootDir>tsconfig.jest.json',
     },
   },
   moduleFileExtensions: ['ts', 'tsx', 'js'],
