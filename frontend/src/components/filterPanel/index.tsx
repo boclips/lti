@@ -4,6 +4,16 @@ import { SelectOption } from '@bit/boclips.boclips-ui.types.select-option';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 import s from './style.module.less';
 import { Filters } from '../../types/filters';
+import DurationConverter from './converters/DurationConverter';
+import Range from '../../types/range';
+
+const durationFilterOptions: Range[] = [
+    { min: 0, max: 120 },
+    { min: 120, max: 300 },
+    { min: 300, max: 600 },
+    { min: 600, max: 1200 },
+    { min: 1200, max: 86400 },
+  ];
 
 interface Props {
   facets: VideoFacets | undefined;
@@ -12,12 +22,19 @@ interface Props {
 
 const FilterPanel = ({ facets, onApply }: Props) => {
   const [ageRangeFilter, setAgeRangeFilter] = useState<string[]>();
+  const [durationFilter, setDurationFilter] = useState<string[]>();
 
   useEffect(() => {
     if (ageRangeFilter) {
       onApply({ ageRanges: ageRangeFilter });
     }
   }, [ageRangeFilter]);
+
+  useEffect(() => {
+    if (durationFilter) {
+      onApply({ duration: durationFilter });
+    }
+  }, [durationFilter]);
 
   const ageRangeArray: string[] = Object.keys(facets?.ageRanges!);
   const ageRangeOptions: SelectOption[] = ageRangeArray.map((it) => ({
@@ -37,6 +54,14 @@ const FilterPanel = ({ facets, onApply }: Props) => {
             options={ageRangeOptions}
             title="Age"
             onApply={setAgeRangeFilter}
+          />
+          <SelectFilter
+            options={DurationConverter.convertToSelectOptions(
+              facets?.durations!!,
+              durationFilterOptions
+            )}
+            title="Duration"
+            onApply={setDurationFilter}
           />
         </div>
       </div>

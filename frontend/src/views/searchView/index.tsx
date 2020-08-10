@@ -61,7 +61,7 @@ const LtiView = ({ renderVideoCard }: Props) => {
             page: searchPageNumber,
             size: 10,
             age_range: appliedFilters?.ageRanges,
-            duration: appliedFilters?.duration
+            duration: appliedFilters?.duration,
           })
           .then((videosResponse) => {
             handleSearchResults(videosResponse);
