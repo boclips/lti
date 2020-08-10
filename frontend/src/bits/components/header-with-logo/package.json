@@ -1,0 +1,19 @@
+{
+  "name": "@bit/boclips.dev-boclips-ui.components.header-with-logo",
+  "version": "1.0.4",
+  "homepage": "https://bit.dev/boclips/dev-boclips-ui/components/header-with-logo",
+  "main": "dist/index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "peerDependencies": {
+    "@testing-library/react": "^10.4.5",
+    "react": "^16.13.1",
+    "antd": "^4.3.1"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "bit": {
+    "env": {
+      "compiler": "boclips.compilers/compiler@2.0.7"
+    }
+  }
+}

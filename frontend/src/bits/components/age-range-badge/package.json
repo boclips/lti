@@ -1,0 +1,20 @@
+{
+  "name": "@bit/boclips.dev-boclips-ui.components.age-range-badge",
+  "version": "1.0.12",
+  "homepage": "https://bit.dev/boclips/dev-boclips-ui/components/age-range-badge",
+  "main": "dist/index.js",
+  "dependencies": {
+    "@bit/boclips.dev-boclips-ui.components.badge": "file:../badge",
+    "@bit/boclips.dev-boclips-ui.types.age-range": "1.0.0"
+  },
+  "devDependencies": {},
+  "peerDependencies": {
+    "react": "^16.13.1"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "bit": {
+    "env": {
+      "compiler": "boclips.compilers/compiler@2.0.7"
+    }
+  }
+}

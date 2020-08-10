@@ -18,12 +18,14 @@ describe('LTI test', () => {
     const searchButton = screen.getByText('Search');
     fireEvent.click(searchButton);
   };
-  
+
   it('displays empty render with welcome message', async () => {
     render(<LtiView renderVideoCard={() => <div />} />);
 
     expect(
-      await screen.findByText('Use the search on top to discover inspiring videos'),
+      await screen.findByText(
+        'Use the search on top to discover inspiring videos',
+      ),
     ).toBeInTheDocument();
   });
 
@@ -68,7 +70,9 @@ describe('LTI test', () => {
     const searchButton = screen.getByText('Search');
     fireEvent.click(searchButton);
 
-    await screen.findByText('We couldn\'t anything for "yay" with your filters');
+    await screen.findByText(
+      'We couldn\'t anything for "yay" with your filters',
+    );
   });
 
   it('shows filter panel only when there are videos and facets returned', async () => {
@@ -79,6 +83,7 @@ describe('LTI test', () => {
     fakeApiClient.videos.insertVideo(
       VideoFactory.sample({ id: '123', title: 'Hi' }),
     );
+
     fakeApiClient.videos.setFacets({
       durations: {},
       resourceTypes: {},
@@ -87,7 +92,7 @@ describe('LTI test', () => {
         '3-5': {
           hits: 3,
         },
-      }
+      },
     });
 
     render(
@@ -97,7 +102,9 @@ describe('LTI test', () => {
     );
 
     searchFor('find nothing');
-    await screen.findByText('We couldn\'t anything for "find nothing" with your filters');
+    await screen.findByText(
+      'We couldn\'t anything for "find nothing" with your filters',
+    );
     expect(screen.queryByText('FILTER BY:')).toBeNull();
 
     searchFor('Hi');

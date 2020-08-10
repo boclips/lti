@@ -1,0 +1,20 @@
+{
+  "name": "@bit/boclips.dev-boclips-ui.components.duration",
+  "version": "1.0.5",
+  "homepage": "https://bit.dev/boclips/dev-boclips-ui/components/duration",
+  "main": "dist/index.js",
+  "dependencies": {
+    "@bit/boclips.dev-boclips-ui.styles.styles": "1.0.3"
+  },
+  "devDependencies": {},
+  "peerDependencies": {
+    "@ant-design/icons": "^4.1.0",
+    "react": "^16.13.1"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "bit": {
+    "env": {
+      "compiler": "boclips.compilers/compiler@2.0.7"
+    }
+  }
+}
