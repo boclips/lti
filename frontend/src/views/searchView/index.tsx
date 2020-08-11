@@ -6,7 +6,7 @@ import { Video } from '@bit/boclips.boclips-ui.types.video';
 import c from 'classnames';
 import SearchBar from '@bit/boclips.boclips-ui.components.search-bar';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
-import { Subject } from 'boclips-api-client/dist/types';
+import { Channel, Subject } from 'boclips-api-client/dist/types';
 import ApiClient from '../../service/client/ApiClient';
 import { AppConstants } from '../../types/AppConstants';
 import VideoService, { ExtendedClientVideo, } from '../../service/video/VideoService';
@@ -30,6 +30,7 @@ const LtiView = ({ renderVideoCard }: Props) => {
   const [facets, setFacets] = useState<VideoFacets>();
   const [filters, setFilters] = useState<Filters | null>(null);
   const [apiSubjects, setApiSubjects] = useState<Subject[]>([]);
+  const [apiChannels, setApiChannels] = useState<Channel[]>([]);
 
   const videoServicePromise = useMemo(
     () =>
@@ -65,6 +66,7 @@ const LtiView = ({ renderVideoCard }: Props) => {
             age_range: appliedFilters?.ageRanges,
             duration: appliedFilters?.duration,
             subject: appliedFilters?.subjects,
+            channel: appliedFilters?.source,
           })
           .then((videosResponse) => {
             handleSearchResults(videosResponse);
@@ -76,6 +78,8 @@ const LtiView = ({ renderVideoCard }: Props) => {
   const getFilters = () => {
     videoServicePromise.then((client) => client.getSubjects())
       .then((it) => setApiSubjects(it));
+    videoServicePromise.then((client) => client.getChannels())
+      .then((it) => setApiChannels(it));
   };
 
   useEffect(() => {
@@ -114,6 +118,7 @@ const LtiView = ({ renderVideoCard }: Props) => {
                 facets={facets}
                 onApply={setFilters}
                 subjects={apiSubjects}
+                sources={apiChannels}
               />
             )}
           </Col>

@@ -3,6 +3,7 @@ import SelectFilter from '@bit/boclips.boclips-ui.components.select';
 import { SelectOption } from '@bit/boclips.boclips-ui.types.select-option';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subject';
+import { Channel } from 'boclips-api-client/dist/sub-clients/channels/model/Channel';
 import s from './style.module.less';
 import { Filters } from '../../types/filters';
 import DurationConverter from './converters/DurationConverter';
@@ -10,13 +11,17 @@ import DurationConverter from './converters/DurationConverter';
 interface Props {
   facets: VideoFacets | undefined;
   onApply: (filters: Filters) => void;
-  subjects: Subject[];
+  subjects?: Subject[];
+  sources?: Channel[];
 }
 
-const FilterPanel = ({ facets, onApply, subjects }: Props) => {
+const FilterPanel = ({
+  facets, onApply, subjects, sources 
+}: Props) => {
   const [ageRangeFilter, setAgeRangeFilter] = useState<string[]>();
   const [durationFilter, setDurationFilter] = useState<string[]>();
   const [subjectFilter, setSubjectFilter] = useState<string[]>();
+  const [sourceFilter, setSourceFilter] = useState<string[]>();
 
   useEffect(() => {
     if (ageRangeFilter) {
@@ -36,6 +41,12 @@ const FilterPanel = ({ facets, onApply, subjects }: Props) => {
     }
   }, [subjectFilter]);
 
+  useEffect(() => {
+    if (sourceFilter) {
+      onApply({ source: sourceFilter });
+    }
+  }, [sourceFilter]);
+
   const ageRangeArray: string[] = Object.keys(facets?.ageRanges!);
   const ageRangeOptions: SelectOption[] = ageRangeArray.map((it) => ({
     id: it,
@@ -43,8 +54,14 @@ const FilterPanel = ({ facets, onApply, subjects }: Props) => {
     count: 0,
   }));
 
-  const subjectOptions = subjects.map((it) => ({
+  const subjectOptions = subjects?.map((it) => ({
     id: it.id,
+    label: it.name,
+    count: 0,
+  }));
+
+  const sourceOptions = sources?.map((it) => ({
+    id: it.name,
     label: it.name,
     count: 0,
   }));
@@ -65,10 +82,17 @@ const FilterPanel = ({ facets, onApply, subjects }: Props) => {
             onApply={setDurationFilter}
           />
           <SelectFilter
-            options={subjectOptions}
+            options={subjectOptions || []}
             title="Subject"
             onApply={setSubjectFilter}
             searchPlaceholder="Search for subject"
+            allowSearch
+          />
+          <SelectFilter
+            options={sourceOptions || []}
+            title="Source"
+            onApply={setSourceFilter}
+            searchPlaceholder="Search for source"
             allowSearch
           />
         </div>

@@ -45,4 +45,19 @@ describe('VideoService', () => {
     expect(subjects[0].id).toEqual('1');
     expect(subjects[1].id).toEqual('2');
   });
+
+  it('Can load all sources', async () => {
+    const fakeApiClient = (await apiClientPromise) as FakeBoclipsClient;
+    fakeApiClient.channels.insertFixture({ id: '1', name: 'crash course history' });
+    fakeApiClient.channels.insertFixture({ id: '2', name: 'crash course biology' });
+
+    const service = new VideoService(fakeApiClient);
+    const channels = await service.getChannels();
+
+    expect(channels.length).toEqual(2);
+    expect(channels[0].id).toEqual('1');
+    expect(channels[1].id).toEqual('2');
+    expect(channels[0].name).toEqual('crash course history');
+    expect(channels[1].name).toEqual('crash course biology');
+  });
 });
