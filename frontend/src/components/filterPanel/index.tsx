@@ -4,6 +4,7 @@ import { SelectOption } from '@bit/boclips.boclips-ui.types.select-option';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subject';
 import { Channel } from 'boclips-api-client/dist/sub-clients/channels/model/Channel';
+import c from 'classnames';
 import s from './style.module.less';
 import { Filters } from '../../types/filters';
 import DurationConverter from './converters/DurationConverter';
@@ -13,10 +14,11 @@ interface Props {
   onApply: (filters: Filters) => void;
   subjects?: Subject[];
   sources?: Channel[];
+  hidePanel?: boolean;
 }
 
 const FilterPanel = ({
-  facets, onApply, subjects, sources 
+  facets, onApply, subjects, sources, hidePanel
 }: Props) => {
   const [ageRangeFilter, setAgeRangeFilter] = useState<string[]>();
   const [durationFilter, setDurationFilter] = useState<string[]>();
@@ -68,7 +70,10 @@ const FilterPanel = ({
 
   return (
     <>
-      <div className={s.filters}>
+      <div className={c({
+        [s.filters]: true,
+        [s.hideFilters]: hidePanel
+      })}>
         <div className={s.filtersTitle}>FILTER BY:</div>
         <div className={s.filtersWrapper}>
           <SelectFilter

@@ -33,7 +33,10 @@ const renderVideoCard = (video: Video, loading: boolean) => (
 const App = () => {
   AxiosService.configureAxios();
 
-  return <SearchView renderVideoCard={renderVideoCard} />;
+  return <SearchView
+    collapsibleFilters
+    renderVideoCard={renderVideoCard}
+  />;
 };
 
 export default App;

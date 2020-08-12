@@ -103,4 +103,31 @@ describe('LTI test', () => {
     searchFor('Hi');
     expect(await screen.findByText('FILTER BY:')).toBeInTheDocument();
   });
+
+  it('clicking "show/hide filters" toggles displaying filters', async () => {
+    const fakeApiClient = (await new ApiClient(
+      'https://api.example.com',
+    ).getClient()) as FakeBoclipsClient;
+
+    fakeApiClient.videos.insertVideo(
+      VideoFactory.sample({ id: '123', title: 'Hi' }),
+    );
+
+    render(
+      <LtiView
+        collapsibleFilters
+        renderVideoCard={(video: Video) => <div>Hello, video {video.id}</div>}
+      />,
+    );
+    searchFor('Hi');
+
+    const showFiltersButton = await screen.findByText('SHOW FILTERS');
+    expect(showFiltersButton).toBeInTheDocument();
+    fireEvent.click(showFiltersButton);
+
+    const hideFiltersButton = await screen.findByText('HIDE FILTERS');
+    expect(hideFiltersButton).toBeInTheDocument();
+    expect(screen.queryByText('FILTER BY:')).toBeVisible();
+    expect(screen.queryByText('SHOW FILTERS')).toBeNull();
+  });
 });

@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  Col, Layout, List, Row 
+  Button,
+  Col, Layout, List, Row
 } from 'antd';
 import { Video } from '@bit/boclips.boclips-ui.types.video';
 import c from 'classnames';
@@ -16,12 +17,14 @@ import TitleHeader from '../../components/TitleHeader';
 import NoResults from '../../components/NoResults/NoResults';
 import FilterPanel from '../../components/filterPanel';
 import { Filters } from '../../types/filters';
+import FiltersIcon from '../../resources/images/filters-icon.svg';
 
 interface Props {
   renderVideoCard: (video: Video, isLoading: boolean) => React.ReactNode;
+  collapsibleFilters?: boolean;
 }
 
-const LtiView = ({ renderVideoCard }: Props) => {
+const LtiView = ({ renderVideoCard, collapsibleFilters }: Props) => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>();
@@ -31,6 +34,7 @@ const LtiView = ({ renderVideoCard }: Props) => {
   const [filters, setFilters] = useState<Filters | null>(null);
   const [apiSubjects, setApiSubjects] = useState<Subject[]>([]);
   const [apiChannels, setApiChannels] = useState<Channel[]>([]);
+  const [filtersVisible, setFiltersVisible] = useState<boolean>(!collapsibleFilters);
 
   const videoServicePromise = useMemo(
     () =>
@@ -94,6 +98,8 @@ const LtiView = ({ renderVideoCard }: Props) => {
     window.scrollTo(0, 0);
   };
 
+  const showFiltersButton = collapsibleFilters && videos.length > 0;
+
   return (
     <>
       <Layout.Header className={s.layoutHeader}>
@@ -103,22 +109,41 @@ const LtiView = ({ renderVideoCard }: Props) => {
           </Col>
         </Row>
         <Row>
-          <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }} className={s.searchBar}>
+          <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }}
+            className={c({
+              [s.searchBar]: true,
+              [s.filtersButton]: showFiltersButton
+            })}
+          >
             <SearchBar
               onSearch={onSearch}
               placeholder="Search for videos..."
               theme="lti"
             />
+            {showFiltersButton && (
+              <Button
+                type="primary"
+                className={c({
+                  [s.toggleFiltersButton]: true,
+                  [s.showFilters]: !filtersVisible,
+                  [s.hideFilters]: filtersVisible
+                })}
+                onClick={() => setFiltersVisible(!filtersVisible)}
+              >
+                <div className={s.labelWrapper}><FiltersIcon/>{filtersVisible ? 'HIDE FILTERS' : 'SHOW FILTERS'}</div>
+              </Button>
+            )}
           </Col>
         </Row>
         <Row >
           <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }} className={s.filtersAlign}>
-            {(videos.length > 0 || filters) && (
+            {videos.length > 0 && (
               <FilterPanel
                 facets={facets}
                 onApply={setFilters}
                 subjects={apiSubjects}
                 sources={apiChannels}
+                hidePanel={!filtersVisible}
               />
             )}
           </Col>
