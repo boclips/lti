@@ -7,6 +7,7 @@ import SearchView from '../../views/searchView';
 import AxiosService from '../../service/axios/AxiosService';
 import EmbedVideoButton from '../../components/embedVideoButton/EmbedVideoButton';
 import playerOptions from '../../Player/playerOptions';
+import ClosableHeader from '../../components/closableHeader';
 
 const renderVideoCard = (video: Video, loading: boolean) => (
   <VideoCard
@@ -36,6 +37,7 @@ const App = () => {
   return <SearchView
     collapsibleFilters
     renderVideoCard={renderVideoCard}
+    header={<ClosableHeader title="Video library" handleSubmit={(form) => form?.submit()} />}
   />;
 };
 

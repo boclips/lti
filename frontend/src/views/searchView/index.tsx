@@ -22,9 +22,10 @@ import FiltersIcon from '../../resources/images/filters-icon.svg';
 interface Props {
   renderVideoCard: (video: Video, isLoading: boolean) => React.ReactNode;
   collapsibleFilters?: boolean;
+  header?: React.ReactNode;
 }
 
-const LtiView = ({ renderVideoCard, collapsibleFilters }: Props) => {
+const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>();
@@ -113,7 +114,7 @@ const LtiView = ({ renderVideoCard, collapsibleFilters }: Props) => {
       <Layout.Header className={s.layoutHeader}>
         <Row>
           <Col xs={24}>
-            <TitleHeader title="Video Library" />
+            {header || (<TitleHeader title="Video Library" />)}
           </Col>
         </Row>
         <Row>
