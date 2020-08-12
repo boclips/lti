@@ -10,7 +10,7 @@ import { Filters } from '../../types/filters';
 import DurationConverter from './converters/DurationConverter';
 
 interface Props {
-  facets: VideoFacets | undefined;
+  facets?: VideoFacets;
   onApply: (filters: Filters) => void;
   subjects?: Subject[];
   sources?: Channel[];
@@ -29,43 +29,35 @@ const FilterPanel = ({
     if (ageRangeFilter) {
       onApply({ ageRanges: ageRangeFilter });
     }
-  }, [ageRangeFilter]);
-
-  useEffect(() => {
     if (durationFilter) {
       onApply({ duration: durationFilter });
     }
-  }, [durationFilter]);
-
-  useEffect(() => {
     if (subjectFilter) {
       onApply({ subjects: subjectFilter });
     }
-  }, [subjectFilter]);
-
-  useEffect(() => {
     if (sourceFilter) {
       onApply({ source: sourceFilter });
     }
-  }, [sourceFilter]);
+  }, [ageRangeFilter, durationFilter, subjectFilter, sourceFilter]);
+ 
+  const ageRangeOptions: SelectOption[] = Object.keys(facets?.ageRanges!).map((it) => ({
+    id: it,
+    label: it === '16-99' ? '16+' : it.replace('-', ' - '),
+    count: facets?.ageRanges[it].hits,
+  }));
 
-  const ageRangeArray: string[] = Object.keys(facets?.ageRanges!);
-  const ageRangeOptions: SelectOption[] = ageRangeArray.map((it) => ({
+  const subjectOptions:SelectOption[] = Object.keys(facets?.subjects!).map((it) => ({
+    id: it,
+    label: subjects?.find((subject) => subject.id === it)?.name!,
+    count: facets?.subjects[it].hits,
+  }));
+
+  const durationOptions:SelectOption[] = DurationConverter.toSelectOptions(facets?.durations!);
+
+  const sourceOptions:SelectOption[] = Object.keys(facets?.resourceTypes!)?.map((it) => ({
     id: it,
     label: it,
-    count: 0,
-  }));
-
-  const subjectOptions = subjects?.map((it) => ({
-    id: it.id,
-    label: it.name,
-    count: 0,
-  }));
-
-  const sourceOptions = sources?.map((it) => ({
-    id: it.name,
-    label: it.name,
-    count: 0,
+    count: facets?.resourceTypes[it].hits,
   }));
 
   return (
@@ -82,24 +74,24 @@ const FilterPanel = ({
             onApply={setAgeRangeFilter}
           />
           <SelectFilter
-            options={DurationConverter.toSelectOptions(facets?.durations!!)}
+            options={durationOptions}
             title="Duration"
             onApply={setDurationFilter}
-          />
-          <SelectFilter
-            options={subjectOptions || []}
+          /> 
+          {subjects && <SelectFilter
+            options={subjectOptions!}
             title="Subject"
             onApply={setSubjectFilter}
             searchPlaceholder="Search for subject"
             allowSearch
-          />
-          <SelectFilter
-            options={sourceOptions || []}
+          />}
+          {sources && <SelectFilter
+            options={sourceOptions!}
             title="Source"
             onApply={setSourceFilter}
             searchPlaceholder="Search for source"
             allowSearch
-          />
+          />}
         </div>
       </div>
     </>

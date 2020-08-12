@@ -95,6 +95,11 @@ module.exports = {
           },
           {
             loader: 'less-loader',
+            options: {
+              lessOptions: {
+                javascriptEnabled: true,
+              },
+            },
           },
         ],
       },

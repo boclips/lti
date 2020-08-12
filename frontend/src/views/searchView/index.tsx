@@ -16,7 +16,7 @@ import EmptyList from '../../components/EmptyList';
 import TitleHeader from '../../components/TitleHeader';
 import NoResults from '../../components/NoResults/NoResults';
 import FilterPanel from '../../components/filterPanel';
-import { Filters } from '../../types/filters';
+
 import FiltersIcon from '../../resources/images/filters-icon.svg';
 
 interface Props {
@@ -31,7 +31,8 @@ const LtiView = ({ renderVideoCard, collapsibleFilters }: Props) => {
   const [searchPageNumber, setPageNumber] = useState<number>(0);
   const [totalVideoElements, setTotalVideoElements] = useState<number>(0);
   const [facets, setFacets] = useState<VideoFacets>();
-  const [filters, setFilters] = useState<Filters | null>(null);
+  const [singleFilter, setSingleFilter] = useState<any>(null);
+  const [filters, setFilters] = useState<any>(null);
   const [apiSubjects, setApiSubjects] = useState<Subject[]>([]);
   const [apiChannels, setApiChannels] = useState<Channel[]>([]);
   const [filtersVisible, setFiltersVisible] = useState<boolean>(!collapsibleFilters);
@@ -59,29 +60,29 @@ const LtiView = ({ renderVideoCard, collapsibleFilters }: Props) => {
     setLoading(false);
   };
 
-  const search = (appliedFilters?: Filters | null) => {
-    if (searchQuery || searchPageNumber) {
-      videoServicePromise.then((videoService) =>
-        videoService
-          .searchVideos({
-            query: searchQuery,
-            page: searchPageNumber,
-            size: 10,
-            age_range: appliedFilters?.ageRanges,
-            duration: appliedFilters?.duration,
-            subject: appliedFilters?.subjects,
-            channel: appliedFilters?.source,
-          })
-          .then((videosResponse) => {
-            handleSearchResults(videosResponse);
-          }),
-      );
-    }
+  const search = () => {
+    videoServicePromise.then((videoService) => {
+      videoService
+        .searchVideos({
+          query: searchQuery,
+          page: searchPageNumber,
+          size: 10,
+          age_range: filters?.ageRanges,
+          duration: filters?.duration,
+          subject: filters?.subjects,
+          channel: filters?.source,
+        })
+        .then((videosResponse) => {
+          handleSearchResults(videosResponse);
+        });
+    },
+    );
   };
 
   const getFilters = () => {
     videoServicePromise.then((client) => client.getSubjects())
       .then((it) => setApiSubjects(it));
+
     videoServicePromise.then((client) => client.getChannels())
       .then((it) => setApiChannels(it));
   };
@@ -89,9 +90,16 @@ const LtiView = ({ renderVideoCard, collapsibleFilters }: Props) => {
   useEffect(() => {
     getFilters();
   }, []);
+  
+  useEffect(() => {
+    setFilters(((prevState) => ({ ...prevState, ...singleFilter })));
+  }, [singleFilter]);
 
   useEffect(() => {
-    search(filters);
+    if (searchQuery || searchPageNumber || filters) {
+      setLoading(true);
+      search();
+    }
   }, [searchQuery, searchPageNumber, filters]);
 
   const scrollToTop = () => {
@@ -137,10 +145,10 @@ const LtiView = ({ renderVideoCard, collapsibleFilters }: Props) => {
         </Row>
         <Row >
           <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }} className={s.filtersAlign}>
-            {videos.length > 0 && (
+            {(videos.length > 0 || singleFilter) && (
               <FilterPanel
                 facets={facets}
-                onApply={setFilters}
+                onApply={setSingleFilter}
                 subjects={apiSubjects}
                 sources={apiChannels}
                 hidePanel={!filtersVisible}
