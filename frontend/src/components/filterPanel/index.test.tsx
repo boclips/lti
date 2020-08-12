@@ -11,8 +11,18 @@ const testFacets = {
     'PT10M-PT20M': { hits: 48 },
     'PT20M-PT24H': { hits: 45 }
   },
-  resourceTypes: {},
-  subjects: {},
+  resourceTypes: {
+    'biology channel': {
+      hits: 3
+    },
+    'history channel': {
+      hits: 5
+    }
+  },
+  subjects: {
+    '5cb499c9fd5beb428189454c': { hits: 88 },
+    '5cb499c9fd5beb428189454d': { hits: 32 }
+  },
   ageRanges: {
     '3-5': {
       hits: 3,
@@ -27,8 +37,8 @@ describe('Filter Panel', () => {
         facets={testFacets}
         onApply={jest.fn()}
         subjects={[
-          { id: '1', name: 'subject1' },
-          { id: '2', name: 'subject2' },
+          { id: '5cb499c9fd5beb428189454c', name: 'subject1' },
+          { id: '5cb499c9fd5beb428189454d', name: 'subject2' },
         ]}
       />,
     );
@@ -47,10 +57,8 @@ describe('Filter Panel', () => {
       <FilterPanel
         facets={testFacets}
         onApply={jest.fn()}
-        sources={[
-          ChannelFactory.sample({ id: '1', name: 'biology channel', }),
-          ChannelFactory.sample({ id: '2', name: 'history channel' }),
-        ]}
+        sources={[ChannelFactory.sample({ id: '1', name: 'biology channel' }),
+          ChannelFactory.sample({ id: '1', name: 'history channel' })]}
       />,
     );
 

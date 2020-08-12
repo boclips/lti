@@ -46,19 +46,25 @@ const FilterPanel = ({
     count: facets?.ageRanges[it].hits,
   }));
 
-  const subjectOptions:SelectOption[] = Object.keys(facets?.subjects!).map((it) => ({
-    id: it,
-    label: subjects?.find((subject) => subject.id === it)?.name!,
-    count: facets?.subjects[it].hits,
-  }));
+  const subjectOptions:SelectOption[] = Object.keys(facets?.subjects!).map((it) => {
+    const subject = subjects?.find((item) => item.id === it);
+    return {
+      id: subject?.id || it,
+      label: subject?.name || it,
+      count: facets?.subjects[it].hits,
+    };
+  });
 
   const durationOptions:SelectOption[] = DurationConverter.toSelectOptions(facets?.durations!);
 
-  const sourceOptions:SelectOption[] = Object.keys(facets?.resourceTypes!)?.map((it) => ({
-    id: it,
-    label: it,
-    count: facets?.resourceTypes[it].hits,
-  }));
+  const sourceOptions:SelectOption[] = Object.keys(facets?.resourceTypes!)?.map((it) => {
+    const source = sources?.find((item) => item.name === it);
+    return {
+      id: source?.id || it,
+      label: source?.name || it,
+      count: facets?.resourceTypes[it].hits,
+    };
+  });
 
   return (
     <>
@@ -78,20 +84,20 @@ const FilterPanel = ({
             title="Duration"
             onApply={setDurationFilter}
           /> 
-          {subjects && <SelectFilter
+          <SelectFilter
             options={subjectOptions!}
             title="Subject"
             onApply={setSubjectFilter}
             searchPlaceholder="Search for subject"
             allowSearch
-          />}
-          {sources && <SelectFilter
+          />
+          <SelectFilter
             options={sourceOptions!}
             title="Source"
             onApply={setSourceFilter}
             searchPlaceholder="Search for source"
             allowSearch
-          />}
+          />
         </div>
       </div>
     </>
