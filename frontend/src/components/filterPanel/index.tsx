@@ -26,21 +26,30 @@ const FilterPanel = ({
   const [sourceFilter, setSourceFilter] = useState<string[]>();
 
   useEffect(() => {
-    if (ageRangeFilter) {
-      onApply({ ageRanges: ageRangeFilter });
-    }
-    if (durationFilter) {
+    if (durationFilter || (durationFilter && durationFilter!.length === 0)) {
       onApply({ duration: durationFilter });
     }
-    if (subjectFilter) {
+  }, [durationFilter]);
+
+  useEffect(() => {
+    if (subjectFilter || (subjectFilter && subjectFilter!.length === 0)) {
       onApply({ subjects: subjectFilter });
     }
-    if (sourceFilter) {
+  }, [subjectFilter]);
+
+  useEffect(() => {
+    if (sourceFilter || (sourceFilter && sourceFilter!.length === 0)) {
       onApply({ source: sourceFilter });
     }
-  }, [ageRangeFilter, durationFilter, subjectFilter, sourceFilter]);
+  }, [sourceFilter]);
+
+  useEffect(() => {
+    if (ageRangeFilter || (ageRangeFilter && ageRangeFilter!.length === 0)) {
+      onApply({ ageRanges: ageRangeFilter });
+    }
+  }, [ageRangeFilter]);
  
-  const ageRangeOptions: SelectOption[] = Object.keys(facets?.ageRanges!).map((it) => ({
+  const ageRangeOptions:SelectOption[] = Object.keys(facets?.ageRanges!).map((it) => ({
     id: it,
     label: it === '16-99' ? '16+' : it.replace('-', ' - '),
     count: facets?.ageRanges[it].hits,
@@ -83,7 +92,7 @@ const FilterPanel = ({
             options={durationOptions}
             title="Duration"
             onApply={setDurationFilter}
-          /> 
+          />
           <SelectFilter
             options={subjectOptions!}
             title="Subject"
