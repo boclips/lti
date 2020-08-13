@@ -5,6 +5,7 @@ import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/Vi
 import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subject';
 import { Channel } from 'boclips-api-client/dist/sub-clients/channels/model/Channel';
 import c from 'classnames';
+import { Button } from 'antd';
 import s from './style.module.less';
 import { Filters } from '../../types/filters';
 import DurationConverter from './converters/DurationConverter';
@@ -24,6 +25,8 @@ const FilterPanel = ({
   const [durationFilter, setDurationFilter] = useState<string[]>();
   const [subjectFilter, setSubjectFilter] = useState<string[]>();
   const [sourceFilter, setSourceFilter] = useState<string[]>();
+  const [clearFilterCount, setClearFilterCount] = useState<boolean>(false);
+  const [filterTouched, setFilterTouched] = useState<boolean>(false);
 
   useEffect(() => {
     if (durationFilter || (durationFilter && durationFilter!.length === 0)) {
@@ -48,6 +51,20 @@ const FilterPanel = ({
       onApply({ ageRanges: ageRangeFilter });
     }
   }, [ageRangeFilter]);
+  
+  useEffect(() => {
+    if (clearFilterCount) {
+      setClearFilterCount(!clearFilterCount);
+    }
+  }, [clearFilterCount]);
+  
+  const onClear = () => {
+    setFilterTouched(false);
+    setClearFilterCount(true);
+    onApply({
+      ageRanges: [], source: [], subjects: [], duration: []
+    });
+  };
  
   const ageRangeOptions:SelectOption[] = Object.keys(facets?.ageRanges!).map((it) => ({
     id: it,
@@ -81,31 +98,42 @@ const FilterPanel = ({
         [s.filters]: true,
         [s.hideFilters]: hidePanel
       })}>
-        <div className={s.filtersTitle}>FILTER BY:</div>
+        <div className={s.filtersHeader}>
+          <span className={s.filtersTitle}>FILTER BY:</span> 
+          {filterTouched && <Button className={s.clearAll} onClick={onClear} type="text"> CLEAR ALL</Button>}
+        </div>
         <div className={s.filtersWrapper}>
           <SelectFilter
             options={ageRangeOptions}
             title="Age"
             onApply={setAgeRangeFilter}
+            clearCount={clearFilterCount}
+            touched={setFilterTouched}
           />
           <SelectFilter
             options={durationOptions}
             title="Duration"
             onApply={setDurationFilter}
+            clearCount={clearFilterCount}
+            touched={setFilterTouched}
           />
           <SelectFilter
             options={subjectOptions!}
             title="Subject"
             onApply={setSubjectFilter}
+            clearCount={clearFilterCount}
             searchPlaceholder="Search for subject"
             allowSearch
+            touched={setFilterTouched}
           />
           <SelectFilter
             options={sourceOptions!}
             title="Source"
+            clearCount={clearFilterCount}
             onApply={setSourceFilter}
             searchPlaceholder="Search for source"
             allowSearch
+            touched={setFilterTouched}
           />
         </div>
       </div>

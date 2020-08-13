@@ -90,4 +90,33 @@ describe('Filter Panel', () => {
     expect(screen.getByTitle('10m - 20m'));
     expect(screen.getByTitle('> 20m'));
   });
+
+  it('clear all clears the filters', async () => {
+    const onApply = jest.fn();
+    
+    render(
+      <FilterPanel
+        facets={testFacets}
+        onApply={onApply}
+      />,
+    );
+
+    const sourceSelector = screen.getByText('Duration');
+    expect(sourceSelector).toBeVisible();
+
+    fireEvent.mouseDown(sourceSelector);
+
+    fireEvent.click(screen.getByTitle('0m - 2m'));
+    fireEvent.click(screen.getByTitle('2m - 5m'));
+
+    fireEvent.click(screen.getByText('APPLY'));
+    
+    expect(screen.getByText('CLEAR ALL')).toBeInTheDocument();
+    
+    fireEvent.click(screen.getByText('CLEAR ALL'));
+    
+    expect(onApply).toBeCalledWith({
+      ageRanges: [], source: [], subjects: [], duration: [] 
+    });
+  });
 });

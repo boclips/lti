@@ -10,10 +10,29 @@
     display: none;
   }
 
-  .filtersTitle {
-    font-weight: bolder;
-    color: #231F20;
-    padding-bottom: 4px;
+  .filtersHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height:32px;
+
+    .filtersTitle {
+      font-weight: bolder;
+      color: #231f20;
+      font-size: 14px;
+    }
+
+    .clearAll {
+      padding: 0;
+      font-weight: bold;
+      font-size: 16px;
+      color: #346FB6;
+
+      &:hover {
+        background: none;
+      }
+    }
   }
 
   .filtersWrapper {
