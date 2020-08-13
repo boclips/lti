@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  Button,
-  Col, Layout, List, Row
+  Col, Layout, List, Row 
 } from 'antd';
 import { Video } from '@bit/boclips.boclips-ui.types.video';
 import c from 'classnames';
@@ -16,8 +15,7 @@ import EmptyList from '../../components/EmptyList';
 import TitleHeader from '../../components/TitleHeader';
 import NoResults from '../../components/NoResults/NoResults';
 import FilterPanel from '../../components/filterPanel';
-
-import FiltersIcon from '../../resources/images/filters-icon.svg';
+import FiltersButton from '../../components/filtersButton';
 
 interface Props {
   renderVideoCard: (video: Video, isLoading: boolean) => React.ReactNode;
@@ -126,24 +124,19 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
               [s.filtersButton]: showFiltersButton
             })}
           >
-            <SearchBar
-              onSearch={onSearch}
-              placeholder="Search for videos..."
-              theme="lti"
-            />
-            {showFiltersButton && (
-              <Button
-                type="primary"
-                className={c({
-                  [s.toggleFiltersButton]: true,
-                  [s.showFilters]: !filtersVisible,
-                  [s.hideFilters]: filtersVisible
-                })}
-                onClick={() => setFiltersVisible(!filtersVisible)}
-              >
-                <div className={s.labelWrapper}><FiltersIcon/>{filtersVisible ? 'HIDE FILTERS' : 'SHOW FILTERS'}</div>
-              </Button>
-            )}
+            <div className={s.searchBarContainer}>
+              <SearchBar
+                onSearch={onSearch}
+                placeholder="Search for videos..."
+                theme="lti"
+              />
+              {showFiltersButton && (
+                <FiltersButton 
+                  filtersVisible={filtersVisible}
+                  toggleFilters={setFiltersVisible}
+                />
+              )}
+            </div>
           </Col>
         </Row>
         <Row >

@@ -104,7 +104,7 @@ describe('LTI test', () => {
     expect(await screen.findByText('FILTER BY:')).toBeInTheDocument();
   });
 
-  it('clicking "show/hide filters" toggles displaying filters', async () => {
+  it('clicking filters button toggles buttons label', async () => {
     const fakeApiClient = (await new ApiClient(
       'https://api.example.com',
     ).getClient()) as FakeBoclipsClient;
@@ -127,7 +127,6 @@ describe('LTI test', () => {
 
     const hideFiltersButton = await screen.findByText('HIDE FILTERS');
     expect(hideFiltersButton).toBeInTheDocument();
-    expect(screen.queryByText('FILTER BY:')).toBeVisible();
     expect(screen.queryByText('SHOW FILTERS')).toBeNull();
   });
 });

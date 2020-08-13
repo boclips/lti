@@ -1,0 +1,33 @@
+@import '~@bit/boclips.boclips-ui.styles.styles/_colours';
+
+.toggleFiltersButton {
+  width: 192px;
+  height: 40px;
+  margin-left: 9px;
+  border: 1px solid #CBCECF !important;
+  border-radius: 4px;
+  color: #336FB6 !important;
+  font-family: var(--fontFamily);
+  font-size: 16px;
+  line-height: 19px;
+  position: relative;
+
+  &.showFilters {
+    background-color: @shade-1;
+  }
+
+  &.hideFilters {
+    background-color: #EBF0F8;
+  }
+
+  & .labelWrapper {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+
+    svg {
+      margin-bottom: 3px;
+      margin-right: 10px;
+    }
+  }
+}
