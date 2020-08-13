@@ -93,7 +93,9 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
   }, []);
   
   useEffect(() => {
-    setFilters(((prevState) => ({ ...prevState, ...singleFilter })));
+    if (singleFilter) {
+      setFilters(((prevState) => ({ ...prevState, ...singleFilter })));
+    }
   }, [singleFilter]);
 
   useEffect(() => {
