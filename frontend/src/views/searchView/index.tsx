@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  Col, Layout, List, Row 
+  Col, Layout, List, Row
 } from 'antd';
 import { Video } from '@bit/boclips.boclips-ui.types.video';
 import c from 'classnames';
@@ -89,7 +89,7 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
   useEffect(() => {
     getFilters();
   }, []);
-  
+
   useEffect(() => {
     if (singleFilter) {
       setFilters(((prevState) => ({ ...prevState, ...singleFilter })));
@@ -108,6 +108,47 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
   };
 
   const showFiltersButton = collapsibleFilters && videos.length > 0;
+
+  const renderVideoList = () => useMemo(() =>
+    !loading && videos.length === 0 && !!searchQuery ? (
+      <NoResults searchQuery={searchQuery}/>
+    ) : (
+      <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }}>
+        {videos.length > 0 && (
+          <section className={s.numberOfResults}>
+            <span>
+              {`${
+                totalVideoElements > 500 ? '500+' : totalVideoElements
+              } result${videos.length > 1 ? 's' : ''} found:`}
+            </span>
+          </section>
+        )}
+        <List
+          itemLayout="vertical"
+          size="large"
+          className={s.listWrapper}
+          locale={{ emptyText: <EmptyList theme="lti" /> }}
+          pagination={{
+            total: totalVideoElements,
+            pageSize: 10,
+            className: c(s.pagination, {
+              [s.paginationEmpty]: !videos.length,
+            }),
+            showSizeChanger: false,
+            onChange: (page) => {
+              scrollToTop();
+              onSearch(searchQuery, page - 1);
+            },
+          }}
+          dataSource={videos}
+          loading={{
+            wrapperClassName: s.spinner,
+            spinning: loading,
+          }}
+          renderItem={(video: Video) => renderVideoCard(video, loading)}
+        />
+      </Col>
+    ), [videos, loading]);
 
   return (
     <>
@@ -131,7 +172,7 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
                 theme="lti"
               />
               {showFiltersButton && (
-                <FiltersButton 
+                <FiltersButton
                   filtersVisible={filtersVisible}
                   toggleFilters={setFiltersVisible}
                 />
@@ -154,45 +195,8 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
         </Row>
       </Layout.Header>
       <Layout.Content className={s.main}>
-        <Row>
-          {!loading && videos.length === 0 && !!searchQuery ? (
-            <NoResults searchQuery={searchQuery}/>
-          ) : (
-            <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }}>
-              {videos.length > 0 && (
-                <section className={s.numberOfResults}>
-                  <span>
-                    {`${
-                      totalVideoElements > 500 ? '500+' : totalVideoElements
-                    } result${videos.length > 1 ? 's' : ''} found:`}
-                  </span>
-                </section>
-              )}
-              <List
-                itemLayout="vertical"
-                size="large"
-                className={s.listWrapper}
-                locale={{ emptyText: <EmptyList theme="lti" /> }}
-                pagination={{
-                  total: totalVideoElements,
-                  pageSize: 10,
-                  className: c(s.pagination, {
-                    [s.paginationEmpty]: !videos.length,
-                  }),
-                  showSizeChanger: false,
-                  onChange: (page) => {
-                    scrollToTop();
-                    onSearch(searchQuery, page - 1);
-                  },
-                }}
-                dataSource={videos}
-                loading={{
-                  wrapperClassName: s.spinner,
-                  spinning: loading,
-                }}
-                renderItem={(video: Video) => renderVideoCard(video, loading)}
-              />
-            </Col>)}
+        <Row >
+          {renderVideoList()}
         </Row>
       </Layout.Content>
     </>
