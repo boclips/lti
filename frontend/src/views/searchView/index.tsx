@@ -45,7 +45,7 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
   );
 
   const onSearch = (query?: string, page: number = 0) => {
-    if (query && searchQuery !== query) {
+    if ((query && searchQuery !== query) || page !== searchPageNumber) {
       setSearchQuery(query);
       setPageNumber(page!!);
       setLoading(true);
