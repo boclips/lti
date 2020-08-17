@@ -19,7 +19,11 @@ interface Props {
 }
 
 const FilterPanel = ({
-  facets, onApply, subjects, sources, hidePanel
+  facets,
+  onApply,
+  subjects,
+  sources,
+  hidePanel,
 }: Props) => {
   const [ageRangeFilter, setAgeRangeFilter] = useState<string[]>();
   const [durationFilter, setDurationFilter] = useState<string[]>();
@@ -51,39 +55,50 @@ const FilterPanel = ({
       onApply({ ageRanges: ageRangeFilter });
     }
   }, [ageRangeFilter]);
-  
+
   useEffect(() => {
     if (clearFilterCount) {
       setClearFilterCount(!clearFilterCount);
     }
   }, [clearFilterCount]);
-  
+
   const onClear = () => {
     setFilterTouched(false);
     setClearFilterCount(true);
     onApply({
-      ageRanges: [], source: [], subjects: [], duration: []
+      ageRanges: [],
+      source: [],
+      subjects: [],
+      duration: [],
     });
   };
- 
-  const ageRangeOptions:SelectOption[] = Object.keys(facets?.ageRanges!).map((it) => ({
-    id: it,
-    label: it === '16-99' ? '16+' : it.replace('-', ' - '),
-    count: facets?.ageRanges[it].hits,
-  }));
 
-  const subjectOptions:SelectOption[] = Object.keys(facets?.subjects!).map((it) => {
-    const subject = subjects?.find((item) => item.id === it);
-    return {
-      id: subject?.id || it,
-      label: subject?.name || it,
-      count: facets?.subjects[it].hits,
-    };
-  });
+  const ageRangeOptions: SelectOption[] = Object.keys(facets?.ageRanges!).map(
+    (it) => ({
+      id: it,
+      label: it === '16-99' ? '16+' : it.replace('-', ' - '),
+      count: facets?.ageRanges[it].hits,
+    }),
+  );
 
-  const durationOptions:SelectOption[] = DurationConverter.toSelectOptions(facets?.durations!);
+  const subjectOptions: SelectOption[] = Object.keys(facets?.subjects!).map(
+    (it) => {
+      const subject = subjects?.find((item) => item.id === it);
+      return {
+        id: subject?.id || it,
+        label: subject?.name || it,
+        count: facets?.subjects[it].hits,
+      };
+    },
+  );
 
-  const sourceOptions:SelectOption[] = Object.keys(facets?.resourceTypes!)?.map((it) => {
+  const durationOptions: SelectOption[] = DurationConverter.toSelectOptions(
+    facets?.durations!,
+  );
+
+  const sourceOptions: SelectOption[] = Object.keys(
+    facets?.resourceTypes!,
+  )?.map((it) => {
     const source = sources?.find((item) => item.name === it);
     return {
       id: source?.id || it,
@@ -94,13 +109,19 @@ const FilterPanel = ({
 
   return (
     <>
-      <div className={c({
-        [s.filters]: true,
-        [s.hideFilters]: hidePanel
-      })}>
+      <div
+        className={c({
+          [s.filters]: true,
+          [s.hideFilters]: hidePanel,
+        })}
+      >
         <div className={s.filtersHeader}>
-          <span className={s.filtersTitle}>FILTER BY:</span> 
-          {filterTouched && <Button className={s.clearAll} onClick={onClear} type="text"> CLEAR ALL</Button>}
+          <span className={s.filtersTitle}>FILTER BY:</span>
+          {filterTouched && (
+            <Button className={s.clearAll} onClick={onClear} type="text">
+              CLEAR ALL
+            </Button>
+          )}
         </div>
         <div className={s.filtersWrapper}>
           <SelectFilter
@@ -109,6 +130,7 @@ const FilterPanel = ({
             onApply={setAgeRangeFilter}
             clearCount={clearFilterCount}
             touched={setFilterTouched}
+            showFacets
           />
           <SelectFilter
             options={durationOptions}
@@ -116,6 +138,7 @@ const FilterPanel = ({
             onApply={setDurationFilter}
             clearCount={clearFilterCount}
             touched={setFilterTouched}
+            showFacets
           />
           <SelectFilter
             options={subjectOptions!}
@@ -125,6 +148,7 @@ const FilterPanel = ({
             searchPlaceholder="Search for subject"
             allowSearch
             touched={setFilterTouched}
+            showFacets
           />
           <SelectFilter
             options={sourceOptions!}
@@ -134,6 +158,7 @@ const FilterPanel = ({
             searchPlaceholder="Search for source"
             allowSearch
             touched={setFilterTouched}
+            showFacets
           />
         </div>
       </div>
