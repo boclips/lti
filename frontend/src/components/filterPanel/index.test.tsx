@@ -11,14 +11,7 @@ const testFacets = {
     'PT10M-PT20M': { hits: 48 },
     'PT20M-PT24H': { hits: 45 }
   },
-  resourceTypes: {
-    'biology channel': {
-      hits: 3
-    },
-    'history channel': {
-      hits: 5
-    }
-  },
+  resourceTypes: {},
   subjects: {
     '5cb499c9fd5beb428189454c': { hits: 88 },
     '5cb499c9fd5beb428189454d': { hits: 32 }

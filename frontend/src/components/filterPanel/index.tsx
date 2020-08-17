@@ -96,16 +96,11 @@ const FilterPanel = ({
     facets?.durations!,
   );
 
-  const sourceOptions: SelectOption[] = Object.keys(
-    facets?.resourceTypes!,
-  )?.map((it) => {
-    const source = sources?.find((item) => item.name === it);
-    return {
-      id: source?.id || it,
-      label: source?.name || it,
-      count: facets?.resourceTypes[it].hits,
-    };
-  });
+  const sourceOptions:SelectOption[] = sources?.map((it) => ({
+    id: it.name,
+    label: it.name,
+    count: 1,
+  })) || [];
 
   return (
     <>
@@ -158,7 +153,6 @@ const FilterPanel = ({
             searchPlaceholder="Search for source"
             allowSearch
             touched={setFilterTouched}
-            showFacets
           />
         </div>
       </div>
