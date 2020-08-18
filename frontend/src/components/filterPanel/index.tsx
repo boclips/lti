@@ -9,6 +9,7 @@ import { Button } from 'antd';
 import s from './style.module.less';
 import { Filters } from '../../types/filters';
 import DurationConverter from './converters/DurationConverter';
+import {AppliedFilters} from "../appliedFilters";
 
 interface Props {
   facets?: VideoFacets;
@@ -73,6 +74,7 @@ const FilterPanel = ({
     });
   };
 
+
   const ageRangeOptions: SelectOption[] = Object.keys(facets?.ageRanges!).map(
     (it) => ({
       id: it,
@@ -95,6 +97,16 @@ const FilterPanel = ({
   const durationOptions: SelectOption[] = DurationConverter.toSelectOptions(
     facets?.durations!,
   );
+
+  const getSubjectOptions = (subjectId:String) => {
+    const subject = subjects?.find((item) => item.id === subjectId)
+    return subject?.name
+  }
+
+  const subjectFilterLabels = (subjectFilter!)?.map(subjectId => getSubjectOptions(subjectId));
+
+  const durationLabels = (durationFilter!)?.map((duration)=>
+    DurationConverter.getLabelFromIso(duration))
 
   const sourceOptions:SelectOption[] = sources?.map((it) => ({
     id: it.name,
@@ -155,6 +167,14 @@ const FilterPanel = ({
             touched={setFilterTouched}
           />
         </div>
+        {filterTouched && (
+          <>
+          <div>{'Filters applied'}</div>
+          {ageRangeFilter && <AppliedFilters type={'Ages'} value={ageRangeFilter} onClick={(value)=>setAgeRangeFilter(value)} />}
+          {subjectFilter && <AppliedFilters type={'Subjects'} value={subjectFilterLabels} onClick={(value)=>setSubjectFilter(value)} />}
+          {sourceFilter && <AppliedFilters type={'Sources'} value={sourceFilter} onClick={(value)=>setSourceFilter(value)} />}
+          {durationFilter && <AppliedFilters type={'Durations'} value={durationLabels} onClick={(value)=>setDurationFilter(value)} />}
+          </>)}
       </div>
     </>
   );

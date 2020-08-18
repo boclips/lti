@@ -15,7 +15,7 @@ import EmptyList from '../../components/EmptyList';
 import TitleHeader from '../../components/TitleHeader';
 import NoResults from '../../components/NoResults/NoResults';
 import FilterPanel from '../../components/filterPanel';
-import FiltersButton from '../../components/filtersButton';
+import FiltersButton from '../../components/filterButton';
 
 interface Props {
   renderVideoCard: (video: Video, isLoading: boolean) => React.ReactNode;
