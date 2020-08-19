@@ -15,7 +15,7 @@ import EmptyList from '../../components/EmptyList';
 import TitleHeader from '../../components/TitleHeader';
 import NoResults from '../../components/NoResults/NoResults';
 import FilterPanel from '../../components/filterPanel';
-import FiltersButton from '../../components/filtersButton';
+import FiltersButton from '../../components/filterButton';
 
 interface Props {
   renderVideoCard: (video: Video, isLoading: boolean) => React.ReactNode;
@@ -152,7 +152,7 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
 
   return (
     <>
-      <Layout.Header className={!!searchQuery? s.layoutHeader : s.layoutHeaderBeforeSearch}>
+      <Layout.Header className={searchQuery ? s.layoutHeader : s.layoutHeaderBeforeSearch}>
         <Row>
           <Col xs={24}>
             {header || (<TitleHeader title="Video Library" />)}
@@ -194,7 +194,7 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
           </Col>
         </Row>
       </Layout.Header>
-      <Layout.Content className={!!searchQuery? s.main : s.mainBeforeSearch }>
+      <Layout.Content className={searchQuery ? s.main : s.mainBeforeSearch }>
         <Row >
           {renderVideoList()}
         </Row>

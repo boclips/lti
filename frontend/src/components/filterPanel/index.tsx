@@ -7,8 +7,9 @@ import { Channel } from 'boclips-api-client/dist/sub-clients/channels/model/Chan
 import c from 'classnames';
 import { Button } from 'antd';
 import s from './style.module.less';
-import { Filters } from '../../types/filters';
 import DurationConverter from './converters/DurationConverter';
+import AppliedFiltersPanel from '../appliedFiltersPanel';
+import { Filters } from '../../types/filters';
 
 interface Props {
   facets?: VideoFacets;
@@ -29,7 +30,6 @@ const FilterPanel = ({
   const [durationFilter, setDurationFilter] = useState<string[]>();
   const [subjectFilter, setSubjectFilter] = useState<string[]>();
   const [sourceFilter, setSourceFilter] = useState<string[]>();
-  const [clearFilterCount, setClearFilterCount] = useState<boolean>(false);
   const [filterTouched, setFilterTouched] = useState<boolean>(false);
 
   useEffect(() => {
@@ -56,15 +56,12 @@ const FilterPanel = ({
     }
   }, [ageRangeFilter]);
 
-  useEffect(() => {
-    if (clearFilterCount) {
-      setClearFilterCount(!clearFilterCount);
-    }
-  }, [clearFilterCount]);
-
   const onClear = () => {
     setFilterTouched(false);
-    setClearFilterCount(true);
+    setSubjectFilter([]);
+    setDurationFilter([]);
+    setAgeRangeFilter([]);
+    setSourceFilter([]);
     onApply({
       ageRanges: [],
       source: [],
@@ -101,7 +98,7 @@ const FilterPanel = ({
     label: it.name,
     count: 1,
   })) || [];
-
+  
   return (
     <>
       <div
@@ -122,16 +119,16 @@ const FilterPanel = ({
           <SelectFilter
             options={ageRangeOptions}
             title="Age"
+            updatedSelected={ageRangeFilter}
             onApply={setAgeRangeFilter}
-            clearCount={clearFilterCount}
             touched={setFilterTouched}
             showFacets
           />
           <SelectFilter
             options={durationOptions}
             title="Duration"
+            updatedSelected={durationFilter}
             onApply={setDurationFilter}
-            clearCount={clearFilterCount}
             touched={setFilterTouched}
             showFacets
           />
@@ -139,7 +136,7 @@ const FilterPanel = ({
             options={subjectOptions!}
             title="Subject"
             onApply={setSubjectFilter}
-            clearCount={clearFilterCount}
+            updatedSelected={subjectFilter}
             searchPlaceholder="Search for subject"
             allowSearch
             touched={setFilterTouched}
@@ -148,13 +145,27 @@ const FilterPanel = ({
           <SelectFilter
             options={sourceOptions!}
             title="Source"
-            clearCount={clearFilterCount}
             onApply={setSourceFilter}
+            updatedSelected={sourceFilter}
             searchPlaceholder="Search for source"
             allowSearch
             touched={setFilterTouched}
           />
         </div>
+        {filterTouched && (
+          <AppliedFiltersPanel 
+            subjectList={subjects || []} 
+            setSubjectFilter={setSubjectFilter}
+            setSourceFilter={setSourceFilter}
+            setAgeRangeFilter={setAgeRangeFilter}
+            setDurationFilter={setDurationFilter}
+            appliedFilters={{
+              ageRanges: ageRangeFilter,
+              duration: durationFilter, 
+              subjects: subjectFilter,
+              source: sourceFilter
+            }}
+          />)}
       </div>
     </>
   );

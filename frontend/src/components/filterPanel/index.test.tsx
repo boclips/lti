@@ -86,7 +86,7 @@ describe('Filter Panel', () => {
 
   it('clear all clears the filters', async () => {
     const onApply = jest.fn();
-    
+
     render(
       <FilterPanel
         facets={testFacets}
@@ -103,13 +103,71 @@ describe('Filter Panel', () => {
     fireEvent.click(screen.getByTitle('2m - 5m'));
 
     fireEvent.click(screen.getByText('APPLY'));
-    
+
     expect(screen.getByText('CLEAR ALL')).toBeInTheDocument();
-    
+
     fireEvent.click(screen.getByText('CLEAR ALL'));
-    
+
     expect(onApply).toBeCalledWith({
-      ageRanges: [], source: [], subjects: [], duration: [] 
+      ageRanges: [], source: [], subjects: [], duration: []
     });
+  });
+
+  it('Filters applied panel only shows when filters are selected', () => {
+    render(
+      <FilterPanel
+        facets={testFacets}
+        onApply={jest.fn()}
+      />,
+    );
+
+    const sourceSelector = screen.getByText('Duration');
+
+    fireEvent.mouseDown(sourceSelector);
+
+    fireEvent.click(screen.getByTitle('0m - 2m'));
+    fireEvent.click(screen.getByTitle('2m - 5m'));
+
+    fireEvent.click(screen.getByText('APPLY'));
+
+    expect(screen.queryByText('Filters applied:')).toBeInTheDocument();
+    expect(screen.getAllByText('0m - 2m').length).toEqual(2);
+    expect(screen.getAllByText('2m - 5m').length).toEqual(2);
+    expect(screen.getAllByText('10m - 20m').length).toEqual(1);
+
+    const removeElements = screen.getAllByTestId(/-remove-button/);
+    removeElements.map((element) => (fireEvent.click(element)));
+
+    expect(screen.queryByText('Filters applied')).not.toBeInTheDocument();
+    expect(screen.getAllByText('0m - 2m').length).toEqual(1);
+    expect(screen.getAllByText('2m - 5m').length).toEqual(1);
+  });
+
+  it('When filters are removed from applied filters the count shows correct number', async () => {
+    render(
+      <FilterPanel
+        facets={testFacets}
+        onApply={jest.fn()}
+      />,
+    );
+
+    const sourceSelector = screen.getByText('Duration');
+    expect(sourceSelector).toBeVisible();
+
+    fireEvent.mouseDown(sourceSelector);
+
+    fireEvent.click(screen.getByTitle('0m - 2m'));
+    fireEvent.click(screen.getByTitle('2m - 5m'));
+    fireEvent.click(screen.getByTitle('10m - 20m'));
+
+    fireEvent.click(screen.getByText('APPLY'));
+
+    const removeElements = screen.getAllByTestId(/-remove-button/);
+
+    expect(await screen.queryByTestId('count-wrapper')?.innerHTML).toEqual('3');
+
+    fireEvent.click(removeElements[0]);
+
+    expect(await screen.queryByTestId('count-wrapper')?.innerHTML).toEqual('2');
   });
 });
