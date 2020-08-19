@@ -9,11 +9,12 @@ import { Button } from 'antd';
 import s from './style.module.less';
 import { Filters } from '../../types/filters';
 import DurationConverter from './converters/DurationConverter';
-import { AppliedFilters } from '../appliedFilters';
+import { AppliedFilters } from '../appliedFiltersPanel';
+import { FilterBadgeFactory } from './FilterBadgeFactory';
 
 interface Props {
   facets?: VideoFacets;
-  onApply: (filters: Filters) => void;
+  onApply: (filters: ) => void;
   subjects?: Subject[];
   sources?: Channel[];
   hidePanel?: boolean;
@@ -97,22 +98,63 @@ const FilterPanel = ({
     facets?.durations!,
   );
 
-  const getSubjectOptions = (subjectId:String) => {
-    const subject = subjects?.find((item) => item.id === subjectId);
-    return subject?.name;
-  };
-
-  const subjectFilterLabels = (subjectFilter!)?.map((subjectId) => getSubjectOptions(subjectId));
-
-  const durationLabels = (durationFilter!)?.map((duration) =>
-    DurationConverter.getLabelFromIso(duration));
-
   const sourceOptions:SelectOption[] = sources?.map((it) => ({
     id: it.name,
     label: it.name,
     count: 1,
   })) || [];
 
+  const appliedFilterBadges = () => {
+    const AgeBadgeOptions = ageRangeFilter?.map((filter) => ({
+      displayValue: filter,
+      key: filter
+    }));
+
+    const durationBadgeOptions = durationFilter?.map((durationISO) => ({
+      displayValue: DurationConverter.getLabelFromIso(durationISO),
+      key: durationISO
+    }));
+
+    const sourceBadgeOptions = sourceFilter?.map((filter) => ({
+      displayValue: filter,
+      key: filter
+    }));
+
+    const subjectBadgeOptions = subjectFilter?.map((subjectId) => {
+      const subject = subjects?.find((item) => item.id === subjectId);
+      return {
+        displayValue: subject?.name,
+        key: subject?.id
+      };
+    });
+
+    const ageBadges = FilterBadgeFactory.produce({
+      badgeType: 'Age',
+      badges: AgeBadgeOptions || [],
+      updateFilters: setAgeRangeFilter
+    });
+
+    const durationBadges = FilterBadgeFactory.produce({
+      badgeType: 'Duration',
+      badges: durationBadgeOptions || [],
+      updateFilters: setDurationFilter
+    });
+
+    const subjectBadges = FilterBadgeFactory.produce({
+      badgeType: 'Subject',
+      badges: subjectBadgeOptions || [],
+      updateFilters: setSubjectFilter
+    });
+
+    const sourcesBadges = FilterBadgeFactory.produce({
+      badgeType: 'Source',
+      badges: sourceBadgeOptions || [],
+      updateFilters: setSourceFilter
+    });
+
+    return [...ageBadges, ...durationBadges, ...subjectBadges, ...sourcesBadges];
+  };
+  
   return (
     <>
       <div
@@ -167,16 +209,26 @@ const FilterPanel = ({
           />
         </div>
         {filterTouched && (
-          <>
+          <div>
             <div>Filters applied</div>
-            {ageRangeFilter && <AppliedFilters type="Ages" values={ageRangeFilter} onClick={(value) => setAgeRangeFilter(value)} />}
-            {subjectFilter && <AppliedFilters type="Subjects" values={subjectFilterLabels} onClick={(value) => setSubjectFilter(value)} />}
-            {sourceFilter && <AppliedFilters type="Sources" values={sourceFilter} onClick={(value) => setSourceFilter(value)} />}
-            {durationFilter && <AppliedFilters type="Durations" values={durationLabels} onClick={(value) => setDurationFilter(value)} />}
-          </>)}
+            {appliedFilterBadges()}
+            {/* {ageRangeFilter && <AppliedFilters type="Ages" values={ageRangeFilter} onClick={(value) => setAgeRangeFilter(value)} />} */}
+            {/* {subjectFilter && <AppliedFilters type="Subjects" values={subjectFilterLabels} onClick={(value) => setSubjectFilter(value)} />} */}
+            {/* {sourceFilter && <AppliedFilters type="Sources" values={sourceFilter} onClick={(value) => setSourceFilter(value)} />} */}
+            {/* {durationFilter && <AppliedFilters type="Durations" values={durationLabels} onClick={(value) => setDurationFilter(value)} />} */}
+          </div>)}
       </div>
     </>
   );
 };
+
+interface AppliedFiltersPanelProps {
+  appliedFilters: Filters;
+  setAgeRangeFilter: (filter: string) => void;
+  setDurationFilter: (filter: string) => void;
+  setSourceFilter: (filter: string) => void;
+  setSubjectFilter: (filter: string) => void;
+  subjects: Subject[];
+}
 
 export default FilterPanel;
