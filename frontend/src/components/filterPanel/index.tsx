@@ -30,7 +30,6 @@ const FilterPanel = ({
   const [durationFilter, setDurationFilter] = useState<string[]>();
   const [subjectFilter, setSubjectFilter] = useState<string[]>();
   const [sourceFilter, setSourceFilter] = useState<string[]>();
-  const [clearFilterCount, setClearFilterCount] = useState<boolean>(false);
   const [filterTouched, setFilterTouched] = useState<boolean>(false);
 
   useEffect(() => {
@@ -57,15 +56,12 @@ const FilterPanel = ({
     }
   }, [ageRangeFilter]);
 
-  useEffect(() => {
-    if (clearFilterCount) {
-      setClearFilterCount(!clearFilterCount);
-    }
-  }, [clearFilterCount]);
-
   const onClear = () => {
     setFilterTouched(false);
-    setClearFilterCount(true);
+    setSubjectFilter([]);
+    setDurationFilter([]);
+    setAgeRangeFilter([]);
+    setSourceFilter([]);
     onApply({
       ageRanges: [],
       source: [],
@@ -123,16 +119,16 @@ const FilterPanel = ({
           <SelectFilter
             options={ageRangeOptions}
             title="Age"
+            updatedSelected={ageRangeFilter}
             onApply={setAgeRangeFilter}
-            clearCount={clearFilterCount}
             touched={setFilterTouched}
             showFacets
           />
           <SelectFilter
             options={durationOptions}
             title="Duration"
+            updatedSelected={durationFilter}
             onApply={setDurationFilter}
-            clearCount={clearFilterCount}
             touched={setFilterTouched}
             showFacets
           />
@@ -140,7 +136,7 @@ const FilterPanel = ({
             options={subjectOptions!}
             title="Subject"
             onApply={setSubjectFilter}
-            clearCount={clearFilterCount}
+            updatedSelected={subjectFilter}
             searchPlaceholder="Search for subject"
             allowSearch
             touched={setFilterTouched}
@@ -149,8 +145,8 @@ const FilterPanel = ({
           <SelectFilter
             options={sourceOptions!}
             title="Source"
-            clearCount={clearFilterCount}
             onApply={setSourceFilter}
+            updatedSelected={sourceFilter}
             searchPlaceholder="Search for source"
             allowSearch
             touched={setFilterTouched}
