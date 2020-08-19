@@ -2,26 +2,6 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import AppliedFiltersPanel from './index';
 
-const testFacets = {
-  durations: {
-    'PT0S-PT2M': { hits: 53 },
-    'PT2M-PT5M': { hits: 94 },
-    'PT5M-PT10M': { hits: 44 },
-    'PT10M-PT20M': { hits: 48 },
-    'PT20M-PT24H': { hits: 45 }
-  },
-  resourceTypes: {},
-  subjects: {
-    '5cb499c9fd5beb428189454c': { hits: 88 },
-    '5cb499c9fd5beb428189454d': { hits: 32 }
-  },
-  ageRanges: {
-    '3-5': {
-      hits: 3,
-    },
-  },
-};
-
 describe('Applied filters panel', () => {
   it('shows badges for all applied filters', () => {
     render(
@@ -48,33 +28,72 @@ describe('Applied filters panel', () => {
     expect(screen.getByText('history subject'));
     expect(screen.getByText('BBC'));
   });
-  
-  it('shows badges for all applied filters', async () => {
-    const sourceFilterCalled = jest.fn();
+
+  it('calls correct set method when removing a badge', async () => {
+    const ageFilterMock = jest.fn();
+    const durationFilterMock = jest.fn();
+    const subjectFilterMock = jest.fn();
+    const sourceFilterMock = jest.fn();
     render(
       <AppliedFiltersPanel
         subjectList={[{
-          id: 'subject-id',
+          id: 'subject-1',
           name: 'history subject'
+        }, {
+          id: 'subject-2',
+          name: 'art subject'
         }]}
         appliedFilters={{
-          ageRanges: [],
-          duration: [],
-          subjects: [],
+          ageRanges: ['4-6', '7-9'],
+          duration: ['PT0S-PT2M', 'PT2M-PT5M'],
+          subjects: ['subject-1', 'subject-2'],
           source: ['BBC', 'nature channel']
         }}
+        setSubjectFilter={subjectFilterMock}
+        setSourceFilter={sourceFilterMock}
+        setDurationFilter={durationFilterMock}
+        setAgeRangeFilter={ageFilterMock}
+      />,
+    );
+
+    const sourceBadge = screen.getByTestId('BBC-remove-button');
+    await fireEvent.click(sourceBadge!);
+    expect(sourceFilterMock).toHaveBeenCalledTimes(1);
+    expect(sourceFilterMock).toHaveBeenCalledWith(['nature channel']);
+
+    const ageBadge = screen.getByTestId('4-6-remove-button');
+    await fireEvent.click(ageBadge!);
+    expect(ageFilterMock).toHaveBeenCalledTimes(1);
+    expect(ageFilterMock).toHaveBeenCalledWith(['7-9']);
+
+    const durationBadge = screen.getByTestId('PT0S-PT2M-remove-button');
+    await fireEvent.click(durationBadge!);
+    expect(durationFilterMock).toHaveBeenCalledTimes(1);
+    expect(durationFilterMock).toHaveBeenCalledWith(['PT2M-PT5M']);
+
+    const subjectBadge = screen.getByTestId('subject-1-remove-button');
+    await fireEvent.click(subjectBadge!);
+    expect(subjectFilterMock).toHaveBeenCalledTimes(1);
+    expect(subjectFilterMock).toHaveBeenCalledWith(['subject-2']);
+  });
+
+  it('does not display header when no filters are applied', async () => {
+    render(
+      <AppliedFiltersPanel
+        subjectList={[]}
+        appliedFilters={{
+          ageRanges: undefined,
+          duration: [],
+          subjects: [],
+          source: undefined
+        }}
         setSubjectFilter={jest.fn()}
-        setSourceFilter={sourceFilterCalled}
+        setSourceFilter={jest.fn()}
         setDurationFilter={jest.fn()}
         setAgeRangeFilter={jest.fn()}
       />,
     );
-    const sourceFilter = screen.getByText('BBC').closest('close-icon');
 
-    await fireEvent.click(sourceFilter);
-    
-    expect(await screen.findByText('BBC')).not.toBeInTheDocument();
-    expect(sourceFilterCalled).toHaveBeenCalledTimes(1);
-    expect(sourceFilterCalled).toHaveBeenCalledWith(['nature channel']);
+    expect(await screen.queryByText('Filters applied')).not.toBeInTheDocument();
   });
 });

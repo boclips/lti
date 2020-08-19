@@ -1,5 +1,5 @@
 import React from 'react';
-import { FilterBadge } from '../filterBadge';
+import FilterBadge from '../filterBadge';
 
 export interface BadgeOption {
   displayValue: string;

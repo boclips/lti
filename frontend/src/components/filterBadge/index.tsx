@@ -11,7 +11,7 @@ interface Props {
   theme?: 'backoffice' | 'lti' | 'custom';
 }
 
-export const FilterBadge = ({
+const FilterBadge = ({
   id, value, label, onClick, theme = 'lti'
 }: Props) => (
   <span className={c(s.badge, {
@@ -21,8 +21,10 @@ export const FilterBadge = ({
   })}>
     {label && <div className={s.label}>{label}</div>}
     {value && <div className={s.value}>{value}</div>}
-    <div data-qa="close-icon" onClick={(_) => onClick(id)}>
+    <div role="presentation" data-qa={`${id}-remove-button`} onClick={() => onClick(id)}>
       <CloseIcon/>
     </div>
   </span>
 );
+
+export default FilterBadge;
