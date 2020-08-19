@@ -1,4 +1,5 @@
 import { PlayerOptions } from 'boclips-player';
+import {AppConstants} from "../types/AppConstants";
 
 const playerOptions: Partial<PlayerOptions> = {
   interface: {
@@ -13,6 +14,9 @@ const playerOptions: Partial<PlayerOptions> = {
       'fullscreen',
       'settings',
     ],
+  },
+  api: {
+    userIdFactory: AppConstants.USER_ID ? () => Promise.resolve(AppConstants.USER_ID) : undefined,
   },
 };
 
