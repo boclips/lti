@@ -1,7 +1,7 @@
 import React from 'react';
 import { FilterBadge } from '../filterBadge';
 
-interface BadgeOption {
+export interface BadgeOption {
   displayValue: string;
   key: string;
 }
@@ -12,10 +12,10 @@ interface BadgeProps {
   updateFilters: (values: string[]) => void;
 }
 
-export class FilterBadgeFactory {
+class FilterBadgeFactory {
   static produce({ badgeType, badges, updateFilters }: BadgeProps) {
     const onClick = (clickedValue: string) => {
-      const filters = badges.map((b) => b.key);
+      const filters = badges.map((b) => b!.key);
       updateFilters(filters?.filter((item) => item !== clickedValue));
     };
 
@@ -32,3 +32,5 @@ export class FilterBadgeFactory {
     ));
   }
 }
+
+export default FilterBadgeFactory;

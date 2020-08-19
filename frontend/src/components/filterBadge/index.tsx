@@ -21,7 +21,7 @@ export const FilterBadge = ({
   })}>
     {label && <div className={s.label}>{label}</div>}
     {value && <div className={s.value}>{value}</div>}
-    <div onClick={(_) => onClick(id)}>
+    <div data-qa="close-icon" onClick={(_) => onClick(id)}>
       <CloseIcon/>
     </div>
   </span>

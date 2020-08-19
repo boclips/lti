@@ -1,7 +1,6 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { ChannelFactory } from 'boclips-api-client/dist/test-support';
-import FilterPanel from './index';
+import AppliedFiltersPanel from './index';
 
 const testFacets = {
   durations: {
@@ -23,93 +22,59 @@ const testFacets = {
   },
 };
 
-describe('Filter Panel', () => {
-  it('shows subject filters with options from API', async () => {
+describe('Applied filters panel', () => {
+  it('shows badges for all applied filters', () => {
     render(
-      <FilterPanel
-        facets={testFacets}
-        onApply={jest.fn()}
-        subjects={[
-          { id: '5cb499c9fd5beb428189454c', name: 'subject1' },
-          { id: '5cb499c9fd5beb428189454d', name: 'subject2' },
-        ]}
+      <AppliedFiltersPanel
+        subjectList={[{
+          id: 'subject-id',
+          name: 'history subject'
+        }]}
+        appliedFilters={{
+          ageRanges: ['4-6'],
+          duration: ['PT0S-PT2M'],
+          subjects: ['subject-id'],
+          source: ['BBC']
+        }}
+        setSubjectFilter={jest.fn()}
+        setSourceFilter={jest.fn()}
+        setDurationFilter={jest.fn()}
+        setAgeRangeFilter={jest.fn()}
       />,
     );
 
-    const subjectSelector = screen.getByText('Subject');
-    expect(subjectSelector).toBeVisible();
-
-    fireEvent.mouseDown(subjectSelector);
-
-    expect(screen.getByText('subject1'));
-    expect(screen.getByText('subject2'));
+    expect(screen.getByText('4-6'));
+    expect(screen.getByText('0m - 2m'));
+    expect(screen.getByText('history subject'));
+    expect(screen.getByText('BBC'));
   });
-
-  it('shows sources filters with options from API', async () => {
+  
+  it('shows badges for all applied filters', async () => {
+    const sourceFilterCalled = jest.fn();
     render(
-      <FilterPanel
-        facets={testFacets}
-        onApply={jest.fn()}
-        sources={[ChannelFactory.sample({ id: '1', name: 'biology channel' }),
-          ChannelFactory.sample({ id: '1', name: 'history channel' })]}
+      <AppliedFiltersPanel
+        subjectList={[{
+          id: 'subject-id',
+          name: 'history subject'
+        }]}
+        appliedFilters={{
+          ageRanges: [],
+          duration: [],
+          subjects: [],
+          source: ['BBC', 'nature channel']
+        }}
+        setSubjectFilter={jest.fn()}
+        setSourceFilter={sourceFilterCalled}
+        setDurationFilter={jest.fn()}
+        setAgeRangeFilter={jest.fn()}
       />,
     );
+    const sourceFilter = screen.getByText('BBC').closest('close-icon');
 
-    const sourceSelector = screen.getByText('Source');
-    expect(sourceSelector).toBeVisible();
-
-    fireEvent.mouseDown(sourceSelector);
-
-    expect(screen.getByTitle('biology channel'));
-    expect(screen.getByTitle('history channel'));
-  });
-
-  it('shows duration filters', async () => {
-    render(
-      <FilterPanel
-        facets={testFacets}
-        onApply={jest.fn()}
-      />,
-    );
-
-    const sourceSelector = screen.getByText('Duration');
-    expect(sourceSelector).toBeVisible();
-
-    fireEvent.mouseDown(sourceSelector);
-
-    expect(screen.getByTitle('0m - 2m'));
-    expect(screen.getByTitle('2m - 5m'));
-    expect(screen.getByTitle('5m - 10m'));
-    expect(screen.getByTitle('10m - 20m'));
-    expect(screen.getByTitle('> 20m'));
-  });
-
-  it('clear all clears the filters', async () => {
-    const onApply = jest.fn();
+    await fireEvent.click(sourceFilter);
     
-    render(
-      <FilterPanel
-        facets={testFacets}
-        onApply={onApply}
-      />,
-    );
-
-    const sourceSelector = screen.getByText('Duration');
-    expect(sourceSelector).toBeVisible();
-
-    fireEvent.mouseDown(sourceSelector);
-
-    fireEvent.click(screen.getByTitle('0m - 2m'));
-    fireEvent.click(screen.getByTitle('2m - 5m'));
-
-    fireEvent.click(screen.getByText('APPLY'));
-    
-    expect(screen.getByText('CLEAR ALL')).toBeInTheDocument();
-    
-    fireEvent.click(screen.getByText('CLEAR ALL'));
-    
-    expect(onApply).toBeCalledWith({
-      ageRanges: [], source: [], subjects: [], duration: [] 
-    });
+    expect(await screen.findByText('BBC')).not.toBeInTheDocument();
+    expect(sourceFilterCalled).toHaveBeenCalledTimes(1);
+    expect(sourceFilterCalled).toHaveBeenCalledWith(['nature channel']);
   });
 });
