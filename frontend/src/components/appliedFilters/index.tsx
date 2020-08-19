@@ -1,23 +1,22 @@
 import React from 'react';
-import {FilterBadge} from "../filterBadge";
+import { FilterBadge } from '../filterBadge';
 
 interface Props {
-  value:string[];
+  values:string[];
   onClick:(ageRange:string[])=>void;
   type:string;
 }
 
-export const AppliedFilters = ({value, onClick, type}: Props) => {
-
-  return (
-    <span>{(value!)?.map((filter)=>{
-    return (<FilterBadge
+export const AppliedFilters = ({ values, onClick, type }: Props) => (
+  <span>
+    {values?.map((filter) => (
+      <FilterBadge
+        key={filter}
         value={filter}
         label={`${type}:`}
-        onClick={(filter: string) => onClick(value?.filter(item => item !== filter))}
+        onClick={(clickedValue: string) => onClick(values?.filter((item) => item !== clickedValue))}
       />
+    )
     )}
-    )}</span>
-  )
-};
-
+  </span>
+);

@@ -17,7 +17,7 @@ export default class DurationConverter {
       .filter((option) => option.label?.length > 0);
   }
   
-  private static getLabelFromIso(iso: string) {
+  static getLabelFromIso(iso: string) {
     const values = iso.split('-');
     return values.length === 2 
       ? this.getLabel({

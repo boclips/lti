@@ -9,7 +9,7 @@ import { Button } from 'antd';
 import s from './style.module.less';
 import { Filters } from '../../types/filters';
 import DurationConverter from './converters/DurationConverter';
-import {AppliedFilters} from "../appliedFilters";
+import { AppliedFilters } from '../appliedFilters';
 
 interface Props {
   facets?: VideoFacets;
@@ -74,7 +74,6 @@ const FilterPanel = ({
     });
   };
 
-
   const ageRangeOptions: SelectOption[] = Object.keys(facets?.ageRanges!).map(
     (it) => ({
       id: it,
@@ -99,14 +98,14 @@ const FilterPanel = ({
   );
 
   const getSubjectOptions = (subjectId:String) => {
-    const subject = subjects?.find((item) => item.id === subjectId)
-    return subject?.name
-  }
+    const subject = subjects?.find((item) => item.id === subjectId);
+    return subject?.name;
+  };
 
-  const subjectFilterLabels = (subjectFilter!)?.map(subjectId => getSubjectOptions(subjectId));
+  const subjectFilterLabels = (subjectFilter!)?.map((subjectId) => getSubjectOptions(subjectId));
 
-  const durationLabels = (durationFilter!)?.map((duration)=>
-    DurationConverter.getLabelFromIso(duration))
+  const durationLabels = (durationFilter!)?.map((duration) =>
+    DurationConverter.getLabelFromIso(duration));
 
   const sourceOptions:SelectOption[] = sources?.map((it) => ({
     id: it.name,
@@ -169,11 +168,11 @@ const FilterPanel = ({
         </div>
         {filterTouched && (
           <>
-          <div>{'Filters applied'}</div>
-          {ageRangeFilter && <AppliedFilters type={'Ages'} value={ageRangeFilter} onClick={(value)=>setAgeRangeFilter(value)} />}
-          {subjectFilter && <AppliedFilters type={'Subjects'} value={subjectFilterLabels} onClick={(value)=>setSubjectFilter(value)} />}
-          {sourceFilter && <AppliedFilters type={'Sources'} value={sourceFilter} onClick={(value)=>setSourceFilter(value)} />}
-          {durationFilter && <AppliedFilters type={'Durations'} value={durationLabels} onClick={(value)=>setDurationFilter(value)} />}
+            <div>Filters applied</div>
+            {ageRangeFilter && <AppliedFilters type="Ages" values={ageRangeFilter} onClick={(value) => setAgeRangeFilter(value)} />}
+            {subjectFilter && <AppliedFilters type="Subjects" values={subjectFilterLabels} onClick={(value) => setSubjectFilter(value)} />}
+            {sourceFilter && <AppliedFilters type="Sources" values={sourceFilter} onClick={(value) => setSourceFilter(value)} />}
+            {durationFilter && <AppliedFilters type="Durations" values={durationLabels} onClick={(value) => setDurationFilter(value)} />}
           </>)}
       </div>
     </>
