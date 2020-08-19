@@ -14,4 +14,7 @@ class FrontendProperties {
 
     @NotBlank
     var apiBaseUrl: String = ""
+
+    // @NotBlank
+    // var userId: String = ""
 }
