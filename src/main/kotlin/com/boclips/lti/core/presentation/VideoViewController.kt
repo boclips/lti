@@ -7,6 +7,7 @@ import com.boclips.lti.core.application.service.LtiSessionHelpers.getIntegration
 import com.boclips.lti.core.domain.model.VideoRequest
 import com.boclips.lti.core.domain.repository.VideoRepository
 import com.boclips.lti.core.presentation.service.ToVideoViewModel
+import com.boclips.lti.v1p3.domain.model.getUserId
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -34,7 +35,7 @@ class VideoViewController(
             "video", mapOf(
                 "customLogoUrl" to session.getAttribute(customLogo),
                 "video" to toVideoViewModel(video),
-                "userId" to session.getAttribute(userId)
+                "userId" to session.getUserId()
             )
         )
     }

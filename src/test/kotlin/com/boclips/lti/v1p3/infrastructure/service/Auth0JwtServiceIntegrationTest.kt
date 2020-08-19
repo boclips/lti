@@ -146,6 +146,7 @@ PwIDAQAB
 
             {
               "iss": "https://lms.com",
+              "sub": "user-id-1234",
               "aud": ["boclips"],
               "azp": "boclips",
               "iat": 1300819380,
@@ -161,9 +162,7 @@ PwIDAQAB
             }
 
             */
-            val encodedToken =
-                "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczovL2xtcy5jb20iLCJhdWQiOlsiYm9jbGlwcyJdLCJhenAiOiJib2NsaXBzIiwiaWF0IjoxMzAwODE5MzgwLCJleHAiOjEzMDA4MTkzOTksIm5vbmNlIjoid29vZ2llLWJvb2dpZSIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL2RlcGxveW1lbnRfaWQiOiJ0ZXN0LWRlcGxveW1lbnQtaWQiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS90YXJnZXRfbGlua191cmkiOiJodHRwczovL3Rvb2wubmV0L3N1cGVyL3Jlc291cmNlIiwiaHR0cHM6Ly9wdXJsLmltc2dsb2JhbC5vcmcvc3BlYy9sdGkvY2xhaW0vbWVzc2FnZV90eXBlIjoiTHRpUmVzb3VyY2VMaW5rUmVxdWVzdCIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL3ZlcnNpb24iOiIxLjMuMCIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL3Jlc291cmNlX2xpbmsiOnsiaWQiOiJ0ZXN0LXJlc291cmNlLWxpbmstaWQifX0.CzAEt0L1mBD_TQ2wCQ0ytPCp2xGq9tzYC_EGHdR1HwwSsFsN6jPyzxjhIMMRHjtsIfSX958W0vFgIWFoLAsk6SdUY0Kshp9A9R-ld3Q99U6nlTMSPdFI52sPBlnp7Xf54SPG426xqOEEGmGOB6I57zoOBxqjgtgK7oQF3SB76xGPZqfPkaSKapV-c2kfi87rg_AmLCJ4HVPgeJFYRNBEg9675BPNL15dsn4zvmY7vnp0kezFds33RYNiiIDA_STGArHx7MFBOiIk033URDJ2ic8r05dbvi8O85TJnVLVE-bKqO0h66y4jmxP7aillN_hMgqwPuKn-zVSnDUIh60QNw"
-
+            val encodedToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2xtcy5jb20iLCJzdWIiOiJ1c2VyLWlkLTEyMzQiLCJhdWQiOlsiYm9jbGlwcyJdLCJhenAiOiJib2NsaXBzIiwiaWF0IjoxMzAwODE5MzgwLCJleHAiOjEzMDA4MTkzOTksIm5vbmNlIjoid29vZ2llLWJvb2dpZSIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL2RlcGxveW1lbnRfaWQiOiJ0ZXN0LWRlcGxveW1lbnQtaWQiLCJodHRwczovL3B1cmwuaW1zZ2xvYmFsLm9yZy9zcGVjL2x0aS9jbGFpbS90YXJnZXRfbGlua191cmkiOiJodHRwczovL3Rvb2wubmV0L3N1cGVyL3Jlc291cmNlIiwiaHR0cHM6Ly9wdXJsLmltc2dsb2JhbC5vcmcvc3BlYy9sdGkvY2xhaW0vbWVzc2FnZV90eXBlIjoiTHRpUmVzb3VyY2VMaW5rUmVxdWVzdCIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL3ZlcnNpb24iOiIxLjMuMCIsImh0dHBzOi8vcHVybC5pbXNnbG9iYWwub3JnL3NwZWMvbHRpL2NsYWltL3Jlc291cmNlX2xpbmsiOnsiaWQiOiJ0ZXN0LXJlc291cmNlLWxpbmstaWQifX0.KldwZsAbiLftmlAyoY84z3WyBNAY_0UC8drF8W3ix60"
             val decodedToken = service.decode(encodedToken)
 
             assertThat(decodedToken.issuerClaim).isEqualTo("https://lms.com")
@@ -177,6 +176,7 @@ PwIDAQAB
             assertThat(decodedToken.messageTypeClaim).isEqualTo("LtiResourceLinkRequest")
             assertThat(decodedToken.ltiVersionClaim).isEqualTo("1.3.0")
             assertThat(decodedToken.resourceLinkClaim?.id).isEqualTo("test-resource-link-id")
+            assertThat(decodedToken.subjectClaim).isEqualTo("user-id-1234")
         }
 
         @Test

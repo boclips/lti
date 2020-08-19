@@ -43,10 +43,12 @@ class HandleResourceLinkMessageIntegrationTest : AbstractSpringIntegrationTest()
                 issuer = issuer,
                 requestedResource = resource
             ),
-            session = session
+            session = session,
+            userId = "user-id-1234"
         )
 
         assertThat(session.getIntegrationId()).isEqualTo(issuer.toString())
+        assertThat(session.getAttribute("userId")).isEqualTo("user-id-1234")
     }
 
     @Test

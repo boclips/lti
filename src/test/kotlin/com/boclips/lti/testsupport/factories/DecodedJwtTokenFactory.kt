@@ -20,7 +20,8 @@ object DecodedJwtTokenFactory {
         messageTypeClaim: String? = MessageTypes.ResourceLinkRequest,
         ltiVersionClaim: String? = "1.3.0",
         resourceLinkClaim: ResourceLinkClaim? = sampleResourceLinkClaim(),
-        deepLinkingSettingsClaim: DeepLinkingSettingsClaim? = null
+        deepLinkingSettingsClaim: DeepLinkingSettingsClaim? = null,
+        subjectClaim: String? = "user-id"
     ) = DecodedJwtToken(
         issuerClaim = issuerClaim,
         audienceClaim = audienceClaim,
@@ -33,7 +34,8 @@ object DecodedJwtTokenFactory {
         ltiVersionClaim = ltiVersionClaim,
         resourceLinkClaim = resourceLinkClaim,
         nonceClaim = nonceClaim,
-        deepLinkingSettingsClaim = deepLinkingSettingsClaim
+        deepLinkingSettingsClaim = deepLinkingSettingsClaim,
+        subjectClaim = subjectClaim
     )
 
     fun sampleDeepLinkingToken(

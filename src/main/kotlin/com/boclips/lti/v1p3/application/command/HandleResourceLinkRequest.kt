@@ -15,7 +15,8 @@ class HandleResourceLinkRequest(private val handleResourceLinkMessage: HandleRes
             message = MessageConverter.toResourceLinkMessage(
                 idToken
             ),
-            session = session
+            session = session,
+            userId = idToken.subjectClaim
         )
     }
 }
