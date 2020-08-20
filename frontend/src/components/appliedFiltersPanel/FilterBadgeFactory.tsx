@@ -1,5 +1,5 @@
 import React from 'react';
-import FilterBadge from '../filterBadge';
+import FilterBadge from '@bit/boclips.boclips-ui.components.filter-badge';
 
 export interface BadgeOption {
   displayValue: string;
