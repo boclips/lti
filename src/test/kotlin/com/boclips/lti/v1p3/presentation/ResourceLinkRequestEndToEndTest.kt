@@ -4,6 +4,7 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.testsupport.factories.JwtTokenFactory
 import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
+import com.boclips.lti.v1p3.domain.model.getUserId
 import com.github.tomakehurst.wiremock.WireMockServer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -30,6 +31,7 @@ class ResourceLinkRequestEndToEndTest : AbstractSpringIntegrationTest() {
         val issuer = "https://a-learning-platform.com"
         val resource = "https://tool.com/resource/super-cool"
         val clientId = "test-client-id"
+        val userId = "a-sample-users-id"
 
         val tokenSigningSetup = setupTokenSigning(server, uri)
 
@@ -62,7 +64,8 @@ class ResourceLinkRequestEndToEndTest : AbstractSpringIntegrationTest() {
             signatureAlgorithm = Algorithm.RSA256(
                 tokenSigningSetup.keyPair.first,
                 tokenSigningSetup.keyPair.second
-            )
+            ),
+            subject = userId
         )
 
         mvc.perform(
@@ -82,6 +85,9 @@ class ResourceLinkRequestEndToEndTest : AbstractSpringIntegrationTest() {
                         com.boclips.lti.core.application.model.SessionKeys.integrationId
                     )
                 ).isEqualTo(issuer)
+                assertThat(
+                    result.request.session?.getUserId()
+                ).isEqualTo(userId)
             }
     }
 

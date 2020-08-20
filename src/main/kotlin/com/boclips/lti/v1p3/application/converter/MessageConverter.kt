@@ -8,6 +8,7 @@ import java.net.URL
 object MessageConverter {
     fun toResourceLinkMessage(token: DecodedJwtToken): ResourceLinkMessage = ResourceLinkMessage(
         issuer = URL(token.issuerClaim),
+        subject = token.subjectClaim,
         requestedResource = URL(token.targetLinkUriClaim)
     )
 
@@ -15,6 +16,7 @@ object MessageConverter {
         issuer = URL(token.issuerClaim),
         returnUrl = URL(token.deepLinkingSettingsClaim!!.deepLinkReturnUrl),
         data = token.deepLinkingSettingsClaim.data,
+        subject = token.subjectClaim,
         deploymentId = token.deploymentIdClaim!!
     )
 }

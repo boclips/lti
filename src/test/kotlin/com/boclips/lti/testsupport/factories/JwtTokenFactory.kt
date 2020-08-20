@@ -12,7 +12,8 @@ object JwtTokenFactory {
         issuer: String = "https://lms.com",
         audience: List<String> = listOf("some audience"),
         targetLinkUri: String = "https://tool.com/resource/123",
-        signatureAlgorithm: Algorithm
+        signatureAlgorithm: Algorithm,
+        subject: String? = "user-1"
     ): String {
         return JWT.create()
             .withIssuer(issuer)
@@ -28,13 +29,15 @@ object JwtTokenFactory {
                 "https://purl.imsglobal.org/spec/lti/claim/resource_link",
                 mapOf("id" to "test-resource-link-id")
             )
+            .withSubject(subject)
             .sign(signatureAlgorithm)
     }
 
     fun sampleDeepLinkingRequestJwt(
         issuer: String = "https://lms.com",
         audience: List<String> = listOf("some audience"),
-        signatureAlgorithm: Algorithm
+        signatureAlgorithm: Algorithm,
+        subject: String? = "user-1"
     ): String {
         return JWT.create()
             .withIssuer(issuer)
@@ -53,6 +56,7 @@ object JwtTokenFactory {
                     "accept_presentation_document_targets" to emptyList<String>() // We don't really care about this value now
                 )
             )
+            .withSubject(subject)
             .sign(signatureAlgorithm)
     }
 }

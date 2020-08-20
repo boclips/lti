@@ -36,17 +36,21 @@ class HandleResourceLinkMessageIntegrationTest : AbstractSpringIntegrationTest()
     fun `sets up a user session`() {
         val issuer = URL("https://lms.com/ok")
         val resource = URL("https://this-is.requested/alright")
+        val userId = "user-id-123"
+
         mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer.toString()))
 
         handleResourceLinkMessage(
             message = MessageFactory.sampleResourceLinkMessage(
                 issuer = issuer,
-                requestedResource = resource
+                requestedResource = resource,
+                subject = userId
             ),
             session = session
         )
 
         assertThat(session.getIntegrationId()).isEqualTo(issuer.toString())
+        assertThat(session.getAttribute("userId")).isEqualTo("user-id-123")
     }
 
     @Test

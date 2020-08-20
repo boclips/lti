@@ -6,6 +6,7 @@ import java.net.URL
 object MessageFactory {
     fun sampleResourceLinkMessage(
         issuer: URL = URL("https://lms.com/learn-it"),
-        requestedResource: URL = URL("https://tool.com/resource/123")
-    ) = ResourceLinkMessage(issuer = issuer, requestedResource = requestedResource)
+        requestedResource: URL = URL("https://tool.com/resource/123"),
+        subject: String = "user-1234"
+    ) = ResourceLinkMessage(issuer = issuer, requestedResource = requestedResource, subject = subject)
 }

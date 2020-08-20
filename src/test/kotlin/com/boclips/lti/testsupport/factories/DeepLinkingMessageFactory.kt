@@ -8,13 +8,15 @@ object DeepLinkingMessageFactory {
         issuer: URL = URL("http://issuer.com"),
         returnUrl: URL = URL("https://returnurl.com"),
         deploymentId: String = "deployment-id",
-        data: String? = "data"
+        data: String? = "data",
+        subject: String? = "user-123"
     ): DeepLinkingMessage {
         return DeepLinkingMessage(
             issuer = issuer,
             returnUrl = returnUrl,
             deploymentId = deploymentId,
-            data = data
+            data = data,
+            subject = subject
         )
     }
 }

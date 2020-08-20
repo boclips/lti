@@ -5,6 +5,7 @@ import com.boclips.lti.core.application.model.SessionKeys
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.testsupport.factories.JwtTokenFactory
 import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
+import com.boclips.lti.v1p3.domain.model.getUserId
 import com.github.tomakehurst.wiremock.WireMockServer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -55,6 +56,7 @@ class DeepLinkingRequestEndToEndTest : AbstractSpringIntegrationTest() {
 
         val session = loginInitResult.request.session
         val state = extractStateFromLocationHeader(loginInitResult.response)
+        val userId = "bob"
 
         val idToken = JwtTokenFactory.sampleDeepLinkingRequestJwt(
             issuer = issuer,
@@ -62,7 +64,8 @@ class DeepLinkingRequestEndToEndTest : AbstractSpringIntegrationTest() {
             signatureAlgorithm = Algorithm.RSA256(
                 tokenSigningSetup.keyPair.first,
                 tokenSigningSetup.keyPair.second
-            )
+            ),
+            subject = userId
         )
 
         mvc.perform(
@@ -82,6 +85,9 @@ class DeepLinkingRequestEndToEndTest : AbstractSpringIntegrationTest() {
                         SessionKeys.integrationId
                     )
                 ).isEqualTo(issuer)
+                assertThat(
+                    result.request.session?.getUserId()
+                ).isEqualTo(userId)
             }
     }
 }

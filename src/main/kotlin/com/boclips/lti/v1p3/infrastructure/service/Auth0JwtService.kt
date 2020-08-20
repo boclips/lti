@@ -77,7 +77,8 @@ class Auth0JwtService(
                             acceptPresentationDocumentTargets = claim["accept_presentation_document_targets"].toNullableListOfStrings(),
                             data = claim["data"].toString()
                         )
-                    }
+                    },
+                subjectClaim = it.subject
             )
         }
 

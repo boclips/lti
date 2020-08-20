@@ -6,5 +6,6 @@ data class DeepLinkingMessage(
     val issuer: URL,
     val returnUrl: URL,
     val data: String?,
+    val subject: String?,
     val deploymentId: String
 )

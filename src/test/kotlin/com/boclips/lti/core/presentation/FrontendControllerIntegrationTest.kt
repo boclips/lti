@@ -2,7 +2,9 @@ package com.boclips.lti.core.presentation
 
 import com.boclips.lti.core.application.service.ApiAccessTokenProviderTest
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
+import com.boclips.lti.testsupport.factories.LtiTestSessionFactory
 import org.junit.jupiter.api.Test
+import org.springframework.mock.web.MockHttpSession
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.model
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -10,8 +12,14 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
 
 class FrontendControllerIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
-    fun `passes frontend url to the search view`() {
-        mvc.perform(get("/search"))
+    fun `passes frontend url and user id to the search view`() {
+
+        val session = LtiTestSessionFactory.authenticated(
+            integrationId = "blah",
+            sessionAttributes = mapOf("userId" to "user-123")
+        )
+
+        mvc.perform(get("/search").session(session as MockHttpSession))
             .andExpect(status().isOk)
             .andExpect(view().name("search"))
             .andExpect(
@@ -35,12 +43,23 @@ class FrontendControllerIntegrationTest : AbstractSpringIntegrationTest() {
                     "developmentSessionUrl",
                     ""
                 )
+            ).andExpect(
+                model().attribute(
+                    "userId",
+                    "user-123"
+                )
             )
     }
 
     @Test
-    fun `passes frontend url to the search and embed view`() {
-        mvc.perform(get("/search-and-embed"))
+    fun `passes frontend url and user id to the search and embed view`() {
+
+        val session = LtiTestSessionFactory.authenticated(
+            integrationId = "blah",
+            sessionAttributes = mapOf("userId" to "user-123")
+        )
+
+        mvc.perform(get("/search-and-embed").session(session as MockHttpSession))
             .andExpect(status().isOk)
             .andExpect(view().name("search-and-embed"))
             .andExpect(
@@ -63,6 +82,11 @@ class FrontendControllerIntegrationTest : AbstractSpringIntegrationTest() {
                 model().attribute(
                     "developmentSessionUrl",
                     ""
+                )
+            ).andExpect(
+                model().attribute(
+                    "userId",
+                    "user-123"
                 )
             )
     }

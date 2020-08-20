@@ -20,7 +20,8 @@ object DecodedJwtTokenFactory {
         messageTypeClaim: String? = MessageTypes.ResourceLinkRequest,
         ltiVersionClaim: String? = "1.3.0",
         resourceLinkClaim: ResourceLinkClaim? = sampleResourceLinkClaim(),
-        deepLinkingSettingsClaim: DeepLinkingSettingsClaim? = null
+        deepLinkingSettingsClaim: DeepLinkingSettingsClaim? = null,
+        subjectClaim: String? = "user-id"
     ) = DecodedJwtToken(
         issuerClaim = issuerClaim,
         audienceClaim = audienceClaim,
@@ -33,7 +34,8 @@ object DecodedJwtTokenFactory {
         ltiVersionClaim = ltiVersionClaim,
         resourceLinkClaim = resourceLinkClaim,
         nonceClaim = nonceClaim,
-        deepLinkingSettingsClaim = deepLinkingSettingsClaim
+        deepLinkingSettingsClaim = deepLinkingSettingsClaim,
+        subjectClaim = subjectClaim
     )
 
     fun sampleDeepLinkingToken(
@@ -41,14 +43,16 @@ object DecodedJwtTokenFactory {
         audienceClaim: List<String>? = listOf("boclips"),
         nonceClaim: String? = UUID.randomUUID().toString(),
         deploymentIdClaim: String? = UUID.randomUUID().toString(),
-        deepLinkingSettingsClaim: DeepLinkingSettingsClaim? = sampleDeepLinkingSettingsClaim()
+        deepLinkingSettingsClaim: DeepLinkingSettingsClaim? = sampleDeepLinkingSettingsClaim(),
+        subjectClaim: String? = "user-123"
     ) = sample(
         issuerClaim = issuerClaim,
         audienceClaim = audienceClaim,
         nonceClaim = nonceClaim,
         deploymentIdClaim = deploymentIdClaim,
         messageTypeClaim = MessageTypes.DeepLinkingRequest,
-        deepLinkingSettingsClaim = deepLinkingSettingsClaim
+        deepLinkingSettingsClaim = deepLinkingSettingsClaim,
+        subjectClaim = subjectClaim
     )
 
     fun sampleResourceLinkClaim(id: String? = UUID.randomUUID().toString()) = ResourceLinkClaim(id)
