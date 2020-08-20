@@ -7,13 +7,13 @@ import c from 'classnames';
 import SearchBar from '@bit/boclips.boclips-ui.components.search-bar';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 import { Channel, Subject } from 'boclips-api-client/dist/types';
+import NoResults from '@bit/boclips.boclips-ui.components.no-results';
 import ApiClient from '../../service/client/ApiClient';
 import { AppConstants } from '../../types/AppConstants';
 import VideoService, { ExtendedClientVideo, } from '../../service/video/VideoService';
 import s from './styles.module.less';
 import EmptyList from '../../components/EmptyList';
 import TitleHeader from '../../components/TitleHeader';
-import NoResults from '../../components/NoResults/NoResults';
 import FilterPanel from '../../components/filterPanel';
 import FiltersButton from '../../components/filterButton';
 
