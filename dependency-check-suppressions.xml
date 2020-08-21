@@ -8,13 +8,7 @@
     <vulnerabilityName>CVE-2019-0205</vulnerabilityName>
     <vulnerabilityName>CVE-2019-0210</vulnerabilityName>
   </suppress>
-  <suppress>
-    <notes><![CDATA[
-   file name: spring-security-core-5.2.1.RELEASE.jar
-   ]]></notes>
-    <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-core@.*$</packageUrl>
-    <cve>CVE-2018-1258</cve>
-  </suppress>
+
   <suppress>
     <notes><![CDATA[
    file name: tomcat-embed-websocket-9.0.29.jar
@@ -29,20 +23,7 @@
     <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-core@.*$</packageUrl>
     <cve>CVE-2019-17563</cve>
   </suppress>
-  <suppress>
-    <notes><![CDATA[
-   file name: spring-security-web-5.2.1.RELEASE.jar
-   ]]></notes>
-    <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-web@.*$</packageUrl>
-    <cve>CVE-2018-1258</cve>
-  </suppress>
-  <suppress>
-    <notes><![CDATA[
-   file name: spring-security-config-5.2.1.RELEASE.jar
-   ]]></notes>
-    <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-config@.*$</packageUrl>
-    <cve>CVE-2018-1258</cve>
-  </suppress>
+
   <suppress until="2030-01-01Z">
     <notes><![CDATA[
       We're stuck with IMSGlobal/basiclti-util-java using prehistoric dependencies... It's an OS project, perhaps
@@ -69,4 +50,35 @@
     <vulnerabilityName>CVE-2020-10672</vulnerabilityName>
     <vulnerabilityName>CVE-2020-10673</vulnerabilityName>
   </suppress>
+
+  <suppress>
+    <notes><![CDATA[
+   file name: spring-security-web-5.2.2.RELEASE.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-web@.*$</packageUrl>
+    <cve>CVE-2018-1258</cve>
+    <cve>CVE-2020-5407</cve>
+    <cve>CVE-2020-5408</cve>
+  </suppress>
+
+  <suppress>
+    <notes><![CDATA[
+   file name: spring-security-config-5.2.2.RELEASE.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-config@.*$</packageUrl>
+    <cve>CVE-2018-1258</cve>
+    <cve>CVE-2020-5407</cve>
+    <cve>CVE-2020-5408</cve>
+  </suppress>
+
+  <suppress>
+    <notes><![CDATA[
+   file name: spring-security-core-5.2.2.RELEASE.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-core@.*$</packageUrl>
+    <cve>CVE-2018-1258</cve>
+    <cve>CVE-2020-5407</cve>
+    <cve>CVE-2020-5408</cve>
+  </suppress>
+
 </suppressions>
