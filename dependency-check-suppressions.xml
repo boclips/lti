@@ -8,22 +8,6 @@
     <vulnerabilityName>CVE-2019-0205</vulnerabilityName>
     <vulnerabilityName>CVE-2019-0210</vulnerabilityName>
   </suppress>
-
-  <suppress>
-    <notes><![CDATA[
-   file name: tomcat-embed-websocket-9.0.29.jar
-   ]]></notes>
-    <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-websocket@.*$</packageUrl>
-    <cve>CVE-2019-17563</cve>
-  </suppress>
-  <suppress>
-    <notes><![CDATA[
-   file name: tomcat-embed-core-9.0.29.jar
-   ]]></notes>
-    <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-core@.*$</packageUrl>
-    <cve>CVE-2019-17563</cve>
-  </suppress>
-
   <suppress until="2030-01-01Z">
     <notes><![CDATA[
       We're stuck with IMSGlobal/basiclti-util-java using prehistoric dependencies... It's an OS project, perhaps
@@ -46,6 +30,7 @@
    file name: jackson-mapper-asl-1.9.3.jar
    ]]></notes>
     <packageUrl regex="true">^pkg:maven/org\.codehaus\.jackson/jackson\-mapper\-asl@.*$</packageUrl>
+    <vulnerabilityName>CVE-2018-1000873</vulnerabilityName>
     <vulnerabilityName>CVE-2019-14893</vulnerabilityName>
     <vulnerabilityName>CVE-2020-10672</vulnerabilityName>
     <vulnerabilityName>CVE-2020-10673</vulnerabilityName>
