@@ -1,4 +1,5 @@
 node_modules
+src/bits
 dist
 *.iml
 .idea
@@ -7,3 +8,4 @@ ts-compiler-dump.*
 .env
 .bit
 .npmrc
+.bitmap
