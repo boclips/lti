@@ -8,7 +8,4 @@ build
 out
 dependency-check-cache
 security-report
-frontend/package-lock.json
-frontend/.bitmap
-frontend/.bit/*
 
