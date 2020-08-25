@@ -14,9 +14,6 @@ keycloak:
 spring:
   thymeleaf:
     cache: false
-  mvc:
-    favicon:
-      enabled: false
   data:
     mongodb:
       uri: 'mongodb://localhost:27017/lti-db'

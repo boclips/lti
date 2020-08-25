@@ -6,7 +6,3 @@ boclips:
 keycloak:
   configurationFile: 'classpath:keycloak-staging.json'
 
-spring:
-  mvc:
-    favicon:
-      enabled: false
