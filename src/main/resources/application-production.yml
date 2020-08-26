@@ -6,3 +6,7 @@ boclips:
 keycloak:
   configurationFile: 'classpath:keycloak-production.json'
 
+spring:
+  mvc:
+    favicon:
+      enabled: false

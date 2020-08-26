@@ -6,6 +6,11 @@ boclips:
 keycloak:
   configurationFile: 'classpath:keycloak-testing.json'
 
+spring:
+  mvc:
+    favicon:
+      enabled: false
+
 fixtures:
   ltiOnePointOne:
     consumerKey:
