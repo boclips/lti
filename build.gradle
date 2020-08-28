@@ -79,7 +79,7 @@ node  {
 
 def frontendDir = 'frontend'
 
-npm_install {
+npm_ci {
   inputs.file file("$frontendDir/package.json")
 
   outputs.dir file("$frontendDir/node_modules")
@@ -90,12 +90,12 @@ npm_install {
 npm_run_lint {
   workingDir = file(frontendDir)
 }
-npm_run_lint.dependsOn npm_install
+npm_run_lint.dependsOn npm_ci
 
 npm_test {
   workingDir = file(frontendDir)
 }
-npm_test.dependsOn npm_install
+npm_test.dependsOn npm_ci
 npm_test.dependsOn npm_run_lint
 test.dependsOn npm_test
 
@@ -108,7 +108,7 @@ npm_run_build {
 
   outputs.dir file("$frontendDir/dist")
 }
-npm_run_build.dependsOn npm_install
+npm_run_build.dependsOn npm_ci
 
 task copyFrontendOutput(type: Copy) {
   from npm_run_build.outputs
