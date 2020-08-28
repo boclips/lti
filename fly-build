@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+cwd="$(cd "$(dirname "$0")" && pwd)"
+dir=$(mktemp -d -t fly-build-lti.XXXXX)
+
+tidy () {
+    rm -rf "$dir"
+}
+
+trap tidy EXIT
+
+mkdir "$dir/version"
+echo TEST_VERSION > "$dir/version/tag"
+BIT_TOKEN="$(bo show credential concourse-main bit token)"
+
+fly --target ci execute \
+    --input source="$cwd" \
+    --input version="$dir/version" \
+    --config "$cwd/pipeline/build.yml" \
+    --output dist=fly-dist
