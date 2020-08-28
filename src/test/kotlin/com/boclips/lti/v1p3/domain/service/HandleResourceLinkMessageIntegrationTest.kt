@@ -33,6 +33,24 @@ class HandleResourceLinkMessageIntegrationTest : AbstractSpringIntegrationTest()
     }
 
     @Test
+    fun `returns extra params for search request`() {
+        val issuer = URL("https://platform.com/")
+        val resource = URL("https://this-is.requested/search")
+        mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer.toString()))
+
+        val url = handleResourceLinkMessage(
+            message = MessageFactory.sampleResourceLinkMessage(
+                issuer = issuer,
+                requestedResource = resource
+            ),
+            session = session
+        )
+
+        assertThat(url).hasParameter("embeddable_video_url", "http://localhost/embeddable-videos/%7Bid%7D")
+        assertThat(url).hasParameter("show_copy_link", "true")
+    }
+
+    @Test
     fun `sets up a user session`() {
         val issuer = URL("https://lms.com/ok")
         val resource = URL("https://this-is.requested/alright")

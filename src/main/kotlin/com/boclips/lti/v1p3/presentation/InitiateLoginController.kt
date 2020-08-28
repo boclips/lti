@@ -25,7 +25,7 @@ class InitiateLoginController(
     )
     fun initiateLogin(
         @NotNull(message = "'iss' parameter must not be blank")
-        @URL(protocol = "https", message = "'iss' parameter must be a valid HTTPS URL")
+        // @URL(protocol = "https", message = "'iss' parameter must be a valid HTTPS URL")
         @RequestParam("iss")
         issuer: String?,
         @NotBlank(message = "'login_hint' parameter must not be blank")

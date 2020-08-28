@@ -6,6 +6,7 @@ import com.boclips.lti.testsupport.factories.VideoFactory
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
@@ -42,45 +43,58 @@ class SpringRequestAwareResourceLinkServiceTest {
         assertThat(videoLink.toString()).isEqualTo("http://localhost/embeddable-videos/abc")
     }
 
-    @Test
-    fun `returns a deep linking link with query params when given a message`() {
-        val deepLinkingLink = resourceLinkService.getDeepLinkingLink(
-            message = DeepLinkingMessageFactory.sample(
-                returnUrl = URL("https://returnurl.com"),
-                data = "data",
-                deploymentId = "id"
+    @Nested
+    inner class DeepLinking {
+        @Test
+        fun `returns a deep linking link with query params when given a message`() {
+            val deepLinkingLink = resourceLinkService.getDeepLinkingLink(
+                message = DeepLinkingMessageFactory.sample(
+                    returnUrl = URL("https://returnurl.com"),
+                    data = "data",
+                    deploymentId = "id"
+                )
             )
-        )
 
-        assertThat(deepLinkingLink.toString()).startsWith("http://localhost/search-and-embed")
-        assertThat(deepLinkingLink).hasParameter("deep_link_return_url", "https://returnurl.com")
-        assertThat(deepLinkingLink).hasParameter("data", "data")
-        assertThat(deepLinkingLink).hasParameter("deployment_id", "id")
+            assertThat(deepLinkingLink.toString()).startsWith("http://localhost/search-and-embed")
+            assertThat(deepLinkingLink).hasParameter("deep_link_return_url", "https://returnurl.com")
+            assertThat(deepLinkingLink).hasParameter("data", "data")
+            assertThat(deepLinkingLink).hasParameter("deployment_id", "id")
+        }
+
+        @Test
+        fun `does not preserve unexpected query parameters`() {
+            val deepLinkingLink = resourceLinkService.getDeepLinkingLink(
+                message = DeepLinkingMessageFactory.sample(data = null)
+            )
+
+            assertThat(deepLinkingLink).hasNoParameter("with")
+        }
+
+        @Test
+        fun `does not add data parameter if no data is given`() {
+            val deepLinkingLink = resourceLinkService.getDeepLinkingLink(
+                message = DeepLinkingMessageFactory.sample(data = null)
+            )
+
+            assertThat(deepLinkingLink).hasNoParameter("data")
+        }
+
+        @Test
+        fun `returns a vanilla deep link url when not given a message`() {
+            val deepLinkingLink = resourceLinkService.getDeepLinkingLink()
+
+            assertThat(deepLinkingLink.toString()).startsWith("http://localhost/search-and-embed")
+        }
     }
 
-    @Test
-    fun `does not preserve unexpected query parameters`() {
-        val deepLinkingLink = resourceLinkService.getDeepLinkingLink(
-            message = DeepLinkingMessageFactory.sample(data = null)
-        )
-
-        assertThat(deepLinkingLink).hasNoParameter("with")
-    }
-
-    @Test
-    fun `does not add data parameter if no data is given`() {
-        val deepLinkingLink = resourceLinkService.getDeepLinkingLink(
-            message = DeepLinkingMessageFactory.sample(data = null)
-        )
-
-        assertThat(deepLinkingLink).hasNoParameter("data")
-    }
-
-    @Test
-    fun `returns a vanilla deep link url when not given a message`() {
-        val deepLinkingLink = resourceLinkService.getDeepLinkingLink()
-
-        assertThat(deepLinkingLink.toString()).startsWith("http://localhost/search-and-embed")
+    @Nested
+    inner class SearchResponseLink {
+        @Test
+        fun `returns a search response url with copy link feature params`() {
+            val searchLink = resourceLinkService.getSearchVideoLink()
+            assertThat(searchLink).hasParameter("embeddable_video_url", "http://localhost/embeddable-videos/%7Bid%7D")
+            assertThat(searchLink).hasParameter("show_copy_link", "true")
+        }
     }
 
     @Test

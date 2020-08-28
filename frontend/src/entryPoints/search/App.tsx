@@ -8,6 +8,7 @@ import AxiosService from '../../service/axios/AxiosService';
 import SearchView from '../../views/searchView';
 import '../../index.less';
 import playerOptions from '../../Player/playerOptions';
+import CopyVideoLinkButton from '../../components/copyVideoLinkButton/CopyVideoLinkButton';
 
 // document.documentElement.style.setProperty('--titleHeaderTextColor', '#fff')
 
@@ -20,6 +21,7 @@ const renderVideoCard = (video: Video, loading: boolean) => (
     hideAttachments
     hideBestFor
     theme="lti"
+    videoActionButtons={[<CopyVideoLinkButton videoId={video.id} />]}
     videoPlayer={
       <Player
         options={playerOptions}

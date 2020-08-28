@@ -78,4 +78,21 @@ class SpringRequestAwareResourceLinkService(
                 .toUriString()
         )
     }
+
+    override fun getSearchVideoLink(): URL {
+        return URL(
+            uriComponentsBuilderFactory
+                .getInstance()
+                .replaceQuery(null)
+                .replacePath("/search")
+                .queryParam(
+                    "embeddable_video_url",
+                    uriComponentsBuilderFactory.getInstance()
+                        .replacePath("embeddable-videos/{id}")
+                        .toUriString()
+                )
+                .queryParam("show_copy_link", "true")
+                .toUriString()
+        )
+    }
 }

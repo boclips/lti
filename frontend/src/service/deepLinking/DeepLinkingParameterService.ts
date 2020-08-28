@@ -1,25 +1,14 @@
-import queryString from 'query-string';
-
-const extractParameter = (name: string): string => {
-  const { query } = queryString.parseUrl(window.location.href);
-  const parameterValue = query[name];
-
-  if (!parameterValue || Array.isArray(parameterValue)) {
-    throw new Error(`Expected a single value for parameter ${name}`);
-  }
-
-  return parameterValue;
-};
+import { extractSingleUrlParameter } from '../extractUrlParameter';
 
 const DeepLinkingParameterService = {
   getReturnUrl() {
-    return extractParameter('deep_link_return_url');
+    return extractSingleUrlParameter('deep_link_return_url');
   },
   getData() {
-    return extractParameter('data');
+    return extractSingleUrlParameter('data');
   },
   getDeploymentId() {
-    return extractParameter('deployment_id');
+    return extractSingleUrlParameter('deployment_id');
   },
 };
 
