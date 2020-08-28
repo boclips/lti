@@ -1,8 +1,8 @@
 package com.boclips.lti.v1p3.domain.service
 
 import com.boclips.lti.core.domain.service.ResourceLinkService
-import com.boclips.lti.v1p3.domain.model.setIntegrationId
 import com.boclips.lti.v1p3.domain.model.ResourceLinkMessage
+import com.boclips.lti.v1p3.domain.model.setIntegrationId
 import com.boclips.lti.v1p3.domain.model.setUserId
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
 import java.net.URL
@@ -19,10 +19,12 @@ class HandleResourceLinkMessage(
             session.setUserId(message.subject)
         }
 
-        return if (message.requestedResource.toString().endsWith("search")) {
+        return if (message.requestedResource.isSearchResourceRequest()) {
             linkService.getSearchVideoLink()
         } else {
             message.requestedResource
         }
     }
 }
+
+fun URL.isSearchResourceRequest() = this.toString().endsWith("search")
