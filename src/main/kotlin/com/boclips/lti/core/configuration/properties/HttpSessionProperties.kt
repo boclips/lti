@@ -7,4 +7,5 @@ import org.springframework.stereotype.Component
 @ConfigurationProperties(prefix = "boclips.session")
 class HttpSessionProperties {
     var useSecureCookie: Boolean = true
+    var setSameSiteNone: Boolean = true
 }
