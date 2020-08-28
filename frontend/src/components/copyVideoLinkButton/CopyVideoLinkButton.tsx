@@ -3,11 +3,12 @@ import { Button } from 'antd';
 import copy from 'copy-to-clipboard';
 import { tryExtractSingleUrlParameter } from '../../service/extractUrlParameter';
 import s from './styles.module.less';
+import TickIcon from '../../resources/images/tick.svg';
+import CopyIcon from '../../resources/images/copy.svg';
 
 interface Props {
   videoId: string;
 }
-
 
 const CopyVideoLinkButton = ({ videoId }: Props) => {
   const showCopyLink =
@@ -27,16 +28,24 @@ const CopyVideoLinkButton = ({ videoId }: Props) => {
     return null;
   }
 
-  // TODO ICONS
   return isCopying ? (
-    <Button className={`${s.copyVideoLink} ${s.success}`}>LINK COPIED</Button>
+    <Button
+      type="primary"
+      size="large"
+      className={`${s.copyVideoLink} ${s.success}`}
+    >
+      <TickIcon className={s.icon} />
+      LINK COPIED
+    </Button>
   ) : (
     <Button
       role="button"
-      className={`${s.copyVideoLink} ${s.primary}`}
       type="primary"
+      size="large"
+      className={`${s.copyVideoLink} ${s.primary}`}
       onClick={handleCopy}
     >
+      <CopyIcon className={s.icon} />
       COPY LINK
     </Button>
   );
