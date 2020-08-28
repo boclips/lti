@@ -6,7 +6,7 @@ import { Video } from '@bit/boclips.boclips-ui.types.video';
 import c from 'classnames';
 import SearchBar from '@bit/boclips.boclips-ui.components.search-bar';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
-import { Channel, Subject } from 'boclips-api-client/dist/types';
+import { Subject } from 'boclips-api-client/dist/types';
 import NoResults from '@bit/boclips.boclips-ui.components.no-results';
 import ApiClient from '../../service/client/ApiClient';
 import { AppConstants } from '../../types/AppConstants';
@@ -33,7 +33,6 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
   const [singleFilter, setSingleFilter] = useState<any>(null);
   const [filters, setFilters] = useState<any>(null);
   const [apiSubjects, setApiSubjects] = useState<Subject[]>([]);
-  const [apiChannels, setApiChannels] = useState<Channel[]>([]);
   const [filtersVisible, setFiltersVisible] = useState<boolean>(!collapsibleFilters);
 
   const videoServicePromise = useMemo(
@@ -70,6 +69,7 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
           duration: filters?.duration,
           subject: filters?.subjects,
           channel: filters?.source,
+          include_channel_facets: true
         })
         .then((videosResponse) => {
           handleSearchResults(videosResponse);
@@ -81,9 +81,6 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
   const getFilters = () => {
     videoServicePromise.then((client) => client.getSubjects())
       .then((it) => setApiSubjects(it));
-
-    videoServicePromise.then((client) => client.getChannels())
-      .then((it) => setApiChannels(it));
   };
 
   useEffect(() => {
@@ -187,7 +184,6 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
                 facets={facets}
                 onApply={setSingleFilter}
                 subjects={apiSubjects}
-                sources={apiChannels}
                 hidePanel={!filtersVisible}
               />
             )}

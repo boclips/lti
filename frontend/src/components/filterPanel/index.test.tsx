@@ -1,6 +1,5 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { ChannelFactory } from 'boclips-api-client/dist/test-support';
 import FilterPanel from './index';
 
 const testFacets = {
@@ -11,7 +10,6 @@ const testFacets = {
     'PT10M-PT20M': { hits: 48 },
     'PT20M-PT24H': { hits: 45 }
   },
-  resourceTypes: {},
   subjects: {
     '5cb499c9fd5beb428189454c': { hits: 88 },
     '5cb499c9fd5beb428189454d': { hits: 32 }
@@ -20,6 +18,11 @@ const testFacets = {
     '3-5': {
       hits: 3,
     },
+  },
+  resourceTypes: {},
+  channels: {
+    'biology channel': { hits: 111 },
+    'history channel': { hits: 212 }
   },
 };
 
@@ -50,8 +53,6 @@ describe('Filter Panel', () => {
       <FilterPanel
         facets={testFacets}
         onApply={jest.fn()}
-        sources={[ChannelFactory.sample({ id: '1', name: 'biology channel' }),
-          ChannelFactory.sample({ id: '1', name: 'history channel' })]}
       />,
     );
 

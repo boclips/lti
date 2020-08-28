@@ -3,7 +3,6 @@ import SelectFilter from '@bit/boclips.boclips-ui.components.select';
 import { SelectOption } from '@bit/boclips.boclips-ui.types.select-option';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subject';
-import { Channel } from 'boclips-api-client/dist/sub-clients/channels/model/Channel';
 import c from 'classnames';
 import { Button } from 'antd';
 import s from './style.module.less';
@@ -15,7 +14,6 @@ interface Props {
   facets?: VideoFacets;
   onApply: (filters: Filters) => void;
   subjects?: Subject[];
-  sources?: Channel[];
   hidePanel?: boolean;
 }
 
@@ -23,7 +21,6 @@ const FilterPanel = ({
   facets,
   onApply,
   subjects,
-  sources,
   hidePanel,
 }: Props) => {
   const [ageRangeFilter, setAgeRangeFilter] = useState<string[]>();
@@ -93,10 +90,10 @@ const FilterPanel = ({
     facets?.durations!,
   );
 
-  const sourceOptions:SelectOption[] = sources?.map((it) => ({
-    id: it.name,
-    label: it.name,
-    count: 1,
+  const sourceOptions:SelectOption[] = Object.keys(facets?.channels || {}).map((it) => ({
+    id: it,
+    label: it,
+    count: facets?.channels && facets?.channels[it].hits,
   })) || [];
   
   return (
@@ -150,6 +147,7 @@ const FilterPanel = ({
             searchPlaceholder="Search for source"
             allowSearch
             touched={setFilterTouched}
+            showFacets
           />
         </div>
         {filterTouched && (
