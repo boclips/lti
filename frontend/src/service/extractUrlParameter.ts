@@ -8,7 +8,7 @@ export const extractSingleUrlParameter = (name: string): string => {
     throw new Error(`Expected a single value for parameter ${name}`);
   }
 
-  return parameterValue;
+  return decodeURIComponent(parameterValue);
 };
 
 export const tryExtractSingleUrlParameter = (name: string) => {

@@ -1,24 +1,11 @@
 @import '~@bit/boclips.boclips-ui.styles.styles/_colours';
 
-// I think we should create a button component in bit. We're going to have to reuse these styles for the EmbedVideoButton and for any other buttons that get added to LTI
 .copyVideoLink {
-  border: 0;
-  font-size: 16px;
-  color: #FFFFFF;
-  font-weight: 500;
-  letter-spacing: 0;
-  border-radius: 4px;
-
-  // Ideally this would come from the parent container of copy video link
   margin-top: 8px;
 
-  &.primary {
-    background-color: @blue-shade-5;
-  }
-
   &.success {
-    // Should this live in bit?
-    background-color: #6BB539;
+    background-color: #6BB539 !important;
+    box-shadow: none !important;
   }
 }
 

@@ -2,14 +2,16 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 import copy from 'copy-to-clipboard';
 import CopyVideoLinkButton from './CopyVideoLinkButton';
+import setupInitialLocation from '../../testSupport/setupInitialLocation';
 
 jest.mock('copy-to-clipboard');
 
 describe('CopyVideoLinkButton', () => {
-  const setupInitialLocation = (location: string) => {
-    const previousLocation = global.window.location;
-    delete global.window.location;
-    global.window.location = { ...previousLocation, href: location };
+  const clickCopyButton = () => {
+    const button = screen.getByRole('button', { name: 'COPY LINK' });
+    const mockFn = copy as jest.Mock;
+    fireEvent.click(button);
+    return mockFn;
   };
 
   it('shows button when show_copy_link and embeddable_video_url are present', () => {
@@ -44,13 +46,19 @@ describe('CopyVideoLinkButton', () => {
     setupInitialLocation(
       'http://dummy.com?show_copy_link=true&embeddable_video_url=http://video.com/{id}',
     );
-
     render(<CopyVideoLinkButton videoId="video-id" />);
-    const button = screen.getByRole('button', { name: 'COPY LINK' });
+    const copiedToClipboardFn = clickCopyButton();
 
-    const mockFn = copy as jest.Mock;
+    expect(copiedToClipboardFn).toHaveBeenCalledWith('http://video.com/video-id');
+  });
 
-    fireEvent.click(button);
-    expect(mockFn).toHaveBeenCalledWith('http://video.com/video-id');
+  it('can handle encoded URL when filling in video id', () => {
+    setupInitialLocation(
+      'http://localhost:8081/search?embeddable_video_url=http://localhost:8081/%257Bid%257D&show_copy_link=true',
+    );
+    render(<CopyVideoLinkButton videoId="video-id" />);
+    const copiedToClipboardFn = clickCopyButton();
+    
+    expect(copiedToClipboardFn).toHaveBeenCalledWith('http://localhost:8081/video-id');
   });
 });

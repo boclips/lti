@@ -1,5 +1,5 @@
-import { Button } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
+import Button from '../button/Button';
 import ContentSelectionService from '../../service/contentSelection/ContentSelectionService';
 import DeepLinkingParameterService from '../../service/deepLinking/DeepLinkingParameterService';
 
