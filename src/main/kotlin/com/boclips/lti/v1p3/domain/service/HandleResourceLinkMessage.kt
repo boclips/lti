@@ -1,14 +1,16 @@
 package com.boclips.lti.v1p3.domain.service
 
-import com.boclips.lti.v1p3.domain.model.setIntegrationId
+import com.boclips.lti.core.domain.service.ResourceLinkService
 import com.boclips.lti.v1p3.domain.model.ResourceLinkMessage
+import com.boclips.lti.v1p3.domain.model.setIntegrationId
 import com.boclips.lti.v1p3.domain.model.setUserId
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
 import java.net.URL
 import javax.servlet.http.HttpSession
 
 class HandleResourceLinkMessage(
-    private val platformRepository: PlatformRepository
+    private val platformRepository: PlatformRepository,
+    private val linkService: ResourceLinkService
 ) {
     operator fun invoke(message: ResourceLinkMessage, session: HttpSession): URL {
         val platform = platformRepository.getByIssuer(message.issuer)
@@ -17,6 +19,12 @@ class HandleResourceLinkMessage(
             session.setUserId(message.subject)
         }
 
-        return message.requestedResource
+        return if (message.requestedResource.isSearchResourceRequest()) {
+            linkService.getSearchVideoLink()
+        } else {
+            message.requestedResource
+        }
     }
 }
+
+fun URL.isSearchResourceRequest() = this.toString().endsWith("search")

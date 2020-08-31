@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Configuration
 @Configuration("ltiOnePointThreeDomainContext")
 class DomainContext {
     @Bean
-    fun handleResourceLinkMessage(platformRepository: PlatformRepository) =
-        HandleResourceLinkMessage(platformRepository)
+    fun handleResourceLinkMessage(platformRepository: PlatformRepository, linkService: ResourceLinkService) =
+        HandleResourceLinkMessage(platformRepository, linkService)
 
     @Bean
     fun handleDeepLinkingMessage(

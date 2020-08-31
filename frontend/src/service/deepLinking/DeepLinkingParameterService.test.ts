@@ -1,12 +1,7 @@
 import DeepLinkingParameterService from './DeepLinkingParameterService';
+import setupInitialLocation from '../../testSupport/setupInitialLocation';
 
 describe('DeepLinkingParameterService', () => {
-  const setupInitialLocation = (location: string) => {
-    const previousLocation = global.window.location;
-    delete global.window.location;
-    global.window.location = { ...previousLocation, href: location };
-  };
-
   it('can retrieve deep link return url parameter from url', () => {
     setupInitialLocation(
       'https://blah.com?deep_link_return_url=https://return_url.com/',
