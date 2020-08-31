@@ -68,7 +68,7 @@ describe('LTI test', () => {
     const searchButton = screen.getByText('Search');
     fireEvent.click(searchButton);
 
-    await screen.findByText('We couldn\'t anything for "yay" with your filters');
+    await screen.findByText('try again using different keywords or change the filters');
   });
 
   it('shows filter panel only when there are videos and facets returned', async () => {
@@ -97,7 +97,7 @@ describe('LTI test', () => {
     );
 
     searchFor('find nothing');
-    await screen.findByText('We couldn\'t anything for "find nothing" with your filters');
+    await screen.findByText('try again using different keywords or change the filters');
     expect(screen.queryByText('FILTER BY:')).toBeNull();
 
     searchFor('Hi');
