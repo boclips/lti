@@ -75,7 +75,7 @@ class ResourceLinkRequestEndToEndTest : AbstractSpringIntegrationTest() {
                 .param("state", state)
                 .param("id_token", idToken)
         )
-            .andExpect(status().isFound)
+            .andExpect(status().isSeeOther)
             .andDo { result ->
                 val location = result.response.getHeader("Location")
 
@@ -155,7 +155,7 @@ class ResourceLinkRequestEndToEndTest : AbstractSpringIntegrationTest() {
                 .param("state", firstState)
                 .param("id_token", firstResourceToken)
         )
-            .andExpect(status().isFound)
+            .andExpect(status().isSeeOther)
             .andDo { result ->
                 val location = result.response.getHeader("Location")
 
@@ -179,7 +179,7 @@ class ResourceLinkRequestEndToEndTest : AbstractSpringIntegrationTest() {
                 .param("state", secondState)
                 .param("id_token", secondResourceToken)
         )
-            .andExpect(status().isFound)
+            .andExpect(status().isSeeOther)
             .andDo { result ->
                 val location = result.response.getHeader("Location")
 

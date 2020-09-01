@@ -75,7 +75,7 @@ class DeepLinkingRequestEndToEndTest : AbstractSpringIntegrationTest() {
                 .param("state", state)
                 .param("id_token", idToken)
         )
-            .andExpect(status().isFound)
+            .andExpect(status().isSeeOther)
             .andDo { result ->
                 val location = result.response.getHeader("Location")
 

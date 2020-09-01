@@ -69,7 +69,7 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
                     .param("state", state)
                     .param("id_token", jwtToken)
             )
-                .andExpect(status().isFound)
+                .andExpect(status().isSeeOther)
                 .andDo { result ->
                     val location = result.response.getHeader("Location")
 
@@ -190,7 +190,7 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
                     .param("state", state)
                     .param("id_token", jwtToken)
             )
-                .andExpect(status().isFound)
+                .andExpect(status().isSeeOther)
                 .andDo { result ->
                     val location = result.response.getHeader("Location")
 

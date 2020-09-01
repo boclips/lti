@@ -4,6 +4,7 @@ import com.boclips.lti.v1p3.application.command.HandlePlatformRequest
 import com.boclips.lti.v1p3.application.command.PerformSecurityChecks
 import com.boclips.lti.v1p3.application.service.JwtService
 import mu.KLogging
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.PostMapping
@@ -28,7 +29,7 @@ class AuthenticationResponseController(
         @RequestParam(name = "id_token")
         idToken: String?,
         httpSession: HttpSession
-    ): String {
+    ): ResponseEntity<Nothing> {
         performSecurityChecks(state!!, idToken!!, httpSession)
 
         val decodedToken = jwtService.decode(idToken)
@@ -37,6 +38,6 @@ class AuthenticationResponseController(
 
         val resourceUrl = handlePlatformRequest(decodedToken, httpSession, state)
 
-        return "redirect:$resourceUrl"
+        return seeOtherRedirect(resourceUrl)
     }
 }
