@@ -1,7 +1,9 @@
 package com.boclips.lti.testsupport.configuration
 
 import com.boclips.lti.core.infrastructure.service.CollectionsClientFactory
+import com.boclips.lti.core.infrastructure.service.UsersClientFactory
 import com.boclips.lti.core.infrastructure.service.VideosClientFactory
+import com.boclips.users.api.httpclient.test.fakes.UsersClientFake
 import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
 import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
 import org.springframework.context.annotation.Bean
@@ -36,4 +38,17 @@ class FakeClientsConfig {
 
     @Bean
     fun collectionsClientFactory() = FakeCollectionsClientFactory
+
+    object FakeUsersClientFactory : UsersClientFactory {
+        private val clientsMap: MutableMap<String, UsersClientFake> = HashMap()
+
+        override fun getClient(integrationId: String) = clientsMap.getOrPut(integrationId, { UsersClientFake() })
+
+        fun clear() {
+            clientsMap.clear()
+        }
+    }
+
+    @Bean
+    fun usersClientFactory() = FakeUsersClientFactory
 }

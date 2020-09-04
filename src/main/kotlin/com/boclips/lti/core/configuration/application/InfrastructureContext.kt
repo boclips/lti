@@ -11,8 +11,10 @@ import com.boclips.lti.core.infrastructure.repository.MongoIntegrationDocumentRe
 import com.boclips.lti.core.infrastructure.service.CollectionsClientFactory
 import com.boclips.lti.core.infrastructure.service.KeycloakClientFactory
 import com.boclips.lti.core.infrastructure.service.MongoBackedCollectionsClientFactory
+import com.boclips.lti.core.infrastructure.service.MongoBackedUsersClientFactory
 import com.boclips.lti.core.infrastructure.service.MongoBackedVideosClientFactory
 import com.boclips.lti.core.infrastructure.service.SpringRequestAwareResourceLinkService
+import com.boclips.lti.core.infrastructure.service.UsersClientFactory
 import com.boclips.lti.core.infrastructure.service.VideosClientFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -36,6 +38,15 @@ class InfrastructureContext(
     @Profile("!test")
     fun collectionsClientFactory(): CollectionsClientFactory {
         return MongoBackedCollectionsClientFactory(
+            boclipsApiProperties = boclipsApiProperties,
+            integrationDocumentRepository = integrationDocumentRepository
+        )
+    }
+
+    @Bean
+    @Profile("!test")
+    fun usersClientFactory(): UsersClientFactory {
+        return MongoBackedUsersClientFactory(
             boclipsApiProperties = boclipsApiProperties,
             integrationDocumentRepository = integrationDocumentRepository
         )
