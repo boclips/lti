@@ -405,5 +405,51 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
                 .andExpect(status().isBadRequest)
                 .andExpect(content().string(containsString("id_token")))
         }
+
+        @Test
+        fun `does not perform security checks when already authenticated`() {
+            val issuer = "https://platform.com/for-learning"
+            val resource = "https://lti.resource/we-expose"
+            val clientId = "test-client-id"
+            val userId = "test-user-id"
+
+            val nonce = "super-random-nonce"
+            whenever(jwtService.decode(jwtToken)).thenReturn(
+                DecodedJwtTokenFactory.sample(
+                    issuerClaim = issuer,
+                    audienceClaim = listOf(clientId),
+                    nonceClaim = nonce,
+                    targetLinkUriClaim = resource,
+                    messageTypeClaim = MessageTypes.ResourceLinkRequest,
+                    subjectClaim = userId
+                )
+            )
+            mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer, clientId = clientId))
+
+            val state = UUID.randomUUID().toString()
+            val session = LtiTestSessionFactory.authenticated(
+                integrationId = issuer,
+                sessionAttributes = mapOf(
+                    SessionKeys.statesToTargetLinkUris to mapOf(state to resource),
+                    "userId" to "user-123"
+                )
+            )
+
+            mvc.perform(
+                post("/v1p3/authentication-response")
+                    .session(session as MockHttpSession)
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .param("state", state)
+                    .param("id_token", jwtToken)
+            )
+                .andExpect(status().isSeeOther)
+                .andDo { result ->
+                    val location = result.response.getHeader("Location")
+
+                    assertThat(location).isEqualTo(resource)
+                    assertThat(result.request.session?.getAttribute(CoreSessionKeys.integrationId)).isEqualTo(issuer)
+                    assertThat(result.request.session?.getUserId()).isEqualTo(userId)
+                }
+        }
     }
 }
