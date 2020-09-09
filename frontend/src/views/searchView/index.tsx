@@ -34,6 +34,7 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
   const [filters, setFilters] = useState<any>(null);
   const [apiSubjects, setApiSubjects] = useState<Subject[]>([]);
   const [filtersVisible, setFiltersVisible] = useState<boolean>(!collapsibleFilters);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const videoServicePromise = useMemo(
     () =>
@@ -48,6 +49,7 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
       setSearchQuery(query);
       setPageNumber(page!!);
       setLoading(true);
+      setCurrentPage(1);
     }
   };
 
@@ -135,7 +137,9 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
             onChange: (page) => {
               scrollToTop();
               onSearch(searchQuery, page - 1);
+              setCurrentPage(page);
             },
+            current: currentPage,
           }}
           dataSource={videos}
           loading={{
