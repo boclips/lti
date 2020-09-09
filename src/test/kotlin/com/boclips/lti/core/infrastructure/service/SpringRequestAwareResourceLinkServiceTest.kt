@@ -92,14 +92,20 @@ class SpringRequestAwareResourceLinkServiceTest {
         @Test
         fun `returns a search response url with copy link feature params set to true`() {
             val searchLink = resourceLinkService.getSearchVideoLink(showCopyLink = true)
-            assertThat(searchLink).hasParameter("embeddable_video_url", "http://localhost/embeddable-videos/%7Bid%7D")
+            assertThat(searchLink).hasParameter(
+                "embeddable_video_url",
+                "http://localhost/embeddable-videos/%7Bid%7D?with=params"
+            )
             assertThat(searchLink).hasParameter("show_copy_link", "true")
         }
 
         @Test
         fun `returns a search response url with copy link feature params set to false`() {
             val searchLink = resourceLinkService.getSearchVideoLink(showCopyLink = false)
-            assertThat(searchLink).hasParameter("embeddable_video_url", "http://localhost/embeddable-videos/%7Bid%7D")
+            assertThat(searchLink).hasParameter(
+                "embeddable_video_url",
+                "http://localhost/embeddable-videos/%7Bid%7D?with=params"
+            )
             assertThat(searchLink).hasParameter("show_copy_link", "false")
         }
     }
