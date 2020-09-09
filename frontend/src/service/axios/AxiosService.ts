@@ -8,14 +8,16 @@ let hasBeenConfigured: boolean = false;
 
 class AxiosService {
   public static configureAxios(
+    setAuthError: () => void,
     tokenFactory: (
       axios: AxiosInstance,
+      setAuthError: () => void,
     ) => Promise<string> = AxiosService.ltiTokenFactory,
   ): void {
     const nonModifiedAxiosInstance = axios.create();
 
     apiAccessTokenSupportingInstance.interceptors.request.use((config: AxiosRequestConfig) =>
-      tokenFactory(nonModifiedAxiosInstance).then((token) => {
+      tokenFactory(nonModifiedAxiosInstance, setAuthError).then((token) => {
         config.headers.Authorization = `Bearer ${token}`;
         return config;
       }),
@@ -24,13 +26,16 @@ class AxiosService {
     hasBeenConfigured = true;
   }
 
-  public static ltiTokenFactory(axiosInstance: AxiosInstance): Promise<string> {
+  public static ltiTokenFactory(axiosInstance: AxiosInstance, setAuthError): Promise<string> {
     return axiosInstance
       .get(`${AppConstants.LTI_BASE_URL}/auth/token`, {
         withCredentials: true,
       })
       .then((response: AxiosResponse<string>) => response.data)
-      .catch((e) => `Cannot retrieve token ${e}`);
+      .catch((e) => {
+        setAuthError();
+        return `Cannot retrieve token ${e}`;
+      });
   }
 
   public static getApiAuthenticatedInstance(): AxiosInstance {

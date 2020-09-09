@@ -9,7 +9,7 @@ import org.springframework.session.web.http.CookieSerializer
 import org.springframework.session.web.http.DefaultCookieSerializer
 
 @Profile("!test")
-@EnableMongoHttpSession(maxInactiveIntervalInSeconds = 3600)
+@EnableMongoHttpSession(maxInactiveIntervalInSeconds = 10)
 class HttpSessionContext(private val httpSessionProperties: HttpSessionProperties) {
     @Bean
     fun mongoSessionConverter(): JacksonMongoSessionConverter {
