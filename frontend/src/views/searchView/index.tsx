@@ -27,14 +27,13 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>();
-  const [searchPageNumber, setPageNumber] = useState<number>(0);
+  const [searchPageNumber, setSearchPageNumber] = useState<number>(0);
   const [totalVideoElements, setTotalVideoElements] = useState<number>(0);
   const [facets, setFacets] = useState<VideoFacets>();
   const [singleFilter, setSingleFilter] = useState<any>(null);
   const [filters, setFilters] = useState<any>(null);
   const [apiSubjects, setApiSubjects] = useState<Subject[]>([]);
   const [filtersVisible, setFiltersVisible] = useState<boolean>(!collapsibleFilters);
-  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const videoServicePromise = useMemo(
     () =>
@@ -47,9 +46,8 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
   const onSearch = (query?: string, page: number = 0) => {
     if ((query && searchQuery !== query) || page !== searchPageNumber) {
       setSearchQuery(query);
-      setPageNumber(page!!);
+      setSearchPageNumber(page!!);
       setLoading(true);
-      setCurrentPage(1);
     }
   };
 
@@ -137,9 +135,8 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
             onChange: (page) => {
               scrollToTop();
               onSearch(searchQuery, page - 1);
-              setCurrentPage(page);
             },
-            current: currentPage,
+            current: searchPageNumber + 1,
           }}
           dataSource={videos}
           loading={{
