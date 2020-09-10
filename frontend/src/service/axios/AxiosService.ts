@@ -8,7 +8,7 @@ let hasBeenConfigured: boolean = false;
 
 class AxiosService {
   public static configureAxios(
-    setAuthError: () => void,
+    setAuthError: () => void = () => {},
     tokenFactory: (
       axios: AxiosInstance,
       setAuthError: () => void,
