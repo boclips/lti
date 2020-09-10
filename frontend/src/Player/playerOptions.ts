@@ -18,7 +18,7 @@ const playerOptions: Partial<PlayerOptions> = {
     ],
   },
   api: {
-    tokenFactory: async () => AxiosService.ltiTokenFactory(Axios),
+    tokenFactory: async () => AxiosService.ltiTokenFactory(Axios, () => {}),
     userIdFactory: AppConstants.USER_ID ? () => Promise.resolve(AppConstants.USER_ID) : undefined,
   },
 };
