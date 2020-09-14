@@ -4,10 +4,10 @@ import { Video } from '@bit/boclips.boclips-ui.types.video';
 import { VideoCard } from '@bit/boclips.boclips-ui.components.video-card';
 import { Player } from 'boclips-player-react';
 import SearchView from '../../views/searchView';
-import AxiosService from '../../service/axios/AxiosService';
 import EmbedVideoButton from '../../components/embedVideoButton/EmbedVideoButton';
 import playerOptions from '../../Player/playerOptions';
 import ClosableHeader from '../../components/closableHeader';
+import AxiosWrapper from '../../service/axios/AxiosWrapper';
 
 const renderVideoCard = (video: Video, loading: boolean) => (
   <VideoCard
@@ -31,14 +31,17 @@ const renderVideoCard = (video: Video, loading: boolean) => (
   />
 );
 
-const App = () => {
-  AxiosService.configureAxios();
-
-  return <SearchView
+const App = () => (
+  <SearchView
     collapsibleFilters
     renderVideoCard={renderVideoCard}
-    header={<ClosableHeader title="Video library" handleSubmit={(form) => form?.submit()} />}
-  />;
-};
+    header={
+      <ClosableHeader
+        title="Video library"
+        handleSubmit={(form) => form?.submit()}
+      />
+    }
+  />
+);
 
-export default App;
+export default AxiosWrapper(App);

@@ -1,8 +1,10 @@
 package com.boclips.lti.core.application.service
 
+import com.boclips.lti.core.application.exception.InvalidatedSessionException
 import com.boclips.lti.core.application.exception.UnauthorizedException
 import com.boclips.lti.core.application.model.SessionKeys
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.mock
 import org.assertj.core.api.Assertions.assertThatCode
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -35,6 +37,15 @@ class AssertHasValidSessionTest {
             on { getAttribute(SessionKeys.integrationId) } doReturn null
         }
         assertThatThrownBy { assertHasLtiSession(session) }.isInstanceOf(UnauthorizedException::class.java)
+    }
+
+    @Test
+    fun `throws InvalidatedSessionException if session has expired`() {
+        val session = mock<HttpSession> {
+            on { getAttribute(SessionKeys.integrationId) } doReturn "test-integration"
+            on { it.lastAccessedTime } doThrow IllegalStateException("Session has expired")
+        }
+        assertThatThrownBy { assertHasLtiSession(session) }.isInstanceOf(InvalidatedSessionException::class.java)
     }
 
     val assertHasLtiSession = AssertHasValidSession()

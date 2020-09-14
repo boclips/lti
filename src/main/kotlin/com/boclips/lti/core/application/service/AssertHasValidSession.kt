@@ -1,5 +1,6 @@
 package com.boclips.lti.core.application.service
 
+import com.boclips.lti.core.application.exception.InvalidatedSessionException
 import com.boclips.lti.core.application.exception.UnauthorizedException
 import com.boclips.lti.core.application.model.SessionKeys
 import javax.servlet.http.HttpSession
@@ -14,6 +15,12 @@ class AssertHasValidSession {
 
         if (!hasIntegrationIdSet) {
             throw UnauthorizedException("A valid session is required")
+        }
+
+        try {
+            session?.lastAccessedTime
+        }catch (ex: IllegalStateException) {
+            throw InvalidatedSessionException("Session has expired")
         }
     }
 }

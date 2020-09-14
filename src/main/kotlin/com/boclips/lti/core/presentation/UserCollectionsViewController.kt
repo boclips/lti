@@ -7,6 +7,7 @@ import com.boclips.lti.core.domain.model.CollectionsRequest
 import com.boclips.lti.core.domain.repository.CollectionRepository
 import com.boclips.lti.core.presentation.service.SortByCollectionTitle
 import com.boclips.lti.core.presentation.service.ToCollectionViewModel
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.servlet.ModelAndView
@@ -21,8 +22,11 @@ class UserCollectionsViewController(
 ) {
     @GetMapping("/collections")
     fun getUserCollections(session: HttpSession): ModelAndView {
-        assertHasValidSession(session)
-
+        try {
+            assertHasValidSession(session)
+        } catch (e: Exception) {
+            return ModelAndView("error/invalidSession", HttpStatus.UNAUTHORIZED)
+        }
         val userCollections = collectionRepository.getMyCollections(
             CollectionsRequest(
                 integrationId = getIntegrationId(session)

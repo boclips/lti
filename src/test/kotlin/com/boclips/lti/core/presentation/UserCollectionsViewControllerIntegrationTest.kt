@@ -3,8 +3,8 @@ package com.boclips.lti.core.presentation
 import com.boclips.lti.core.application.model.SessionKeys
 import com.boclips.lti.core.presentation.model.CollectionViewModel
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
-import com.boclips.lti.testsupport.factories.LtiTestSessionFactory
 import com.boclips.lti.testsupport.factories.CollectionResourceFactory
+import com.boclips.lti.testsupport.factories.LtiTestSessionFactory
 import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.CoreMatchers.nullValue
@@ -21,6 +21,20 @@ class UserCollectionsViewControllerIntegrationTest : AbstractSpringIntegrationTe
     fun `accessing user collections without a session results in unauthorised response`() {
         mvc.perform(MockMvcRequestBuilders.get("/collections"))
             .andExpect(status().isUnauthorized)
+    }
+
+    @Test
+    fun `if session is invalidated, display error page`() {
+        val session = LtiTestSessionFactory.authenticated(
+            integrationId = "BLAH",
+            sessionAttributes = mapOf("lastAccessedTime" to 99999999999)
+        ) as MockHttpSession
+
+        session.invalidate()
+
+        mvc.perform(MockMvcRequestBuilders.get("/collections").session(session))
+            .andExpect(status().isUnauthorized)
+            .andExpect(view().name("error/invalidSession"))
     }
 
     @Test
