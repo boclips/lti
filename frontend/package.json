@@ -16,7 +16,7 @@
     "@ant-design/icons": "4.1.0",
     "@bit/boclips.boclips-ui.components.filter-badge": "^1.0.1",
     "@bit/boclips.boclips-ui.components.no-results": "^1.0.4",
-    "@bit/boclips.boclips-ui.components.search-bar": "1.0.12",
+    "@bit/boclips.boclips-ui.components.search-bar": "1.0.13",
     "@bit/boclips.boclips-ui.components.select": "^1.0.26",
     "@bit/boclips.boclips-ui.components.video-card": "1.0.6",
     "@bit/boclips.boclips-ui.types.age-range": "1.0.1",
