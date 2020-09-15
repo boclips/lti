@@ -45,7 +45,7 @@ const CopyVideoLinkButton = ({ videoId }: Props) => {
       onClick={handleCopy}
     >
       <span className={s.icon}>
-        <CopyIcon/>
+        <CopyIcon />
       </span>
       COPY LINK
     </Button>
