@@ -15,7 +15,7 @@ import s from './styles.module.less';
 import EmptyList from '../../components/EmptyList';
 import TitleHeader from '../../components/TitleHeader';
 import FilterPanel from '../../components/filterPanel';
-import FiltersButton from '../../components/filterButton';
+import FiltersButton from '../../components/filtersButton';
 
 interface Props {
   renderVideoCard: (video: Video, isLoading: boolean) => React.ReactNode;
@@ -35,6 +35,7 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
   const [apiSubjects, setApiSubjects] = useState<Subject[]>([]);
   const [filtersVisible, setFiltersVisible] = useState<boolean>(!collapsibleFilters);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [activeFilterCount, setActiveFilterCount] = useState<number>(0);
 
   const videoServicePromise = useMemo(
     () =>
@@ -101,6 +102,21 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
       search();
     }
   }, [searchQuery, searchPageNumber, filters]);
+
+  const convertToArray = (array) =>
+    array.reduce((
+      filter,
+      element
+    ) => filter.concat(
+      Array.isArray(element) ?
+        convertToArray(element) : element), []);
+
+  useEffect(() => {
+    if (filters) {
+      const filterValues = Object.values(filters);
+      setActiveFilterCount(convertToArray(filterValues).length);
+    }
+  }, [filters]);
 
   const scrollToTop = () => {
     window.scrollTo(0, 0);
@@ -176,6 +192,7 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
                 <FiltersButton
                   filtersVisible={filtersVisible}
                   toggleFilters={setFiltersVisible}
+                  activeFilterCount={activeFilterCount}
                 />
               )}
             </div>

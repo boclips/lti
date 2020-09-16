@@ -7,9 +7,10 @@ import FiltersIcon from '../../resources/images/filters-icon.svg';
 interface Props {
   filtersVisible: boolean;
   toggleFilters: (visible: boolean) => void;
+  activeFilterCount?:number;
 }
 
-const FiltersButton = ({ filtersVisible, toggleFilters }: Props) => 
+const FiltersButton = ({ filtersVisible, toggleFilters, activeFilterCount }: Props) =>
   <Button
     type="primary"
     className={c({
@@ -21,6 +22,11 @@ const FiltersButton = ({ filtersVisible, toggleFilters }: Props) =>
   >
     <div className={s.labelWrapper}><FiltersIcon/>
       {filtersVisible ? 'HIDE FILTERS' : 'SHOW FILTERS'}
+      {!filtersVisible && activeFilterCount!! > 0 &&
+      <span data-qa="count-wrapper" className={s.countWrapper}>
+        {activeFilterCount}
+      </span>
+      }
     </div>
   </Button>;
 

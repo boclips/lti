@@ -1,7 +1,7 @@
 @import '~@bit/boclips.boclips-ui.styles.styles/_colours';
 
 .toggleFiltersButton {
-  width: 192px;
+  width: 205px;
   height: 40px;
   margin-left: 9px;
   border: 1px solid #CBCECF !important;
@@ -11,6 +11,20 @@
   font-size: 16px;
   line-height: 19px;
   position: relative;
+
+  & .countWrapper {
+    width: 20px;
+    background-color: #3370b6;
+    color: white;
+    border-radius: 100%;
+    font-size: 13px;
+    font-weight: bold;
+    height: 21px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin-left: 5px;
+  }
 
   &.showFilters {
     background-color: @shade-1;
@@ -24,6 +38,7 @@
     position: absolute;
     top: 10px;
     left: 15px;
+    display: flex;
 
     svg {
       margin-bottom: 3px;
