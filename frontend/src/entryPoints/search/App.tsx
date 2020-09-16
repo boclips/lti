@@ -21,7 +21,7 @@ const renderVideoCard = (video: Video, loading: boolean) => (
     hideAttachments
     hideBestFor
     theme="lti"
-    videoActionButtons={[<CopyVideoLinkButton videoId={video.id} />]}
+    videoActionButtons={[<CopyVideoLinkButton video={video} />]}
     videoPlayer={
       <Player
         options={playerOptions}

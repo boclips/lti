@@ -1,16 +1,18 @@
 import React from 'react';
 import copy from 'copy-to-clipboard';
+import { Video } from '@bit/boclips.boclips-ui.types.video';
 import { tryExtractSingleUrlParameter } from '../../service/extractUrlParameter';
 import s from './styles.module.less';
 import TickIcon from '../../resources/images/tick.svg';
 import CopyIcon from '../../resources/images/copy.svg';
 import Button from '../button/Button';
+import AnalyticsFactory from '../../service/analytics/AnalyticsFactory';
 
 interface Props {
-  videoId: string;
+  video: Video;
 }
 
-const CopyVideoLinkButton = ({ videoId }: Props) => {
+const CopyVideoLinkButton = ({ video }: Props) => {
   const [isCopying, setIsCopying] = React.useState(false);
 
   const showCopyLink =
@@ -21,7 +23,11 @@ const CopyVideoLinkButton = ({ videoId }: Props) => {
   );
 
   const handleCopy = () => {
-    copy(embeddableVideoUrl.replace('{id}', videoId));
+    AnalyticsFactory.getInstance().trackVideoInteraction(
+      video,
+      'LTI_SEARCH_VIDEO_LINK_COPIED',
+    );
+    copy(embeddableVideoUrl.replace('{id}', video.id));
     setIsCopying(true);
     setTimeout(() => setIsCopying(false), 1500);
   };
@@ -31,19 +37,14 @@ const CopyVideoLinkButton = ({ videoId }: Props) => {
   }
 
   return isCopying ? (
-    <Button
-      className={`${s.copyVideoLink} ${s.success}`}
-    >
+    <Button className={`${s.copyVideoLink} ${s.success}`}>
       <span className={s.icon}>
-        <TickIcon/>
+        <TickIcon />
       </span>
       LINK COPIED
     </Button>
   ) : (
-    <Button
-      className={`${s.copyVideoLink}`}
-      onClick={handleCopy}
-    >
+    <Button className={`${s.copyVideoLink}`} onClick={handleCopy}>
       <span className={s.icon}>
         <CopyIcon />
       </span>

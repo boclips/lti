@@ -1,12 +1,22 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 import copy from 'copy-to-clipboard';
+import { VideoFactory } from 'boclips-api-client/dist/test-support/VideosFactory';
 import CopyVideoLinkButton from './CopyVideoLinkButton';
 import setupInitialLocation from '../../testSupport/setupInitialLocation';
+import convertApiClientVideo from '../../service/video/convertVideoFromApi';
+import AxiosService from '../../service/axios/AxiosService';
 
 jest.mock('copy-to-clipboard');
 
+const sampleVideo = (id: string) =>
+  convertApiClientVideo(VideoFactory.sample({ id }));
+
 describe('CopyVideoLinkButton', () => {
+  beforeEach(() => {
+    AxiosService.configureAxios();
+  });
+
   const clickCopyButton = () => {
     const button = screen.getByRole('button', { name: 'COPY LINK' });
     const mockFn = copy as jest.Mock;
@@ -19,7 +29,7 @@ describe('CopyVideoLinkButton', () => {
       'http://dummy.com?show_copy_link=true&embeddable_video_url=http://video.com/{id}',
     );
 
-    render(<CopyVideoLinkButton videoId="videoId" />);
+    render(<CopyVideoLinkButton video={sampleVideo('videoId')} />);
     const button = screen.getByRole('button', { name: 'COPY LINK' });
     expect(button).toBeInTheDocument();
   });
@@ -29,7 +39,7 @@ describe('CopyVideoLinkButton', () => {
       'http://dummy.com?show_copy_link=false&embeddable_video_url=http://video.com/{id}',
     );
 
-    render(<CopyVideoLinkButton videoId="videoId" />);
+    render(<CopyVideoLinkButton video={sampleVideo('videoId')} />);
     const button = screen.queryByRole('button', { name: 'COPY LINK' });
     expect(button).not.toBeInTheDocument();
   });
@@ -37,7 +47,7 @@ describe('CopyVideoLinkButton', () => {
   it('does not show button when embeddable_video_url is missing', () => {
     setupInitialLocation('http://dummy.com?show_copy_link=true');
 
-    render(<CopyVideoLinkButton videoId="videoId" />);
+    render(<CopyVideoLinkButton video={sampleVideo('videoId')} />);
     const button = screen.queryByRole('button', { name: 'COPY LINK' });
     expect(button).not.toBeInTheDocument();
   });
@@ -46,19 +56,23 @@ describe('CopyVideoLinkButton', () => {
     setupInitialLocation(
       'http://dummy.com?show_copy_link=true&embeddable_video_url=http://video.com/{id}',
     );
-    render(<CopyVideoLinkButton videoId="video-id" />);
+    render(<CopyVideoLinkButton video={sampleVideo('video-id')} />);
     const copiedToClipboardFn = clickCopyButton();
 
-    expect(copiedToClipboardFn).toHaveBeenCalledWith('http://video.com/video-id');
+    expect(copiedToClipboardFn).toHaveBeenCalledWith(
+      'http://video.com/video-id',
+    );
   });
 
   it('can handle encoded URL when filling in video id', () => {
     setupInitialLocation(
       'http://localhost:8081/search?embeddable_video_url=http://localhost:8081/%257Bid%257D&show_copy_link=true',
     );
-    render(<CopyVideoLinkButton videoId="video-id" />);
+    render(<CopyVideoLinkButton video={sampleVideo('video-id')} />);
     const copiedToClipboardFn = clickCopyButton();
-    
-    expect(copiedToClipboardFn).toHaveBeenCalledWith('http://localhost:8081/video-id');
+
+    expect(copiedToClipboardFn).toHaveBeenCalledWith(
+      'http://localhost:8081/video-id',
+    );
   });
 });
