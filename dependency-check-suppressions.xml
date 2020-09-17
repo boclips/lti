@@ -69,4 +69,9 @@
     <vulnerabilityName>CVE-2020-10672</vulnerabilityName>
     <vulnerabilityName>CVE-2020-10673</vulnerabilityName>
   </suppress>
+  <suppress until="2020-12-01">
+    <notes>Matching 1.4.0 even though fixed in 1.4.0.</notes>
+    <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-.+$</packageUrl>
+    <cve>CVE-2020-15824</cve>
+  </suppress>
 </suppressions>
