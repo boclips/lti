@@ -8,16 +8,15 @@
   <link rel="stylesheet" href="/styles/main.css">
 </head>
 <body>
-
 <div class="errorMessageContainer" th:fragment="error (message, details)">
 
-  <div class="errorMessageContainer" th:fragment="error (message, details)">
-    <input type="checkbox" id="my_checkbox" style="display:none;">
-    <div id="hidden">
-      <p class="errorMessageContent" th:text="${details}"></p>
-    </div>
-    <label for="my_checkbox">Show/hide</label>
-  </div>
+  <label class="collapsibleContainer">
+    <input type="checkbox"  class="collapsibleInput" />
+    <span class="arrow">&gt;</span>
+    <span class="collapser" th:text="${message}"></span>
+    <div class="collapsed" th:text="${title}"></div>
+  </label>
+
 </div>
 
 </body>
