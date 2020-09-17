@@ -16,12 +16,12 @@ buildscript {
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
     classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
     classpath("com.github.ben-manes:gradle-versions-plugin:0.27.0")
-    classpath("com.moowork.gradle:gradle-node-plugin:1.2.0")
   }
 }
 
 plugins {
   id 'org.owasp.dependencycheck' version '5.2.4'
+  id 'com.github.node-gradle.node' version '2.2.4'
 }
 
 ext {
@@ -35,7 +35,6 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.owasp.dependencycheck'
 apply plugin: 'com.github.ben-manes.versions'
-apply plugin: 'com.moowork.node'
 
 group = 'com.boclips.lti'
 version = '0.0.1-SNAPSHOT'
@@ -71,7 +70,8 @@ configurations {
   }
 }
 
-node  {
+node {
+  nodeModulesDir = file('frontend/')
   version = '12.16.3'
   npmVersion = '6.13.4'
   download = true
@@ -131,6 +131,7 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-security'
   implementation 'org.springframework.session:spring-session-data-mongodb'
   implementation 'org.springframework.retry:spring-retry'
+  implementation 'org.springframework.hateoas:spring-hateoas'
 
   implementation 'com.auth0:java-jwt:3.10.1'
   implementation 'com.auth0:jwks-rsa:0.11.0'
@@ -154,6 +155,7 @@ dependencies {
   implementation 'com.github.boclips:boclips-spring-security:0.377.0'
   implementation 'com.github.boclips:boclips-spring-web:0.128.0'
   implementation 'com.github.boclips:videos:v15'
+  implementation 'io.github.openfeign:feign-core:10.7.0'
   implementation("com.github.boclips:user-service:241")
   implementation 'com.damnhandy:handy-uri-templates:2.1.8'
   implementation 'joda-time:joda-time:2.10.2'
