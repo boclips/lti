@@ -11,7 +11,7 @@ const MockApi = {
   ) => {
     const axiosMock = new MockAdapter(axiosInstance);
     axiosMock
-      .onPost('http://lti-service.com/v1p3/deep-linking-response', {
+      .onPost('http://example.com/v1p3/deep-linking-response', {
         data,
         deploymentId,
         selectedItems: selectedIds.map((it) => ({ id: it })),
