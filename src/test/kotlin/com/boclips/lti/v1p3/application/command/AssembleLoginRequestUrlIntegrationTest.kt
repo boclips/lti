@@ -45,11 +45,11 @@ class AssembleLoginRequestUrlIntegrationTest : AbstractSpringIntegrationTest() {
         )
         assertThat(url).hasParameter("login_hint", loginHint)
 
-        val stateParameter = extractStateFromUrl(url)
+        val stateParameter = extractStateFromUrl(url!!)
         assertThat(stateParameter).isNotBlank()
         assertThat(url).hasParameter("response_mode", "form_post")
 
-        val nonceParameter = UriComponentsBuilder.fromUri(url.toURI()).build().queryParams["nonce"]!!.first()
+        val nonceParameter = UriComponentsBuilder.fromUri(url?.toURI()).build().queryParams["nonce"]!!.first()
         assertThat(nonceParameter).isNotBlank()
 
         assertThat(url).hasParameter("prompt", "none")
@@ -120,7 +120,7 @@ class AssembleLoginRequestUrlIntegrationTest : AbstractSpringIntegrationTest() {
             session = session
         )
 
-        val state = extractStateFromUrl(url)
+        val state = extractStateFromUrl(url!!)
 
         assertThat(session.getTargetLinkUri(state)).isEqualTo(resource)
     }

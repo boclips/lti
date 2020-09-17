@@ -10,3 +10,7 @@ spring:
   mvc:
     favicon:
       enabled: false
+
+server:
+  error:
+    include-stacktrace: ALWAYS

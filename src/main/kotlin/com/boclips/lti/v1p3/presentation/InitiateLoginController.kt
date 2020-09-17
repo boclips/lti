@@ -5,6 +5,7 @@ import mu.KLogging
 import org.hibernate.validator.constraints.URL
 import org.springframework.stereotype.Controller
 import org.springframework.validation.annotation.Validated
+import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
@@ -25,7 +26,7 @@ class InitiateLoginController(
     )
     fun initiateLogin(
         @NotNull(message = "'iss' parameter must not be blank")
-        @URL(protocol = "https", message = "'iss' parameter must be a valid HTTPS URL")
+        // @URL(protocol = "https", message = "'iss' parameter must be a valid HTTPS URL")
         @RequestParam("iss")
         issuer: String?,
         @NotBlank(message = "'login_hint' parameter must not be blank")
@@ -41,13 +42,17 @@ class InitiateLoginController(
     ): String {
         logger.info { "LTI 1.3 Login Initiation Request from $issuer for $targetLinkUri" }
 
-        val authenticationRequestUrl = assembleLoginRequestUrl(
-            issuer = issuer!!,
-            loginHint = loginHint!!,
-            targetLinkUri = targetLinkUri!!,
-            ltiMessageHint = ltiMessageHint,
-            session = session
-        )
+        val authenticationRequestUrl =
+            assembleLoginRequestUrl(
+                issuer = issuer!!,
+                loginHint = "login hint wrong",
+                targetLinkUri = targetLinkUri!!,
+                ltiMessageHint = ltiMessageHint,
+                session = session
+            )
+
+
+
 
         return "redirect:$authenticationRequestUrl"
     }

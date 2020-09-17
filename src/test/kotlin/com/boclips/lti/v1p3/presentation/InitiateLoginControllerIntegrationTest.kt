@@ -151,6 +151,19 @@ class InitiateLoginControllerIntegrationTest : AbstractSpringIntegrationTest() {
     }
 
     @Test
+    fun `returns a forbidden response when issuer does not exist`() {
+        mvc.perform(
+            post("/v1p3/initiate-login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("iss", "https://insecure.com")
+                .param("login_hint", "a-user-login-hint")
+                .param("target_link_uri", "https://tool.com/resource/super-cool")
+        )
+            .andExpect(status().isForbidden)
+            .andExpect(content().string(Matchers.containsString("Platform not found")))
+    }
+
+    @Test
     fun `returns a bad request response when login_hint is not provided`() {
         mvc.perform(
             post("/v1p3/initiate-login")
