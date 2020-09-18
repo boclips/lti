@@ -34,7 +34,7 @@ object VideoResourceConverter {
             )
 
         // We need this because as of today Spring HATEOAS does not deserialize links correctly
-        val thumbnailLink = Link.of(rawThumbnailLink.href)
+        val thumbnailLink = Link(rawThumbnailLink.href)
 
         return if (thumbnailLink.isTemplated) {
             thumbnailLink.template.expand(mapOf("thumbnailWidth" to DEFAULT_THUMBNAIL_WIDTH)).toString()
