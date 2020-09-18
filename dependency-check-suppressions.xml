@@ -74,4 +74,14 @@
     <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-.+$</packageUrl>
     <cve>CVE-2020-15824</cve>
   </suppress>
+  <suppress until="2020-12-01">
+    <notes>We don't use Ruby in this project</notes>
+    <packageUrl regex="true">^.*$</packageUrl>
+    <cve>CVE-2020-10663</cve>
+  </suppress>
+  <suppress until="2020-12-01">
+    <notes>See https://github.com/jeremylong/DependencyCheck/issues/2794</notes>
+    <packageUrl regex="true">^.*$</packageUrl>
+    <cve>CVE-2020-7712</cve>
+  </suppress>
 </suppressions>
