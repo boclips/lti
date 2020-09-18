@@ -23,7 +23,8 @@ import com.boclips.videos.api.response.video.VideoResource
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.jayway.jsonpath.JsonPath
-import com.mongodb.MongoClient
+import com.mongodb.client.MongoClient
+import com.mongodb.client.MongoDatabase
 import de.flapdoodle.embed.mongo.MongodProcess
 import mu.KLogging
 import org.imsglobal.lti.launch.LtiOauthSigner
@@ -133,7 +134,7 @@ abstract class AbstractSpringIntegrationTest {
                 .filterNot { setOf("admin", "config").contains(it) }
                 .forEach {
                     println("Dropping $it")
-                    dropDatabase(it)
+                    mongoClient.getDatabase(it).drop()
                 }
         }
     }
