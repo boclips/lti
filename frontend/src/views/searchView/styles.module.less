@@ -35,16 +35,18 @@
 }
 
 .searchBar {
+  display: flex;
   justify-content: center;
+
+  .searchBarContainer {
+    display: flex;
+    max-width: 975px;
+    width: 100%;
+  }
 
   &.filtersButton {
     display: flex;
-
     .searchBarContainer {
-      display: flex;
-      max-width: 975px;
-      width: 100%;
-
       & > :first-child {
         width: calc(100% - 203px);
       }
