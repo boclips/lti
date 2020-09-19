@@ -23,12 +23,11 @@ module.exports = {
   },
   // Allows ts(x) and js files to be imported without extension
   resolve: {
+    // symlinks: false,
     extensions: ['.ts', '.tsx', '.js'],
     alias: {
-      '@ant-design/icons/lib/': path.resolve(
-        __dirname,
-        '../resources/icons.ts',
-      ),
+      react: path.resolve('./node_modules/react'),
+      antd: path.resolve('./node_modules/antd'),
       src: path.resolve(__dirname, '../src'),
       resources: path.resolve(__dirname, '../resources'),
       'test-support': path.resolve(__dirname, '../test-support'),
