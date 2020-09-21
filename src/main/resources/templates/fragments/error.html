@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="/styles/main.css">
 </head>
 <body>
-<div class="errorMessageContainer" th:fragment="error (message, url)">
+<div class="errorMessageContainer" th:fragment="error (message)">
   <details class="errorMessage__details">
     <summary>Error Details</summary>
     <p th:text="${message}"></p>
