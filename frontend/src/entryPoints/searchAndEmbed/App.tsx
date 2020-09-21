@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../index.less';
-import { Video } from '@bit/boclips.boclips-ui.types.video';
-import { VideoCard } from '@bit/boclips.boclips-ui.components.video-card';
+import { Video } from '@bit/boclips.dev-boclips-ui.types.video';
+import { VideoCard } from '@bit/boclips.dev-boclips-ui.components.video-card';
 import { Player } from 'boclips-player-react';
 import SearchView from '../../views/searchView';
 import EmbedVideoButton from '../../components/embedVideoButton/EmbedVideoButton';

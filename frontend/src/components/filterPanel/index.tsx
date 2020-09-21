@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { SelectOption } from '@bit/boclips.boclips-ui.types.select-option';
+import { SelectOption } from '@bit/boclips.dev-boclips-ui.types.select-option';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subject';
-import SelectFilter from '@bit/boclips.boclips-ui.components.select';
+import SelectFilter from '@bit/boclips.dev-boclips-ui.components.select';
 import c from 'classnames';
 import { Button } from 'antd';
 import s from './style.module.less';

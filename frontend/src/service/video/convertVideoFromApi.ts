@@ -1,8 +1,8 @@
 import { Video as ClientVideo } from 'boclips-api-client/dist/sub-clients/videos/model/Video';
-import { convertFromApiClientLink } from '@bit/boclips.boclips-ui.types.link';
-import AgeRange from '@bit/boclips.boclips-ui.types.age-range';
+import { convertFromApiClientLink } from '@bit/boclips.dev-boclips-ui.types.link';
+import AgeRange from '@bit/boclips.dev-boclips-ui.types.age-range';
 import { AgeRange as ClientAgeRange } from 'boclips-api-client/dist/sub-clients/common/model/AgeRange';
-import { ExtendedVideo } from '@bit/boclips.boclips-ui.types.video';
+import { ExtendedVideo } from '@bit/boclips.dev-boclips-ui.types.video';
 import { getEffectiveThumbnailUrl } from './convertVideoResource';
 
 function convertApiClientVideo(clientVideo: ClientVideo): ExtendedVideo {

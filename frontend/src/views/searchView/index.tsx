@@ -2,12 +2,12 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   Col, Layout, List, Row
 } from 'antd';
-import { Video } from '@bit/boclips.boclips-ui.types.video';
+import { Video } from '@bit/boclips.dev-boclips-ui.types.video';
 import c from 'classnames';
 import SearchBar from '@boclips-ui/search-bar';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 import { Subject } from 'boclips-api-client/dist/types';
-import NoResults from '@bit/boclips.boclips-ui.components.no-results';
+import NoResults from '@bit/boclips.dev-boclips-ui.components.no-results';
 import ApiClient from '../../service/client/ApiClient';
 import { AppConstants } from '../../types/AppConstants';
 import VideoService, { ExtendedClientVideo, } from '../../service/video/VideoService';

@@ -1,4 +1,4 @@
-import { Link } from '@bit/boclips.boclips-ui.types.link';
+import { Link } from '@bit/boclips.dev-boclips-ui.types.link';
 import MockAdapter from 'axios-mock-adapter';
 import AnalyticsFactory from './AnalyticsFactory';
 import AxiosService from '../axios/AxiosService';

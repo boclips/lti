@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { Video } from '@bit/boclips.boclips-ui.types.video/index';
+import { Video } from '@bit/boclips.dev-boclips-ui.types.video/index';
 import { VideoFactory } from 'boclips-api-client/dist/test-support/VideosFactory';
 import { FakeBoclipsClient } from 'boclips-api-client/dist/test-support';
 import { fireEvent } from '@testing-library/dom';
