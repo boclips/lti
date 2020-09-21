@@ -297,9 +297,8 @@ html {
  * Errors
  */
 .errorMessageContainer {
-  max-width: 94rem;
-
-  margin: 6rem auto auto;
+  margin: auto;
+  text-align: center;
 }
 
 .errorMessage__header {
@@ -327,6 +326,10 @@ html {
   font-size: 16px;
   line-height: 24px;
   text-align: center;
+}
+
+summary:focus {
+  outline: none;
 }
 
 /*
