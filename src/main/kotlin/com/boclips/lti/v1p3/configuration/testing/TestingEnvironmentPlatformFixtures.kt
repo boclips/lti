@@ -19,12 +19,13 @@ class TestingEnvironmentPlatformFixtures(
 ) {
     @PostConstruct
     fun insertConsumerFixture() {
-        mongoPlatformDocumentRepository.insert(PlatformDocument(
-            id = ObjectId(),
-            issuer = issuer,
-            authenticationEndpoint = authEndpoint,
-            jwksUrl = jwksEndpoint,
-            clientId = clientId
-        ))
+        mongoPlatformDocumentRepository.findByIssuer(issuer = issuer)
+            ?: mongoPlatformDocumentRepository.insert(PlatformDocument(
+                id = ObjectId(),
+                issuer = issuer,
+                authenticationEndpoint = authEndpoint,
+                jwksUrl = jwksEndpoint,
+                clientId = clientId
+            ))
     }
 }
