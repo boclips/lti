@@ -19,22 +19,26 @@ class TestingEnvironmentFixturesCore(
 ) {
     @PostConstruct
     fun insertIntegrationFixture() {
-        integrationDocumentRepository.insert(
-            IntegrationDocument(
-                id = ObjectId(),
-                integrationId = testingConsumerKey,
-                clientId = testingClientId,
-                clientSecret = testingClientSecret
+        integrationDocumentRepository.findOneByIntegrationId(issuer) ?: run {
+            integrationDocumentRepository.insert(
+                IntegrationDocument(
+                    id = ObjectId(),
+                    integrationId = testingConsumerKey,
+                    clientId = testingClientId,
+                    clientSecret = testingClientSecret
+                )
             )
-        )
+        }
 
-        integrationDocumentRepository.insert(
-            IntegrationDocument(
-                id = ObjectId(),
-                integrationId = issuer,
-                clientId = testingClientId,
-                clientSecret = testingClientSecret
+        integrationDocumentRepository.findOneByIntegrationId(issuer) ?: run {
+            integrationDocumentRepository.insert(
+                IntegrationDocument(
+                    id = ObjectId(),
+                    integrationId = issuer,
+                    clientId = testingClientId,
+                    clientSecret = testingClientSecret
+                )
             )
-        )
+        }
     }
 }
