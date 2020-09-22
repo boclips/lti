@@ -2,6 +2,7 @@ package com.boclips.lti.v1p3.application.command
 
 import com.boclips.lti.core.domain.exception.ResourceNotFoundException
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
+import com.boclips.lti.testsupport.factories.SelectedVideoFactory
 import com.boclips.lti.testsupport.factories.VideoResourcesFactory
 import com.boclips.lti.v1p3.presentation.model.SelectedVideoRequest
 import org.assertj.core.api.Assertions.assertThat
@@ -16,9 +17,18 @@ class GetSelectedItemsIntegrationTest : AbstractSpringIntegrationTest() {
     }
 
     @Test
-    fun `returns a list of selected videos`() {
-        val firstResource = VideoResourcesFactory.sampleVideo(videoId = "123")
-        val secondResource = VideoResourcesFactory.sampleVideo(videoId = "456")
+    fun `returns a list of selected videos with titles and descriptions`() {
+        val firstResource = VideoResourcesFactory.sampleVideo(
+            videoId = "123",
+            title = "an awesome title",
+            description = "an awesome description"
+        )
+        val secondResource = VideoResourcesFactory.sampleVideo(
+            videoId = "456",
+            title = "a great title",
+            description = "a great description"
+        )
+
         saveVideo(firstResource, integrationId)
         saveVideo(secondResource, integrationId)
 
@@ -26,11 +36,19 @@ class GetSelectedItemsIntegrationTest : AbstractSpringIntegrationTest() {
 
         val selectedItems = getSelectedItems(selectionRequest, integrationId)
 
-        assertThat(selectedItems.map { it.url.toString() }).containsExactlyInAnyOrder(
-            "http://localhost/embeddable-videos/123",
-            "http://localhost/embeddable-videos/456"
+        assertThat(selectedItems).containsExactlyInAnyOrder(
+            SelectedVideoFactory.sample(
+                url = "http://localhost/embeddable-videos/456",
+                title = "a great title",
+                text = "a great description",
+                type = "ltiResourceLink"
+            ), SelectedVideoFactory.sample(
+                url = "http://localhost/embeddable-videos/123",
+                title = "an awesome title",
+                text = "an awesome description",
+                type = "ltiResourceLink"
+            )
         )
-        assertThat(selectedItems.map { it.type }).containsExactlyInAnyOrder("ltiResourceLink", "ltiResourceLink")
     }
 
     @Test
