@@ -61,6 +61,12 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
     setLoading(false);
   };
 
+  const handleFilterAdded = (addedFilter) => {
+    setFilters(((prevState) => ({ ...prevState, ...addedFilter })));
+    setPageNumber(0);
+    setCurrentPage(1);
+  };
+
   const search = () => {
     videoServicePromise.then((videoService) => {
       videoService
@@ -92,7 +98,7 @@ const LtiView = ({ renderVideoCard, collapsibleFilters, header }: Props) => {
 
   useEffect(() => {
     if (singleFilter) {
-      setFilters(((prevState) => ({ ...prevState, ...singleFilter })));
+      handleFilterAdded(singleFilter);
     }
   }, [singleFilter]);
 
