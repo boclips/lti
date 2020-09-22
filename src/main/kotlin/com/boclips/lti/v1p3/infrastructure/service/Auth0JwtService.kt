@@ -95,7 +95,9 @@ class Auth0JwtService(
                 "https://purl.imsglobal.org/spec/lti-dl/claim/content_items",
                 deepLinkingSelection.selectedVideos.map { hashMapOf(
                     "url" to it.url.toString(),
-                    "type" to it.type
+                    "type" to it.type,
+                    "title" to it.title,
+                    "text" to it.text
                 ) }
             )
             .withIssuer(platform.clientId)

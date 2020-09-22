@@ -12,15 +12,16 @@ class GetSelectedItems(
 ) {
     operator fun invoke(selectedItems: List<SelectedVideoRequest>, integrationId: String): List<SelectedVideo> {
         return selectedItems.map {
-            SelectedVideo(
-                url = resourceLinkService.getEmbeddableVideoLink(
-                    videoRepository.get(
-                        VideoRequest(
-                            videoId = it.id,
-                            integrationId = integrationId
-                        )
-                    )
+            val video = videoRepository.get(
+                VideoRequest(
+                    videoId = it.id,
+                    integrationId = integrationId
                 )
+            )
+            SelectedVideo(
+                url = resourceLinkService.getEmbeddableVideoLink(video),
+                title = video.title,
+                text = video.description ?: ""
             )
         }
     }

@@ -7,6 +7,7 @@ import com.boclips.lti.testsupport.factories.DeepLinkingSelectionFactory
 import com.boclips.lti.testsupport.factories.JwtTokenFactory
 import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
 import com.boclips.lti.testsupport.factories.PlatformFactory
+import com.boclips.lti.testsupport.factories.SelectedVideoFactory
 import com.boclips.lti.v1p3.application.exception.UnsupportedSigningAlgorithmException
 import com.boclips.lti.v1p3.application.model.SelectedVideo
 import com.boclips.lti.v1p3.application.service.JwtService
@@ -285,7 +286,11 @@ PwIDAQAB
 
         @Test
         fun `creates a token with selected LTI links`() {
-            val selection = listOf(SelectedVideo(url = URL("https://tool.com/videos/123")))
+            val selection = listOf(SelectedVideoFactory.sample(
+                url = "https://tool.com/videos/123",
+                title = "fantabulous title",
+                text = "fantabulous description"
+            ))
 
             val token = service.createDeepLinkingResponseToken(
                 platform,
@@ -300,6 +305,8 @@ PwIDAQAB
             val item = contentItemsClaim[0]
             assertThat(item["url"]).isEqualTo("https://tool.com/videos/123")
             assertThat(item["type"]).isEqualTo("ltiResourceLink")
+            assertThat(item["title"]).isEqualTo("fantabulous title")
+            assertThat(item["text"]).isEqualTo("fantabulous description")
         }
 
         @Test
