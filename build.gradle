@@ -149,7 +149,7 @@ dependencies {
   implementation "io.micrometer:micrometer-registry-prometheus"
 
   implementation 'io.sentry:sentry-logback:1.7.21'
-  implementation "io.opentracing.contrib:opentracing-spring-jaeger-web-starter:2.0.3"
+  implementation "io.opentracing.contrib:opentracing-spring-jaeger-web-starter:3.2.0"
 
   implementation "org.imsglobal:basiclti-util:1.2.0"
 
