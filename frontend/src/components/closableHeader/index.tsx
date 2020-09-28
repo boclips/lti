@@ -46,7 +46,6 @@ const ClosableHeader = ({ title, handleSubmit }: TitleHeaderProps) => {
           name="hidden-form"
           method="post"
           action={DeepLinkingParameterService.getReturnUrl()}
-          target="_parent"
         >
           <input type="hidden" aria-label="jwt" value={jwt} name="JWT" />
         </form>
