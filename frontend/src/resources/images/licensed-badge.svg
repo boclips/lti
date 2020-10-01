@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="92px" height="24px" viewBox="0 0 92 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>304B3BA4-F111-4E8A-B8F7-033901AB655D</title>
+    <g id="Phase-1-design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="S&amp;E---How-does-it-work?-small" transform="translate(-347.000000, -370.000000)">
+            <rect id="Rectangle" fill="#918F8F" x="0" y="0" width="1440" height="1329"></rect>
+            <rect id="Rectangle" fill="#F8FAFF" x="205" y="82" width="1031" height="1006"></rect>
+            <g id="How-does-it-work-copy" transform="translate(258.000000, 118.000000)">
+                <rect id="Rectangle" fill="#FFFFFF" x="0" y="0" width="911" height="931"></rect>
+                <g id="How-does-it-work?-common-info" transform="translate(59.000000, 37.000000)">
+                    <g id="How-does-licensing-work?" transform="translate(0.000000, 156.000000)">
+                        <g id="License-explanation" transform="translate(30.000000, 54.000000)">
+                            <g id="tags-/-info-badge" transform="translate(0.000000, 5.000000)">
+                                <rect id="Rectangle" stroke="#CFD1D2" fill="#FFFFFF" x="0.5" y="0.5" width="91" height="23" rx="6"></rect>
+                                <g id="Group" transform="translate(7.000000, 4.000000)" fill="#545454">
+                                    <text id="Licensed" font-family="WorkSans-SemiBold, Work Sans" font-size="14" font-weight="500">
+                                        <tspan x="17.68" y="13">Licensed</tspan>
+                                    </text>
+                                    <g id="Icons-/-licensed" transform="translate(0.000000, 3.000000)" fill-rule="nonzero">
+                                        <g id="np_complete_3120615_000000" transform="translate(1.000000, 2.000000)">
+                                            <path d="M3.82334662,8 C3.52822174,8 3.24380262,7.86807372 3.0437651,7.6480499 L0.282712113,4.53460281 C-0.117784402,4.08337796 -0.0860886142,3.39069897 0.335397932,2.97254369 C0.767590236,2.55441042 1.43105221,2.58750201 1.8315698,3.02754965 L3.81266193,5.26090145 L8.16461589,0.354150208 C8.56511241,-0.097074645 9.22908016,-0.118989018 9.66078776,0.299144252 C10.0929801,0.717277522 10.1139701,1.41048457 9.71347358,1.86120337 L4.59262279,7.6480499 C4.39217432,7.87882188 4.10774467,8 3.82332554,8 L3.82334662,8 Z" id="Path"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

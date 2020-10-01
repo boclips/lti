@@ -19,6 +19,7 @@ describe('VideoService', () => {
         title: 'TED1',
         id: 'ted1',
         channel: 'ted1',
+        channelId: 'ted1'
       }),
     );
     fakeApiClient.videos.insertVideo(VideoFactory.sample({ title: 'TED2' }));

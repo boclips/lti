@@ -4,6 +4,7 @@ import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import 'jest-enzyme';
 import { ApiBoclipsClient, TestSupport } from 'boclips-api-client';
+import axios from 'axios';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -29,6 +30,10 @@ jest.mock('boclips-api-client', () => {
       create: () => Promise.resolve(testApiClient),
     } as ApiBoclipsClient,
   };
+});
+
+beforeEach(() => {
+  (axios.interceptors.request as any).handlers = [];
 });
 
 Object.defineProperty(window, 'matchMedia', {

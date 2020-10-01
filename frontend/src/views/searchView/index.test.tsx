@@ -4,13 +4,15 @@ import { Video } from '@bit/boclips.dev-boclips-ui.types.video/index';
 import { VideoFactory } from 'boclips-api-client/dist/test-support/VideosFactory';
 import { FakeBoclipsClient } from 'boclips-api-client/dist/test-support';
 import { fireEvent } from '@testing-library/dom';
+import { UserFactory } from 'boclips-api-client/dist/test-support/UserFactory';
 import ApiClient from '../../service/client/ApiClient';
 import LtiView from './index';
 import AxiosService from '../../service/axios/AxiosService';
 
-AxiosService.configureAxios();
-
 describe('LTI test', () => {
+  beforeEach(() => {
+    AxiosService.configureAxios();
+  });
   const searchFor = (query: string) => {
     const searchBar = screen.getByTestId('search-input');
     fireEvent.change(searchBar, { target: { value: query } });
@@ -20,11 +22,49 @@ describe('LTI test', () => {
   };
   
   it('displays empty render with welcome message', async () => {
-    render(<LtiView renderVideoCard={() => <div />} />);
+    const fakeApiClient = (await new ApiClient(
+      'https://api.example.com',
+    ).getClient()) as FakeBoclipsClient;
+
+    fakeApiClient.users.insertCurrentUser(UserFactory.sample());
+
+    render(<LtiView renderVideoCard={() => <div/>}/>);
 
     expect(
       await screen.findByText('Use the search on top to discover inspiring videos'),
     ).toBeInTheDocument();
+  });
+
+  it('displays SLS terms if user has that feature turned on', async () => {
+    const fakeApiClient = (await new ApiClient(
+      'https://api.example.com',
+    ).getClient()) as FakeBoclipsClient;
+
+    fakeApiClient.users.insertCurrentUser(UserFactory.sample({
+      features: { LTI_SLS_TERMS_BUTTON: true }
+    }));
+
+    render(<LtiView renderVideoCard={() => <div />}/>);
+
+    const aboutButton = await screen.findByText('About the app and services');
+
+    expect(aboutButton).toBeVisible();
+    fireEvent.click(aboutButton);
+    expect(await screen.findByText('How does it work?')).toBeVisible();
+  });
+
+  it('doesn\'t show SLS terms if user should not see it', async () => {
+    const fakeApiClient = (await new ApiClient(
+      'https://api.example.com',
+    ).getClient()) as FakeBoclipsClient;
+
+    fakeApiClient.users.insertCurrentUser(UserFactory.sample({
+      features: { }
+    }));
+
+    render(<LtiView renderVideoCard={() => <div />}/>);
+
+    expect(await screen.queryByText('About the app and services')).toBeNull();
   });
 
   it('uses provided function to render videos on search', async () => {

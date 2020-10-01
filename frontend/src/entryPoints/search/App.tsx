@@ -32,5 +32,5 @@ const renderVideoCard = (video: Video, loading: boolean) => (
 );
 
 const App = (): ReactElement =>
-  <SearchView renderVideoCard={renderVideoCard} />;
+  <SearchView renderVideoCard={renderVideoCard}/>;
 export default hot(AxiosWrapper(App));

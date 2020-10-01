@@ -6,7 +6,6 @@ import { Player } from 'boclips-player-react';
 import SearchView from '../../views/searchView';
 import EmbedVideoButton from '../../components/embedVideoButton/EmbedVideoButton';
 import playerOptions from '../../Player/playerOptions';
-import ClosableHeader from '../../components/closableHeader';
 import AxiosWrapper from '../../service/axios/AxiosWrapper';
 
 const renderVideoCard = (video: Video, loading: boolean) => (
@@ -35,12 +34,7 @@ const App = () => (
   <SearchView
     collapsibleFilters
     renderVideoCard={renderVideoCard}
-    header={
-      <ClosableHeader
-        title="Video library"
-        handleSubmit={(form) => form?.submit()}
-      />
-    }
+    closableHeader
   />
 );
 

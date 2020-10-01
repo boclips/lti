@@ -3,15 +3,17 @@ import s from './style.module.less';
 import DeepLinkingParameterService from '../../service/deepLinking/DeepLinkingParameterService';
 import ContentSelectionService from '../../service/contentSelection/ContentSelectionService';
 import CloseIcon from '../../resources/images/close-icon.svg';
+import AboutDrawer from '../sls/AboutDrawer';
 
 const contentSelectionService = new ContentSelectionService();
 
 interface TitleHeaderProps {
   title: string;
   handleSubmit: (form: HTMLFormElement | null) => void;
+  showSlsTerms?: boolean;
 }
 
-const ClosableHeader = ({ title, handleSubmit }: TitleHeaderProps) => {
+const ClosableHeader = ({ title, handleSubmit, showSlsTerms }: TitleHeaderProps) => {
   const [jwt, setJwt] = useState<string | undefined>(undefined);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -21,25 +23,31 @@ const ClosableHeader = ({ title, handleSubmit }: TitleHeaderProps) => {
     }
   }, [jwt]);
 
+  const onClose = () => contentSelectionService
+    .getContentSelectionJwt(
+      [],
+      DeepLinkingParameterService.getDeploymentId(),
+      DeepLinkingParameterService.getData(),
+    )
+    .then((jwtResponse) => setJwt(jwtResponse));
+  
+  const closeIcon = (<span
+    data-qa="close-icon"
+    className={s.closeIcon}
+    role="presentation"
+    onClick={onClose}
+  >
+    <CloseIcon />
+  </span>);
+
   return (
     <div data-qa="closable-header" className={s.header}>
-      <span className={s.text}>{title}</span>
-      <span
-        data-qa="close-icon"
-        className={s.closeIcon}
-        role="presentation"
-        onClick={() =>
-          contentSelectionService
-            .getContentSelectionJwt(
-              [],
-              DeepLinkingParameterService.getDeploymentId(),
-              DeepLinkingParameterService.getData(),
-            )
-            .then((jwtResponse) => setJwt(jwtResponse))
-        }
-      >
-        <CloseIcon />
-      </span>
+      <div>
+        <span className={s.text}>{title}</span>
+        {showSlsTerms && <AboutDrawer closeIcon={closeIcon}/>}
+      </div>
+
+      {closeIcon}
       {jwt && (
         <form
           ref={formRef}
