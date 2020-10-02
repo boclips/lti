@@ -21,8 +21,8 @@ const testFacets = {
   },
   resourceTypes: {},
   channels: {
-    'biology channel': { hits: 111 },
-    'history channel': { hits: 212 }
+    'biology channel': { hits: 111, id: 'biology-channel-id' },
+    'history channel': { hits: 212, id: 'history-channel-id' }
   },
 };
 

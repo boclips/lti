@@ -19,7 +19,7 @@ describe('VideoService', () => {
         title: 'TED1',
         id: 'ted1',
         channel: 'ted1',
-        channelId: 'ted1'
+        channelId: 'ted-channel-id',
       }),
     );
     fakeApiClient.videos.insertVideo(VideoFactory.sample({ title: 'TED2' }));
@@ -27,7 +27,7 @@ describe('VideoService', () => {
     const service = new VideoService(fakeApiClient);
     // Right now the fake only allows searching by cp or id
     const videos = await service.searchVideos({
-      channel: ['ted1'],
+      channel: ['ted-channel-id'],
     });
 
     expect(videos.page.length).toEqual(1);

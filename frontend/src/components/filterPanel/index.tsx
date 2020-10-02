@@ -90,10 +90,10 @@ const FilterPanel = ({
     facets?.durations!,
   );
 
-  const sourceOptions:SelectOption[] = Object.keys(facets?.channels || {}).map((it) => ({
-    id: it,
-    label: it,
-    count: facets?.channels && facets?.channels[it].hits,
+  const sourceOptions:SelectOption[] = Object.keys(facets?.channels || {}).map((facetKey) => ({
+    id: (facets?.channels && facets?.channels[facetKey].id) || '',
+    label: facetKey,
+    count: facets?.channels && facets?.channels[facetKey].hits,
   })) || [];
   
   return (
@@ -157,6 +157,7 @@ const FilterPanel = ({
             setSourceFilter={setSourceFilter}
             setAgeRangeFilter={setAgeRangeFilter}
             setDurationFilter={setDurationFilter}
+            facets={facets}
             appliedFilters={{
               ageRanges: ageRangeFilter,
               duration: durationFilter, 

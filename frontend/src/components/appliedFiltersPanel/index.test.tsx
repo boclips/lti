@@ -14,12 +14,19 @@ describe('Applied filters panel', () => {
           ageRanges: ['4-6'],
           duration: ['PT0S-PT2M'],
           subjects: ['subject-id'],
-          source: ['BBC']
+          source: ['bbc-id']
         }}
         setSubjectFilter={jest.fn()}
         setSourceFilter={jest.fn()}
         setDurationFilter={jest.fn()}
         setAgeRangeFilter={jest.fn()}
+        facets={{
+          ageRanges: {},
+          durations: {},
+          resourceTypes: {},
+          subjects: {},
+          channels: { BBC: { id: 'bbc-id', hits: 25 } } 
+        }}
       />,
     );
 
@@ -47,19 +54,26 @@ describe('Applied filters panel', () => {
           ageRanges: ['4-6', '7-9'],
           duration: ['PT0S-PT2M', 'PT2M-PT5M'],
           subjects: ['subject-1', 'subject-2'],
-          source: ['BBC', 'nature channel']
+          source: ['bbc-id', 'nature-channel-id']
         }}
         setSubjectFilter={subjectFilterMock}
         setSourceFilter={sourceFilterMock}
         setDurationFilter={durationFilterMock}
         setAgeRangeFilter={ageFilterMock}
+        facets={{
+          ageRanges: {},
+          durations: {},
+          resourceTypes: {},
+          subjects: {},
+          channels: { BBC: { id: 'bbc-id', hits: 25 }, 'nature channel': { id: 'nature-channel-id', hits: 2 } } 
+        }}
       />,
     );
 
-    const sourceBadge = screen.getByTestId('BBC-remove-button');
+    const sourceBadge = screen.getByTestId('bbc-id-remove-button');
     await fireEvent.click(sourceBadge!);
     expect(sourceFilterMock).toHaveBeenCalledTimes(1);
-    expect(sourceFilterMock).toHaveBeenCalledWith(['nature channel']);
+    expect(sourceFilterMock).toHaveBeenCalledWith(['nature-channel-id']);
 
     const ageBadge = screen.getByTestId('4-6-remove-button');
     await fireEvent.click(ageBadge!);
@@ -91,6 +105,13 @@ describe('Applied filters panel', () => {
         setSourceFilter={jest.fn()}
         setDurationFilter={jest.fn()}
         setAgeRangeFilter={jest.fn()}
+        facets={{
+          ageRanges: {},
+          durations: {},
+          resourceTypes: {},
+          subjects: {},
+          channels: { BBC: { id: 'bbc-id', hits: 25 } } 
+        }}
       />,
     );
 
