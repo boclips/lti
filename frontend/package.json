@@ -15,8 +15,10 @@
   "dependencies": {
     "@ant-design/icons": "4.1.0",
     "@bit/boclips.dev-boclips-ui.components.filter-badge": "^1.0.1",
-    "@bit/boclips.dev-boclips-ui.components.no-results": "^1.0.4",
+    "@boclips-ui/no-results": "1.0.10",
     "@boclips-ui/search-bar": "1.0.2",
+    "@boclips-ui/select": "1.0.1",
+    "@boclips-ui/select-option": "1.0.1",
     "@bit/boclips.dev-boclips-ui.components.select": "1.0.28",
     "@bit/boclips.dev-boclips-ui.components.video-card": "1.0.10",
     "@bit/boclips.dev-boclips-ui.types.age-range": "1.0.1",

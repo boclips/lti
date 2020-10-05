@@ -1,4 +1,4 @@
-import { SelectOption } from '@bit/boclips.dev-boclips-ui.types.select-option/index';
+import { SelectOption } from '@boclips-ui/select-option';
 import DurationConverter from './DurationConverter';
 
 describe('Duration converter', () => {

@@ -1,4 +1,4 @@
-import { SelectOption } from '@bit/boclips.dev-boclips-ui.types.select-option/index';
+import { SelectOption } from '@boclips-ui/select-option';
 import { Facet } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 import moment from 'moment';
 import Range from '../../../types/range';

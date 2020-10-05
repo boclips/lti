@@ -95,23 +95,7 @@ describe('LTI test', () => {
     await screen.findByText('Hello, video 456');
   });
 
-  it('renders empty results view when no video results', async () => {
-    render(
-      <LtiView
-        renderVideoCard={(video: Video) => <div>Hello, video {video.id}</div>}
-      />,
-    );
-
-    const searchBar = screen.getByTestId('search-input');
-    fireEvent.change(searchBar, { target: { value: 'yay' } });
-
-    const searchButton = screen.getByText('Search');
-    fireEvent.click(searchButton);
-
-    await screen.findByText('We couldn\'t find anything for "yay" with your filters');
-  });
-
-  it('shows filter panel only when there are videos and facets returned', async () => {
+  it('show filter panel when no results found but filters were applied', async () => {
     const fakeApiClient = (await new ApiClient(
       'https://api.example.com',
     ).getClient()) as FakeBoclipsClient;
@@ -130,18 +114,40 @@ describe('LTI test', () => {
       }
     });
 
-    render(
+    const view = render(
+      <LtiView
+        renderVideoCard={(video: Video) => <div>Hello, video {video.id}</div>}
+      />,
+    );
+
+    searchFor('Hi');
+    expect(await view.findByText('FILTER BY:')).toBeInTheDocument();
+
+    await fireEvent.mouseDown(view.getByText('Age'));
+    await fireEvent.click(view.getByTitle('3 - 5'));
+    await fireEvent.click(view.getByText('APPLY'));
+
+    searchFor('nothing');
+
+    expect(await view.findByText('Try again using different keywords or change the filters'));
+    expect(view.getByText('FILTER BY:')).toBeVisible();
+  });
+
+  it('does not show filter panel when no results found & no filters were applied', async () => {
+    const view = render(
       <LtiView
         renderVideoCard={(video: Video) => <div>Hello, video {video.id}</div>}
       />,
     );
 
     searchFor('find nothing');
-    await screen.findByText('We couldn\'t find anything for "find nothing" with your filters');
-    expect(screen.queryByText('FILTER BY:')).toBeNull();
 
-    searchFor('Hi');
-    expect(await screen.findByText('FILTER BY:')).toBeInTheDocument();
+    expect(await view.findByText('Try different words that mean the same thing')).toBeVisible();
+    expect(await view.findByText("Sorry, we couldn't find any results for")).toBeVisible();
+    expect(await view.findByText('"find nothing"')).toBeVisible();
+    expect(await view.findByText('Check your spelling')).toBeVisible();
+    expect(await view.findByText('Try more general words')).toBeVisible();
+    expect(view.queryByText('FILTER BY:')).toBeNull();
   });
 
   it('clicking filters button toggles buttons label', async () => {
