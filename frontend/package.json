@@ -15,7 +15,7 @@
   "dependencies": {
     "@ant-design/icons": "4.1.0",
     "@bit/boclips.dev-boclips-ui.components.filter-badge": "^1.0.1",
-    "@bit/boclips.dev-boclips-ui.components.no-results": "^1.0.4",
+    "@boclips-ui/no-results": "1.0.9",
     "@boclips-ui/search-bar": "1.0.2",
     "@bit/boclips.dev-boclips-ui.components.select": "1.0.28",
     "@bit/boclips.dev-boclips-ui.components.video-card": "1.0.10",

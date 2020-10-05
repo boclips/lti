@@ -5,9 +5,9 @@ import {
 import { Video } from '@bit/boclips.dev-boclips-ui.types.video';
 import c from 'classnames';
 import SearchBar from '@boclips-ui/search-bar';
+import NoResults from '@boclips-ui/no-results';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 import { Subject } from 'boclips-api-client/dist/types';
-import NoResults from '@bit/boclips.dev-boclips-ui.components.no-results';
 import { User } from 'boclips-api-client/dist/sub-clients/organisations/model/User';
 import ApiClient from '../../service/client/ApiClient';
 import { AppConstants } from '../../types/AppConstants';
@@ -152,7 +152,7 @@ const LtiView = ({
 
   const renderVideoList = () => useMemo(() =>
     !loading && videos.length === 0 && !!searchQuery ? (
-      <NoResults searchQuery={searchQuery}/>
+      <NoResults searchQuery={searchQuery} filtersApplied={activeFilterCount > 0 && true}/>
     ) : (
       <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }}>
         {videos.length > 0 && (

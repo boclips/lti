@@ -111,7 +111,41 @@ describe('LTI test', () => {
     await screen.findByText('We couldn\'t find anything for "yay" with your filters');
   });
 
-  it('shows filter panel only when there are videos and facets returned', async () => {
+  it('show filter panel when no results found but filters were applied', async () => {
+    const fakeApiClient = (await new ApiClient(
+      'https://api.example.com',
+    ).getClient()) as FakeBoclipsClient;
+
+    fakeApiClient.videos.insertVideo(
+      VideoFactory.sample({ id: '123', title: 'Hi' }),
+    );
+    fakeApiClient.videos.setFacets({
+      durations: {},
+      resourceTypes: {},
+      subjects: {},
+      ageRanges: {
+        '3-5': {
+          hits: 3,
+        },
+      }
+    });
+
+   const view = render(
+      <LtiView
+        renderVideoCard={(video: Video) => <div>Hello, video {video.id}</div>}
+      />,
+    );
+
+    searchFor('Hi');
+    expect(await view.findByText('FILTER BY:')).toBeInTheDocument();
+
+    const dropdown = view.getByText('Age')
+
+    fireEvent.click(dropdown)
+    expect(await screen.findByText('We couldn\'t find anything for "find nothing" with your filters'));
+  })
+
+    it('does not show filter panel when no results found & no filters were applied', async () => {
     const fakeApiClient = (await new ApiClient(
       'https://api.example.com',
     ).getClient()) as FakeBoclipsClient;
@@ -137,11 +171,12 @@ describe('LTI test', () => {
     );
 
     searchFor('find nothing');
-    await screen.findByText('We couldn\'t find anything for "find nothing" with your filters');
+    await screen.findByText(/Sorry, we could\'t find any results for/);
+    await screen.findByText(/"find nothing"/);
+    await screen.findByText('Check your spelling');
+    await screen.findByText('Try more general words');
+    await screen.findByText('Try different words that mean the same thing');
     expect(screen.queryByText('FILTER BY:')).toBeNull();
-
-    searchFor('Hi');
-    expect(await screen.findByText('FILTER BY:')).toBeInTheDocument();
   });
 
   it('clicking filters button toggles buttons label', async () => {
