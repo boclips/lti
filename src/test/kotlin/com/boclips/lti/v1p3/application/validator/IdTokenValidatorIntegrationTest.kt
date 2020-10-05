@@ -69,6 +69,8 @@ class IdTokenValidatorIntegrationTest : AbstractSpringIntegrationTest() {
         fun `throws an error when the issuer is not provided`() {
             val token = DecodedJwtTokenFactory.sample(
                 issuerClaim = null,
+                deploymentIdClaim = "deployment-id",
+                subjectClaim = "external-user-id",
                 audienceClaim = listOf(testClientId)
             )
             assertThatThrownBy { validator.assertHasValidClaims(token) }
@@ -80,6 +82,8 @@ class IdTokenValidatorIntegrationTest : AbstractSpringIntegrationTest() {
         fun `throws an error when the issuer is empty`() {
             val token = DecodedJwtTokenFactory.sample(
                 issuerClaim = "",
+                deploymentIdClaim = "deployment-id",
+                subjectClaim = "external-user-id",
                 audienceClaim = listOf(testClientId)
             )
             assertThatThrownBy { validator.assertHasValidClaims(token) }
@@ -91,11 +95,97 @@ class IdTokenValidatorIntegrationTest : AbstractSpringIntegrationTest() {
         fun `throws an error when the issuer is blank`() {
             val token = DecodedJwtTokenFactory.sample(
                 issuerClaim = "   ",
+                deploymentIdClaim = "deployment-id",
+                subjectClaim = "external-user-id",
                 audienceClaim = listOf(testClientId)
             )
             assertThatThrownBy { validator.assertHasValidClaims(token) }
                 .isInstanceOf(JwtClaimValidationException::class.java)
                 .asString().contains("iss")
+        }
+    }
+
+    @Nested
+    inner class DeploymentId {
+        @Test
+        fun `throws an error when deploymentId is not provided`() {
+            val token = DecodedJwtTokenFactory.sample(
+                issuerClaim = "issuer",
+                deploymentIdClaim = null,
+                subjectClaim = "external-user-id",
+                audienceClaim = listOf(testClientId)
+            )
+            assertThatThrownBy { validator.assertHasValidClaims(token) }
+                .isInstanceOf(JwtClaimValidationException::class.java)
+                .asString().contains("Deployment ID")
+        }
+
+        @Test
+        fun `throws an error when the deploymentId is empty`() {
+            val token = DecodedJwtTokenFactory.sample(
+                issuerClaim = "issuer",
+                deploymentIdClaim = "",
+                subjectClaim = "external-user-id",
+                audienceClaim = listOf(testClientId)
+            )
+            assertThatThrownBy { validator.assertHasValidClaims(token) }
+                .isInstanceOf(JwtClaimValidationException::class.java)
+                .asString().contains("Deployment ID")
+        }
+
+        @Test
+        fun `throws an error when the deploymentId is blank`() {
+            val token = DecodedJwtTokenFactory.sample(
+                issuerClaim = "isser",
+                deploymentIdClaim = "   ",
+                subjectClaim = "external-user-id",
+                audienceClaim = listOf(testClientId)
+            )
+            assertThatThrownBy { validator.assertHasValidClaims(token) }
+                .isInstanceOf(JwtClaimValidationException::class.java)
+                .asString().contains("Deployment ID")
+        }
+    }
+
+    @Nested
+    inner class Subject {
+        @Test
+        fun `throws an error when subject is not provided`() {
+            val token = DecodedJwtTokenFactory.sample(
+                issuerClaim = "issuer",
+                deploymentIdClaim = "deployment-id",
+                subjectClaim = null,
+                audienceClaim = listOf(testClientId)
+            )
+            assertThatThrownBy { validator.assertHasValidClaims(token) }
+                .isInstanceOf(JwtClaimValidationException::class.java)
+                .asString().contains("Subject")
+        }
+
+        @Test
+        fun `throws an error when the subject is empty`() {
+            val token = DecodedJwtTokenFactory.sample(
+                issuerClaim = "issuer",
+                deploymentIdClaim = "deployment-id",
+                subjectClaim = "",
+                audienceClaim = listOf(testClientId)
+            )
+            assertThatThrownBy { validator.assertHasValidClaims(token) }
+                .isInstanceOf(JwtClaimValidationException::class.java)
+                .asString().contains("Subject")
+        }
+
+        @Test
+        fun `throws an error when the subject is blank`() {
+            val token = DecodedJwtTokenFactory.sample(
+                issuerClaim = "isser",
+                deploymentIdClaim = "deployment-id",
+                subjectClaim = "   ",
+                audienceClaim = listOf(testClientId)
+            )
+            assertThatThrownBy { validator.assertHasValidClaims(token) }
+                .isInstanceOf(JwtClaimValidationException::class.java)
+                .asString().contains("Subject")
         }
     }
 

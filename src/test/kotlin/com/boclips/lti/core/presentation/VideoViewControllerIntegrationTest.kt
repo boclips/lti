@@ -5,7 +5,6 @@ import com.boclips.lti.core.infrastructure.repository.VideoResourceConverter
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.testsupport.factories.LtiTestSessionFactory
 import com.boclips.lti.testsupport.factories.VideoResourcesFactory
-import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
 import com.boclips.videos.api.response.video.VideoResource
 import org.hamcrest.CoreMatchers.nullValue
 import org.junit.jupiter.api.BeforeEach
@@ -57,7 +56,7 @@ class VideoViewControllerIntegrationTest : AbstractSpringIntegrationTest() {
         val session = LtiTestSessionFactory.authenticated(
             integrationId = integrationId,
             sessionAttributes = mapOf(
-                SessionKeys.userId to testUserId
+                SessionKeys.boclipsUserId to testUserId
             )
         )
 

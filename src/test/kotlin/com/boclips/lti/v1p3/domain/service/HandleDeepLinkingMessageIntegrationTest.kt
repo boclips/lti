@@ -3,7 +3,7 @@ package com.boclips.lti.v1p3.domain.service
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.testsupport.factories.DeepLinkingMessageFactory
 import com.boclips.lti.v1p3.domain.model.getIntegrationId
-import com.boclips.lti.v1p3.domain.model.getUserId
+import com.boclips.lti.v1p3.domain.model.getBoclipsUserId
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -34,7 +34,7 @@ class HandleDeepLinkingMessageIntegrationTest : AbstractSpringIntegrationTest() 
         handleDeepLinkingMessage(message, session)
 
         assertThat(session.getIntegrationId()).isEqualTo(issuer)
-        assertThat(session.getUserId()).isEqualTo(userId)
+        assertThat(session.getBoclipsUserId()).isEqualTo(userId)
     }
 
     private val session = MockHttpSession()

@@ -14,6 +14,8 @@ class IdTokenValidator(
 ) {
     fun assertHasValidClaims(token: DecodedJwtToken) {
         if (token.issuerClaim.isNullOrBlank()) throw JwtClaimValidationException("'iss' was not provided")
+        if (token.deploymentIdClaim.isNullOrBlank()) throw JwtClaimValidationException("'Deployment ID' was not provided")
+        if (token.subjectClaim.isNullOrBlank()) throw JwtClaimValidationException("'Subject' was not provided")
         assertHasValidAudience(token)
         assertIsWithinTimeConstraints(token)
         if (token.nonceClaim.isNullOrBlank()) throw JwtClaimValidationException("'nonce' was not provided")

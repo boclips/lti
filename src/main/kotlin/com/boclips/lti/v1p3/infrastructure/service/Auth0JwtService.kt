@@ -55,6 +55,8 @@ class Auth0JwtService(
     override fun decode(token: String) = JWT.decode(token)
         .let {
             DecodedJwtToken(
+                deploymentIdClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/deployment_id").asString(),
+                subjectClaim = it.subject,
                 issuerClaim = it.issuer,
                 audienceClaim = it.audience,
                 authorizedPartyClaim = it.getClaim("azp").asString(),
@@ -63,7 +65,6 @@ class Auth0JwtService(
                 nonceClaim = it.getClaim("nonce").asString(),
                 targetLinkUriClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/target_link_uri")
                     .asString(),
-                deploymentIdClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/deployment_id").asString(),
                 messageTypeClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/message_type").asString(),
                 ltiVersionClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/version").asString(),
                 resourceLinkClaim = it.getClaim("https://purl.imsglobal.org/spec/lti/claim/resource_link").asMap()
@@ -77,8 +78,7 @@ class Auth0JwtService(
                             acceptPresentationDocumentTargets = claim["accept_presentation_document_targets"].toNullableListOfStrings(),
                             data = claim["data"].toString()
                         )
-                    },
-                subjectClaim = it.subject
+                    }
             )
         }
 

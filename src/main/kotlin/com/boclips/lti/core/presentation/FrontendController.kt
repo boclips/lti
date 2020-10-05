@@ -2,7 +2,7 @@ package com.boclips.lti.core.presentation
 
 import com.boclips.lti.core.configuration.properties.DevSupportProperties
 import com.boclips.lti.core.configuration.properties.FrontendProperties
-import com.boclips.lti.v1p3.domain.model.getUserId
+import com.boclips.lti.v1p3.domain.model.getBoclipsUserId
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.servlet.ModelAndView
@@ -22,7 +22,7 @@ class FrontendController(
         return ModelAndView(
             "search", mapOf(
                 "ltiBaseUrl" to frontendProperties.ltiBaseUrl,
-                "userId" to session.getUserId(),
+                "userId" to session.getBoclipsUserId(),
                 "apiBaseUrl" to frontendProperties.apiBaseUrl,
                 "initialiseDevelopmentSession" to devSupportProperties.initialiseDevelopmentSession,
                 "developmentSessionUrl" to devSupportProperties.developmentSessionUrl
@@ -40,7 +40,7 @@ class FrontendController(
             "search-and-embed", mapOf(
                 "ltiBaseUrl" to frontendProperties.ltiBaseUrl,
                 "apiBaseUrl" to frontendProperties.apiBaseUrl,
-                "userId" to session.getUserId(),
+                "userId" to session.getBoclipsUserId(),
                 "initialiseDevelopmentSession" to devSupportProperties.initialiseDevelopmentSession,
                 "developmentSessionUrl" to devSupportProperties.developmentSessionUrl
             )

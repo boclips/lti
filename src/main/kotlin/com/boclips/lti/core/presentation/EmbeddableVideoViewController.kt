@@ -32,7 +32,7 @@ class EmbeddableVideoViewController(
         return ModelAndView(
             "embeddable-video", mapOf(
                 "video" to toVideoViewModel(video),
-                "userId" to session.getAttribute(SessionKeys.userId)
+                "userId" to session.getAttribute(SessionKeys.boclipsUserId)
             )
         )
     }

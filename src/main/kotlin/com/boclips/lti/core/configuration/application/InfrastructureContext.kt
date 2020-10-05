@@ -9,8 +9,10 @@ import com.boclips.lti.core.infrastructure.repository.ApiCollectionRepository
 import com.boclips.lti.core.infrastructure.repository.ApiVideoRepository
 import com.boclips.lti.core.infrastructure.repository.MongoIntegrationDocumentRepository
 import com.boclips.lti.core.infrastructure.service.CollectionsClientFactory
+import com.boclips.lti.core.infrastructure.service.IntegrationsClientFactory
 import com.boclips.lti.core.infrastructure.service.KeycloakClientFactory
 import com.boclips.lti.core.infrastructure.service.MongoBackedCollectionsClientFactory
+import com.boclips.lti.core.infrastructure.service.MongoBackedIntegrationsClientFactory
 import com.boclips.lti.core.infrastructure.service.MongoBackedUsersClientFactory
 import com.boclips.lti.core.infrastructure.service.MongoBackedVideosClientFactory
 import com.boclips.lti.core.infrastructure.service.SpringRequestAwareResourceLinkService
@@ -47,6 +49,15 @@ class InfrastructureContext(
     @Profile("!test")
     fun usersClientFactory(): UsersClientFactory {
         return MongoBackedUsersClientFactory(
+            boclipsApiProperties = boclipsApiProperties,
+            integrationDocumentRepository = integrationDocumentRepository
+        )
+    }
+
+    @Bean
+    @Profile("!test")
+    fun integrationsClientFactory(): IntegrationsClientFactory {
+        return MongoBackedIntegrationsClientFactory(
             boclipsApiProperties = boclipsApiProperties,
             integrationDocumentRepository = integrationDocumentRepository
         )

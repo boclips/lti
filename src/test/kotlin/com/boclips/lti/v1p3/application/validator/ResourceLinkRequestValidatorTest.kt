@@ -42,21 +42,6 @@ class ResourceLinkRequestValidatorTest {
     }
 
     @Test
-    fun `throws a validation error when deploymentId is not provided`() {
-        val token =
-            DecodedJwtTokenFactory.sample(deploymentIdClaim = null, targetLinkUriClaim = "https://tool.com/resource/1")
-        session.mapStateToTargetLinkUri(state, token.targetLinkUriClaim!!)
-
-        assertThrows<LtiMessageClaimValidationException> {
-            ResourceLinkRequestValidator.assertIsValid(
-                state = state,
-                token = token,
-                session = session
-            )
-        }
-    }
-
-    @Test
     fun `throws a validation error when deploymentId is blank`() {
         val token =
             DecodedJwtTokenFactory.sample(deploymentIdClaim = " ", targetLinkUriClaim = "https://tool.com/resource/1")

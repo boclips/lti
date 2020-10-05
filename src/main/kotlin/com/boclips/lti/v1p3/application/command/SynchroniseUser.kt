@@ -1,7 +1,9 @@
 package com.boclips.lti.v1p3.application.command
 
 import com.boclips.lti.core.infrastructure.service.IntegrationsClientFactory
+import org.springframework.stereotype.Component
 
+@Component
 class SynchroniseUser(
     private val integrationsClientFactory: IntegrationsClientFactory
 ) {

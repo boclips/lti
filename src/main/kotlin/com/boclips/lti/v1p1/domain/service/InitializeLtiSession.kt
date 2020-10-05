@@ -22,7 +22,7 @@ class InitializeLtiSession {
     fun handleUserId(request: HttpServletRequest, session: HttpSession) {
         val userId: String = request.getParameter(LaunchParams.Custom.USER_ID).orEmpty()
         if (userId.isNotBlank()) {
-            session.setAttribute(SessionKeys.userId, userId)
+            session.setAttribute(SessionKeys.boclipsUserId, userId)
         }
     }
 

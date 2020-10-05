@@ -270,6 +270,7 @@ PwIDAQAB
             assertThat(decodedToken.expClaim).isNull()
             assertThat(decodedToken.issuedAtClaim).isNull()
             assertThat(decodedToken.deploymentIdClaim).isNull()
+            assertThat(decodedToken.subjectClaim).isNull()
             assertThat(decodedToken.targetLinkUriClaim).isNull()
             assertThat(decodedToken.messageTypeClaim).isNull()
             assertThat(decodedToken.ltiVersionClaim).isNull()
@@ -286,11 +287,13 @@ PwIDAQAB
 
         @Test
         fun `creates a token with selected LTI links`() {
-            val selection = listOf(SelectedVideoFactory.sample(
-                url = "https://tool.com/videos/123",
-                title = "fantabulous title",
-                text = "fantabulous description"
-            ))
+            val selection = listOf(
+                SelectedVideoFactory.sample(
+                    url = "https://tool.com/videos/123",
+                    title = "fantabulous title",
+                    text = "fantabulous description"
+                )
+            )
 
             val token = service.createDeepLinkingResponseToken(
                 platform,

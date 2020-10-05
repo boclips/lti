@@ -35,8 +35,8 @@ fun HttpSession.getIntegrationId(): String =
     (this.getAttribute(com.boclips.lti.core.application.model.SessionKeys.integrationId)
         ?: throw MissingSessionAttributeException("integrationId")) as String
 
-fun HttpSession.setUserId(value: String) =
-    this.setAttribute(com.boclips.lti.core.application.model.SessionKeys.userId, value)
+fun HttpSession.setBoclipsUserId(value: String) =
+    this.setAttribute(com.boclips.lti.core.application.model.SessionKeys.boclipsUserId, value)
 
-fun HttpSession.getUserId(): String? =
-    this.getAttribute(com.boclips.lti.core.application.model.SessionKeys.userId) as String?
+fun HttpSession.getBoclipsUserId(): String? =
+    this.getAttribute(com.boclips.lti.core.application.model.SessionKeys.boclipsUserId) as String?
