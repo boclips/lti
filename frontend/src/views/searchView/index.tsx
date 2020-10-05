@@ -228,7 +228,7 @@ const LtiView = ({
         </Row>
         <Row >
           <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }} className={s.filtersAlign}>
-            {(videos.length > 0 || singleFilter) && (
+            {(videos.length > 0 || activeFilterCount > 0) && (
               <FilterPanel
                 facets={facets}
                 onApply={setSingleFilter}

@@ -20,7 +20,17 @@ describe('LTI test', () => {
     const searchButton = screen.getByText('Search');
     fireEvent.click(searchButton);
   };
-  
+
+  const filterResults = async (component:any, filterType:string, filterSelection:string) => {
+    await fireEvent.mouseDown(component.getByText(filterType));
+    await fireEvent.click(component.getByTitle(filterSelection));
+    await fireEvent.click(component.getByText('APPLY'));
+  };
+
+  const removeFilters = (component:any) => {
+    fireEvent.click(component.getByText('CLEAR ALL'));
+  };
+
   it('displays empty render with welcome message', async () => {
     const fakeApiClient = (await new ApiClient(
       'https://api.example.com',
@@ -123,9 +133,7 @@ describe('LTI test', () => {
     searchFor('Hi');
     expect(await view.findByText('FILTER BY:')).toBeInTheDocument();
 
-    await fireEvent.mouseDown(view.getByText('Age'));
-    await fireEvent.click(view.getByTitle('3 - 5'));
-    await fireEvent.click(view.getByText('APPLY'));
+    filterResults(view, 'Age', '3 - 5');
 
     searchFor('nothing');
 
@@ -174,5 +182,49 @@ describe('LTI test', () => {
     const hideFiltersButton = await screen.findByText('HIDE FILTERS');
     expect(hideFiltersButton).toBeInTheDocument();
     expect(screen.queryByText('SHOW FILTERS')).toBeNull();
+  });
+
+  it('when searching with filters produces no results then filters are removed,' +
+    ' the filter panel disappears and no results view changes', async () => {
+    const fakeApiClient = (await new ApiClient(
+      'https://api.example.com',
+    ).getClient()) as FakeBoclipsClient;
+
+    fakeApiClient.videos.insertVideo(
+      VideoFactory.sample({ id: '123', title: 'Hi' }),
+    );
+    fakeApiClient.videos.setFacets({
+      durations: {},
+      resourceTypes: {},
+      subjects: {},
+      ageRanges: {
+        '3-5': {
+          hits: 3,
+        },
+      }
+    });
+
+    const view = render(
+      <LtiView
+        renderVideoCard={(video: Video) => <div>Hello, video {video.id}</div>}
+      />,
+    );
+
+    searchFor('Hi');
+    expect(await view.findByText('FILTER BY:')).toBeInTheDocument();
+
+    filterResults(view, 'Age', '3 - 5');
+
+    expect(await view.findByText('CLEAR ALL')).toBeVisible();
+
+    searchFor('definitely not a search query :( ');
+
+    expect(await view.findByText(/Try again using different keywords or change the filters/)).toBeVisible();
+
+    removeFilters(view);
+
+    expect(await view.findByText(/Check your spelling/)).toBeVisible();
+
+    expect(await view.queryByText('FILTER BY:')).not.toBeInTheDocument();
   });
 });
