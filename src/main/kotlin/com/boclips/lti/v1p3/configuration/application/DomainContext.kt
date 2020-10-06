@@ -1,10 +1,11 @@
 package com.boclips.lti.v1p3.configuration.application
 
 import com.boclips.lti.core.domain.service.ResourceLinkService
+import com.boclips.lti.core.infrastructure.service.IntegrationsClientFactory
 import com.boclips.lti.core.infrastructure.service.UsersClientFactory
-import com.boclips.lti.v1p3.domain.repository.PlatformRepository
 import com.boclips.lti.v1p3.domain.service.HandleDeepLinkingMessage
 import com.boclips.lti.v1p3.domain.service.HandleResourceLinkMessage
+import com.boclips.lti.v1p3.domain.service.SynchroniseUser
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -12,18 +13,17 @@ import org.springframework.context.annotation.Configuration
 class DomainContext {
     @Bean
     fun handleResourceLinkMessage(
-        platformRepository: PlatformRepository,
         linkService: ResourceLinkService,
         usersClientFactory: UsersClientFactory
-    ) =
-        HandleResourceLinkMessage(platformRepository, linkService, usersClientFactory)
+    ) = HandleResourceLinkMessage(linkService, usersClientFactory)
+
+    @Bean
+    fun synchroniseUser(
+        integrationsClientFactory: IntegrationsClientFactory
+    ) = SynchroniseUser(integrationsClientFactory = integrationsClientFactory)
 
     @Bean
     fun handleDeepLinkingMessage(
-        platformRepository: PlatformRepository,
         resourceLinkService: ResourceLinkService
-    ) = HandleDeepLinkingMessage(
-            platformRepository,
-            resourceLinkService
-        )
+    ) = HandleDeepLinkingMessage(resourceLinkService)
 }

@@ -28,6 +28,7 @@ class FakeClientsConfig {
     @Bean
     fun videosClientFactory() = FakeVideoClientFactory
 
+
     object FakeCollectionsClientFactory : CollectionsClientFactory {
         private val clientsMap: MutableMap<String, CollectionsClientFake> = HashMap()
 

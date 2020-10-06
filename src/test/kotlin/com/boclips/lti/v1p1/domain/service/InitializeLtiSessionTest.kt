@@ -59,7 +59,7 @@ class InitializeLtiSessionTest {
 
         initializeLtiSession.handleUserId(request, session)
 
-        assertThat(session.getAttribute(SessionKeys.userId)).isEqualTo(userId)
+        assertThat(session.getAttribute(SessionKeys.boclipsUserId)).isEqualTo(userId)
     }
 
     @Test
@@ -68,7 +68,7 @@ class InitializeLtiSessionTest {
 
         initializeLtiSession.handleUserId(request, session)
 
-        assertThat(session.getAttribute(SessionKeys.userId)).isEqualTo(null)
+        assertThat(session.getAttribute(SessionKeys.boclipsUserId)).isEqualTo(null)
     }
 
     @Test

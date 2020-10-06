@@ -52,7 +52,7 @@ class EmbeddableVideoViewControllerIntegrationTest : AbstractSpringIntegrationTe
         val session = LtiTestSessionFactory.authenticated(
             integrationId = integrationId,
             sessionAttributes = mapOf(
-                SessionKeys.userId to testUserId
+                SessionKeys.boclipsUserId to testUserId
             )
         )
 

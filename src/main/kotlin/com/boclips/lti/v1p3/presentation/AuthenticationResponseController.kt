@@ -2,8 +2,9 @@ package com.boclips.lti.v1p3.presentation
 
 import com.boclips.lti.v1p3.application.command.HandlePlatformRequest
 import com.boclips.lti.v1p3.application.command.PerformSecurityChecks
+import com.boclips.lti.v1p3.application.command.SetUpSession
 import com.boclips.lti.v1p3.application.service.JwtService
-import com.boclips.lti.v1p3.domain.model.getUserId
+import com.boclips.lti.v1p3.domain.model.getBoclipsUserId
 import mu.KLogging
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -18,7 +19,8 @@ import javax.validation.constraints.NotBlank
 class AuthenticationResponseController(
     private val jwtService: JwtService,
     private val handlePlatformRequest: HandlePlatformRequest,
-    private val performSecurityChecks: PerformSecurityChecks
+    private val performSecurityChecks: PerformSecurityChecks,
+    private val setUpSession: SetUpSession
 ) {
     companion object : KLogging()
 
@@ -31,12 +33,13 @@ class AuthenticationResponseController(
         idToken: String?,
         httpSession: HttpSession
     ): ResponseEntity<Nothing> {
-    if(httpSession.getUserId().isNullOrBlank()) {
-        performSecurityChecks(state!!, idToken!!, httpSession)
-    }
+        if (httpSession.getBoclipsUserId().isNullOrBlank()) {
+            performSecurityChecks(state!!, idToken!!, httpSession)
+        }
         val decodedToken = jwtService.decode(idToken!!)
         logger.info { "LTI 1.3 Authentication Response from iss: '${decodedToken.issuerClaim}' for '${decodedToken.targetLinkUriClaim}' }" }
 
+        setUpSession(httpSession, decodedToken)
 
         val resourceUrl = handlePlatformRequest(decodedToken, httpSession, state!!)
 

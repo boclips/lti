@@ -14,9 +14,6 @@ class HandleDeepLinkingRequest(
     operator fun invoke(idToken: DecodedJwtToken, session: HttpSession, state: String): URL {
         validator.assertIsValid(idToken, session, state)
 
-        return handleDeepLinkingMessage(
-            message = MessageConverter.toDeepLinkingMessage(idToken),
-            session = session
-        )
+        return handleDeepLinkingMessage(message = MessageConverter.toDeepLinkingMessage(idToken))
     }
 }

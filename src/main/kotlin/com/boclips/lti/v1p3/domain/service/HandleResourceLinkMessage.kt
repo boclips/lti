@@ -3,27 +3,19 @@ package com.boclips.lti.v1p3.domain.service
 import com.boclips.lti.core.domain.service.ResourceLinkService
 import com.boclips.lti.core.infrastructure.service.UsersClientFactory
 import com.boclips.lti.v1p3.domain.model.ResourceLinkMessage
+import com.boclips.lti.v1p3.domain.model.getIntegrationId
 import com.boclips.lti.v1p3.domain.model.setIntegrationId
-import com.boclips.lti.v1p3.domain.model.setUserId
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
 import java.net.URL
 import javax.servlet.http.HttpSession
 
 class HandleResourceLinkMessage(
-    private val platformRepository: PlatformRepository,
     private val linkService: ResourceLinkService,
     private val usersClientFactory: UsersClientFactory
 ) {
     operator fun invoke(message: ResourceLinkMessage, session: HttpSession): URL {
-        val platform = platformRepository.getByIssuer(message.issuer)
-        val integrationId = platform.issuer.toString()
-        session.setIntegrationId(integrationId)
-        if (!message.subject.isNullOrEmpty()) {
-            session.setUserId(message.subject)
-        }
-
         return if (message.requestedResource.isSearchResourceRequest()) {
-            val showCopyLink = isCopyResourceLinkFeatureAvailable(integrationId)
+            val showCopyLink = isCopyResourceLinkFeatureAvailable(session.getIntegrationId())
             linkService.getSearchVideoLink(showCopyLink)
         } else {
             message.requestedResource

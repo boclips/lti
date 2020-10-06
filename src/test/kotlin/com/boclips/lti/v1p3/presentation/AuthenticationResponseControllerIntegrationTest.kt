@@ -8,7 +8,7 @@ import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
 import com.boclips.lti.v1p3.application.service.JwtService
 import com.boclips.lti.v1p3.domain.model.MessageTypes
 import com.boclips.lti.v1p3.domain.model.SessionKeys
-import com.boclips.lti.v1p3.domain.model.getUserId
+import com.boclips.lti.v1p3.domain.model.getBoclipsUserId
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.containsString
@@ -39,7 +39,7 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
             val resource = "https://lti.resource/we-expose"
             val nonce = "super-random-nonce"
             val clientId = "test-client-id"
-            val userId = "test-user-id"
+            val externalUserId = "test-user-id"
 
             whenever(jwtService.isSignatureValid(jwtToken)).thenReturn(true)
             whenever(jwtService.decode(jwtToken)).thenReturn(
@@ -49,7 +49,7 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
                     nonceClaim = nonce,
                     targetLinkUriClaim = resource,
                     messageTypeClaim = MessageTypes.ResourceLinkRequest,
-                    subjectClaim = userId
+                    subjectClaim = externalUserId
                 )
             )
 
@@ -75,7 +75,8 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
 
                     assertThat(location).isEqualTo(resource)
                     assertThat(result.request.session?.getAttribute(CoreSessionKeys.integrationId)).isEqualTo(issuer)
-                    assertThat(result.request.session?.getUserId()).isEqualTo(userId)
+                    assertThat(result.request.session?.getBoclipsUserId()).isNotNull
+                    assertThat(result.request.session?.getBoclipsUserId()).isNotEqualTo(externalUserId)
                 }
         }
 
@@ -448,7 +449,7 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
 
                     assertThat(location).isEqualTo(resource)
                     assertThat(result.request.session?.getAttribute(CoreSessionKeys.integrationId)).isEqualTo(issuer)
-                    assertThat(result.request.session?.getUserId()).isEqualTo(userId)
+                    assertThat(result.request.session?.getBoclipsUserId()).isNotNull
                 }
         }
     }

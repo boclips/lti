@@ -2,13 +2,7 @@ package com.boclips.lti.v1p3.configuration.application
 
 import com.boclips.lti.core.domain.repository.VideoRepository
 import com.boclips.lti.core.domain.service.ResourceLinkService
-import com.boclips.lti.v1p3.application.command.AssembleLoginRequestUrl
-import com.boclips.lti.v1p3.application.command.GetPlatformForIntegration
-import com.boclips.lti.v1p3.application.command.GetSelectedItems
-import com.boclips.lti.v1p3.application.command.HandleDeepLinkingRequest
-import com.boclips.lti.v1p3.application.command.HandlePlatformRequest
-import com.boclips.lti.v1p3.application.command.HandleResourceLinkRequest
-import com.boclips.lti.v1p3.application.command.PerformSecurityChecks
+import com.boclips.lti.v1p3.application.command.*
 import com.boclips.lti.v1p3.application.converter.RsaKeyPairConverter
 import com.boclips.lti.v1p3.application.service.CsrfService
 import com.boclips.lti.v1p3.application.service.JwtService
@@ -20,6 +14,7 @@ import com.boclips.lti.v1p3.configuration.properties.SigningKeysProperties
 import com.boclips.lti.v1p3.domain.repository.PlatformRepository
 import com.boclips.lti.v1p3.domain.service.HandleDeepLinkingMessage
 import com.boclips.lti.v1p3.domain.service.HandleResourceLinkMessage
+import com.boclips.lti.v1p3.domain.service.SynchroniseUser
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -83,5 +78,14 @@ class ApplicationContext {
     @Bean
     fun keyPairService(signingKeysProperties: SigningKeysProperties) = KeyPairService(
         keyPairs = signingKeysProperties.signingKeys.map(RsaKeyPairConverter::toSigningKeyPair)
+    )
+
+    @Bean
+    fun setUpSession(
+        synchroniseUser: SynchroniseUser,
+        platformRepository: PlatformRepository
+    ) = SetUpSession(
+        synchroniseUser = synchroniseUser,
+        platformRepository = platformRepository
     )
 }

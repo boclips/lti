@@ -18,7 +18,6 @@ object ResourceLinkRequestValidator {
 
     private fun assertContainsAllRequiredClaims(token: DecodedJwtToken) {
         if (token.ltiVersionClaim != "1.3.0") throw LtiMessageClaimValidationException("LTI version should be 1.3.0")
-        if (token.deploymentIdClaim.isNullOrBlank()) throw LtiMessageClaimValidationException("Deployment ID was not provided")
         if (token.targetLinkUriClaim == null || !token.targetLinkUriClaim.isURLString()) throw LtiMessageClaimValidationException(
             "Target Link URI should be a valid URI"
         )

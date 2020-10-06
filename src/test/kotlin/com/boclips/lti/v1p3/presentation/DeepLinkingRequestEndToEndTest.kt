@@ -5,7 +5,7 @@ import com.boclips.lti.core.application.model.SessionKeys
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.testsupport.factories.JwtTokenFactory
 import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
-import com.boclips.lti.v1p3.domain.model.getUserId
+import com.boclips.lti.v1p3.domain.model.getBoclipsUserId
 import com.github.tomakehurst.wiremock.WireMockServer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -86,8 +86,8 @@ class DeepLinkingRequestEndToEndTest : AbstractSpringIntegrationTest() {
                     )
                 ).isEqualTo(issuer)
                 assertThat(
-                    result.request.session?.getUserId()
-                ).isEqualTo(userId)
+                    result.request.session?.getBoclipsUserId()
+                ).isNotNull
             }
     }
 }

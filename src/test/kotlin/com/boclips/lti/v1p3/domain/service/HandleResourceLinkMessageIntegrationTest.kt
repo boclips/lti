@@ -1,6 +1,7 @@
 package com.boclips.lti.v1p3.domain.service
 
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
+import com.boclips.lti.testsupport.factories.LtiTestSessionFactory
 import com.boclips.lti.testsupport.factories.MessageFactory
 import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
 import com.boclips.lti.v1p3.domain.model.getIntegrationId
@@ -24,6 +25,7 @@ class HandleResourceLinkMessageIntegrationTest : AbstractSpringIntegrationTest()
         val issuer = URL("https://platform.com/")
         val resource = URL("https://this-is.requested/alright")
         mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer.toString()))
+        val session = LtiTestSessionFactory.authenticated(integrationId = issuer.toString())
 
         val url = handleResourceLinkMessage(
             message = MessageFactory.sampleResourceLinkMessage(
@@ -51,6 +53,7 @@ class HandleResourceLinkMessageIntegrationTest : AbstractSpringIntegrationTest()
         )
         userClient.add(user)
         userClient.setLoggedInUser(user)
+        val session = LtiTestSessionFactory.authenticated(integrationId = issuer.toString())
 
         val url = handleResourceLinkMessage(
             message = MessageFactory.sampleResourceLinkMessage(
@@ -68,7 +71,6 @@ class HandleResourceLinkMessageIntegrationTest : AbstractSpringIntegrationTest()
     fun `correctly defaults when no explicit value provided`() {
         val issuer = URL("https://platform.com/")
         val resource = URL("https://this-is.requested/search")
-        mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer.toString()))
         val userClient: UsersClientFake = usersClientFactory.getClient(issuer.toString()) as UsersClientFake
         val user = UserResourceFactory.sample(
             id = "1",
@@ -77,7 +79,7 @@ class HandleResourceLinkMessageIntegrationTest : AbstractSpringIntegrationTest()
         )
         userClient.add(user)
         userClient.setLoggedInUser(user)
-
+        val session = LtiTestSessionFactory.authenticated(integrationId = issuer.toString())
         val url = handleResourceLinkMessage(
             message = MessageFactory.sampleResourceLinkMessage(
                 issuer = issuer,
@@ -105,6 +107,8 @@ class HandleResourceLinkMessageIntegrationTest : AbstractSpringIntegrationTest()
         )
         userClient.add(user)
         userClient.setLoggedInUser(user)
+        val session = LtiTestSessionFactory.authenticated(integrationId = issuer.toString())
+
         val url = handleResourceLinkMessage(
             message = MessageFactory.sampleResourceLinkMessage(
                 issuer = issuer,
@@ -116,49 +120,6 @@ class HandleResourceLinkMessageIntegrationTest : AbstractSpringIntegrationTest()
         assertThat(url).hasParameter("embeddable_video_url", "http://localhost/embeddable-videos/%7Bid%7D")
         assertThat(url).hasParameter("show_copy_link", "false")
     }
-
-    @Test
-    fun `sets up a user session`() {
-        val issuer = URL("https://lms.com/ok")
-        val resource = URL("https://this-is.requested/alright")
-        val userId = "user-id-123"
-
-        mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer.toString()))
-
-        handleResourceLinkMessage(
-            message = MessageFactory.sampleResourceLinkMessage(
-                issuer = issuer,
-                requestedResource = resource,
-                subject = userId
-            ),
-            session = session
-        )
-
-        assertThat(session.getIntegrationId()).isEqualTo(issuer.toString())
-        assertThat(session.getAttribute("userId")).isEqualTo("user-id-123")
-    }
-
-    @Test
-    fun `throw an exception if given issuer does not exist on our side`() {
-        val resource = URL("https://this-is.requested/alright")
-
-        assertThrows<PlatformNotFoundException> {
-            handleResourceLinkMessage(
-                message = MessageFactory.sampleResourceLinkMessage(
-                    issuer = URL("https:/this.does/not/exist"),
-                    requestedResource = resource
-                ),
-                session = session
-            )
-        }
-    }
-
-    @BeforeEach
-    fun initialiseHttpSession() {
-        session = MockHttpSession()
-    }
-
-    private lateinit var session: HttpSession
 
     @Autowired
     private lateinit var handleResourceLinkMessage: HandleResourceLinkMessage

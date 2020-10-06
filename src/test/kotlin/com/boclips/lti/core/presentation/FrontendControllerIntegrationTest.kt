@@ -16,7 +16,7 @@ class FrontendControllerIntegrationTest : AbstractSpringIntegrationTest() {
 
         val session = LtiTestSessionFactory.authenticated(
             integrationId = "blah",
-            sessionAttributes = mapOf("userId" to "user-123")
+            sessionAttributes = mapOf("boclipsUserId" to "user-123")
         )
 
         mvc.perform(get("/search").session(session as MockHttpSession))
@@ -56,7 +56,7 @@ class FrontendControllerIntegrationTest : AbstractSpringIntegrationTest() {
 
         val session = LtiTestSessionFactory.authenticated(
             integrationId = "blah",
-            sessionAttributes = mapOf("userId" to "user-123")
+            sessionAttributes = mapOf("boclipsUserId" to "user-123")
         )
 
         mvc.perform(get("/search-and-embed").session(session as MockHttpSession))
