@@ -1,8 +1,10 @@
 package com.boclips.lti.testsupport.configuration
 
 import com.boclips.lti.core.infrastructure.service.CollectionsClientFactory
+import com.boclips.lti.core.infrastructure.service.IntegrationsClientFactory
 import com.boclips.lti.core.infrastructure.service.UsersClientFactory
 import com.boclips.lti.core.infrastructure.service.VideosClientFactory
+import com.boclips.users.api.httpclient.test.fakes.IntegrationsClientFake
 import com.boclips.users.api.httpclient.test.fakes.UsersClientFake
 import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
 import com.boclips.videos.api.httpclient.test.fakes.VideosClientFake
@@ -39,6 +41,7 @@ class FakeClientsConfig {
     @Bean
     fun collectionsClientFactory() = FakeCollectionsClientFactory
 
+
     object FakeUsersClientFactory : UsersClientFactory {
         private val clientsMap: MutableMap<String, UsersClientFake> = HashMap()
 
@@ -51,4 +54,18 @@ class FakeClientsConfig {
 
     @Bean
     fun usersClientFactory() = FakeUsersClientFactory
+
+
+    object FakeIntegrationsClientFactory : IntegrationsClientFactory {
+        private val clientsMap: MutableMap<String, IntegrationsClientFake> = HashMap()
+
+        override fun getClient(integrationId: String) = clientsMap.getOrPut(integrationId, { IntegrationsClientFake() })
+
+        fun clear() {
+            clientsMap.clear()
+        }
+    }
+
+    @Bean
+    fun integrationsClientFactory() = FakeIntegrationsClientFactory
 }

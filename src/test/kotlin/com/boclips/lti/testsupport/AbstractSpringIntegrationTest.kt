@@ -8,6 +8,7 @@ import com.boclips.lti.core.domain.repository.VideoRepository
 import com.boclips.lti.core.domain.service.ResourceLinkService
 import com.boclips.lti.core.infrastructure.repository.MongoIntegrationDocumentRepository
 import com.boclips.lti.core.infrastructure.service.CollectionsClientFactory
+import com.boclips.lti.core.infrastructure.service.IntegrationsClientFactory
 import com.boclips.lti.core.infrastructure.service.UsersClientFactory
 import com.boclips.lti.core.infrastructure.service.VideosClientFactory
 import com.boclips.lti.core.presentation.service.ToVideoViewModel
@@ -75,6 +76,9 @@ abstract class AbstractSpringIntegrationTest {
 
     @Autowired
     protected lateinit var usersClientFactory: UsersClientFactory
+
+    @Autowired
+    protected lateinit var integrationsClientFactory: IntegrationsClientFactory
 
     @Autowired
     protected lateinit var collectionsClientFactory: CollectionsClientFactory
