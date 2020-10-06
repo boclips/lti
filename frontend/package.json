@@ -14,7 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@ant-design/icons": "4.1.0",
-    "@bit/boclips.dev-boclips-ui.components.filter-badge": "^1.0.1",
+    "@boclips-ui/filter-badge": "1.0.7",
     "@boclips-ui/no-results": "1.0.10",
     "@boclips-ui/search-bar": "1.0.2",
     "@boclips-ui/select": "1.0.1",
