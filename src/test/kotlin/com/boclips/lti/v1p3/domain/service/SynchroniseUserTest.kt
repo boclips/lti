@@ -20,7 +20,7 @@ internal class SynchroniseUserTest : AbstractSpringIntegrationTest() {
 
         val user = synchroniseUser(
             integrationId = "a-splendid-lti-integration",
-            username = "Test-user-name",
+            externalUserId = "Test-user-name",
             deploymentId = "deployment-id"
         )
 
@@ -36,12 +36,12 @@ internal class SynchroniseUserTest : AbstractSpringIntegrationTest() {
 
         val user = synchroniseUser(
             integrationId = "a-splendid-lti-integration",
-            username = "Test-user-name",
+            externalUserId = "Test-user-name",
             deploymentId = "deployment-id"
         )
         val user1 = synchroniseUser(
             integrationId = "a-splendid-lti-integration",
-            username = "Test-user-name",
+            externalUserId = "Test-user-name",
             deploymentId = "deployment-id"
         )
 
@@ -59,12 +59,12 @@ internal class SynchroniseUserTest : AbstractSpringIntegrationTest() {
 
         val user = synchroniseUser(
             integrationId = "a-splendid-lti-integration",
-            username = "Test-user-name",
+            externalUserId = "Test-user-name",
             deploymentId = "deployment-id"
         )
         val user1 = synchroniseUser(
             integrationId = "a-splendid-lti-integration",
-            username = "Test-user-name",
+            externalUserId = "Test-user-name",
             deploymentId = "deployment-id-1"
         )
 
