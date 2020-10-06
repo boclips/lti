@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   Col, Layout, List, Row
 } from 'antd';
-import { Video } from '@bit/boclips.dev-boclips-ui.types.video';
+import { Video } from '@boclips-ui/video';
 import c from 'classnames';
 import SearchBar from '@boclips-ui/search-bar';
 import NoResults from '@boclips-ui/no-results';

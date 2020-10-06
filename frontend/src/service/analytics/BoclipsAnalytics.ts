@@ -1,4 +1,4 @@
-import { Link } from '@bit/boclips.dev-boclips-ui.types.link/index';
+import { Link } from '@boclips-ui/link';
 import AxiosService from '../axios/AxiosService';
 
 class BoclipsAnalytics {

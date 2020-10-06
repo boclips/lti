@@ -1,7 +1,7 @@
 import { BoclipsClient } from 'boclips-api-client';
 import { VideoSearchRequest } from 'boclips-api-client/dist/sub-clients/videos/model/VideoSearchRequest';
 import Pageable from 'boclips-api-client/dist/sub-clients/common/model/Pageable';
-import { Video } from '@bit/boclips.dev-boclips-ui.types.video/index';
+import { Video } from '@boclips-ui/video';
 import { Video as ClientVideo } from 'boclips-api-client/dist/sub-clients/videos/model/Video';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subject';

@@ -1,8 +1,8 @@
 import { hot } from 'react-hot-loader/root';
 
 import React, { ReactElement } from 'react';
-import { Video } from '@bit/boclips.dev-boclips-ui.types.video';
-import { VideoCard } from '@bit/boclips.dev-boclips-ui.components.video-card';
+import { Video } from '@boclips-ui/video';
+import { VideoCard } from '@boclips-ui/video-card';
 import { Player } from 'boclips-player-react';
 import SearchView from '../../views/searchView';
 import '../../index.less';

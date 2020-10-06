@@ -1,6 +1,6 @@
 import React from 'react';
 import copy from 'copy-to-clipboard';
-import { Video } from '@bit/boclips.dev-boclips-ui.types.video';
+import { Video } from '@boclips-ui/video';
 import { tryExtractSingleUrlParameter } from '../../service/extractUrlParameter';
 import s from './styles.module.less';
 import TickIcon from '../../resources/images/tick.svg';
