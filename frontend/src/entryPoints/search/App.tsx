@@ -10,8 +10,6 @@ import playerOptions from '../../Player/playerOptions';
 import CopyVideoLinkButton from '../../components/copyVideoLinkButton/CopyVideoLinkButton';
 import AxiosWrapper from '../../service/axios/AxiosWrapper';
 
-// document.documentElement.style.setProperty('--titleHeaderTextColor', '#fff')
-
 const renderVideoCard = (video: Video, loading: boolean) => (
   <VideoCard
     key={video.id}
