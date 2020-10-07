@@ -20,13 +20,14 @@ class SetUpSession(
 
 
         if(session.getBoclipsUserId().isNullOrBlank()) {
-
-            val internalUserId = synchroniseUser(
+            var internalUserId: String? = null
+            try {
+            internalUserId = synchroniseUser(
                 integrationId = token.issuerClaim!!,
                 externalUserId = token.subjectClaim!!,
                 deploymentId = token.deploymentIdClaim!!
-            )
-            session.setBoclipsUserId(internalUserId)
+            )} catch (e: Exception) {}
+            session.setBoclipsUserId(internalUserId ?: token.subjectClaim!!)
         }
     }
 }
