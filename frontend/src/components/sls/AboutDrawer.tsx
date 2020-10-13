@@ -19,7 +19,9 @@ const AboutDrawer = ({ closeIcon }: Props) => {
   return (
     <>
       <Drawer
-        bodyStyle={{ background: '#F8FAFF', padding: '35px 55px' }}
+        bodyStyle={{
+          background: '#F8FAFF', padding: '35px 55px', display: 'flex', justifyContent: 'center' 
+        }}
         headerStyle={{ boxShadow: '0 4px 13px 0 rgba(204,219,237,0.5)' }}
         title={backButton}
         visible={aboutVisible}
