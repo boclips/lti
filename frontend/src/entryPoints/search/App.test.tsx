@@ -1,48 +1,52 @@
 import React from 'react';
-import {fireEvent, render} from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
+import { FakeBoclipsClient } from 'boclips-api-client/dist/test-support';
+import { VideoFactory } from 'boclips-api-client/dist/test-support/VideosFactory';
+import { PlayerFactory } from 'boclips-player';
+import { mocked } from 'ts-jest/utils';
 import App from './App';
-import ApiClient from "../../service/client/ApiClient";
-import {FakeBoclipsClient} from "boclips-api-client/dist/test-support";
-import {VideoFactory} from "boclips-api-client/dist/test-support/VideosFactory";
-import AxiosService from "../../service/axios/AxiosService";
+import ApiClient from '../../service/client/ApiClient';
+import AxiosService from '../../service/axios/AxiosService';
 
-test('renders learn react link', () => {
-  const { getByPlaceholderText } = render(<App />);
-  const pElement = getByPlaceholderText(/search for videos/i);
-  expect(pElement).toBeInTheDocument();
-});
+jest.mock('boclips-player');
 
-let fakeApiClient: Promise<FakeBoclipsClient>;
+describe('Search view', () => {
+  let fakeApiClient: Promise<FakeBoclipsClient>;
 
-beforeAll(() => {
+  beforeAll(() => {
+    AxiosService.configureAxios();
 
-  AxiosService.configureAxios();
+    fakeApiClient = new ApiClient(
+      'https://api.example.com',
+    ).getClient() as Promise<FakeBoclipsClient>;
+  });
 
-  fakeApiClient = new ApiClient(
-    'https://api.example.com',
-  ).getClient() as Promise<FakeBoclipsClient>;
+  it('renders search bar', () => {
+    const appComponent = render(<App />);
+    expect(appComponent.getByPlaceholderText(/search for videos/i)).toBeInTheDocument();
+  });
 
-});
+  it("search query is added to the player's AnalyticsOptions so it can be sent with events", async () => {
+    const appComponent = render(<App />);
+    const videosClient = (await fakeApiClient).videos;
+    videosClient.insertVideo(VideoFactory.sample({ id: '1', title: 'cats 1' }));
 
-test("search query is reported to the backend with playback event", async () => {
+    const searchTextInput = appComponent.getByPlaceholderText('Search for videos...');
+    fireEvent.change(searchTextInput, { target: { value: 'cats' } });
+    expect(await appComponent.findByDisplayValue('cats')).toBeInTheDocument();
 
-  const appComponent = render(<App />);
-  const searchTextInput = appComponent.getByPlaceholderText("Search for videos...");
+    const searchButton = appComponent.getByText('Search').closest('button');
+    fireEvent.click(searchButton!!);
+    expect(await appComponent.findByText('FILTER BY:')).toBeInTheDocument();
 
-  fireEvent.change(searchTextInput, { target: { value: 'cats' } });
-  expect(await appComponent.findByDisplayValue('cats')).toBeInTheDocument();
+    expect(await appComponent.findByText('1 result found:')).toBeInTheDocument();
 
-  (await fakeApiClient).videos.insertVideo(
-    VideoFactory.sample({ id: '123', title: 'The Cat number 1', description: 'for cats query' }),
-  );
-  (await fakeApiClient).videos.insertVideo(
-    VideoFactory.sample({ id: '124', title: 'The Cat number 2', description: 'for cats query' }),
-  );
-
-  const searchButton = appComponent.getByText("Search").closest("button");
-  fireEvent.click(searchButton!!);
-
-  expect(await appComponent.findByText("results found:")).toBeInTheDocument();
+    const optionsPassed = mocked(PlayerFactory.get).mock.calls[0][1];
+    expect(optionsPassed!!.analytics!!.metadata).toEqual(
+      expect.objectContaining({ query: 'q=cats' }),
+    );
+    // TODO let's also test that filters are added to the query
+  });
 });
 
 /*

@@ -1,8 +1,8 @@
 import { PlayerOptions } from 'boclips-player';
 import Axios from 'axios';
+import { defaultAnalyticsOptions } from 'boclips-player/lib/Events/AnalyticsOptions';
 import { AppConstants } from '../types/AppConstants';
 import AxiosService from '../service/axios/AxiosService';
-import {defaultAnalyticsOptions} from "boclips-player/lib/Events/AnalyticsOptions";
 
 const resolvePlayerOptions = (query: string): Partial<PlayerOptions> => ({
   interface: {

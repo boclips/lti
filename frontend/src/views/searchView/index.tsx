@@ -104,6 +104,8 @@ const LtiView = ({
       .then((it) => setCurrentUser(it))
       .catch(() => setCurrentUser(null));
   };
+  
+  const getCurrentSearchQueryString = () => `q=${searchQuery}`;
 
   useEffect(() => {
     getFilters();
@@ -188,7 +190,9 @@ const LtiView = ({
             wrapperClassName: s.spinner,
             spinning: loading,
           }}
-          renderItem={(video: Video) => renderVideoCard(video, loading, "")}
+          renderItem={
+            (video: Video) => renderVideoCard(video, loading, getCurrentSearchQueryString())
+          }
         />
       </Col>
     ), [videos, loading]);
