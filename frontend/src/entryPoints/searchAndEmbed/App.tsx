@@ -5,10 +5,10 @@ import { VideoCard } from '@boclips-ui/video-card';
 import { Player } from 'boclips-player-react';
 import SearchView from '../../views/searchView';
 import EmbedVideoButton from '../../components/embedVideoButton/EmbedVideoButton';
-import playerOptions from '../../Player/playerOptions';
+import resolvePlayerOptions from '../../Player/resolvePlayerOptions';
 import AxiosWrapper from '../../service/axios/AxiosWrapper';
 
-const renderVideoCard = (video: Video, loading: boolean) => (
+const renderVideoCard = (video: Video, loading: boolean, query: string) => (
   <VideoCard
     hideBadges
     key={video.id}
@@ -23,7 +23,7 @@ const renderVideoCard = (video: Video, loading: boolean) => (
     authenticated
     videoPlayer={
       <Player
-        options={playerOptions}
+        options={resolvePlayerOptions(query)}
         videoUri={video.links?.self?.getOriginalLink()}
       />
     }
