@@ -6,11 +6,11 @@ import { VideoCard } from '@boclips-ui/video-card';
 import { Player } from 'boclips-player-react';
 import SearchView from '../../views/searchView';
 import '../../index.less';
-import playerOptions from '../../Player/playerOptions';
+import resolvePlayerOptions from '../../Player/resolvePlayerOptions';
 import CopyVideoLinkButton from '../../components/copyVideoLinkButton/CopyVideoLinkButton';
 import AxiosWrapper from '../../service/axios/AxiosWrapper';
 
-const renderVideoCard = (video: Video, loading: boolean) => (
+const renderVideoCard = (video: Video, loading: boolean, query: string) => (
   <VideoCard
     key={video.id}
     video={video}
@@ -22,7 +22,7 @@ const renderVideoCard = (video: Video, loading: boolean) => (
     videoActionButtons={[<CopyVideoLinkButton video={video} />]}
     videoPlayer={
       <Player
-        options={playerOptions}
+        options={resolvePlayerOptions(query)}
         videoUri={video.links?.self?.getOriginalLink()}
       />
     }

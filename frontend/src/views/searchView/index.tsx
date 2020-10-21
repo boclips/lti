@@ -20,7 +20,7 @@ import FiltersButton from '../../components/filtersButton';
 import ClosableHeader from '../../components/closableHeader';
 
 interface Props {
-  renderVideoCard: (video: Video, isLoading: boolean) => React.ReactNode;
+  renderVideoCard: (video: Video, isLoading: boolean, query: string) => React.ReactNode;
   collapsibleFilters?: boolean;
   closableHeader?: boolean;
   aboutSliderVisible?: boolean;
@@ -188,7 +188,9 @@ const LtiView = ({
             wrapperClassName: s.spinner,
             spinning: loading,
           }}
-          renderItem={(video: Video) => renderVideoCard(video, loading)}
+          renderItem={
+            (video: Video) => renderVideoCard(video, loading, searchQuery!!)
+          }
         />
       </Col>
     ), [videos, loading]);
