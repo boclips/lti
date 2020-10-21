@@ -43,7 +43,7 @@ describe('Search view', () => {
 
     const optionsPassed = mocked(PlayerFactory.get).mock.calls[0][1];
     expect(optionsPassed!!.analytics!!.metadata).toEqual(
-      expect.objectContaining({ query: 'q=cats' }),
+      expect.objectContaining({ query: 'cats' }),
     );
     // TODO let's also test that filters are added to the query
   });
