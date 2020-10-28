@@ -8,6 +8,7 @@ jest.mock('../../types/AppConstants', () => ({
   get AppConstants(): ConfigurableConstants {
     return AppConstantsFactory.sample({
       LTI_BASE_URL: 'https://lti/token',
+      USER_ID: 'boclips-user-id-test'
     });
   },
 }));
@@ -72,6 +73,27 @@ describe('AxiosService', () => {
       }
 
       expect(axiosMock.history.get[0].headers.Authorization).toBeUndefined();
+    });
+  });
+
+  describe('external user', () => {
+    it('sets the boclips-user-id header with the external user id', async () => {
+      const tokenFactory = jest.fn(() => Promise.resolve('i-am-a-token'));
+      AxiosService.configureAxios(() => {}, tokenFactory);
+      const axiosInstance = AxiosService.getApiAuthenticatedInstance();
+
+      const axiosMock = new MockAdapter(axiosInstance);
+      axiosMock
+        .onGet('https://api.example.com/v1/resource')
+        .reply(200, JSON.stringify({}));
+
+      const response = await axiosInstance.get(
+        'https://api.example.com/v1/resource',
+      );
+
+      const requestHeaders = response.config.headers;
+      expect(requestHeaders.Authorization).toEqual('Bearer i-am-a-token');
+      expect(requestHeaders['Boclips-User-Id']).toEqual('boclips-user-id-test');
     });
   });
 

@@ -17,11 +17,17 @@ class AxiosService {
     const nonModifiedAxiosInstance = axios.create();
 
     apiAccessTokenSupportingInstance.interceptors.request.use(
-      (config: AxiosRequestConfig) =>
-        tokenFactory(nonModifiedAxiosInstance, setAuthError).then((token) => {
-          config.headers.Authorization = `Bearer ${token}`;
-          return config;
-        }),
+      (config: AxiosRequestConfig) => {
+        if (AppConstants.USER_ID) {
+          config.headers['Boclips-User-Id'] = AppConstants.USER_ID;
+        }
+
+        return tokenFactory(nonModifiedAxiosInstance, setAuthError)
+          .then((token) => {
+            config.headers.Authorization = `Bearer ${token}`;
+            return config;
+          });
+      }
     );
 
     hasBeenConfigured = true;
