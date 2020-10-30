@@ -3,7 +3,7 @@ import org.springframework.boot.gradle.tasks.run.BootRun
 buildscript {
   ext {
     kotlinVersion = '1.4.10'
-    springBootVersion = '2.3.4.RELEASE'
+    springBootVersion = '2.3.5.RELEASE'
     junitVersion = "5.3.1"
 
   }
