@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Button from '../button/Button';
 import ContentSelectionService from '../../service/contentSelection/ContentSelectionService';
 import DeepLinkingParameterService from '../../service/deepLinking/DeepLinkingParameterService';
+import s from './style.module.less';
 
 const contentSelectionService = new ContentSelectionService();
 
@@ -25,6 +26,7 @@ const EmbedVideoButton = ({ videoId, onSubmit }: Props) => {
       <Button
         role="button"
         type="primary"
+        className={s.embedVideoButton}
         onClick={() =>
           contentSelectionService
             .getContentSelectionJwt(

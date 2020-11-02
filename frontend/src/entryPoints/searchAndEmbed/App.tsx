@@ -10,7 +10,6 @@ import AxiosWrapper from '../../service/axios/AxiosWrapper';
 
 const renderVideoCard = (video: Video, loading: boolean, query: string) => (
   <VideoCard
-    hideBadges
     key={video.id}
     video={video}
     loading={loading}
