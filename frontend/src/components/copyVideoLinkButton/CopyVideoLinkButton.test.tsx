@@ -24,34 +24,6 @@ describe('CopyVideoLinkButton', () => {
     return mockFn;
   };
 
-  it('shows button when show_copy_link and embeddable_video_url are present', () => {
-    setupInitialLocation(
-      'http://dummy.com?show_copy_link=true&embeddable_video_url=http://video.com/{id}',
-    );
-
-    render(<CopyVideoLinkButton video={sampleVideo('videoId')} />);
-    const button = screen.getByRole('button', { name: 'COPY LINK' });
-    expect(button).toBeInTheDocument();
-  });
-
-  it('does not show button when show_copy_link is set to false', () => {
-    setupInitialLocation(
-      'http://dummy.com?show_copy_link=false&embeddable_video_url=http://video.com/{id}',
-    );
-
-    render(<CopyVideoLinkButton video={sampleVideo('videoId')} />);
-    const button = screen.queryByRole('button', { name: 'COPY LINK' });
-    expect(button).not.toBeInTheDocument();
-  });
-
-  it('does not show button when embeddable_video_url is missing', () => {
-    setupInitialLocation('http://dummy.com?show_copy_link=true');
-
-    render(<CopyVideoLinkButton video={sampleVideo('videoId')} />);
-    const button = screen.queryByRole('button', { name: 'COPY LINK' });
-    expect(button).not.toBeInTheDocument();
-  });
-
   it('copies the link when clicking the button', () => {
     setupInitialLocation(
       'http://dummy.com?show_copy_link=true&embeddable_video_url=http://video.com/{id}',

@@ -15,9 +15,6 @@ interface Props {
 const CopyVideoLinkButton = ({ video }: Props) => {
   const [isCopying, setIsCopying] = React.useState(false);
 
-  const showCopyLink =
-    tryExtractSingleUrlParameter('show_copy_link') === 'true';
-
   const embeddableVideoUrl = tryExtractSingleUrlParameter(
     'embeddable_video_url',
   );
@@ -31,10 +28,6 @@ const CopyVideoLinkButton = ({ video }: Props) => {
     setIsCopying(true);
     setTimeout(() => setIsCopying(false), 1500);
   };
-
-  if (!showCopyLink || !embeddableVideoUrl) {
-    return null;
-  }
 
   return isCopying ? (
     <Button className={`${s.copyVideoLink} ${s.success}`}>
