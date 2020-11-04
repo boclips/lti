@@ -10,10 +10,10 @@ interface TitleHeaderProps {
 
 const TitleHeader = ({ title, showSlsTerms }: TitleHeaderProps) => (
   <Row data-qa="title-header" justify="space-between" className={s.title}>
-    <Col xs={showSlsTerms ? 20 : 24}>
+    <Col>
       {title}
     </Col>
-    {showSlsTerms && (<Col xs={4}><AboutModal/></Col>)}
+    {showSlsTerms && (<Col><AboutModal/></Col>)}
   </Row>
 );
 
