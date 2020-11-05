@@ -13,6 +13,11 @@
   min-height:803px;
 }
 
+.main{
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
 .filtersAlign{
   display: flex;
   justify-content: center;
@@ -20,7 +25,7 @@
 
 .layoutHeader,
 .layoutHeaderBeforeSearch {
-  padding: 0 0 20px 0;
+  padding: 0 20px 20px 20px;
   line-height: 24px;
   height: auto;
   display: flex;
@@ -40,7 +45,6 @@
 
   .searchBarContainer {
     display: flex;
-    max-width: 975px;
     width: 100%;
   }
 
@@ -60,7 +64,6 @@
   justify-content: center;
 
   span {
-    width: 977px;
     font-size: 18px;
     font-weight: 500;
     letter-spacing: 0;
@@ -138,4 +141,15 @@
 
 .paginationEmpty {
   display: none;
+}
+
+/* those two value are hardcoded in boclips-ui/search-bar */
+[class*="autoCompleteWrapper"] {
+  max-width: none !important;
+  width: 100%
+}
+
+/* this value is hardcoded in boclips-ui/video-card */
+[class*="videoCard"] {
+  max-width: none !important;
 }

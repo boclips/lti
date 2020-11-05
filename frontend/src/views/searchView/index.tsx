@@ -154,7 +154,7 @@ const LtiView = ({
     !loading && videos.length === 0 && !!searchQuery ? (
       <NoResults searchQuery={searchQuery} filtersApplied={activeFilterCount > 0}/>
     ) : (
-      <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }}>
+      <Col sm={{ span: 24 }} md={{ span: 24 }}>
         {videos.length > 0 && (
           <section className={s.numberOfResults}>
             <span>
@@ -206,7 +206,7 @@ const LtiView = ({
           </Col>
         </Row>
         <Row>
-          <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }}
+          <Col sm={{ span: 24 }} md={{ span: 24 }}
             className={c({
               [s.searchBar]: true,
               [s.filtersButton]: showFiltersButton
@@ -229,7 +229,7 @@ const LtiView = ({
           </Col>
         </Row>
         <Row >
-          <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }} className={s.filtersAlign}>
+          <Col sm={{ span: 24 }} md={{ span: 24 }} className={s.filtersAlign}>
             {(videos.length > 0 || activeFilterCount > 0) && (
               <FilterPanel
                 facets={facets}
