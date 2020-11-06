@@ -45,14 +45,12 @@ describe('Search and embed view', () => {
     const searchButton = appComponent.getByText('Search').closest('button');
     fireEvent.click(searchButton!!);
 
-    expect(await appComponent.findByText('Subject:')).toBeVisible();
     expect(await appComponent.findByText('Design')).toBeVisible();
 
     expect(await appComponent.queryByText('Best for:')).not.toBeInTheDocument();
     expect(await appComponent.queryByText('Hook')).not.toBeInTheDocument();
 
-    expect(await appComponent.findByText('Ages:')).toBeVisible();
-    expect(await appComponent.findByText('3-5')).toBeVisible();
+    expect(await appComponent.findByText('Ages 3-5')).toBeVisible();
 
     expect(await appComponent.queryByTestId('attachment-badge')).not.toBeInTheDocument();
   });
