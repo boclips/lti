@@ -23,7 +23,7 @@
     "@boclips-ui/select-option": "1.0.1",
     "@boclips-ui/styles": "2.0.5",
     "@boclips-ui/video": "1.0.6",
-    "@boclips-ui/video-card": "^1.0.20",
+    "@boclips-ui/video-card": "^1.0.22",
     "@testing-library/jest-dom": "5.7.0",
     "@testing-library/react": "10.4.8",
     "@types/classnames": "^2.2.10",
