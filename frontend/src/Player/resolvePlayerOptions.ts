@@ -17,6 +17,7 @@ const resolvePlayerOptions = (query: string): Partial<PlayerOptions> => ({
       'fullscreen',
       'settings',
     ],
+    ratio: '16:9'
   },
   api: {
     tokenFactory: async () => AxiosService.ltiTokenFactory(Axios, () => {}),
