@@ -20,6 +20,8 @@ const renderVideoCard = (video: Video, loading: boolean, query: string) => (
       />,
     ]}
     authenticated
+    hideBestFor
+    hideAttachments
     videoPlayer={
       <Player
         options={resolvePlayerOptions(query)}
