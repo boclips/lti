@@ -44,6 +44,11 @@
     width: 100%;
   }
 
+  .fullSearchBarContainer {
+    display: flex;
+    width: 100%;
+  }
+
   &.filtersButton {
     display: flex;
     .searchBarContainer {
@@ -54,10 +59,22 @@
   }
 }
 
+.filterPanelContainer {
+  width: 100%;
+  max-width: 975px;
+}
+
+.fullFilterPanelContainer {
+  width: 100%;
+}
+
 .numberOfResults {
   font-family: var(--fontFamily);
   display: flex;
-  justify-content: center;
+
+  &.center {
+    justify-content: center;
+  }
 
   span {
     width: 977px;
@@ -138,4 +155,19 @@
 
 .paginationEmpty {
   display: none;
+}
+
+.fullWidth {
+  padding: 0px 20px 20px 20px;
+}
+
+.listWrapper {
+  &.fullItemWidth {
+    width: 100%
+  }
+
+  &.normalItemWidth {
+    max-width: 977px;
+    margin: auto;
+  }
 }

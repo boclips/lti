@@ -36,6 +36,7 @@ const App = () => (
     collapsibleFilters
     renderVideoCard={renderVideoCard}
     closableHeader
+    useFullWidth
   />
 );
 

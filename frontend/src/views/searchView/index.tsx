@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import c from 'classnames';
 import {
   Col, Layout, List, Row
 } from 'antd';
 import { Video } from '@boclips-ui/video';
-import c from 'classnames';
+
 import SearchBar from '@boclips-ui/search-bar';
 import NoResults from '@boclips-ui/no-results';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
@@ -24,10 +25,11 @@ interface Props {
   collapsibleFilters?: boolean;
   closableHeader?: boolean;
   aboutSliderVisible?: boolean;
+  useFullWidth?: boolean;
 }
 
 const LtiView = ({
-  renderVideoCard, collapsibleFilters, closableHeader
+  renderVideoCard, collapsibleFilters, closableHeader, useFullWidth
 }: Props) => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -154,9 +156,9 @@ const LtiView = ({
     !loading && videos.length === 0 && !!searchQuery ? (
       <NoResults searchQuery={searchQuery} filtersApplied={activeFilterCount > 0}/>
     ) : (
-      <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }}>
+      <Col sm={{ span: 24 }} md={useFullWidth ? { span: 24 } : { span: 16, offset: 4 }}>
         {videos.length > 0 && (
-          <section className={s.numberOfResults}>
+          <section className={c(s.numberOfResults, { [s.center]: !useFullWidth })}>
             <span>
               {`${
                 totalVideoElements > 500 ? '500+' : totalVideoElements
@@ -167,7 +169,10 @@ const LtiView = ({
         <List
           itemLayout="vertical"
           size="large"
-          className={s.listWrapper}
+          className={c(s.listWrapper, {
+            [s.fullItemWidth]: useFullWidth,
+            [s.normalItemWidth]: !useFullWidth,
+          })}
           locale={{ emptyText: <EmptyList theme="lti" /> }}
           pagination={{
             total: totalVideoElements,
@@ -197,7 +202,11 @@ const LtiView = ({
 
   return (
     <>
-      <Layout.Header className={searchQuery ? s.layoutHeader : s.layoutHeaderBeforeSearch}>
+      <Layout.Header className={c({
+        [s.layoutHeader]: searchQuery,
+        [s.layoutHeaderBeforeSearch]: !searchQuery,
+        [s.fullWidth]: useFullWidth
+      })}>
         <Row>
           <Col xs={24}>
             {closableHeader ? 
@@ -206,13 +215,13 @@ const LtiView = ({
           </Col>
         </Row>
         <Row>
-          <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }}
+          <Col sm={{ span: 24 }} md={useFullWidth ? { span: 24 } : { span: 16, offset: 4 }}
             className={c({
               [s.searchBar]: true,
               [s.filtersButton]: showFiltersButton
             })}
           >
-            <div className={s.searchBarContainer}>
+            <div className={useFullWidth ? s.fullSearchBarContainer : s.searchBarContainer}>
               <SearchBar
                 onSearch={onSearch}
                 placeholder="Search for videos..."
@@ -229,20 +238,28 @@ const LtiView = ({
           </Col>
         </Row>
         <Row >
-          <Col sm={{ span: 24 }} md={{ span: 16, offset: 4 }} className={s.filtersAlign}>
+          <Col sm={{ span: 24 }} md={useFullWidth ? { span: 24 } : { span: 16, offset: 4 }} 
+            className={s.filtersAlign}>
             {(videos.length > 0 || activeFilterCount > 0) && (
-              <FilterPanel
-                facets={facets}
-                onApply={setSingleFilter}
-                subjects={apiSubjects}
-                hidePanel={!filtersVisible}
-              />
+              <div className={useFullWidth ? s.fullFilterPanelContainer : s.filterPanelContainer}>
+                <FilterPanel
+                  facets={facets}
+                  onApply={setSingleFilter}
+                  subjects={apiSubjects}
+                  hidePanel={!filtersVisible}
+                />
+              </div>
             )}
           </Col>
         </Row>
       </Layout.Header>
-      <Layout.Content className={searchQuery ? s.main : s.mainBeforeSearch }>
-        <Row >
+      <Layout.Content className={c({
+        [s.main]: searchQuery,
+        [s.mainBeforeSearch]: !searchQuery,
+        [s.fullWidth]: useFullWidth
+      })
+      }>
+        <Row>
           {renderVideoList()}
         </Row>
       </Layout.Content>
