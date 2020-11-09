@@ -41,13 +41,14 @@ const ClosableHeader = ({ title, handleSubmit, showSlsTerms }: TitleHeaderProps)
   </span>);
 
   return (
-    <div data-qa="closable-header" className={s.header}>
-      <div>
-        <span className={s.text}>{title}</span>
-        {showSlsTerms && <AboutDrawer closeIcon={closeIcon}/>}
+    <div data-qa="closable-header">
+      <div className={s.header}>
+        <div>
+          <span className={s.text}>{title}</span>
+          {showSlsTerms && <AboutDrawer closeIcon={closeIcon}/>}
+        </div>
+        {closeIcon}
       </div>
-
-      {closeIcon}
       {jwt && (
         <form
           ref={formRef}
