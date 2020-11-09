@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { SelectOption } from '@boclips-ui/select-option';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subject';
-import SelectFilter from '@boclips-ui/select';
+import SelectFilter, { DropdownAligment } from '@boclips-ui/select';
 import c from 'classnames';
 import { Button } from 'antd';
 import s from './style.module.less';
@@ -148,6 +148,7 @@ const FilterPanel = ({
             allowSearch
             touched={setFilterTouched}
             showFacets
+            dropdownAlignment={DropdownAligment.RIGHT}
           />
         </div>
         {filterTouched && (
