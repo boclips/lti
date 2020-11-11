@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Button } from 'antd';
 import s from './style.module.less';
 import DeepLinkingParameterService from '../../service/deepLinking/DeepLinkingParameterService';
 import ContentSelectionService from '../../service/contentSelection/ContentSelectionService';
@@ -13,7 +14,11 @@ interface TitleHeaderProps {
   showSlsTerms?: boolean;
 }
 
-const ClosableHeader = ({ title, handleSubmit, showSlsTerms }: TitleHeaderProps) => {
+const ClosableHeader = ({
+  title,
+  handleSubmit,
+  showSlsTerms,
+}: TitleHeaderProps) => {
   const [jwt, setJwt] = useState<string | undefined>(undefined);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -23,29 +28,31 @@ const ClosableHeader = ({ title, handleSubmit, showSlsTerms }: TitleHeaderProps)
     }
   }, [jwt]);
 
-  const onClose = () => contentSelectionService
-    .getContentSelectionJwt(
-      [],
-      DeepLinkingParameterService.getDeploymentId(),
-      DeepLinkingParameterService.getData(),
-    )
-    .then((jwtResponse) => setJwt(jwtResponse));
-  
-  const closeIcon = (<span
-    data-qa="close-icon"
-    className={s.closeIcon}
-    role="presentation"
-    onClick={onClose}
-  >
-    <CloseIcon />
-  </span>);
+  const onClose = () =>
+    contentSelectionService
+      .getContentSelectionJwt(
+        [],
+        DeepLinkingParameterService.getDeploymentId(),
+        DeepLinkingParameterService.getData(),
+      )
+      .then((jwtResponse) => setJwt(jwtResponse));
+
+  const closeIcon = (
+    <Button
+      type="text"
+      icon={<CloseIcon />}
+      data-qa="close-icon"
+      className={s.closeIcon}
+      onClick={onClose}
+    />
+  );
 
   return (
     <div data-qa="closable-header">
       <div className={s.header}>
         <div>
           <span className={s.text}>{title}</span>
-          {showSlsTerms && <AboutDrawer closeIcon={closeIcon}/>}
+          {showSlsTerms && <AboutDrawer closeIcon={closeIcon} />}
         </div>
         {closeIcon}
       </div>
