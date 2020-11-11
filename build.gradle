@@ -211,4 +211,4 @@ task bootRunLocal(type: BootRun) {
   systemProperty 'boclips.dev-support.integrationId', "sandbox"
 }
 
-// bootRunLocal.dependsOn copyFrontendOutput
+bootRunLocal.dependsOn copyFrontendOutput
