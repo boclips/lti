@@ -22,15 +22,7 @@ Use the provided script to setup [ktLint](https://ktlint.github.io) and download
 
 ```
 $ ./setup
-```   
-
-The app relies on MongoDB as a data store. For local development, you can start the one packaged via Docker:
-
 ```
-$ docker-compose up
-```  
-
-This will start a mongo instance and expose it on default port 27017.
 
 Running the app locally with the `local` Spring profile activated:
 
@@ -40,7 +32,7 @@ $ ./gradlew bootRunLocal
 
 #### Selecting a dev server
 
-You can switch between the LTI views. 
+You can switch between the LTI views.
 
 Go to `webpack-config/webpack.dev.js` and change the devServer index file name.
 
