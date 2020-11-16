@@ -4,7 +4,7 @@ import {
   Col, Layout, List, Row
 } from 'antd';
 import { Video } from '@boclips-ui/video';
-
+import { VideoCardsPlaceholder } from '@boclips-ui/video-card-placeholder';
 import SearchBar from '@boclips-ui/search-bar';
 import NoResults from '@boclips-ui/no-results';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
@@ -166,37 +166,39 @@ const LtiView = ({
             </span>
           </section>
         )}
-        <List
-          itemLayout="vertical"
-          size="large"
-          className={c(s.listWrapper, {
-            [s.fullItemWidth]: useFullWidth,
-            [s.normalItemWidth]: !useFullWidth,
-          })}
-          locale={{ emptyText: <EmptyList theme="lti" /> }}
-          pagination={{
-            total: totalVideoElements,
-            pageSize: 10,
-            className: c(s.pagination, {
-              [s.paginationEmpty]: !videos.length,
-            }),
-            showSizeChanger: false,
-            onChange: (page) => {
-              scrollToTop();
-              onSearch(searchQuery, page - 1);
-              setCurrentPage(page);
-            },
-            current: currentPage,
-          }}
-          dataSource={videos}
-          loading={{
-            wrapperClassName: s.spinner,
-            spinning: loading,
-          }}
-          renderItem={
-            (video: Video) => renderVideoCard(video, loading, searchQuery!!)
-          }
-        />
+        <div className={c(s.listWrapper, {
+          [s.fullItemWidth]: useFullWidth,
+          [s.normalItemWidth]: !useFullWidth,
+        })}>
+          {loading ?
+            <VideoCardsPlaceholder/> :
+            <List
+              itemLayout="vertical"
+              size="large"
+              locale={{ emptyText: <EmptyList theme="lti" /> }}
+              pagination={{
+                total: totalVideoElements,
+                pageSize: 10,
+                className: c(s.pagination, {
+                  [s.paginationEmpty]: !videos.length,
+                }),
+                showSizeChanger: false,
+                onChange: (page) => {
+                  scrollToTop();
+                  onSearch(searchQuery, page - 1);
+                  setCurrentPage(page);
+                },
+                current: currentPage,
+              }}
+              dataSource={videos}
+              loading={{
+                wrapperClassName: s.spinner,
+                spinning: loading,
+              }}
+              renderItem={
+                (video: Video) => renderVideoCard(video, loading, searchQuery!!)
+              }
+            />}</div>
       </Col>
     ), [videos, loading]);
 
