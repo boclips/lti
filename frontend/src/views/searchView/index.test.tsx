@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import {render, screen, waitFor} from '@testing-library/react';
 import { Video } from '@boclips-ui/video';
 import { VideoFactory } from 'boclips-api-client/dist/test-support/VideosFactory';
 import { FakeBoclipsClient } from 'boclips-api-client/dist/test-support';
@@ -74,7 +74,9 @@ describe('LTI test', () => {
 
     render(<LtiView renderVideoCard={() => <div />}/>);
 
-    expect(await screen.queryByText('About the app and services')).toBeNull();
+    await waitFor(() => {
+      expect(screen.queryByText('About the app and services')).toBeNull();
+    })
   });
 
   it('uses provided function to render videos on search', async () => {
