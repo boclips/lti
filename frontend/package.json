@@ -8,7 +8,9 @@
     "build": "webpack --config webpack-config/webpack.prod.js",
     "lint": "eslint './src/**/*.{js,ts,tsx}' --color",
     "lint:fix": "npm run lint -- --fix",
-    "test": "jest --forceExit"
+    "test": "npm run test:firstBatch && npm run test:secondBatch",
+    "test:firstBatch": "jest --config jest.firstBatch.config.js --forceExit",
+    "test:secondBatch": "jest --config jest.secondBatch.config.js --forceExit"
   },
   "author": "",
   "license": "ISC",
