@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import { FakeBoclipsClient } from 'boclips-api-client/dist/test-support';
 import { VideoFactory } from 'boclips-api-client/dist/test-support/VideosFactory';
 import { PlayerFactory } from 'boclips-player';
@@ -25,7 +25,9 @@ describe('Search view', () => {
 
   it('renders search bar', () => {
     const appComponent = render(<App />);
-    expect(appComponent.getByPlaceholderText(/search for videos/i)).toBeInTheDocument();
+    waitFor(() => {
+      expect(appComponent.getByPlaceholderText(/search for videos/i)).toBeInTheDocument();
+    });
   });
 
   it("search query is added to the player's AnalyticsOptions so it can be sent with events", async () => {

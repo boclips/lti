@@ -1,5 +1,7 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import {
+  fireEvent, render, screen, waitFor 
+} from '@testing-library/react';
 import FilterPanel from './index';
 
 const testFacets = {
@@ -44,8 +46,10 @@ describe('Filter Panel', () => {
 
     fireEvent.mouseDown(subjectSelector);
 
-    expect(screen.getByText('subject1'));
-    expect(screen.getByText('subject2'));
+    await waitFor(() => {
+      expect(screen.getByText('subject1'));
+      expect(screen.getByText('subject2'));
+    });
   });
 
   it('shows sources filters with options from API', async () => {
@@ -61,8 +65,10 @@ describe('Filter Panel', () => {
 
     fireEvent.mouseDown(sourceSelector);
 
-    expect(screen.getByTitle('biology channel'));
-    expect(screen.getByTitle('history channel'));
+    await waitFor(() => {
+      expect(screen.getByTitle('biology channel'));
+      expect(screen.getByTitle('history channel'));
+    });
   });
 
   it('shows duration filters', async () => {
@@ -78,11 +84,13 @@ describe('Filter Panel', () => {
 
     fireEvent.mouseDown(sourceSelector);
 
-    expect(screen.getByTitle('0m - 2m'));
-    expect(screen.getByTitle('2m - 5m'));
-    expect(screen.getByTitle('5m - 10m'));
-    expect(screen.getByTitle('10m - 20m'));
-    expect(screen.getByTitle('> 20m'));
+    await waitFor(() => {
+      expect(screen.getByTitle('0m - 2m'));
+      expect(screen.getByTitle('2m - 5m'));
+      expect(screen.getByTitle('5m - 10m'));
+      expect(screen.getByTitle('10m - 20m'));
+      expect(screen.getByTitle('> 20m'));
+    });
   });
 
   it('clear all clears the filters', async () => {
@@ -109,8 +117,10 @@ describe('Filter Panel', () => {
 
     fireEvent.click(screen.getByText('CLEAR ALL'));
 
-    expect(onApply).toBeCalledWith({
-      ageRanges: [], source: [], subjects: [], duration: []
+    waitFor(() => {
+      expect(onApply).toBeCalledWith({
+        ageRanges: [], source: [], subjects: [], duration: []
+      });
     });
   });
 
@@ -139,9 +149,11 @@ describe('Filter Panel', () => {
     const removeElements = screen.getAllByTestId(/-remove-button/);
     removeElements.map((element) => (fireEvent.click(element)));
 
-    expect(screen.queryByText('Filters applied')).not.toBeInTheDocument();
-    expect(screen.getAllByText('0m - 2m').length).toEqual(1);
-    expect(screen.getAllByText('2m - 5m').length).toEqual(1);
+    waitFor(() => {
+      expect(screen.queryByText('Filters applied')).not.toBeInTheDocument();
+      expect(screen.getAllByText('0m - 2m').length).toEqual(1);
+      expect(screen.getAllByText('2m - 5m').length).toEqual(1);
+    });
   });
 
   it('When filters are removed from applied filters the count shows correct number', async () => {
@@ -165,7 +177,9 @@ describe('Filter Panel', () => {
 
     const removeElements = screen.getAllByTestId(/-remove-button/);
 
-    expect(await screen.queryByTestId('count-wrapper')?.innerHTML).toEqual('3');
+    await waitFor(() => {
+      expect(screen.queryByTestId('count-wrapper')?.innerHTML).toEqual('3');
+    });
 
     fireEvent.click(removeElements[0]);
 
