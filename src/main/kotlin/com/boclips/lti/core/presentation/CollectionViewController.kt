@@ -3,7 +3,7 @@ package com.boclips.lti.core.presentation
 import com.boclips.lti.core.application.model.SessionKeys.customLogo
 import com.boclips.lti.core.application.service.AssertHasValidSession
 import com.boclips.lti.core.application.service.LtiSessionHelpers.getIntegrationId
-import com.boclips.lti.core.domain.model.CollectionRequest
+import com.boclips.lti.core.domain.model.CollectionQuery
 import com.boclips.lti.core.domain.repository.CollectionRepository
 import com.boclips.lti.core.presentation.service.ToVideoViewModel
 import org.springframework.stereotype.Controller
@@ -23,7 +23,7 @@ class CollectionViewController(
         assertHasValidSession(session)
 
         val collection = collectionRepository.get(
-            CollectionRequest(
+            CollectionQuery(
                 collectionId = collectionId,
                 integrationId = getIntegrationId(session)
             )

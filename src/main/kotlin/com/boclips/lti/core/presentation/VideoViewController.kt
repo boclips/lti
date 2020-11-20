@@ -3,7 +3,7 @@ package com.boclips.lti.core.presentation
 import com.boclips.lti.core.application.model.SessionKeys.customLogo
 import com.boclips.lti.core.application.service.AssertHasValidSession
 import com.boclips.lti.core.application.service.LtiSessionHelpers.getIntegrationId
-import com.boclips.lti.core.domain.model.VideoRequest
+import com.boclips.lti.core.domain.model.VideoQuery
 import com.boclips.lti.core.domain.repository.VideoRepository
 import com.boclips.lti.core.presentation.service.ToVideoViewModel
 import com.boclips.lti.v1p3.domain.model.getBoclipsUserId
@@ -24,7 +24,7 @@ class VideoViewController(
         assertHasValidSession(session)
 
         val video = videoRepository.get(
-            VideoRequest(
+            VideoQuery(
                 videoId = videoId,
                 integrationId = getIntegrationId(session)
             )

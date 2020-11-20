@@ -1,6 +1,6 @@
 package com.boclips.lti.v1p3.application.command
 
-import com.boclips.lti.core.domain.model.VideoRequest
+import com.boclips.lti.core.domain.model.VideoQuery
 import com.boclips.lti.core.domain.repository.VideoRepository
 import com.boclips.lti.core.domain.service.ResourceLinkService
 import com.boclips.lti.v1p3.application.model.SelectedVideo
@@ -13,7 +13,7 @@ class GetSelectedItems(
     operator fun invoke(selectedItems: List<SelectedVideoRequest>, integrationId: String): List<SelectedVideo> {
         return selectedItems.map {
             val video = videoRepository.get(
-                VideoRequest(
+                VideoQuery(
                     videoId = it.id,
                     integrationId = integrationId
                 )

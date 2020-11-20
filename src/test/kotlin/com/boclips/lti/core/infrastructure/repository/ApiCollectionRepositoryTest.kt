@@ -1,8 +1,8 @@
 package com.boclips.lti.core.infrastructure.repository
 
 import com.boclips.lti.core.domain.exception.ResourceNotFoundException
-import com.boclips.lti.core.domain.model.CollectionRequest
-import com.boclips.lti.core.domain.model.CollectionsRequest
+import com.boclips.lti.core.domain.model.CollectionQuery
+import com.boclips.lti.core.domain.model.CollectionsQuery
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.testsupport.factories.CollectionResourceFactory
 import com.boclips.videos.api.httpclient.test.fakes.CollectionsClientFake
@@ -22,7 +22,7 @@ class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
 
             assertThat(
                 collectionRepository.get(
-                    CollectionRequest(
+                    CollectionQuery(
                         collectionId = id,
                         integrationId = "integration-one"
                     )
@@ -38,7 +38,7 @@ class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
         fun `throw a not found exception when client returns a 404`() {
             assertThatThrownBy {
                 collectionRepository.get(
-                    CollectionRequest(
+                    CollectionQuery(
                         collectionId = "123",
                         integrationId = "integration-one"
                     )
@@ -59,7 +59,7 @@ class ApiCollectionRepositoryTest : AbstractSpringIntegrationTest() {
             (collectionsClientFactory.getClient("integration-one") as CollectionsClientFake).add(secondResource)
 
             val returnedCollections = collectionRepository
-                .getMyCollections(CollectionsRequest(integrationId = "integration-one"))
+                .getMyCollections(CollectionsQuery(integrationId = "integration-one"))
 
             assertThat(returnedCollections).containsExactlyInAnyOrder(
                 CollectionResourceConverter.toCollection(

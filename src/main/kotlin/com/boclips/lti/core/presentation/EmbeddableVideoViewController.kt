@@ -3,7 +3,7 @@ package com.boclips.lti.core.presentation
 import com.boclips.lti.core.application.model.SessionKeys
 import com.boclips.lti.core.application.service.AssertHasValidSession
 import com.boclips.lti.core.application.service.LtiSessionHelpers
-import com.boclips.lti.core.domain.model.VideoRequest
+import com.boclips.lti.core.domain.model.VideoQuery
 import com.boclips.lti.core.domain.repository.VideoRepository
 import com.boclips.lti.core.presentation.service.ToVideoViewModel
 import org.springframework.stereotype.Controller
@@ -23,7 +23,7 @@ class EmbeddableVideoViewController(
         assertHasValidSession(session)
 
         val video = videoRepository.get(
-            VideoRequest(
+            VideoQuery(
                 videoId = videoId,
                 integrationId = LtiSessionHelpers.getIntegrationId(session)
             )

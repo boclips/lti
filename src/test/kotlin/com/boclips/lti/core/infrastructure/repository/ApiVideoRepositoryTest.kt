@@ -1,7 +1,7 @@
 package com.boclips.lti.core.infrastructure.repository
 
 import com.boclips.lti.core.domain.exception.ResourceNotFoundException
-import com.boclips.lti.core.domain.model.VideoRequest
+import com.boclips.lti.core.domain.model.VideoQuery
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
 import com.boclips.lti.testsupport.factories.VideoResourcesFactory
 import org.assertj.core.api.Assertions.assertThat
@@ -20,7 +20,7 @@ private class ApiVideoRepositoryTest : AbstractSpringIntegrationTest() {
 
             assertThat(
                 videoRepository.get(
-                    VideoRequest(
+                    VideoQuery(
                         videoId = id,
                         integrationId = "integration-one"
                     )
@@ -36,7 +36,7 @@ private class ApiVideoRepositoryTest : AbstractSpringIntegrationTest() {
         fun `throws a not found error when requested video is not found`() {
             assertThatThrownBy {
                 videoRepository.get(
-                    VideoRequest(
+                    VideoQuery(
                         videoId = "123",
                         integrationId = "integration-one"
                     )

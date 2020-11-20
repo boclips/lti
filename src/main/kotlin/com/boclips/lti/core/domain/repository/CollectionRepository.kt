@@ -1,11 +1,11 @@
 package com.boclips.lti.core.domain.repository
 
 import com.boclips.lti.core.domain.model.Collection
-import com.boclips.lti.core.domain.model.CollectionRequest
-import com.boclips.lti.core.domain.model.CollectionsRequest
+import com.boclips.lti.core.domain.model.CollectionQuery
+import com.boclips.lti.core.domain.model.CollectionsQuery
 
 interface CollectionRepository {
-    fun get(collectionRequest: CollectionRequest): Collection
+    fun get(collectionQuery: CollectionQuery): Collection
 
-    fun getMyCollections(collectionsRequest: CollectionsRequest): List<Collection>
+    fun getMyCollections(collectionsQuery: CollectionsQuery): List<Collection>
 }
