@@ -8,7 +8,7 @@
     "build": "webpack --config webpack-config/webpack.prod.js",
     "lint": "eslint './src/**/*.{js,ts,tsx}' --color",
     "lint:fix": "npm run lint -- --fix",
-    "test": "jest --forceExit"
+    "test": "jest --listTests --forceExit | xargs -L 1 -P 1 jest --forceExit"
   },
   "author": "",
   "license": "ISC",
