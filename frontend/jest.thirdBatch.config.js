@@ -8,7 +8,7 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js'],
   testEnvironment: 'jsdom',
-  testMatch: ['<rootDir>src/**/*.(integrationTest|test).(secondBatch).(ts|tsx)'],
+  testMatch: ['<rootDir>src/**/*.(integrationTest|test).(ts|tsx)'],
   testPathIgnorePatterns: ['node_modules'],
   preset: 'ts-jest',
   moduleNameMapper: {
