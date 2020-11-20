@@ -16,22 +16,24 @@ const renderVideoCard = (video: Video, loading: boolean, query: string) => {
   };
 
   return (
-    <VideoCard
-      key={video.id}
-      video={video}
-      loading={loading}
-      authenticated
-      hideAttachments
-      hideBestFor
-      theme="lti"
-      videoActionButtons={getVideoActionButtons()}
-      videoPlayer={
-        <Player
-          options={resolvePlayerOptions(query)}
-          videoUri={video.links?.self?.getOriginalLink()}
-        />
-      }
-    />
+    <div style={{ marginBottom: '4px' }}>
+      <VideoCard
+        key={video.id}
+        video={video}
+        loading={loading}
+        authenticated
+        hideAttachments
+        hideBestFor
+        theme="lti"
+        videoActionButtons={getVideoActionButtons()}
+        videoPlayer={
+          <Player
+            options={resolvePlayerOptions(query)}
+            videoUri={video.links?.self?.getOriginalLink()}
+          />
+        }
+      />
+    </div>
   );
 };
 
