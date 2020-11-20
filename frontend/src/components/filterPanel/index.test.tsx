@@ -183,6 +183,6 @@ describe('Filter Panel', () => {
 
     fireEvent.click(removeElements[0]);
 
-    expect(await screen.queryByTestId('count-wrapper')?.innerHTML).toEqual('2');
+    expect(screen.queryByTestId('count-wrapper')?.innerHTML).toEqual('2');
   });
 });

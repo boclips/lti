@@ -4,8 +4,8 @@ import {
 } from '@testing-library/react';
 
 import ClosableHeader from './index';
-import AxiosService from '../../service/axios/AxiosService';
 import MockApi from '../../testSupport/mockApi';
+import { configureMockAxiosService } from '../../testSupport/configureMockAxiosService';
 
 describe('ClosableHeader', () => {
   it('displays correct header', async () => {
@@ -16,8 +16,8 @@ describe('ClosableHeader', () => {
   });
 
   it('contains a close icon which closes the form on click', async () => {
-    AxiosService.configureAxios();
-    const axiosInstance = AxiosService.getVanillaInstance();
+    const { vanillaInstance } = configureMockAxiosService();
+
     global.window = Object.create(window);
     const url =
       'http://dummy.com?deep_link_return_url=https://return_url.com/&data=data&deployment_id=id';
@@ -27,7 +27,7 @@ describe('ClosableHeader', () => {
         href: url,
       },
     });
-    MockApi.deepLinkingResponse(axiosInstance, 'data', 'id', [], 'i am jwt');
+    MockApi.deepLinkingResponse(vanillaInstance, 'data', 'id', [], 'i am jwt');
 
     const mockSubmit = jest.fn();
     render(<ClosableHeader title="my closable header" handleSubmit={mockSubmit} />);

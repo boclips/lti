@@ -1,28 +1,33 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { AppConstants } from '../../types/AppConstants';
 
-const apiAccessTokenSupportingInstance: AxiosInstance = axios.create();
-const vanillaInstance: AxiosInstance = axios.create();
-
 let hasBeenConfigured: boolean = false;
 
 class AxiosService {
+  static apiAccessTokenSupportingInstance: AxiosInstance;
+  
+  static vanillaInstance: AxiosInstance;
+  
   public static configureAxios(
     setAuthError: () => void = () => {},
     tokenFactory: (
       axios: AxiosInstance,
       setAuthError: () => void,
     ) => Promise<string> = AxiosService.ltiTokenFactory,
+    baseAxiosInstance: AxiosInstance = axios.create(),
+    apiAxiosInstance: AxiosInstance = axios.create(),
+    vanillaAxiosInstance: AxiosInstance = axios.create()
   ): void {
-    const nonModifiedAxiosInstance = axios.create();
+    this.apiAccessTokenSupportingInstance = apiAxiosInstance;
+    this.vanillaInstance = vanillaAxiosInstance;
 
-    apiAccessTokenSupportingInstance.interceptors.request.use(
+    this.apiAccessTokenSupportingInstance.interceptors.request.use(
       (config: AxiosRequestConfig) => {
         if (AppConstants.USER_ID) {
           config.headers['Boclips-User-Id'] = AppConstants.USER_ID;
         }
 
-        return tokenFactory(nonModifiedAxiosInstance, setAuthError)
+        return tokenFactory(baseAxiosInstance, setAuthError)
           .then((token) => {
             config.headers.Authorization = `Bearer ${token}`;
             return config;
@@ -52,14 +57,14 @@ class AxiosService {
     if (!hasBeenConfigured) {
       throw Error('Axios has not been configured');
     }
-    return apiAccessTokenSupportingInstance;
+    return this.apiAccessTokenSupportingInstance;
   }
 
   public static getVanillaInstance(): AxiosInstance {
     if (!hasBeenConfigured) {
       throw Error('Axios has not been configured');
     }
-    return vanillaInstance;
+    return this.vanillaInstance;
   }
 }
 

@@ -7,11 +7,11 @@ import { fireEvent } from '@testing-library/dom';
 import { UserFactory } from 'boclips-api-client/dist/test-support/UserFactory';
 import ApiClient from '../../service/client/ApiClient';
 import LtiView from './index';
-import AxiosService from '../../service/axios/AxiosService';
+import { configureMockAxiosService } from '../../testSupport/configureMockAxiosService';
 
 describe('LTI test', () => {
   beforeEach(() => {
-    AxiosService.configureAxios();
+    configureMockAxiosService();
   });
   const searchFor = (query: string) => {
     const searchBar = screen.getByTestId('search-input');

@@ -3,6 +3,7 @@ import MockAdapter from 'axios-mock-adapter';
 import ConfigurableConstants, { AppConstants } from '../../types/AppConstants';
 import AxiosService from './AxiosService';
 import AppConstantsFactory from '../../testSupport/AppConstantsFactory';
+import { configureMockAxiosService } from '../../testSupport/configureMockAxiosService';
 
 jest.mock('../../types/AppConstants', () => ({
   get AppConstants(): ConfigurableConstants {
@@ -22,36 +23,19 @@ describe('AxiosService', () => {
   });
 
   describe('using the API authenticated instance', () => {
-    it('axios calls invoke given token factory on requests', async () => {
-      const tokenFactory = jest.fn(() => Promise.resolve('i-am-a-token'));
-      AxiosService.configureAxios(() => {}, tokenFactory);
-
-      const axiosInstance = AxiosService.getApiAuthenticatedInstance();
-
-      try {
-        await axiosInstance.get('https://google.com/');
-      } catch (e) {
-        // We just care about executing the call
-      }
-
-      expect(tokenFactory).toHaveBeenCalled();
-    });
-
     it('appends the bearer token in Authorization header', async () => {
       const tokenFactory = jest.fn(() => Promise.resolve('i-am-a-token'));
-      AxiosService.configureAxios(() => {}, tokenFactory);
-
-      const axiosInstance = AxiosService.getApiAuthenticatedInstance();
-
-      const axiosMock = new MockAdapter(axiosInstance);
-      axiosMock
+      const { apiInstance, apiMock } = configureMockAxiosService(tokenFactory);
+      
+      apiMock
         .onGet('https://api.example.com/v1/resource')
         .reply(200, JSON.stringify({}));
 
-      const response = await axiosInstance.get(
+      const response = await apiInstance.get(
         'https://api.example.com/v1/resource',
       );
 
+      expect(tokenFactory).toHaveBeenCalled();
       expect(response.config.headers.Authorization).toEqual(
         'Bearer i-am-a-token',
       );
@@ -61,33 +45,25 @@ describe('AxiosService', () => {
   describe('using the vanilla instance', () => {
     it('does not append a bearer token to the requests', async () => {
       const tokenFactory = jest.fn(() => Promise.resolve('i-am-a-token'));
-      AxiosService.configureAxios(() => {}, tokenFactory);
+      const { vanillaMock } = configureMockAxiosService(tokenFactory);
 
-      const axiosInstance = AxiosService.getVanillaInstance();
+      vanillaMock.onGet().reply(200);
+      await AxiosService.getVanillaInstance().get('https://google.com/');
 
-      const axiosMock = new MockAdapter(axiosInstance);
-      try {
-        await axiosInstance.get('https://google.com/');
-      } catch (e) {
-        // We just care about executing the call
-      }
-
-      expect(axiosMock.history.get[0].headers.Authorization).toBeUndefined();
+      expect(vanillaMock.history.get[0].headers.Authorization).toBeUndefined();
     });
   });
 
   describe('external user', () => {
     it('sets the boclips-user-id header with the external user id', async () => {
       const tokenFactory = jest.fn(() => Promise.resolve('i-am-a-token'));
-      AxiosService.configureAxios(() => {}, tokenFactory);
-      const axiosInstance = AxiosService.getApiAuthenticatedInstance();
+      const { apiMock } = configureMockAxiosService(tokenFactory);
 
-      const axiosMock = new MockAdapter(axiosInstance);
-      axiosMock
+      apiMock
         .onGet('https://api.example.com/v1/resource')
         .reply(200, JSON.stringify({}));
 
-      const response = await axiosInstance.get(
+      const response = await AxiosService.getApiAuthenticatedInstance().get(
         'https://api.example.com/v1/resource',
       );
 
@@ -98,11 +74,9 @@ describe('AxiosService', () => {
   });
 
   describe('lti token factory', () => {
-    const axiosInstance = axios.create();
-
     it('does not get into an infinite loop trying to fetch a token', async () => {
       const factory = AxiosService.ltiTokenFactory;
-      AxiosService.configureAxios(() => {}, factory);
+      configureMockAxiosService();
 
       const freshAxiosInstance = axios.create();
       const axiosMock = new MockAdapter(freshAxiosInstance);
@@ -114,6 +88,7 @@ describe('AxiosService', () => {
     });
 
     it('returns the token from specified endpoint', async () => {
+      const axiosInstance = axios.create();
       const axiosMock = new MockAdapter(axiosInstance);
       const setErrorSpy = jest.fn();
 
@@ -130,6 +105,7 @@ describe('AxiosService', () => {
     });
 
     it('throws when not able to retrieve token', async () => {
+      const axiosInstance = axios.create();
       const axiosMock = new MockAdapter(axiosInstance);
       const setErrorSpy = jest.fn();
 

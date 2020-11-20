@@ -5,7 +5,7 @@ import { VideoFactory } from 'boclips-api-client/dist/test-support/VideosFactory
 import CopyVideoLinkButton from './CopyVideoLinkButton';
 import setupInitialLocation from '../../testSupport/setupInitialLocation';
 import convertApiClientVideo from '../../service/video/convertVideoFromApi';
-import AxiosService from '../../service/axios/AxiosService';
+import { configureMockAxiosService } from '../../testSupport/configureMockAxiosService';
 
 jest.mock('copy-to-clipboard');
 
@@ -14,7 +14,9 @@ const sampleVideo = (id: string) =>
 
 describe('CopyVideoLinkButton', () => {
   beforeEach(() => {
-    AxiosService.configureAxios();
+    const { apiMock } = configureMockAxiosService();
+
+    apiMock.onPost().reply(200); // we need this because of analytic calls when we click the button
   });
 
   const clickCopyButton = () => {

@@ -6,7 +6,7 @@ import { SubjectFactory } from 'boclips-api-client/dist/test-support/SubjectsFac
 import { AttachmentFactory } from 'boclips-api-client/dist/test-support/AttachmentsFactory';
 import App from './App';
 import ApiClient from '../../service/client/ApiClient';
-import AxiosService from '../../service/axios/AxiosService';
+import { configureMockAxiosService } from '../../testSupport/configureMockAxiosService';
 
 jest.mock('boclips-player');
 
@@ -14,7 +14,7 @@ describe('Search and embed view', () => {
   let fakeApiClient: Promise<FakeBoclipsClient>;
 
   beforeAll(() => {
-    AxiosService.configureAxios();
+    configureMockAxiosService();
 
     fakeApiClient = new ApiClient(
       'https://api.example1.com',

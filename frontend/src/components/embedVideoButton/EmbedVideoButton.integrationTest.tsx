@@ -7,9 +7,7 @@ import {
 import React from 'react';
 import EmbedVideoButton from './EmbedVideoButton';
 import MockApi from '../../testSupport/mockApi';
-import AxiosService from '../../service/axios/AxiosService';
-
-AxiosService.configureAxios();
+import { configureMockAxiosService } from '../../testSupport/configureMockAxiosService';
 
 describe('EmbedVideoButton', () => {
   it('has expected label', () => {
@@ -19,7 +17,9 @@ describe('EmbedVideoButton', () => {
   });
 
   it('fetches the JWT and posts it to the LMS on click', async () => {
-    const axiosInstance = AxiosService.getVanillaInstance();
+    const { apiMock, vanillaInstance } = configureMockAxiosService();
+
+    apiMock.onPost().reply(200); // we need this because of analytic calls when we click the button
     global.window = Object.create(window);
     const url =
       'http://dummy.com?deep_link_return_url=https://return_url.com/&data=data&deployment_id=id';
@@ -30,7 +30,7 @@ describe('EmbedVideoButton', () => {
       },
     });
 
-    MockApi.deepLinkingResponse(axiosInstance, 'data', 'id', ['123'], 'i am jwt');
+    MockApi.deepLinkingResponse(vanillaInstance, 'data', 'id', ['123'], 'i am jwt');
     const onSubmitMock = jest.fn();
     render(<EmbedVideoButton onSubmit={onSubmitMock} videoId="123" />);
     const button = screen.getByRole('button', { name: '+ Add to lesson' });
