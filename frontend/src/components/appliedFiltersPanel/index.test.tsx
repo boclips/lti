@@ -6,14 +6,10 @@ describe('Applied filters panel', () => {
   it('shows badges for all applied filters', () => {
     render(
       <AppliedFiltersPanel
-        subjectList={[{
-          id: 'subject-id',
-          name: 'history subject'
-        }]}
         appliedFilters={{
           ageRanges: ['4-6'],
           duration: ['PT0S-PT2M'],
-          subjects: ['subject-id'],
+          subjects: ['subject-1'],
           source: ['bbc-id']
         }}
         setSubjectFilter={jest.fn()}
@@ -24,8 +20,8 @@ describe('Applied filters panel', () => {
           ageRanges: {},
           durations: {},
           resourceTypes: {},
-          subjects: {},
-          channels: { BBC: { id: 'bbc-id', hits: 25 } } 
+          subjects: { 'subject-1': { id: 'subject-1', hits: 25, name: 'history subject' }, 'subject-2': { id: 'subject-2', hits: 25, name: 'subject 2' } },
+          channels: { 'bbc-id': { id: 'bbc-id', hits: 25, name: 'BBC' } }
         }}
       />,
     );
@@ -43,13 +39,6 @@ describe('Applied filters panel', () => {
     const sourceFilterMock = jest.fn();
     render(
       <AppliedFiltersPanel
-        subjectList={[{
-          id: 'subject-1',
-          name: 'history subject'
-        }, {
-          id: 'subject-2',
-          name: 'art subject'
-        }]}
         appliedFilters={{
           ageRanges: ['4-6', '7-9'],
           duration: ['PT0S-PT2M', 'PT2M-PT5M'],
@@ -64,8 +53,8 @@ describe('Applied filters panel', () => {
           ageRanges: {},
           durations: {},
           resourceTypes: {},
-          subjects: {},
-          channels: { BBC: { id: 'bbc-id', hits: 25 }, 'nature channel': { id: 'nature-channel-id', hits: 2 } } 
+          subjects: { 'subject-1': { id: 'subject-1', hits: 25, name: 'subject 1' }, 'subject-2': { id: 'subject-2', hits: 25, name: 'subject 2' } },
+          channels: { 'bbc-id': { id: 'bbc-id', hits: 25, name: 'BBC' }, 'nature-channel-id': { id: 'nature-channel-id', hits: 2, name: 'nature channel' } }
         }}
       />,
     );
@@ -94,7 +83,6 @@ describe('Applied filters panel', () => {
   it('does not display header when no filters are applied', async () => {
     render(
       <AppliedFiltersPanel
-        subjectList={[]}
         appliedFilters={{
           ageRanges: undefined,
           duration: [],
@@ -110,7 +98,7 @@ describe('Applied filters panel', () => {
           durations: {},
           resourceTypes: {},
           subjects: {},
-          channels: { BBC: { id: 'bbc-id', hits: 25 } } 
+          channels: { 'bbc-id': { id: 'bbc-id', hits: 25, name: 'BBC' } }
         }}
       />,
     );

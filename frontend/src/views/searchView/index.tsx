@@ -8,7 +8,6 @@ import { VideoCardsPlaceholder } from '@boclips-ui/video-card-placeholder';
 import SearchBar from '@boclips-ui/search-bar';
 import NoResults from '@boclips-ui/no-results';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
-import { Subject } from 'boclips-api-client/dist/types';
 import { User } from 'boclips-api-client/dist/sub-clients/organisations/model/User';
 import ApiClient from '../../service/client/ApiClient';
 import { AppConstants } from '../../types/AppConstants';
@@ -39,7 +38,6 @@ const LtiView = ({
   const [facets, setFacets] = useState<VideoFacets>();
   const [singleFilter, setSingleFilter] = useState<any>(null);
   const [filters, setFilters] = useState<any>(null);
-  const [apiSubjects, setApiSubjects] = useState<Subject[]>([]);
   const [filtersVisible, setFiltersVisible] = useState<boolean>(!collapsibleFilters);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [activeFilterCount, setActiveFilterCount] = useState<number>(0);
@@ -96,11 +94,6 @@ const LtiView = ({
     );
   };
 
-  const getFilters = () => {
-    videoServicePromise.then((client) => client.getSubjects())
-      .then((it) => setApiSubjects(it));
-  };
-
   const getCurrentUser = () => {
     videoServicePromise.then((client) => client.getCurrentUser())
       .then((it) => setCurrentUser(it))
@@ -108,7 +101,6 @@ const LtiView = ({
   };
 
   useEffect(() => {
-    getFilters();
     getCurrentUser();
   }, []);
   
@@ -247,7 +239,6 @@ const LtiView = ({
                 <FilterPanel
                   facets={facets}
                   onApply={setSingleFilter}
-                  subjects={apiSubjects}
                   hidePanel={!filtersVisible}
                 />
               </div>

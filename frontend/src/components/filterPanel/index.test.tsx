@@ -13,8 +13,8 @@ const testFacets = {
     'PT20M-PT24H': { hits: 45 }
   },
   subjects: {
-    '5cb499c9fd5beb428189454c': { hits: 88 },
-    '5cb499c9fd5beb428189454d': { hits: 32 }
+    '5cb499c9fd5beb428189454d': { hits: 32, id: '5cb499c9fd5beb428189454d', name: 'subject1' },
+    '5cb499c9fd5beb428189454c': { hits: 88, id: '5cb499c9fd5beb428189454c', name: 'subject2' }
   },
   ageRanges: {
     '3-5': {
@@ -23,8 +23,8 @@ const testFacets = {
   },
   resourceTypes: {},
   channels: {
-    'biology channel': { hits: 111, id: 'biology-channel-id' },
-    'history channel': { hits: 212, id: 'history-channel-id' }
+    'biology-channel-id': { hits: 111, id: 'biology-channel-id', name: 'biology channel' },
+    'history-channel-id': { hits: 212, id: 'history-channel-id', name: 'history channel' }
   },
 };
 
@@ -34,10 +34,6 @@ describe('Filter Panel', () => {
       <FilterPanel
         facets={testFacets}
         onApply={jest.fn()}
-        subjects={[
-          { id: '5cb499c9fd5beb428189454c', name: 'subject1' },
-          { id: '5cb499c9fd5beb428189454d', name: 'subject2' },
-        ]}
       />,
     );
 

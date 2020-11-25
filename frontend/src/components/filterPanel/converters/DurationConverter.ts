@@ -1,7 +1,7 @@
 import { SelectOption } from '@boclips-ui/select-option';
 import { Facet } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
-import moment from 'moment';
 import Range from '../../../types/range';
+import dayjs from '../../../types/dayjs';
 
 interface DurationFacet {
   [id: string]: Facet;
@@ -9,10 +9,10 @@ interface DurationFacet {
 
 export default class DurationConverter {
   static toSelectOptions(durationFacet: DurationFacet): SelectOption[] {
-    return Object.keys(durationFacet).map((duration) => ({
-      id: duration,
-      label: this.getLabelFromIso(duration),
-      count: this.extractFacetHits(duration, durationFacet),
+    return Object.keys(durationFacet).map((key) => ({
+      id: key,
+      label: this.getLabelFromIso(key),
+      count: this.extractFacetHits(key, durationFacet),
     }))
       .filter((option) => option.label?.length > 0);
   }
@@ -21,8 +21,8 @@ export default class DurationConverter {
     const values = iso.split('-');
     return values.length === 2 
       ? this.getLabel({
-        min: moment.duration(values[0]).asSeconds(),
-        max: moment.duration(values[1]).asSeconds()
+        min: dayjs.duration(values[0]).asSeconds(),
+        max: dayjs.duration(values[1]).asSeconds()
       })
       : '';
   }

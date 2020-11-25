@@ -1,8 +1,8 @@
-import moment from 'moment';
 import AgeRange from '@boclips-ui/age-range';
 import { PlaybackConverter } from 'boclips-api-client/dist/sub-clients/common/model/PlaybackConverter';
 import { Link } from '@boclips-ui/link';
 import { ExtendedVideo } from '@boclips-ui/video';
+import dayjs from '../../types/dayjs';
 
 const DEFAULT_THUMBNAIL_WIDTH = 500;
 
@@ -23,7 +23,7 @@ export function convertVideoResource(resource: any): Partial<ExtendedVideo> {
     id: resource.id,
     title: resource.title,
     description: resource.description,
-    duration: moment.duration(resource.playback.duration),
+    duration: dayjs.duration(resource.playback.duration),
     releasedOn: new Date(resource.releasedOn),
     createdBy: resource.createdBy,
     thumbnailUrl: getEffectiveThumbnailUrl(
