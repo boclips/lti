@@ -1,4 +1,5 @@
 import React from 'react';
+import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subject';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 import { Filters } from '../../types/filters';
 import DurationConverter from '../filterPanel/converters/DurationConverter';
@@ -11,6 +12,7 @@ interface AppliedFiltersPanelProps {
   setDurationFilter: (filter: string[]) => void;
   setSourceFilter: (filter: string[]) => void;
   setSubjectFilter: (filter: string[]) => void;
+  subjectList: Subject[];
   facets: VideoFacets | undefined;
 }
 
@@ -22,6 +24,7 @@ const AppliedFiltersPanel = ({
   setDurationFilter,
   setSourceFilter,
   setSubjectFilter,
+  subjectList,
   facets
 }: AppliedFiltersPanelProps) => {
   const AgeBadgeOptions = ageRanges?.map((filter) => ({
@@ -33,7 +36,7 @@ const AppliedFiltersPanel = ({
     displayValue: DurationConverter.getLabelFromIso(durationISO),
     key: durationISO
   }));
-  
+
   const sourceBadgeOptions = source?.map((selectedChannelId) => {
     const facet = facets!!.channels!![selectedChannelId];
     return {
@@ -43,11 +46,11 @@ const AppliedFiltersPanel = ({
   });
 
   const subjectBadgeOptions = subjects?.map((subjectId) => {
-    const subject = facets!!.subjects!![subjectId];
+    const subject = subjectList?.find((item) => item.id === subjectId)!!;
 
     return {
-      displayValue: subject!!.name!!,
-      key: subject!!.id!!
+      displayValue: subject!!.name,
+      key: subject!!.id
     };
   });
   

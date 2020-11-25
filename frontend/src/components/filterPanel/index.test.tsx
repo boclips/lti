@@ -34,6 +34,10 @@ describe('Filter Panel', () => {
       <FilterPanel
         facets={testFacets}
         onApply={jest.fn()}
+        subjects={[
+          { id: '5cb499c9fd5beb428189454c', name: 'subject1' },
+          { id: '5cb499c9fd5beb428189454d', name: 'subject2' },
+        ]}
       />,
     );
 
