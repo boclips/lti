@@ -17,7 +17,10 @@ const resolvePlayerOptions = (query: string): Partial<PlayerOptions> => ({
       'fullscreen',
       'settings',
     ],
-    ratio: '16:9'
+    ratio: '16:9',
+    addons: {
+      videoLengthPreview: true
+    }
   },
   api: {
     tokenFactory: async () => AxiosService.ltiTokenFactory(Axios, () => {}),

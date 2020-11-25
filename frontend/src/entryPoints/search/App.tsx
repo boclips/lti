@@ -2,12 +2,11 @@ import { hot } from 'react-hot-loader/root';
 import React, { ReactElement } from 'react';
 import { Video } from '@boclips-ui/video';
 import { VideoCard } from '@boclips-ui/video-card';
-import { Player } from 'boclips-player-react';
 import SearchView from '../../views/searchView';
 import '../../index.less';
-import resolvePlayerOptions from '../../Player/resolvePlayerOptions';
 import AxiosWrapper from '../../service/axios/AxiosWrapper';
 import CopyVideoLinkButtonFactory from '../../components/copyVideoLinkButton/CopyVideoLinkButtonFactory';
+import getPlayer from '../../Player/getPlayer';
 
 const renderVideoCard = (video: Video, loading: boolean, query: string) => {
   const getVideoActionButtons = () => {
@@ -26,12 +25,7 @@ const renderVideoCard = (video: Video, loading: boolean, query: string) => {
         hideBestFor
         theme="lti"
         videoActionButtons={getVideoActionButtons()}
-        videoPlayer={
-          <Player
-            options={resolvePlayerOptions(query)}
-            videoUri={video.links?.self?.getOriginalLink()}
-          />
-        }
+        videoPlayer={getPlayer(query, video)}
       />
     </div>
   );
