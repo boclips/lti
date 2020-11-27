@@ -8,21 +8,23 @@ import AxiosWrapper from '../../service/axios/AxiosWrapper';
 import getPlayer from '../../Player/getPlayer';
 
 const renderVideoCard = (video: Video, loading: boolean, query: string) => (
-  <VideoCard
-    key={video.id}
-    video={video}
-    loading={loading}
-    videoActionButtons={[
-      <EmbedVideoButton
-        videoId={video.id}
-        onSubmit={(form) => form?.submit()}
-      />,
-    ]}
-    authenticated
-    hideBestFor
-    hideAttachments
-    videoPlayer={getPlayer(query, video)}
-  />);
+  <div style={{ marginBottom: '4px' }}>
+    <VideoCard
+      key={video.id}
+      video={video}
+      loading={loading}
+      videoActionButtons={[
+        <EmbedVideoButton
+          videoId={video.id}
+          onSubmit={(form) => form?.submit()}
+        />,
+      ]}
+      authenticated
+      hideBestFor
+      hideAttachments
+      videoPlayer={getPlayer(query, video)}
+    /></div>
+);
 
 const App = () => (
   <SearchView
