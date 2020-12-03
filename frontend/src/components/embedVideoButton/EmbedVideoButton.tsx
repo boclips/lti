@@ -1,17 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Video } from '@boclips-ui/video';
 import Button from '../button/Button';
 import ContentSelectionService from '../../service/contentSelection/ContentSelectionService';
 import DeepLinkingParameterService from '../../service/deepLinking/DeepLinkingParameterService';
 import s from './style.module.less';
+import AnalyticsFactory from '../../service/analytics/AnalyticsFactory';
 
 const contentSelectionService = new ContentSelectionService();
 
 interface Props {
-  videoId: string;
+  video: Video;
   onSubmit: (form: HTMLFormElement | null) => void;
 }
 
-const EmbedVideoButton = ({ videoId, onSubmit }: Props) => {
+const EmbedVideoButton = ({ video, onSubmit }: Props) => {
   const [jwt, setJwt] = useState<string | undefined>(undefined);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -20,6 +22,21 @@ const EmbedVideoButton = ({ videoId, onSubmit }: Props) => {
       onSubmit(formRef.current);
     }
   }, [jwt]);
+  
+  const handleEmbed = () => {
+    AnalyticsFactory.getInstance().trackVideoInteraction(
+      video,
+      'LTI_SEARCH_AND_EMBED',
+    );
+
+    contentSelectionService
+      .getContentSelectionJwt(
+        [video.id],
+        DeepLinkingParameterService.getDeploymentId(),
+        DeepLinkingParameterService.getData(),
+      )
+      .then((jwtResponse) => setJwt(jwtResponse));
+  };
 
   return (
     <>
@@ -27,15 +44,7 @@ const EmbedVideoButton = ({ videoId, onSubmit }: Props) => {
         role="button"
         type="primary"
         className={s.embedVideoButton}
-        onClick={() =>
-          contentSelectionService
-            .getContentSelectionJwt(
-              [videoId],
-              DeepLinkingParameterService.getDeploymentId(),
-              DeepLinkingParameterService.getData(),
-            )
-            .then((jwtResponse) => setJwt(jwtResponse))
-        }
+        onClick={handleEmbed}
       >
         + Add to lesson
       </Button>

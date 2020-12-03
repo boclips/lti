@@ -15,7 +15,7 @@ const renderVideoCard = (video: Video, loading: boolean, query: string) => (
       loading={loading}
       videoActionButtons={[
         <EmbedVideoButton
-          videoId={video.id}
+          video={video}
           onSubmit={(form) => form?.submit()}
         />,
       ]}
