@@ -19,6 +19,6 @@ object CollectionResourceFactory {
         videos = videos,
         subjects = emptySet(),
         attachments = emptySet(),
-        _links = mapOf("self" to Link("$apiBaseUrl/v1/collections/$id"))
+        _links = mapOf("self" to Link.of("$apiBaseUrl/v1/collections/$id"))
     )
 }

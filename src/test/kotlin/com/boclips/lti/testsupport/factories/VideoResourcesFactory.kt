@@ -23,12 +23,12 @@ object VideoResourcesFactory {
         playback = playback,
         contentPartnerId = contentPartnerId,
         contentPartnerVideoId = contentPartnerVideoId,
-        _links = mapOf("self" to Link("$apiBaseUrl/v1/videos/$videoId"))
+        _links = mapOf("self" to Link.of("$apiBaseUrl/v1/videos/$videoId"))
     )
 
     fun sampleStreamPlayback(
         duration: Duration = Duration.ofMinutes(3),
-        _links: Map<String, Link> = mapOf("thumbnail" to Link("http://thumbs.up/1/width/{thumbnailWidth}/2.png"))
+        _links: Map<String, Link> = mapOf("thumbnail" to Link.of("http://thumbs.up/1/width/{thumbnailWidth}/2.png"))
     ): PlaybackResource {
         return StreamPlaybackResource(
             id = UUID.randomUUID().toString(),

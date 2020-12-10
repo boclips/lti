@@ -28,7 +28,7 @@ class VideoResourceConverterTest {
         val resource = VideoResourcesFactory.sampleVideo(
             playback = VideoResourcesFactory.sampleStreamPlayback(
                 _links = mapOf(
-                    "thumbnail" to Link("https://api.boclips.com/thumbnail/1_e72xmbcb/width/{thumbnailWidth}/slice/1")
+                    "thumbnail" to Link.of("https://api.boclips.com/thumbnail/1_e72xmbcb/width/{thumbnailWidth}/slice/1")
                 )
             )
         )
@@ -44,7 +44,7 @@ class VideoResourceConverterTest {
         val resource = VideoResourcesFactory.sampleVideo(
             playback = VideoResourcesFactory.sampleStreamPlayback(
                 _links = mapOf(
-                    "thumbnail" to Link(thumbnailUrl)
+                    "thumbnail" to Link.of(thumbnailUrl)
                 )
             )
         )
