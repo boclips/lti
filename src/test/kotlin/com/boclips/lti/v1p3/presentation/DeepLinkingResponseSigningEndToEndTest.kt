@@ -52,5 +52,5 @@ class DeepLinkingResponseSigningEndToEndTest : AbstractSpringIntegrationTest() {
     }
 
     @LocalServerPort
-    private lateinit var serverPort: Integer
+    private var serverPort: Int? = null
 }

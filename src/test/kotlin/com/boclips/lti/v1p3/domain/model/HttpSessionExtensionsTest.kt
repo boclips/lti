@@ -32,9 +32,7 @@ class HttpSessionExtensionsTest {
         val uri = "https://super.com/ok"
         httpSession.mapStateToTargetLinkUri(state, uri)
 
-        val statesToUrisMap = httpSession.getAttribute(SessionKeys.statesToTargetLinkUris) as Map<String, String>
-
-        assertThat(statesToUrisMap).containsEntry(state, uri)
+        assertThat(httpSession.getTargetLinkUri(state)).isEqualTo(uri)
     }
 
     @Test
