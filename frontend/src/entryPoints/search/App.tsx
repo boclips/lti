@@ -1,36 +1,28 @@
 import { hot } from 'react-hot-loader/root';
 import React, { ReactElement } from 'react';
 import { Video } from '@boclips-ui/video';
-import { VideoCard } from '@boclips-ui/video-card';
 import SearchView from '../../views/searchView';
 import '../../index.less';
 import AxiosWrapper from '../../service/axios/AxiosWrapper';
+import { VideoCardWrapper } from '../../components/videoCard/VideoCardWrapper';
 import CopyVideoLinkButtonFactory from '../../components/copyVideoLinkButton/CopyVideoLinkButtonFactory';
-import getPlayer from '../../Player/getPlayer';
 
-const renderVideoCard = (video: Video, loading: boolean, query: string) => {
+const renderVideoCard = (video: Video, query: string) => {
   const getVideoActionButtons = () => {
     const copyLinkButton = CopyVideoLinkButtonFactory.getButton(video);
     return copyLinkButton ? [copyLinkButton] : [];
   };
 
   return (
-    <div style={{ marginBottom: '4px' }}>
-      <VideoCard
-        key={video.id}
-        video={video}
-        loading={loading}
-        authenticated
-        hideAttachments
-        hideBestFor
-        theme="lti"
-        videoActionButtons={getVideoActionButtons()}
-        videoPlayer={getPlayer(query, video)}
-      />
-    </div>
+    <VideoCardWrapper
+      video={video}
+      query={query}
+      actions={getVideoActionButtons()}
+    />
   );
 };
 
-const App = (): ReactElement =>
-  <SearchView renderVideoCard={renderVideoCard}/>;
+const App = (): ReactElement => (
+  <SearchView renderVideoCard={renderVideoCard} />
+);
 export default hot(AxiosWrapper(App));
