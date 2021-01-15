@@ -4,7 +4,7 @@ import { Video } from '@boclips-ui/video';
 import SearchView from '../../views/searchView';
 import '../../index.less';
 import AxiosWrapper from '../../service/axios/AxiosWrapper';
-import { VideoCardWrapper } from '../../components/videoCard/VideoCardWrapper';
+import VideoCardWrapper from '../../components/videoCard/VideoCardWrapper';
 import CopyVideoLinkButtonFactory from '../../components/copyVideoLinkButton/CopyVideoLinkButtonFactory';
 
 const renderVideoCard = (video: Video, query: string) => {
