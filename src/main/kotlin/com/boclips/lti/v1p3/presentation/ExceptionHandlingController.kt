@@ -13,11 +13,12 @@ class ExceptionHandlingController {
 
     @ExceptionHandler(BoclipsApiException::class)
     fun handleBoclipsExceptions(req: HttpServletRequest, ex: BoclipsApiException): ModelAndView {
-        logger.info{"exception message: " + ex.message}
+        val message = formatBoclipsApiExceptionDetails(ex)
+        logger.info { message }
 
         val mav = ModelAndView()
         mav.status = (ex.exceptionDetails.status)
-        mav.addObject("message", ex.message)
+        mav.addObject("message", message)
         mav.addObject("url", req.requestURL)
         mav.viewName = "error"
 
