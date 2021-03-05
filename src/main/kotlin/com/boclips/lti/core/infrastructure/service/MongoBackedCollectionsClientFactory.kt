@@ -6,10 +6,14 @@ import com.boclips.lti.core.infrastructure.repository.MongoIntegrationDocumentRe
 import com.boclips.videos.api.httpclient.CollectionsClient
 import com.boclips.videos.api.httpclient.helper.ServiceAccountCredentials
 import com.boclips.videos.api.httpclient.helper.ServiceAccountTokenFactory
+import feign.okhttp.OkHttpClient
+import feign.opentracing.TracingClient
+import io.opentracing.Tracer
 
 class MongoBackedCollectionsClientFactory(
     private val boclipsApiProperties: BoclipsApiProperties,
-    private val integrationDocumentRepository: MongoIntegrationDocumentRepository
+    private val integrationDocumentRepository: MongoIntegrationDocumentRepository,
+    private val tracer: Tracer
 ) : CollectionsClientFactory {
     override fun getClient(integrationId: String): CollectionsClient {
         val integration = integrationDocumentRepository.findOneByIntegrationId(integrationId)
@@ -24,7 +28,8 @@ class MongoBackedCollectionsClientFactory(
                         integration.clientId,
                         integration.clientSecret
                     )
-                )
+                ),
+                feignClient = TracingClient(OkHttpClient(), tracer)
             )
         } else {
             throw ClientNotFoundException(integrationId)

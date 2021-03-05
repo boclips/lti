@@ -2,6 +2,7 @@ package com.boclips.lti.core.infrastructure.repository
 
 import com.boclips.lti.core.infrastructure.exception.ResourceConversionException
 import com.boclips.lti.testsupport.factories.VideoResourcesFactory
+import com.boclips.videos.api.response.HateoasLink
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -28,7 +29,7 @@ class VideoResourceConverterTest {
         val resource = VideoResourcesFactory.sampleVideo(
             playback = VideoResourcesFactory.sampleStreamPlayback(
                 _links = mapOf(
-                    "thumbnail" to Link.of("https://api.boclips.com/thumbnail/1_e72xmbcb/width/{thumbnailWidth}/slice/1")
+                    "thumbnail" to HateoasLink.of(Link.of("https://api.boclips.com/thumbnail/1_e72xmbcb/width/{thumbnailWidth}/slice/1"))
                 )
             )
         )
@@ -44,7 +45,7 @@ class VideoResourceConverterTest {
         val resource = VideoResourcesFactory.sampleVideo(
             playback = VideoResourcesFactory.sampleStreamPlayback(
                 _links = mapOf(
-                    "thumbnail" to Link.of(thumbnailUrl)
+                    "thumbnail" to HateoasLink.of(Link.of(thumbnailUrl))
                 )
             )
         )

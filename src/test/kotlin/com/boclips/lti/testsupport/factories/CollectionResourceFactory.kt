@@ -1,5 +1,6 @@
 package com.boclips.lti.testsupport.factories
 
+import com.boclips.videos.api.response.HateoasLink
 import com.boclips.videos.api.response.agerange.AgeRangeResource
 import com.boclips.videos.api.response.collection.CollectionResource
 import com.boclips.videos.api.response.video.VideoResource
@@ -19,6 +20,7 @@ object CollectionResourceFactory {
         videos = videos,
         subjects = emptySet(),
         attachments = emptySet(),
-        _links = mapOf("self" to Link.of("$apiBaseUrl/v1/collections/$id"))
+        subCollections = emptyList(),
+        _links = mapOf("self" to HateoasLink.of(Link.of("$apiBaseUrl/v1/collections/$id")))
     )
 }

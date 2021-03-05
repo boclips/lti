@@ -4,6 +4,7 @@ import com.boclips.lti.core.configuration.properties.BoclipsApiProperties
 import com.boclips.lti.core.infrastructure.exception.ClientNotFoundException
 import com.boclips.lti.core.infrastructure.model.IntegrationDocument
 import com.boclips.lti.core.infrastructure.repository.MongoIntegrationDocumentRepository
+import com.boclips.lti.testsupport.factories.JaegerTracerFactory
 import com.boclips.users.api.httpclient.IntegrationsClient
 import com.boclips.users.api.httpclient.test.fakes.IntegrationsClientFake
 import com.nhaarman.mockitokotlin2.whenever
@@ -34,7 +35,8 @@ class MongoBackedIntegrationsClientFactoryTest {
 
         factory = MongoBackedIntegrationsClientFactory(
             boclipsApiProperties = boclipsApiProperties,
-            integrationDocumentRepository = integrationDocumentRepository
+            integrationDocumentRepository = integrationDocumentRepository,
+            tracer = JaegerTracerFactory.createTracer()
         )
     }
 

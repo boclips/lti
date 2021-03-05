@@ -18,6 +18,7 @@ import com.boclips.lti.core.infrastructure.service.MongoBackedVideosClientFactor
 import com.boclips.lti.core.infrastructure.service.SpringRequestAwareResourceLinkService
 import com.boclips.lti.core.infrastructure.service.UsersClientFactory
 import com.boclips.lti.core.infrastructure.service.VideosClientFactory
+import io.opentracing.Tracer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
@@ -25,14 +26,16 @@ import org.springframework.context.annotation.Profile
 @Configuration("coreInfrastructureContext")
 class InfrastructureContext(
     private val boclipsApiProperties: BoclipsApiProperties,
-    private val integrationDocumentRepository: MongoIntegrationDocumentRepository
+    private val integrationDocumentRepository: MongoIntegrationDocumentRepository,
+    private val tracer: Tracer
 ) {
     @Bean
     @Profile("!test")
     fun videosClientFactory(): VideosClientFactory {
         return MongoBackedVideosClientFactory(
             boclipsApiProperties = boclipsApiProperties,
-            integrationDocumentRepository = integrationDocumentRepository
+            integrationDocumentRepository = integrationDocumentRepository,
+            tracer = tracer
         )
     }
 
@@ -41,7 +44,8 @@ class InfrastructureContext(
     fun collectionsClientFactory(): CollectionsClientFactory {
         return MongoBackedCollectionsClientFactory(
             boclipsApiProperties = boclipsApiProperties,
-            integrationDocumentRepository = integrationDocumentRepository
+            integrationDocumentRepository = integrationDocumentRepository,
+            tracer = tracer
         )
     }
 
@@ -50,7 +54,8 @@ class InfrastructureContext(
     fun usersClientFactory(): UsersClientFactory {
         return MongoBackedUsersClientFactory(
             boclipsApiProperties = boclipsApiProperties,
-            integrationDocumentRepository = integrationDocumentRepository
+            integrationDocumentRepository = integrationDocumentRepository,
+            tracer = tracer
         )
     }
 
@@ -59,7 +64,8 @@ class InfrastructureContext(
     fun integrationsClientFactory(): IntegrationsClientFactory {
         return MongoBackedIntegrationsClientFactory(
             boclipsApiProperties = boclipsApiProperties,
-            integrationDocumentRepository = integrationDocumentRepository
+            integrationDocumentRepository = integrationDocumentRepository,
+            tracer = tracer
         )
     }
 

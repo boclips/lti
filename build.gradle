@@ -5,7 +5,8 @@ buildscript {
     kotlinVersion = '1.4.21'
     springBootVersion = '2.3.5.RELEASE'
     junitVersion = "5.3.1"
-
+    feignClientVersion = '10.7.0'
+    opentracingJaegerCloudVerions = '3.2.2'
   }
   repositories {
     jcenter()
@@ -149,15 +150,16 @@ dependencies {
   implementation "io.micrometer:micrometer-registry-prometheus"
 
   implementation 'io.sentry:sentry-logback:4.2.0'
-  implementation "io.opentracing.contrib:opentracing-spring-jaeger-web-starter:3.2.2"
+  implementation "io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter:${opentracingJaegerCloudVerions}"
 
   implementation "org.imsglobal:basiclti-util:1.2.0"
 
   implementation 'com.github.boclips:boclips-spring-security:0.558.0'
   implementation 'com.github.boclips:boclips-spring-web:0.453.0'
-  implementation 'com.github.boclips:videos:v15'
-  implementation 'io.github.openfeign:feign-core:10.7.0'
-  implementation("com.github.boclips:user-service:267")
+  implementation 'com.github.boclips:videos:v766'
+  implementation "io.github.openfeign:feign-core:${feignClientVersion}"
+  implementation "io.github.openfeign:feign-okhttp:${feignClientVersion}"
+  implementation("com.github.boclips:user-service:v312")
   implementation 'com.damnhandy:handy-uri-templates:2.1.8'
   implementation 'joda-time:joda-time:2.10.10'
 
