@@ -16,7 +16,7 @@ class PerformSecurityChecks(
     private val idTokenValidator: IdTokenValidator
 ) {
     operator fun invoke(state: String, idToken: String, httpSession: HttpSession) {
-        if (!csrfService.doesCsrfStateMatch(state, httpSession)) throw StatesDoNotMatchException()
+        if (!csrfService.doesCsrfStateMatch(state, httpSession)) throw StatesDoNotMatchException(state)
         if (!jwtService.isSignatureValid(idToken)) throw InvalidJwtTokenSignatureException()
 
         val decodedToken = jwtService.decode(idToken)

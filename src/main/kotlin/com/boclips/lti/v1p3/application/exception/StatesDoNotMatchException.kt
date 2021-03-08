@@ -4,10 +4,10 @@ import com.boclips.web.exceptions.BoclipsApiException
 import com.boclips.web.exceptions.ExceptionDetails
 import org.springframework.http.HttpStatus
 
-class StatesDoNotMatchException : BoclipsApiException(
+class StatesDoNotMatchException(stateValue: String) : BoclipsApiException(
     ExceptionDetails(
         error = "Unauthorised",
-        message = "Given and expected states do not match",
+        message = "'$stateValue' not found in the session as a state assigned at login initiation",
         status = HttpStatus.UNAUTHORIZED
     )
 )
