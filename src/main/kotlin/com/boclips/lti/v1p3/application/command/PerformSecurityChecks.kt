@@ -21,7 +21,7 @@ class PerformSecurityChecks(
     companion object : KLogging()
 
     operator fun invoke(state: String, idToken: String, httpSession: HttpSession) {
-        logger.info { httpSession.getMapAttribute(SessionKeys.statesToTargetLinkUris) }
+        logger.info { "${httpSession.id}: ${httpSession.getMapAttribute(SessionKeys.statesToTargetLinkUris)}" }
 
         if (!csrfService.doesCsrfStateMatch(state, httpSession)) throw StatesDoNotMatchException(state)
         if (!jwtService.isSignatureValid(idToken)) throw InvalidJwtTokenSignatureException()
