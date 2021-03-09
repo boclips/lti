@@ -15,7 +15,7 @@ fun HttpSession.getTargetLinkUri(state: String): String {
 fun HttpSession.containsMappingForState(state: String): Boolean =
     this.getMapAttribute(SessionKeys.statesToTargetLinkUris).containsKey(state)
 
-private fun HttpSession.getMapAttribute(value: String): MutableMap<String, String> {
+fun HttpSession.getMapAttribute(value: String): MutableMap<String, String> {
     return this.getAttribute(value).let {
         if (it == null) {
             val newMap = serializableMapOf<String, String>()
