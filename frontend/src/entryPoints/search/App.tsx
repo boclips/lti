@@ -6,8 +6,9 @@ import '../../index.less';
 import AxiosWrapper from '../../service/axios/AxiosWrapper';
 import VideoCardWrapper from '../../components/videoCard/VideoCardWrapper';
 import CopyVideoLinkButtonFactory from '../../components/copyVideoLinkButton/CopyVideoLinkButtonFactory';
+import {User} from "boclips-api-client/dist/sub-clients/organisations/model/User";
 
-const renderVideoCard = (video: Video, query: string) => {
+const renderVideoCard = (video: Video, query: string, user: User | null) => {
   const getVideoActionButtons = () => {
     const copyLinkButton = CopyVideoLinkButtonFactory.getButton(video);
     return copyLinkButton ? [copyLinkButton] : [];

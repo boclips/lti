@@ -5,8 +5,9 @@ import SearchView from '../../views/searchView';
 import EmbedVideoButton from '../../components/embedVideoButton/EmbedVideoButton';
 import AxiosWrapper from '../../service/axios/AxiosWrapper';
 import VideoCardWrapper from '../../components/videoCard/VideoCardWrapper';
+import {User} from "boclips-api-client/dist/sub-clients/organisations/model/User";
 
-const renderVideoCard = (video: Video, query: string) => (
+const renderVideoCard = (video: Video, query: string, user: User | null) => (
   <VideoCardWrapper
     video={video}
     query={query}
