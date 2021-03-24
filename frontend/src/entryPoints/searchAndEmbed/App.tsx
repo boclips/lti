@@ -6,13 +6,18 @@ import EmbedVideoButton from '../../components/embedVideoButton/EmbedVideoButton
 import AxiosWrapper from '../../service/axios/AxiosWrapper';
 import VideoCardWrapper from '../../components/videoCard/VideoCardWrapper';
 
-const renderVideoCard = (video: Video, query: string) => (
+const renderVideoCard = (
+  video: Video,
+  query: string,
+  showVideoCardV3: boolean,
+) => (
   <VideoCardWrapper
     video={video}
     query={query}
     actions={[
       <EmbedVideoButton video={video} onSubmit={(form) => form?.submit()} />,
     ]}
+    showVideoCardV3={showVideoCardV3}
   />
 );
 

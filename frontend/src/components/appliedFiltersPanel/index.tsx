@@ -1,6 +1,6 @@
 import React from 'react';
 import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subject';
-import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
+import { VideoFacetsEntity } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacetsEntity';
 import { Filters } from '../../types/filters';
 import DurationConverter from '../filterPanel/converters/DurationConverter';
 import FilterBadgeFactory from './FilterBadgeFactory';
@@ -13,35 +13,35 @@ interface AppliedFiltersPanelProps {
   setSourceFilter: (filter: string[]) => void;
   setSubjectFilter: (filter: string[]) => void;
   subjectList: Subject[];
-  facets: VideoFacets | undefined;
+  facets: VideoFacetsEntity | undefined;
 }
 
 const AppliedFiltersPanel = ({
   appliedFilters: {
-    ageRanges, source, duration, subjects
+    ageRanges, source, duration, subjects 
   },
   setAgeRangeFilter,
   setDurationFilter,
   setSourceFilter,
   setSubjectFilter,
   subjectList,
-  facets
+  facets,
 }: AppliedFiltersPanelProps) => {
   const AgeBadgeOptions = ageRanges?.map((filter) => ({
     displayValue: filter,
-    key: filter
+    key: filter,
   }));
 
   const durationBadgeOptions = duration?.map((durationISO) => ({
     displayValue: DurationConverter.getLabelFromIso(durationISO),
-    key: durationISO
+    key: durationISO,
   }));
 
   const sourceBadgeOptions = source?.map((selectedChannelId) => {
     const facet = facets!!.channels!![selectedChannelId];
     return {
       displayValue: facet!!.name!!,
-      key: facet!!.id!!
+      key: facet!!.id!!,
     };
   });
 
@@ -50,39 +50,49 @@ const AppliedFiltersPanel = ({
 
     return {
       displayValue: subject!!.name,
-      key: subject!!.id
+      key: subject!!.id,
     };
   });
-  
-  const isAnyFilterApplied = () => 
-    Boolean(subjects?.length || ageRanges?.length || source?.length || duration?.length);
+
+  const isAnyFilterApplied = () =>
+    Boolean(
+      subjects?.length ||
+        ageRanges?.length ||
+        source?.length ||
+        duration?.length,
+    );
 
   const appliedFilterBadges = () => {
     const ageBadges = FilterBadgeFactory.produce({
       badgeType: 'Age',
       badges: AgeBadgeOptions || [],
-      updateFilters: setAgeRangeFilter
+      updateFilters: setAgeRangeFilter,
     });
 
     const durationBadges = FilterBadgeFactory.produce({
       badgeType: 'Duration',
       badges: durationBadgeOptions || [],
-      updateFilters: setDurationFilter
+      updateFilters: setDurationFilter,
     });
 
     const subjectBadges = FilterBadgeFactory.produce({
       badgeType: 'Subject',
       badges: subjectBadgeOptions || [],
-      updateFilters: setSubjectFilter
+      updateFilters: setSubjectFilter,
     });
 
     const sourcesBadges = FilterBadgeFactory.produce({
       badgeType: 'Source',
       badges: sourceBadgeOptions || [],
-      updateFilters: setSourceFilter
+      updateFilters: setSourceFilter,
     });
 
-    return [...ageBadges, ...durationBadges, ...subjectBadges, ...sourcesBadges];
+    return [
+      ...ageBadges,
+      ...durationBadges,
+      ...subjectBadges,
+      ...sourcesBadges,
+    ];
   };
   return (
     <div>

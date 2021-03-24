@@ -1,27 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { SelectOption } from '@boclips-ui/select-option';
-import { Facet, VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subject';
 import SelectFilter, { DropdownAligment } from '@boclips-ui/select';
 import c from 'classnames';
 import { Button } from 'antd';
+import {
+  FacetEntity,
+  VideoFacetsEntity,
+} from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacetsEntity';
 import s from './style.module.less';
-import DurationConverter from './converters/DurationConverter';
+import DurationConverter, {
+  DurationFacet,
+} from './converters/DurationConverter';
 import AppliedFiltersPanel from '../appliedFiltersPanel';
 import { Filters } from '../../types/filters';
 
 interface Props {
-  facets?: VideoFacets;
+  facets?: VideoFacetsEntity;
   onApply: (filters: Filters) => void;
   subjects?: Subject[];
   hidePanel?: boolean;
 }
 
 const FilterPanel = ({
-  facets,
-  onApply,
-  subjects,
-  hidePanel,
+  facets, onApply, subjects, hidePanel 
 }: Props) => {
   const [ageRangeFilter, setAgeRangeFilter] = useState<string[]>();
   const [durationFilter, setDurationFilter] = useState<string[]>();
@@ -67,11 +69,13 @@ const FilterPanel = ({
     });
   };
 
-  const convertToSelectOptions = (rawFacets: { [id: string]: Facet} = {}): SelectOption[] => 
+  const convertToSelectOptions = (
+    rawFacets: { [id: string]: FacetEntity } = {},
+  ): SelectOption[] =>
     Object.values(rawFacets).map((facet) => ({
       id: facet.id || '',
       label: facet.name || '',
-      count: facet.hits
+      count: facet.hits,
     })) || [];
 
   const ageRangeOptions: SelectOption[] = Object.keys(facets?.ageRanges!).map(
@@ -94,11 +98,13 @@ const FilterPanel = ({
   );
 
   const durationOptions: SelectOption[] = DurationConverter.toSelectOptions(
-    facets?.durations!,
+    (facets?.durations! as unknown) as DurationFacet,
   );
 
-  const sourceOptions: SelectOption[] = convertToSelectOptions(facets?.channels);
-  
+  const sourceOptions: SelectOption[] = convertToSelectOptions(
+    facets?.channels,
+  );
+
   return (
     <>
       <div
@@ -155,8 +161,8 @@ const FilterPanel = ({
           />
         </div>
         {filterTouched && (
-          <AppliedFiltersPanel 
-            subjectList={subjects || []} 
+          <AppliedFiltersPanel
+            subjectList={subjects || []}
             setSubjectFilter={setSubjectFilter}
             setSourceFilter={setSourceFilter}
             setAgeRangeFilter={setAgeRangeFilter}
@@ -164,11 +170,12 @@ const FilterPanel = ({
             facets={facets}
             appliedFilters={{
               ageRanges: ageRangeFilter,
-              duration: durationFilter, 
+              duration: durationFilter,
               subjects: subjectFilter,
-              source: sourceFilter
+              source: sourceFilter,
             }}
-          />)}
+          />
+        )}
       </div>
     </>
   );

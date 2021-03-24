@@ -10,6 +10,7 @@ import NoResults from '@boclips-ui/no-results';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 import { Subject } from 'boclips-api-client/dist/types';
 import { User } from 'boclips-api-client/dist/sub-clients/organisations/model/User';
+import { VideoFacetsEntity } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacetsEntity';
 import ApiClient from '../../service/client/ApiClient';
 import { AppConstants } from '../../types/AppConstants';
 import VideoService, {
@@ -23,7 +24,11 @@ import FiltersButton from '../../components/filtersButton';
 import ClosableHeader from '../../components/closableHeader';
 
 interface Props {
-  renderVideoCard: (video: Video, query: string) => React.ReactNode;
+  renderVideoCard: (
+    video: Video,
+    query: string,
+    showVideoCardV3: boolean,
+  ) => React.ReactNode;
   collapsibleFilters?: boolean;
   closableHeader?: boolean;
   aboutSliderVisible?: boolean;
@@ -52,6 +57,7 @@ const LtiView = ({
   const [activeFilterCount, setActiveFilterCount] = useState<number>(0);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [showSlsTerms, setShowSlsTerms] = useState<boolean>(false);
+  const [showVideoCardV3, setShowVideoCardV3] = useState<boolean>(false);
 
   const videoServicePromise = useMemo(
     () =>
@@ -123,6 +129,9 @@ const LtiView = ({
   useEffect(() => {
     if (currentUser) {
       setShowSlsTerms(currentUser.features?.LTI_SLS_TERMS_BUTTON || false);
+      setShowVideoCardV3(
+        currentUser.features?.LTI_RESPONSIVE_VIDEO_CARD || false,
+      );
     }
   }, [currentUser]);
 
@@ -218,7 +227,7 @@ const LtiView = ({
                     spinning: loading,
                   }}
                   renderItem={(video: Video) =>
-                    renderVideoCard(video, searchQuery!!)
+                    renderVideoCard(video, searchQuery!!, showVideoCardV3)
                   }
                 />
               )}
@@ -294,7 +303,7 @@ const LtiView = ({
                 }
               >
                 <FilterPanel
-                  facets={facets}
+                  facets={(facets as unknown) as VideoFacetsEntity}
                   onApply={setSingleFilter}
                   subjects={apiSubjects}
                   hidePanel={!filtersVisible}

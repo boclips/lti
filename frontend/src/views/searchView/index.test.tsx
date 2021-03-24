@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Video } from '@boclips-ui/video';
@@ -21,13 +22,17 @@ describe('LTI test', () => {
     fireEvent.click(searchButton);
   };
 
-  const filterResults = async (component:any, filterType:string, filterSelection:string) => {
+  const filterResults = async (
+    component: any,
+    filterType: string,
+    filterSelection: string,
+  ) => {
     await fireEvent.mouseDown(component.getByText(filterType));
     await fireEvent.click(component.getByTitle(filterSelection));
     await fireEvent.click(component.getByText('APPLY'));
   };
 
-  const removeFilters = (component:any) => {
+  const removeFilters = (component: any) => {
     fireEvent.click(component.getByText('CLEAR ALL'));
   };
 
@@ -38,10 +43,12 @@ describe('LTI test', () => {
 
     fakeApiClient.users.insertCurrentUser(UserFactory.sample());
 
-    render(<LtiView renderVideoCard={() => <div/>}/>);
+    render(<LtiView renderVideoCard={() => <div />} />);
 
     expect(
-      await screen.findByText('Use the search on top to discover inspiring videos'),
+      await screen.findByText(
+        'Use the search on top to discover inspiring videos',
+      ),
     ).toBeInTheDocument();
   });
 
@@ -50,11 +57,13 @@ describe('LTI test', () => {
       'https://api.example.com',
     ).getClient()) as FakeBoclipsClient;
 
-    fakeApiClient.users.insertCurrentUser(UserFactory.sample({
-      features: { LTI_SLS_TERMS_BUTTON: true }
-    }));
+    fakeApiClient.users.insertCurrentUser(
+      UserFactory.sample({
+        features: { LTI_SLS_TERMS_BUTTON: true },
+      }),
+    );
 
-    render(<LtiView renderVideoCard={() => <div />}/>);
+    render(<LtiView renderVideoCard={() => <div />} />);
 
     const aboutButton = await screen.findByText('About the app and services');
 
@@ -63,16 +72,18 @@ describe('LTI test', () => {
     expect(await screen.findByText('How does it work?')).toBeVisible();
   });
 
-  it('doesn\'t show SLS terms if user should not see it', async () => {
+  it("doesn't show SLS terms if user should not see it", async () => {
     const fakeApiClient = (await new ApiClient(
       'https://api.example.com',
     ).getClient()) as FakeBoclipsClient;
 
-    fakeApiClient.users.insertCurrentUser(UserFactory.sample({
-      features: { }
-    }));
+    fakeApiClient.users.insertCurrentUser(
+      UserFactory.sample({
+        features: {},
+      }),
+    );
 
-    render(<LtiView renderVideoCard={() => <div />}/>);
+    render(<LtiView renderVideoCard={() => <div />} />);
 
     await waitFor(() => {
       expect(screen.queryByText('About the app and services')).toBeNull();
@@ -123,7 +134,7 @@ describe('LTI test', () => {
         '3-5': {
           hits: 3,
         },
-      }
+      },
     });
 
     const view = render(
@@ -139,7 +150,11 @@ describe('LTI test', () => {
 
     searchFor('nothing');
 
-    expect(await view.findByText('Try again using different keywords or change the filters'));
+    expect(
+      await view.findByText(
+        'Try again using different keywords or change the filters',
+      ),
+    );
     expect(view.getByText('FILTER BY:')).toBeVisible();
   });
 
@@ -152,8 +167,12 @@ describe('LTI test', () => {
 
     searchFor('find nothing');
 
-    expect(await view.findByText('Try different words that mean the same thing')).toBeVisible();
-    expect(await view.findByText("Sorry, we couldn't find any results for")).toBeVisible();
+    expect(
+      await view.findByText('Try different words that mean the same thing'),
+    ).toBeVisible();
+    expect(
+      await view.findByText("Sorry, we couldn't find any results for"),
+    ).toBeVisible();
     expect(await view.findByText('"find nothing"')).toBeVisible();
     expect(await view.findByText('Check your spelling')).toBeVisible();
     expect(await view.findByText('Try more general words')).toBeVisible();
@@ -186,47 +205,55 @@ describe('LTI test', () => {
     expect(screen.queryByText('SHOW FILTERS')).toBeNull();
   });
 
-  it('when searching with filters produces no results then filters are removed,' +
-    ' the filter panel disappears and no results view changes', async () => {
-    const fakeApiClient = (await new ApiClient(
-      'https://api.example.com',
-    ).getClient()) as FakeBoclipsClient;
+  it(
+    'when searching with filters produces no results then filters are removed,' +
+      ' the filter panel disappears and no results view changes',
+    async () => {
+      const fakeApiClient = (await new ApiClient(
+        'https://api.example.com',
+      ).getClient()) as FakeBoclipsClient;
 
-    fakeApiClient.videos.insertVideo(
-      VideoFactory.sample({ id: '123', title: 'Hi' }),
-    );
-    fakeApiClient.videos.setFacets({
-      durations: {},
-      resourceTypes: {},
-      subjects: {},
-      ageRanges: {
-        '3-5': {
-          hits: 3,
+      fakeApiClient.videos.insertVideo(
+        VideoFactory.sample({ id: '123', title: 'Hi' }),
+      );
+
+      fakeApiClient.videos.setFacets({
+        durations: {},
+        resourceTypes: {},
+        subjects: {},
+        ageRanges: {
+          '3-5': {
+            hits: 3,
+          },
         },
-      }
-    });
+      });
 
-    const view = render(
-      <LtiView
-        renderVideoCard={(video: Video) => <div>Hello, video {video.id}</div>}
-      />,
-    );
+      const view = render(
+        <LtiView
+          renderVideoCard={(video: Video) => <div>Hello, video {video.id}</div>}
+        />,
+      );
 
-    searchFor('Hi');
-    expect(await view.findByText('FILTER BY:')).toBeInTheDocument();
+      searchFor('Hi');
+      expect(await view.findByText('FILTER BY:')).toBeInTheDocument();
 
-    filterResults(view, 'Age', '3 - 5');
+      filterResults(view, 'Age', '3 - 5');
 
-    expect(await view.findByText('CLEAR ALL')).toBeVisible();
+      expect(await view.findByText('CLEAR ALL')).toBeVisible();
 
-    searchFor('definitely not a search query :( ');
+      searchFor('definitely not a search query :( ');
 
-    expect(await view.findByText(/Try again using different keywords or change the filters/)).toBeVisible();
+      expect(
+        await view.findByText(
+          /Try again using different keywords or change the filters/,
+        ),
+      ).toBeVisible();
 
-    removeFilters(view);
+      removeFilters(view);
 
-    expect(await view.findByText(/Check your spelling/)).toBeVisible();
+      expect(await view.findByText(/Check your spelling/)).toBeVisible();
 
-    expect(await view.queryByText('FILTER BY:')).not.toBeInTheDocument();
-  });
+      expect(await view.queryByText('FILTER BY:')).not.toBeInTheDocument();
+    },
+  );
 });

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Video } from '@boclips-ui/video';
-import Button from '../button/Button';
+import Button from '@boclips-ui/button';
 import ContentSelectionService from '../../service/contentSelection/ContentSelectionService';
 import DeepLinkingParameterService from '../../service/deepLinking/DeepLinkingParameterService';
 import s from './style.module.less';
@@ -22,7 +22,7 @@ const EmbedVideoButton = ({ video, onSubmit }: Props) => {
       onSubmit(formRef.current);
     }
   }, [jwt]);
-  
+
   const handleEmbed = () => {
     AnalyticsFactory.getInstance().trackVideoInteraction(
       video,
@@ -39,15 +39,8 @@ const EmbedVideoButton = ({ video, onSubmit }: Props) => {
   };
 
   return (
-    <>
-      <Button
-        role="button"
-        type="primary"
-        className={s.embedVideoButton}
-        onClick={handleEmbed}
-      >
-        + Add to lesson
-      </Button>
+    <div className={s.buttonWrapper}>
+      <Button onClick={handleEmbed} text="+ Add to lesson" />
       {jwt && (
         <form
           ref={formRef}
@@ -58,7 +51,7 @@ const EmbedVideoButton = ({ video, onSubmit }: Props) => {
           <input type="hidden" aria-label="jwt" value={jwt} name="JWT" />
         </form>
       )}
-    </>
+    </div>
   );
 };
 

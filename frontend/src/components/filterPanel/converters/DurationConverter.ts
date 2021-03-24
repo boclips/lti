@@ -1,32 +1,33 @@
 import { SelectOption } from '@boclips-ui/select-option';
-import { Facet } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
+import { FacetEntity } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacetsEntity';
 import Range from '../../../types/range';
 import dayjs from '../../../types/dayjs';
 
-interface DurationFacet {
-  [id: string]: Facet;
+export interface DurationFacet {
+  [id: string]: FacetEntity;
 }
 
 export default class DurationConverter {
   static toSelectOptions(durationFacet: DurationFacet): SelectOption[] {
-    return Object.keys(durationFacet).map((key) => ({
-      id: key,
-      label: this.getLabelFromIso(key),
-      count: this.extractFacetHits(key, durationFacet),
-    }))
+    return Object.keys(durationFacet)
+      .map((key) => ({
+        id: key,
+        label: this.getLabelFromIso(key),
+        count: this.extractFacetHits(key, durationFacet),
+      }))
       .filter((option) => option.label?.length > 0);
   }
-  
+
   static getLabelFromIso(iso: string) {
     const values = iso.split('-');
-    return values.length === 2 
+    return values.length === 2
       ? this.getLabel({
         min: dayjs.duration(values[0]).asSeconds(),
-        max: dayjs.duration(values[1]).asSeconds()
+        max: dayjs.duration(values[1]).asSeconds(),
       })
       : '';
   }
-  
+
   private static getLabel = (range: Range) => {
     const formatter = (seconds) => `${seconds / 60}m`;
 
@@ -39,7 +40,7 @@ export default class DurationConverter {
 
   private static extractFacetHits = (
     id: string,
-    facet: { [id: string]: Facet },
+    facet: { [id: string]: FacetEntity },
   ): number => {
     const MaxElementCount = 500;
     if (!facet) {

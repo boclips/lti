@@ -6,15 +6,17 @@ describe('Applied filters panel', () => {
   it('shows badges for all applied filters', () => {
     render(
       <AppliedFiltersPanel
-        subjectList={[{
-          id: 'subject-id',
-          name: 'history subject'
-        }]}
+        subjectList={[
+          {
+            id: 'subject-id',
+            name: 'history subject',
+          },
+        ]}
         appliedFilters={{
           ageRanges: ['4-6'],
           duration: ['PT0S-PT2M'],
           subjects: ['subject-id'],
-          source: ['bbc-id']
+          source: ['bbc-id'],
         }}
         setSubjectFilter={jest.fn()}
         setSourceFilter={jest.fn()}
@@ -24,8 +26,15 @@ describe('Applied filters panel', () => {
           ageRanges: {},
           durations: {},
           resourceTypes: {},
-          subjects: { 'subject-id': { id: 'subject-id', hits: 25, name: 'history subject' }, 'subject-2': { id: 'subject-2', hits: 25, name: 'subject 2' } },
-          channels: { 'bbc-id': { id: 'bbc-id', hits: 25, name: 'BBC' } }
+          subjects: {
+            'subject-id': {
+              id: 'subject-id',
+              hits: 25,
+              name: 'history subject',
+            },
+            'subject-2': { id: 'subject-2', hits: 25, name: 'subject 2' },
+          },
+          channels: { 'bbc-id': { id: 'bbc-id', hits: 25, name: 'BBC' } },
         }}
       />,
     );
@@ -43,18 +52,21 @@ describe('Applied filters panel', () => {
     const sourceFilterMock = jest.fn();
     render(
       <AppliedFiltersPanel
-        subjectList={[{
-          id: 'subject-1',
-          name: 'history subject'
-        }, {
-          id: 'subject-2',
-          name: 'art subject'
-        }]}
+        subjectList={[
+          {
+            id: 'subject-1',
+            name: 'history subject',
+          },
+          {
+            id: 'subject-2',
+            name: 'art subject',
+          },
+        ]}
         appliedFilters={{
           ageRanges: ['4-6', '7-9'],
           duration: ['PT0S-PT2M', 'PT2M-PT5M'],
           subjects: ['subject-1', 'subject-2'],
-          source: ['bbc-id', 'nature-channel-id']
+          source: ['bbc-id', 'nature-channel-id'],
         }}
         setSubjectFilter={subjectFilterMock}
         setSourceFilter={sourceFilterMock}
@@ -64,8 +76,18 @@ describe('Applied filters panel', () => {
           ageRanges: {},
           durations: {},
           resourceTypes: {},
-          subjects: { 'subject-1': { id: 'subject-1', hits: 25, name: 'subject 1' }, 'subject-2': { id: 'subject-2', hits: 25, name: 'subject 2' } },
-          channels: { 'bbc-id': { id: 'bbc-id', hits: 25, name: 'BBC' }, 'nature-channel-id': { id: 'nature-channel-id', hits: 2, name: 'nature channel' } }
+          subjects: {
+            'subject-1': { id: 'subject-1', hits: 25, name: 'subject 1' },
+            'subject-2': { id: 'subject-2', hits: 25, name: 'subject 2' },
+          },
+          channels: {
+            'bbc-id': { id: 'bbc-id', hits: 25, name: 'BBC' },
+            'nature-channel-id': {
+              id: 'nature-channel-id',
+              hits: 2,
+              name: 'nature channel',
+            },
+          },
         }}
       />,
     );
@@ -99,7 +121,7 @@ describe('Applied filters panel', () => {
           ageRanges: undefined,
           duration: [],
           subjects: [],
-          source: undefined
+          source: undefined,
         }}
         setSubjectFilter={jest.fn()}
         setSourceFilter={jest.fn()}
@@ -110,11 +132,13 @@ describe('Applied filters panel', () => {
           durations: {},
           resourceTypes: {},
           subjects: {},
-          channels: { 'bbc-id': { id: 'bbc-id', hits: 25, name: 'BBC' } }
+          channels: { 'bbc-id': { id: 'bbc-id', hits: 25, name: 'BBC' } },
         }}
       />,
     );
 
-    expect(await screen.queryByText('Filters applied:')).not.toBeInTheDocument();
+    expect(
+      await screen.queryByText('Filters applied:'),
+    ).not.toBeInTheDocument();
   });
 });

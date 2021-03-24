@@ -12,9 +12,9 @@ class CopyVideoLinkButtonFactory {
       'embeddable_video_url',
     );
 
-    return (showCopyLink && embeddableVideoUrl)
-      ? <CopyVideoLinkButton video={video}/>
-      : null;
+    return showCopyLink && embeddableVideoUrl ? (
+      <CopyVideoLinkButton video={video} />
+    ) : null;
   };
 }
 

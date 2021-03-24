@@ -10,11 +10,19 @@ const testFacets = {
     'PT2M-PT5M': { hits: 94 },
     'PT5M-PT10M': { hits: 44 },
     'PT10M-PT20M': { hits: 48 },
-    'PT20M-PT24H': { hits: 45 }
+    'PT20M-PT24H': { hits: 45 },
   },
   subjects: {
-    '5cb499c9fd5beb428189454d': { hits: 32, id: '5cb499c9fd5beb428189454d', name: 'subject1' },
-    '5cb499c9fd5beb428189454c': { hits: 88, id: '5cb499c9fd5beb428189454c', name: 'subject2' }
+    '5cb499c9fd5beb428189454d': {
+      hits: 32,
+      id: '5cb499c9fd5beb428189454d',
+      name: 'subject1',
+    },
+    '5cb499c9fd5beb428189454c': {
+      hits: 88,
+      id: '5cb499c9fd5beb428189454c',
+      name: 'subject2',
+    },
   },
   ageRanges: {
     '3-5': {
@@ -23,8 +31,40 @@ const testFacets = {
   },
   resourceTypes: {},
   channels: {
-    'biology-channel-id': { hits: 111, id: 'biology-channel-id', name: 'biology channel' },
-    'history-channel-id': { hits: 212, id: 'history-channel-id', name: 'history channel' }
+    'biology-channel-id': {
+      hits: 111,
+      id: 'biology-channel-id',
+      name: 'biology channel',
+    },
+    'history-channel-id': {
+      hits: 212,
+      id: 'history-channel-id',
+      name: 'history channel',
+    },
+  },
+  videoTypes: {
+    'biology-channel-id': {
+      hits: 111,
+      id: 'biology-channel-id',
+      name: 'biology channel',
+    },
+    'history-channel-id': {
+      hits: 212,
+      id: 'history-channel-id',
+      name: 'history channel',
+    },
+  },
+  prices: {
+    'biology-channel-id': {
+      hits: 111,
+      id: 'biology-channel-id',
+      name: 'biology channel',
+    },
+    'history-channel-id': {
+      hits: 212,
+      id: 'history-channel-id',
+      name: 'history channel',
+    },
   },
 };
 
@@ -32,6 +72,7 @@ describe('Filter Panel', () => {
   it('shows subject filters with options from API', async () => {
     render(
       <FilterPanel
+        // @ts-ignore
         facets={testFacets}
         onApply={jest.fn()}
         subjects={[
@@ -53,12 +94,8 @@ describe('Filter Panel', () => {
   });
 
   it('shows sources filters with options from API', async () => {
-    render(
-      <FilterPanel
-        facets={testFacets}
-        onApply={jest.fn()}
-      />,
-    );
+    // @ts-ignore
+    render(<FilterPanel facets={testFacets} onApply={jest.fn()} />);
 
     const sourceSelector = screen.getByText('Source');
     expect(sourceSelector).toBeVisible();
@@ -72,12 +109,8 @@ describe('Filter Panel', () => {
   });
 
   it('shows duration filters', async () => {
-    render(
-      <FilterPanel
-        facets={testFacets}
-        onApply={jest.fn()}
-      />,
-    );
+    // @ts-ignore
+    render(<FilterPanel facets={testFacets} onApply={jest.fn()} />);
 
     const sourceSelector = screen.getByText('Duration');
     expect(sourceSelector).toBeVisible();
@@ -95,13 +128,8 @@ describe('Filter Panel', () => {
 
   it('clear all clears the filters', async () => {
     const onApply = jest.fn();
-
-    render(
-      <FilterPanel
-        facets={testFacets}
-        onApply={onApply}
-      />,
-    );
+    // @ts-ignore
+    render(<FilterPanel facets={testFacets} onApply={onApply} />);
 
     const sourceSelector = screen.getByText('Duration');
     expect(sourceSelector).toBeVisible();
@@ -119,18 +147,17 @@ describe('Filter Panel', () => {
 
     waitFor(() => {
       expect(onApply).toBeCalledWith({
-        ageRanges: [], source: [], subjects: [], duration: []
+        ageRanges: [],
+        source: [],
+        subjects: [],
+        duration: [],
       });
     });
   });
 
   it('Filters applied panel only shows when filters are selected', () => {
-    render(
-      <FilterPanel
-        facets={testFacets}
-        onApply={jest.fn()}
-      />,
-    );
+    // @ts-ignore
+    render(<FilterPanel facets={testFacets} onApply={jest.fn()} />);
 
     const sourceSelector = screen.getByText('Duration');
 
@@ -147,7 +174,7 @@ describe('Filter Panel', () => {
     expect(screen.getAllByText('10m - 20m').length).toEqual(1);
 
     const removeElements = screen.getAllByTestId(/-remove-button/);
-    removeElements.map((element) => (fireEvent.click(element)));
+    removeElements.map((element) => fireEvent.click(element));
 
     waitFor(() => {
       expect(screen.queryByText('Filters applied')).not.toBeInTheDocument();
@@ -157,12 +184,8 @@ describe('Filter Panel', () => {
   });
 
   it('When filters are removed from applied filters the count shows correct number', async () => {
-    render(
-      <FilterPanel
-        facets={testFacets}
-        onApply={jest.fn()}
-      />,
-    );
+    // @ts-ignore
+    render(<FilterPanel facets={testFacets} onApply={jest.fn()} />);
 
     const sourceSelector = screen.getByText('Duration');
     expect(sourceSelector).toBeVisible();

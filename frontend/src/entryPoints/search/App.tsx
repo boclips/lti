@@ -7,7 +7,11 @@ import AxiosWrapper from '../../service/axios/AxiosWrapper';
 import VideoCardWrapper from '../../components/videoCard/VideoCardWrapper';
 import CopyVideoLinkButtonFactory from '../../components/copyVideoLinkButton/CopyVideoLinkButtonFactory';
 
-const renderVideoCard = (video: Video, query: string) => {
+const renderVideoCard = (
+  video: Video,
+  query: string,
+  showVideoCardV3: boolean,
+) => {
   const getVideoActionButtons = () => {
     const copyLinkButton = CopyVideoLinkButtonFactory.getButton(video);
     return copyLinkButton ? [copyLinkButton] : [];
@@ -18,6 +22,7 @@ const renderVideoCard = (video: Video, query: string) => {
       video={video}
       query={query}
       actions={getVideoActionButtons()}
+      showVideoCardV3={showVideoCardV3}
     />
   );
 };
