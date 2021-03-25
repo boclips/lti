@@ -27,7 +27,6 @@ const VideoCardWrapper = ({
       [s.videoCardV3]: showVideoCardV3,
     })}
   >
-    {console.log(showVideoCardV3)}
     {showVideoCardV3 ? (
       <VideoCardV3
         title={video.title}

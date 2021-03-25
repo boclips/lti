@@ -40,7 +40,7 @@ const EmbedVideoButton = ({ video, onSubmit }: Props) => {
 
   return (
     <div className={s.buttonWrapper}>
-      <Button onClick={handleEmbed} text="+ Add to lesson" />
+      <Button width="72px" height="42px" onClick={handleEmbed} text="+" />
       {jwt && (
         <form
           ref={formRef}
