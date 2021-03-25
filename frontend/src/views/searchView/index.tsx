@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import c from 'classnames';
-import { Col, Layout, List, Row } from 'antd';
+import {
+  Col, Layout, List, Row 
+} from 'antd';
 import { Video } from '@boclips-ui/video';
 import { VideoCardsPlaceholder } from '@boclips-ui/video-card-placeholder';
 import SearchBar from '@boclips-ui/search-bar';
