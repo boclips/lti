@@ -27,8 +27,13 @@ describe('EmbedVideoButton', () => {
   });
 
   it('has expected label', () => {
-    render(<EmbedVideoButton onSubmit={jest.fn()} video={convertApiClientVideo(VideoFactory.sample({ id: '123' }))} />);
-    const button = screen.getByRole('button', { name: '+ Add to lesson' });
+    render(
+      <EmbedVideoButton
+        onSubmit={jest.fn()}
+        video={convertApiClientVideo(VideoFactory.sample({ id: '123' }))}
+      />,
+    );
+    const button = screen.getByRole('button', { name: '+' });
     expect(button).toBeInTheDocument();
   });
 
@@ -37,10 +42,21 @@ describe('EmbedVideoButton', () => {
 
     apiMock.onPost().reply(200); // we need this because of analytic calls when we click the button
 
-    MockApi.deepLinkingResponse(vanillaInstance, 'data', 'id', ['123'], 'i am jwt');
+    MockApi.deepLinkingResponse(
+      vanillaInstance,
+      'data',
+      'id',
+      ['123'],
+      'i am jwt',
+    );
     const onSubmitMock = jest.fn();
-    render(<EmbedVideoButton onSubmit={onSubmitMock} video={convertApiClientVideo(VideoFactory.sample({ id: '123' }))} />);
-    const button = screen.getByRole('button', { name: '+ Add to lesson' });
+    render(
+      <EmbedVideoButton
+        onSubmit={onSubmitMock}
+        video={convertApiClientVideo(VideoFactory.sample({ id: '123' }))}
+      />,
+    );
+    const button = screen.getByRole('button', { name: '+' });
     fireEvent.click(button);
 
     const hiddenForm = await screen.findByRole('form');
@@ -64,19 +80,32 @@ describe('EmbedVideoButton', () => {
     ).getClient() as Promise<FakeBoclipsClient>;
     const apiClient = await apiClientPromise;
 
-    MockApi.deepLinkingResponse(vanillaInstance, 'data', 'id', ['id-1'], 'i am jwt');
+    MockApi.deepLinkingResponse(
+      vanillaInstance,
+      'data',
+      'id',
+      ['id-1'],
+      'i am jwt',
+    );
 
     const video = VideoFactory.sample({
       id: 'id-1',
       links: {
         self: new Link({ href: '/v1/videos/id-1' }),
-        logInteraction: new Link({ href: '/v1/videos/id-1/events?logVideoInteraction=true&type={type}' }),
+        logInteraction: new Link({
+          href: '/v1/videos/id-1/events?logVideoInteraction=true&type={type}',
+        }),
       },
     });
     apiClient.videos.insertVideo(video);
 
-    render(<EmbedVideoButton onSubmit={jest.fn} video={convertApiClientVideo(video)} />);
-    const button = screen.getByRole('button', { name: '+ Add to lesson' });
+    render(
+      <EmbedVideoButton
+        onSubmit={jest.fn}
+        video={convertApiClientVideo(video)}
+      />,
+    );
+    const button = screen.getByRole('button', { name: '+' });
     fireEvent.click(button);
 
     await eventually(() => {
