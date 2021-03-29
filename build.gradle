@@ -144,7 +144,7 @@ dependencies {
 
   implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.12.2'
 
-  implementation 'io.github.microutils:kotlin-logging:2.0.4'
+  implementation 'io.github.microutils:kotlin-logging:2.0.6'
 
   implementation "io.micrometer:micrometer-core"
   implementation "io.micrometer:micrometer-registry-prometheus"
