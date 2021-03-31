@@ -6,6 +6,7 @@ import { VideoFactory } from 'boclips-api-client/dist/test-support/VideosFactory
 import { FakeBoclipsClient } from 'boclips-api-client/dist/test-support';
 import { fireEvent } from '@testing-library/dom';
 import { UserFactory } from 'boclips-api-client/dist/test-support/UserFactory';
+import { FacetsFactory } from 'boclips-api-client/dist/test-support/FacetsFactory';
 import ApiClient from '../../service/client/ApiClient';
 import LtiView from './index';
 import { configureMockAxiosService } from '../../testSupport/configureMockAxiosService';
@@ -43,7 +44,7 @@ describe('LTI test', () => {
 
     fakeApiClient.users.insertCurrentUser(UserFactory.sample());
 
-    render(<LtiView renderVideoCard={() => <div />} />);
+    render(<LtiView renderVideoCard={() => <div/>}/>);
 
     expect(
       await screen.findByText(
@@ -63,7 +64,7 @@ describe('LTI test', () => {
       }),
     );
 
-    render(<LtiView renderVideoCard={() => <div />} />);
+    render(<LtiView renderVideoCard={() => <div/>}/>);
 
     const aboutButton = await screen.findByText('About the app and services');
 
@@ -83,7 +84,7 @@ describe('LTI test', () => {
       }),
     );
 
-    render(<LtiView renderVideoCard={() => <div />} />);
+    render(<LtiView renderVideoCard={() => <div/>}/>);
 
     await waitFor(() => {
       expect(screen.queryByText('About the app and services')).toBeNull();
@@ -126,16 +127,15 @@ describe('LTI test', () => {
     fakeApiClient.videos.insertVideo(
       VideoFactory.sample({ id: '123', title: 'Hi' }),
     );
-    fakeApiClient.videos.setFacets({
-      durations: {},
-      resourceTypes: {},
-      subjects: {},
-      ageRanges: {
-        '3-5': {
+    fakeApiClient.videos.setFacets(FacetsFactory.sample({
+      ageRanges: [
+        {
           hits: 3,
-        },
-      },
-    });
+          name: '3-5',
+          id: '3-5'
+        }
+      ],
+    }));
 
     const view = render(
       <LtiView
@@ -207,7 +207,7 @@ describe('LTI test', () => {
 
   it(
     'when searching with filters produces no results then filters are removed,' +
-      ' the filter panel disappears and no results view changes',
+    ' the filter panel disappears and no results view changes',
     async () => {
       const fakeApiClient = (await new ApiClient(
         'https://api.example.com',
@@ -217,16 +217,13 @@ describe('LTI test', () => {
         VideoFactory.sample({ id: '123', title: 'Hi' }),
       );
 
-      fakeApiClient.videos.setFacets({
-        durations: {},
-        resourceTypes: {},
-        subjects: {},
-        ageRanges: {
-          '3-5': {
-            hits: 3,
-          },
-        },
-      });
+      fakeApiClient.videos.setFacets(FacetsFactory.sample({
+        ageRanges: [{
+          name: '3-5',
+          id: '3-5',
+          hits: 1
+        }]
+      }));
 
       const view = render(
         <LtiView

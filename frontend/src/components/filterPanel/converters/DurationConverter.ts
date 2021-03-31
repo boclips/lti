@@ -1,20 +1,15 @@
 import { SelectOption } from '@boclips-ui/select-option';
-import { FacetEntity } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacetsEntity';
+import { Facet } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 import Range from '../../../types/range';
 import dayjs from '../../../types/dayjs';
 
-export interface DurationFacet {
-  [id: string]: FacetEntity;
-}
-
 export default class DurationConverter {
-  static toSelectOptions(durationFacet: DurationFacet): SelectOption[] {
-    return Object.keys(durationFacet)
-      .map((key) => ({
-        id: key,
-        label: this.getLabelFromIso(key),
-        count: this.extractFacetHits(key, durationFacet),
-      }))
+  static toSelectOptions(durationFacets: Facet[]): SelectOption[] {
+    return durationFacets.map((facet) => ({
+      id: facet.id,
+      label: this.getLabelFromIso(facet.id),
+      count: this.extractFacetHits(facet.hits),
+    }))
       .filter((option) => option.label?.length > 0);
   }
 
@@ -38,17 +33,11 @@ export default class DurationConverter {
     return `> ${formatter(range.min)}`;
   };
 
-  private static extractFacetHits = (
-    id: string,
-    facet: { [id: string]: FacetEntity },
-  ): number => {
+  private static extractFacetHits = (hits: number): number => {
     const MaxElementCount = 500;
-    if (!facet) {
+    if (!hits) {
       return 0;
     }
-    if (!facet[id]) {
-      return 0;
-    }
-    return facet[id].hits > MaxElementCount ? MaxElementCount : facet[id].hits;
+    return hits > MaxElementCount ? MaxElementCount : hits;
   };
 }

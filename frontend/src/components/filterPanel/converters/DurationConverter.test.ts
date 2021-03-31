@@ -1,18 +1,21 @@
 import { SelectOption } from '@boclips-ui/select-option';
+import { FacetsFactory } from 'boclips-api-client/dist/test-support/FacetsFactory';
 import DurationConverter from './DurationConverter';
 
 describe('Duration converter', () => {
-  const durationFacet = {
-    'PT0S-PT2M': { hits: 53 },
-    'PT2M-PT5M': { hits: 94 },
-    'PT5M-PT10M': { hits: 44 },
-    'PT10M-PT20M': { hits: 48 },
-    'PT20M-PT24H': { hits: 45 },
-  };
+  const durationFacets = FacetsFactory.sample({
+    durations: [
+      { name: 'PT0S-PT2M', id: 'PT0S-PT2M', hits: 53 },
+      { name: 'PT2M-PT5M', id: 'PT2M-PT5M', hits: 94 },
+      { name: 'PT5M-PT10M', id: 'PT5M-PT10M', hits: 44 },
+      { name: 'PT10M-PT20M', id: 'PT10M-PT20M', hits: 48 },
+      { name: 'PT20M-PT2H', id: 'PT20M-PT24H', hits: 45 },
+    ]
+  }).durations;
 
   it('can convert "duration" facet into SelectOption', () => {
     const selectOptions: SelectOption[] = DurationConverter.toSelectOptions(
-      durationFacet,
+      durationFacets,
     );
 
     expect(selectOptions).toHaveLength(5);

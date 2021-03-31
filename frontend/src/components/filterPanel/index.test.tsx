@@ -1,84 +1,70 @@
 import React from 'react';
 import {
-  fireEvent, render, screen, waitFor 
+  fireEvent, render, screen, waitFor
 } from '@testing-library/react';
+import { FacetsFactory } from 'boclips-api-client/dist/test-support/FacetsFactory';
 import FilterPanel from './index';
 
-const testFacets = {
-  durations: {
-    'PT0S-PT2M': { hits: 53 },
-    'PT2M-PT5M': { hits: 94 },
-    'PT5M-PT10M': { hits: 44 },
-    'PT10M-PT20M': { hits: 48 },
-    'PT20M-PT24H': { hits: 45 },
-  },
-  subjects: {
-    '5cb499c9fd5beb428189454d': {
+const testFacets = FacetsFactory.sample({
+  durations: [
+    { id: 'PT0S-PT2M', name: 'PT0S-PT2M', hits: 53 },
+    { id: 'PT2M-PT5M', name: 'PT2M-PT5M', hits: 94 },
+    { id: 'PT5M-PT10M', name: 'PT5M-PT10M', hits: 44 },
+    { id: 'PT10M-PT20M', name: 'PT10M-PT20M', hits: 48 },
+    { id: 'PT20M-PT24H', name: 'PT20M-PT24H', hits: 45 },
+  ],
+  subjects: [
+    {
       hits: 32,
       id: '5cb499c9fd5beb428189454d',
       name: 'subject1',
     },
-    '5cb499c9fd5beb428189454c': {
+    {
       hits: 88,
       id: '5cb499c9fd5beb428189454c',
       name: 'subject2',
     },
-  },
-  ageRanges: {
-    '3-5': {
+  ],
+  ageRanges: [
+    {
       hits: 3,
+      id: '3-5',
+      name: '3-5'
     },
-  },
-  resourceTypes: {},
-  channels: {
-    'biology-channel-id': {
+  ],
+  resourceTypes: [],
+  channels: [
+    {
       hits: 111,
       id: 'biology-channel-id',
       name: 'biology channel',
     },
-    'history-channel-id': {
+    {
       hits: 212,
       id: 'history-channel-id',
       name: 'history channel',
     },
-  },
-  videoTypes: {
-    'biology-channel-id': {
+  ],
+  videoTypes: [
+    {
       hits: 111,
       id: 'biology-channel-id',
       name: 'biology channel',
     },
-    'history-channel-id': {
+    {
       hits: 212,
       id: 'history-channel-id',
       name: 'history channel',
     },
-  },
-  prices: {
-    'biology-channel-id': {
-      hits: 111,
-      id: 'biology-channel-id',
-      name: 'biology channel',
-    },
-    'history-channel-id': {
-      hits: 212,
-      id: 'history-channel-id',
-      name: 'history channel',
-    },
-  },
-};
+  ]
+});
 
 describe('Filter Panel', () => {
   it('shows subject filters with options from API', async () => {
     render(
       <FilterPanel
-        // @ts-ignore
         facets={testFacets}
         onApply={jest.fn()}
-        subjects={[
-          { id: '5cb499c9fd5beb428189454c', name: 'subject1' },
-          { id: '5cb499c9fd5beb428189454d', name: 'subject2' },
-        ]}
       />,
     );
 
@@ -94,8 +80,7 @@ describe('Filter Panel', () => {
   });
 
   it('shows sources filters with options from API', async () => {
-    // @ts-ignore
-    render(<FilterPanel facets={testFacets} onApply={jest.fn()} />);
+    render(<FilterPanel facets={testFacets} onApply={jest.fn()}/>);
 
     const sourceSelector = screen.getByText('Source');
     expect(sourceSelector).toBeVisible();
@@ -109,8 +94,7 @@ describe('Filter Panel', () => {
   });
 
   it('shows duration filters', async () => {
-    // @ts-ignore
-    render(<FilterPanel facets={testFacets} onApply={jest.fn()} />);
+    render(<FilterPanel facets={testFacets} onApply={jest.fn()}/>);
 
     const sourceSelector = screen.getByText('Duration');
     expect(sourceSelector).toBeVisible();
@@ -128,8 +112,7 @@ describe('Filter Panel', () => {
 
   it('clear all clears the filters', async () => {
     const onApply = jest.fn();
-    // @ts-ignore
-    render(<FilterPanel facets={testFacets} onApply={onApply} />);
+    render(<FilterPanel facets={testFacets} onApply={onApply}/>);
 
     const sourceSelector = screen.getByText('Duration');
     expect(sourceSelector).toBeVisible();
@@ -156,8 +139,7 @@ describe('Filter Panel', () => {
   });
 
   it('Filters applied panel only shows when filters are selected', () => {
-    // @ts-ignore
-    render(<FilterPanel facets={testFacets} onApply={jest.fn()} />);
+    render(<FilterPanel facets={testFacets} onApply={jest.fn()}/>);
 
     const sourceSelector = screen.getByText('Duration');
 
@@ -184,8 +166,7 @@ describe('Filter Panel', () => {
   });
 
   it('When filters are removed from applied filters the count shows correct number', async () => {
-    // @ts-ignore
-    render(<FilterPanel facets={testFacets} onApply={jest.fn()} />);
+    render(<FilterPanel facets={testFacets} onApply={jest.fn()}/>);
 
     const sourceSelector = screen.getByText('Duration');
     expect(sourceSelector).toBeVisible();
@@ -207,5 +188,16 @@ describe('Filter Panel', () => {
     fireEvent.click(removeElements[0]);
 
     expect(screen.queryByTestId('count-wrapper')?.innerHTML).toEqual('2');
+  });
+  it('shows age range filters', async () => {
+    render(<FilterPanel facets={testFacets} onApply={jest.fn()}/>);
+
+    const ageRangeSelector = screen.getByText('Age');
+    expect(ageRangeSelector).toBeVisible();
+
+    fireEvent.mouseDown(ageRangeSelector);
+
+    expect(screen.getByTitle('3 - 5'));
+    expect(screen.findByText('APPLY'));
   });
 });

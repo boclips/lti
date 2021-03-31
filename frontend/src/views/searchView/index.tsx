@@ -1,16 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import c from 'classnames';
 import {
-  Col, Layout, List, Row 
+  Col, Layout, List, Row
 } from 'antd';
 import { Video } from '@boclips-ui/video';
 import { VideoCardsPlaceholder } from '@boclips-ui/video-card-placeholder';
 import SearchBar from '@boclips-ui/search-bar';
 import NoResults from '@boclips-ui/no-results';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
-import { Subject } from 'boclips-api-client/dist/types';
 import { User } from 'boclips-api-client/dist/sub-clients/organisations/model/User';
-import { VideoFacetsEntity } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacetsEntity';
 import ApiClient from '../../service/client/ApiClient';
 import { AppConstants } from '../../types/AppConstants';
 import VideoService, {
@@ -49,7 +47,6 @@ const LtiView = ({
   const [facets, setFacets] = useState<VideoFacets>();
   const [singleFilter, setSingleFilter] = useState<any>(null);
   const [filters, setFilters] = useState<any>(null);
-  const [apiSubjects, setApiSubjects] = useState<Subject[]>([]);
   const [filtersVisible, setFiltersVisible] = useState<boolean>(
     !collapsibleFilters,
   );
@@ -108,12 +105,6 @@ const LtiView = ({
     });
   };
 
-  const getFilters = () => {
-    videoServicePromise
-      .then((client) => client.getSubjects())
-      .then((it) => setApiSubjects(it));
-  };
-
   const getCurrentUser = () => {
     videoServicePromise
       .then((client) => client.getCurrentUser())
@@ -122,7 +113,6 @@ const LtiView = ({
   };
 
   useEffect(() => {
-    getFilters();
     getCurrentUser();
   }, []);
 
@@ -303,9 +293,8 @@ const LtiView = ({
                 }
               >
                 <FilterPanel
-                  facets={(facets as unknown) as VideoFacetsEntity}
+                  facets={facets}
                   onApply={setSingleFilter}
-                  subjects={apiSubjects}
                   hidePanel={!filtersVisible}
                 />
               </div>
