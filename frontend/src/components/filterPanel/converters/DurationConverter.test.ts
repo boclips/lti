@@ -10,7 +10,7 @@ describe('Duration converter', () => {
       { name: 'PT5M-PT10M', id: 'PT5M-PT10M', hits: 44 },
       { name: 'PT10M-PT20M', id: 'PT10M-PT20M', hits: 48 },
       { name: 'PT20M-PT2H', id: 'PT20M-PT24H', hits: 45 },
-    ]
+    ],
   }).durations;
 
   it('can convert "duration" facet into SelectOption', () => {

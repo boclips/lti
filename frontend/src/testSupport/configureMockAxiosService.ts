@@ -26,10 +26,12 @@ const getMockAxiosInstances = (): MockAxiosInstances => {
   };
 };
 
-export const configureMockAxiosService = (tokenFactory: (
-  axios: AxiosInstance,
-  setAuthError: () => void,
-) => Promise<string> = AxiosService.ltiTokenFactory): MockAxiosInstances => {
+export const configureMockAxiosService = (
+  tokenFactory: (
+    axios: AxiosInstance,
+    setAuthError: () => void,
+  ) => Promise<string> = AxiosService.ltiTokenFactory,
+): MockAxiosInstances => {
   const mockAxiosInstances = getMockAxiosInstances();
 
   AxiosService.configureAxios(
@@ -37,8 +39,8 @@ export const configureMockAxiosService = (tokenFactory: (
     tokenFactory,
     mockAxiosInstances.baseInstance,
     mockAxiosInstances.apiInstance,
-    mockAxiosInstances.vanillaInstance
+    mockAxiosInstances.vanillaInstance,
   );
-  
+
   return mockAxiosInstances;
 };

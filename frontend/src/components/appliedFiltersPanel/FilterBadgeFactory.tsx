@@ -19,17 +19,18 @@ class FilterBadgeFactory {
       updateFilters(filters?.filter((item) => item !== clickedValue));
     };
 
-    return badges?.map((badge) => (
-      badge && (
-        <FilterBadge
-          key={badge.key}
-          id={badge.key}
-          value={badge.displayValue}
-          label={`${badgeType}:`}
-          onClick={onClick}
-        />
-      )
-    ));
+    return badges?.map(
+      (badge) =>
+        badge && (
+          <FilterBadge
+            key={badge.key}
+            id={badge.key}
+            value={badge.displayValue}
+            label={`${badgeType}:`}
+            onClick={onClick}
+          />
+        ),
+    );
   }
 }
 

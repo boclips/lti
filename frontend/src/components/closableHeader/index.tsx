@@ -26,7 +26,7 @@ const ClosableHeader = ({
     if (formRef.current) {
       handleSubmit(formRef.current);
     }
-  }, [jwt]);
+  }, [handleSubmit, jwt]);
 
   const onClose = () =>
     contentSelectionService

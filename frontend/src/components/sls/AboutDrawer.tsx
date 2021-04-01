@@ -10,17 +10,27 @@ interface Props {
 }
 const AboutDrawer = ({ closeIcon }: Props) => {
   const [aboutVisible, setAboutVisible] = useState(false);
-  
+
   const backButton = (
-    <Button type="link" size="large" className={s.backButton} icon={<BackIcon/>} onClick={() => setAboutVisible(false)}>
+    <Button
+      type="link"
+      size="large"
+      className={s.backButton}
+      icon={<BackIcon />}
+      onClick={() => setAboutVisible(false)}
+    >
       Back to Video Library
-    </Button>);
-  
+    </Button>
+  );
+
   return (
     <>
       <Drawer
         bodyStyle={{
-          background: '#F8FAFF', padding: '35px 55px', display: 'flex', justifyContent: 'center' 
+          background: '#F8FAFF',
+          padding: '35px 55px',
+          display: 'flex',
+          justifyContent: 'center',
         }}
         headerStyle={{ boxShadow: '0 4px 13px 0 rgba(204,219,237,0.5)' }}
         title={backButton}
@@ -28,9 +38,9 @@ const AboutDrawer = ({ closeIcon }: Props) => {
         width="100%"
         closeIcon={closeIcon}
       >
-        <AboutAppAndServicesDetails/>
+        <AboutAppAndServicesDetails />
       </Drawer>
-      <AboutButton onClick={() => setAboutVisible(true)}/>
+      <AboutButton onClick={() => setAboutVisible(true)} />
     </>
   );
 };

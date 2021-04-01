@@ -1,13 +1,13 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { AppConstants } from '../../types/AppConstants';
 
-let hasBeenConfigured: boolean = false;
+let hasBeenConfigured = false;
 
 class AxiosService {
   static apiAccessTokenSupportingInstance: AxiosInstance;
-  
+
   static vanillaInstance: AxiosInstance;
-  
+
   public static configureAxios(
     setAuthError: () => void = () => {},
     tokenFactory: (
@@ -16,7 +16,7 @@ class AxiosService {
     ) => Promise<string> = AxiosService.ltiTokenFactory,
     baseAxiosInstance: AxiosInstance = axios.create(),
     apiAxiosInstance: AxiosInstance = axios.create(),
-    vanillaAxiosInstance: AxiosInstance = axios.create()
+    vanillaAxiosInstance: AxiosInstance = axios.create(),
   ): void {
     this.apiAccessTokenSupportingInstance = apiAxiosInstance;
     this.vanillaInstance = vanillaAxiosInstance;
@@ -27,12 +27,11 @@ class AxiosService {
           config.headers['Boclips-User-Id'] = AppConstants.USER_ID;
         }
 
-        return tokenFactory(baseAxiosInstance, setAuthError)
-          .then((token) => {
-            config.headers.Authorization = `Bearer ${token}`;
-            return config;
-          });
-      }
+        return tokenFactory(baseAxiosInstance, setAuthError).then((token) => {
+          config.headers.Authorization = `Bearer ${token}`;
+          return config;
+        });
+      },
     );
 
     hasBeenConfigured = true;

@@ -49,8 +49,14 @@ describe('VideoService', () => {
 
   it('Can load all sources', async () => {
     const fakeApiClient = (await apiClientPromise) as FakeBoclipsClient;
-    fakeApiClient.channels.insertFixture({ id: '1', name: 'crash course history' });
-    fakeApiClient.channels.insertFixture({ id: '2', name: 'crash course biology' });
+    fakeApiClient.channels.insertFixture({
+      id: '1',
+      name: 'crash course history',
+    });
+    fakeApiClient.channels.insertFixture({
+      id: '2',
+      name: 'crash course biology',
+    });
 
     const service = new VideoService(fakeApiClient);
     const channels = await service.getChannels();

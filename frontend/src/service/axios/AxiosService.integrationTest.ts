@@ -9,7 +9,7 @@ jest.mock('../../types/AppConstants', () => ({
   get AppConstants(): ConfigurableConstants {
     return AppConstantsFactory.sample({
       LTI_BASE_URL: 'https://lti/token',
-      USER_ID: 'boclips-user-id-test'
+      USER_ID: 'boclips-user-id-test',
     });
   },
 }));
@@ -26,7 +26,7 @@ describe('AxiosService', () => {
     it('appends the bearer token in Authorization header', async () => {
       const tokenFactory = jest.fn(() => Promise.resolve('i-am-a-token'));
       const { apiInstance, apiMock } = configureMockAxiosService(tokenFactory);
-      
+
       apiMock
         .onGet('https://api.example.com/v1/resource')
         .reply(200, JSON.stringify({}));

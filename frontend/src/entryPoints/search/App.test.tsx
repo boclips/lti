@@ -26,7 +26,9 @@ describe('Search view', () => {
   it('renders search bar', () => {
     const appComponent = render(<App />);
     waitFor(() => {
-      expect(appComponent.getByPlaceholderText(/search for videos/i)).toBeInTheDocument();
+      expect(
+        appComponent.getByPlaceholderText(/search for videos/i),
+      ).toBeInTheDocument();
     });
   });
 
@@ -35,18 +37,22 @@ describe('Search view', () => {
     const videosClient = (await fakeApiClient).videos;
     videosClient.insertVideo(VideoFactory.sample({ id: '1', title: 'cats 1' }));
 
-    const searchTextInput = appComponent.getByPlaceholderText('Search for videos...');
+    const searchTextInput = appComponent.getByPlaceholderText(
+      'Search for videos...',
+    );
     fireEvent.change(searchTextInput, { target: { value: 'cats' } });
     expect(await appComponent.findByDisplayValue('cats')).toBeInTheDocument();
 
     const searchButton = appComponent.getByText('Search').closest('button');
-    fireEvent.click(searchButton!!);
+    fireEvent.click(searchButton!);
     expect(await appComponent.findByText('FILTER BY:')).toBeInTheDocument();
 
-    expect(await appComponent.findByText('1 result found:')).toBeInTheDocument();
+    expect(
+      await appComponent.findByText('1 result found:'),
+    ).toBeInTheDocument();
 
     const optionsPassed = mocked(PlayerFactory.get).mock.calls[0][1];
-    expect(optionsPassed!!.analytics!!.metadata).toEqual(
+    expect(optionsPassed!.analytics!.metadata).toEqual(
       expect.objectContaining({ query: 'cats' }),
     );
   });
@@ -54,26 +60,31 @@ describe('Search view', () => {
   it('loads the video card with the correct badges', async () => {
     const appComponent = render(<App />);
     const videosClient = (await fakeApiClient).videos;
-    videosClient.insertVideo(VideoFactory.sample({
-      id: '1',
-      title: 'goats',
-      subjects: [SubjectFactory.sample({ name: 'Design' })],
-      attachments: [AttachmentFactory.sample({ id: 'i am attachment' })],
-      ageRange: {
-        min: 3,
-        max: 5,
-      },
-      bestFor: [{
-        label: 'Hook'
-      }]
+    videosClient.insertVideo(
+      VideoFactory.sample({
+        id: '1',
+        title: 'goats',
+        subjects: [SubjectFactory.sample({ name: 'Design' })],
+        attachments: [AttachmentFactory.sample({ id: 'i am attachment' })],
+        ageRange: {
+          min: 3,
+          max: 5,
+        },
+        bestFor: [
+          {
+            label: 'Hook',
+          },
+        ],
+      }),
+    );
 
-    }));
-
-    const searchTextInput = appComponent.getByPlaceholderText('Search for videos...');
+    const searchTextInput = appComponent.getByPlaceholderText(
+      'Search for videos...',
+    );
     fireEvent.change(searchTextInput, { target: { value: 'goats' } });
 
     const searchButton = appComponent.getByText('Search').closest('button');
-    fireEvent.click(searchButton!!);
+    fireEvent.click(searchButton!);
 
     expect(await appComponent.findByText('Design')).toBeVisible();
 
@@ -82,6 +93,8 @@ describe('Search view', () => {
 
     expect(await appComponent.findByText('Ages 3-5')).toBeVisible();
 
-    expect(await appComponent.queryByTestId('attachment-badge')).not.toBeInTheDocument();
+    expect(
+      await appComponent.queryByTestId('attachment-badge'),
+    ).not.toBeInTheDocument();
   });
 });

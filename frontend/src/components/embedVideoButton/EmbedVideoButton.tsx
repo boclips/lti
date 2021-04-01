@@ -21,7 +21,7 @@ const EmbedVideoButton = ({ video, onSubmit }: Props) => {
     if (formRef.current) {
       onSubmit(formRef.current);
     }
-  }, [jwt]);
+  }, [jwt, onSubmit]);
 
   const handleEmbed = () => {
     AnalyticsFactory.getInstance().trackVideoInteraction(

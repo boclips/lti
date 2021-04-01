@@ -3,7 +3,9 @@ import setupInitialLocation from '../../testSupport/setupInitialLocation';
 import convertApiClientVideo from '../../service/video/convertVideoFromApi';
 import CopyVideoLinkButtonFactory from './CopyVideoLinkButtonFactory';
 
-const sampleVideo = convertApiClientVideo(VideoFactory.sample({ id: 'sample-video' }));
+const sampleVideo = convertApiClientVideo(
+  VideoFactory.sample({ id: 'sample-video' }),
+);
 
 describe('CopyVideoLinkButton', () => {
   it('shows button when show_copy_link and embeddable_video_url are present', () => {

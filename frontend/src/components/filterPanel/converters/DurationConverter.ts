@@ -5,11 +5,12 @@ import dayjs from '../../../types/dayjs';
 
 export default class DurationConverter {
   static toSelectOptions(durationFacets: Facet[]): SelectOption[] {
-    return durationFacets.map((facet) => ({
-      id: facet.id,
-      label: this.getLabelFromIso(facet.id),
-      count: this.extractFacetHits(facet.hits),
-    }))
+    return durationFacets
+      .map((facet) => ({
+        id: facet.id,
+        label: this.getLabelFromIso(facet.id),
+        count: this.extractFacetHits(facet.hits),
+      }))
       .filter((option) => option.label?.length > 0);
   }
 
@@ -17,9 +18,9 @@ export default class DurationConverter {
     const values = iso.split('-');
     return values.length === 2
       ? this.getLabel({
-        min: dayjs.duration(values[0]).asSeconds(),
-        max: dayjs.duration(values[1]).asSeconds(),
-      })
+          min: dayjs.duration(values[0]).asSeconds(),
+          max: dayjs.duration(values[1]).asSeconds(),
+        })
       : '';
   }
 

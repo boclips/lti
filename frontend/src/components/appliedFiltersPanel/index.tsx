@@ -15,9 +15,7 @@ interface AppliedFiltersPanelProps {
 }
 
 const AppliedFiltersPanel = ({
-  appliedFilters: {
-    ageRanges, source, duration, subjects
-  },
+  appliedFilters: { ageRanges, source, duration, subjects },
   setAgeRangeFilter,
   setDurationFilter,
   setSourceFilter,
@@ -35,18 +33,20 @@ const AppliedFiltersPanel = ({
   }));
 
   const sourceBadgeOptions = source?.map((selectedChannelId) => {
-    const facet = facets!!.channels!!.find((channel) => channel.id === selectedChannelId);
+    const facet = facets!.channels!.find(
+      (channel) => channel.id === selectedChannelId,
+    );
     return {
-      displayValue: facet!!.name,
-      key: facet!!.id,
+      displayValue: facet!.name,
+      key: facet!.id,
     };
   });
 
   const subjectBadgeOptions = subjects?.map((subjectId) => {
-    const facet = facets!!.subjects!!.find((subject) => subject.id === subjectId);
+    const facet = facets!.subjects!.find((subject) => subject.id === subjectId);
     return {
-      displayValue: facet!!.name,
-      key: facet!!.id,
+      displayValue: facet!.name,
+      key: facet!.id,
     };
   });
 

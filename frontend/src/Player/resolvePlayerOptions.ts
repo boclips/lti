@@ -19,19 +19,21 @@ const resolvePlayerOptions = (query: string): Partial<PlayerOptions> => ({
     ],
     ratio: '16:9',
     addons: {
-      videoLengthPreview: true
-    }
+      videoLengthPreview: true,
+    },
   },
   api: {
     tokenFactory: async () => AxiosService.ltiTokenFactory(Axios, () => {}),
-    userIdFactory: AppConstants.USER_ID ? () => Promise.resolve(AppConstants.USER_ID) : undefined,
+    userIdFactory: AppConstants.USER_ID
+      ? () => Promise.resolve(AppConstants.USER_ID)
+      : undefined,
   },
   analytics: {
     ...defaultAnalyticsOptions,
     metadata: {
-      query
-    }
-  }
+      query,
+    },
+  },
 });
 
 export default resolvePlayerOptions;

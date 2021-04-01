@@ -9,7 +9,8 @@ describe('filtersButton', () => {
       <FiltersButton
         toggleFilters={toggle}
         activeFilterCount={3}
-        filtersVisible={false}/>
+        filtersVisible={false}
+      />,
     );
 
     expect(view.getByText('3')).toBeInTheDocument();
@@ -19,7 +20,8 @@ describe('filtersButton', () => {
       <FiltersButton
         toggleFilters={toggle}
         activeFilterCount={3}
-        filtersVisible/>
+        filtersVisible
+      />,
     );
 
     expect(view.queryByText('3')).not.toBeInTheDocument();

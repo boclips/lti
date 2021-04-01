@@ -12,17 +12,17 @@ function convertApiClientVideo(clientVideo: ClientVideo): ExtendedVideo {
   const convertedProperties: Partial<ExtendedVideo> = {
     thumbnailUrl: clientVideo.playback?.links?.thumbnail
       ? getEffectiveThumbnailUrl(
-        convertFromApiClientLink(clientVideo.playback.links.thumbnail),
-      )
+          convertFromApiClientLink(clientVideo.playback.links.thumbnail),
+        )
       : undefined,
     ageRange:
       clientAgeRange && new AgeRange(clientAgeRange.min, clientAgeRange.max),
     bestFor: bestFor || undefined,
     links: {
-      self: convertFromApiClientLink(links.self)!!,
+      self: convertFromApiClientLink(links.self)!,
       rate: convertFromApiClientLink(links.rate),
       tag: convertFromApiClientLink(links.tag),
-      logInteraction: convertFromApiClientLink(links.logInteraction)!!,
+      logInteraction: convertFromApiClientLink(links.logInteraction)!,
     },
   };
 
@@ -49,13 +49,13 @@ function convertApiClientVideo(clientVideo: ClientVideo): ExtendedVideo {
     yourRating: clientVideo.yourRating,
     promoted: clientVideo.promoted,
     thumbnailUrl: convertedProperties.thumbnailUrl,
-    ageRange: convertedProperties.ageRange!!,
+    ageRange: convertedProperties.ageRange!,
     bestFor: convertedProperties.bestFor,
     attachments: clientVideo.attachments,
     contentWarnings: clientVideo.contentWarnings,
     language: clientVideo.language,
     legalRestrictions: clientVideo.legalRestrictions,
-    links: convertedProperties.links!!,
+    links: convertedProperties.links!,
   };
 }
 

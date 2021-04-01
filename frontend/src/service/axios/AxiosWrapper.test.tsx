@@ -11,7 +11,7 @@ describe('axioswrapper', () => {
     axiosMock.onGet('https://lti/token').reply(200, 'valid-token');
 
     const DummyComponent = AxiosWrapper(() => <div>The content</div>);
-    
+
     const wrapper = render(<DummyComponent />);
 
     expect(wrapper.getByText('The content')).toBeInTheDocument();

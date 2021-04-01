@@ -13,8 +13,8 @@ export function getEffectiveThumbnailUrl(thumbnailLink?: Link) {
 
   return thumbnailLink.isTemplated
     ? thumbnailLink.getTemplatedLink({
-      thumbnailWidth: DEFAULT_THUMBNAIL_WIDTH,
-    })
+        thumbnailWidth: DEFAULT_THUMBNAIL_WIDTH,
+      })
     : thumbnailLink.getOriginalLink();
 }
 
@@ -52,7 +52,7 @@ export function convertVideoResource(resource: any): Partial<ExtendedVideo> {
   };
 
   if (resource._links.transcript) {
-    video.links!!.transcript = new Link(resource._links.transcript);
+    video.links!.transcript = new Link(resource._links.transcript);
   }
 
   return video;

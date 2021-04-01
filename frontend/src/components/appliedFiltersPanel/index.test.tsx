@@ -18,14 +18,15 @@ describe('Applied filters panel', () => {
         setDurationFilter={jest.fn()}
         setAgeRangeFilter={jest.fn()}
         facets={FacetsFactory.sample({
-          subjects: [{
-            id: 'subject-id',
-            hits: 25,
-            name: 'history subject',
-          },
-          { id: 'subject-2', hits: 25, name: 'subject 2' }],
-          channels: [{ id: 'bbc-id', hits: 25, name: 'BBC' },
+          subjects: [
+            {
+              id: 'subject-id',
+              hits: 25,
+              name: 'history subject',
+            },
+            { id: 'subject-2', hits: 25, name: 'subject 2' },
           ],
+          channels: [{ id: 'bbc-id', hits: 25, name: 'BBC' }],
         })}
       />,
     );
@@ -65,7 +66,7 @@ describe('Applied filters panel', () => {
               hits: 2,
               name: 'nature channel',
             },
-          ]
+          ],
         })}
       />,
     );
@@ -104,11 +105,9 @@ describe('Applied filters panel', () => {
         setSourceFilter={jest.fn()}
         setDurationFilter={jest.fn()}
         setAgeRangeFilter={jest.fn()}
-        facets={
-          FacetsFactory.sample({
-            channels: [{ id: 'bbc-id', hits: 25, name: 'BBC' }]
-          })
-        }
+        facets={FacetsFactory.sample({
+          channels: [{ id: 'bbc-id', hits: 25, name: 'BBC' }],
+        })}
       />,
     );
 

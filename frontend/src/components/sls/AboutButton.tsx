@@ -7,9 +7,10 @@ interface Props {
   onClick: () => void;
 }
 
-const AboutButton = ({ onClick }: Props) =>
-  <Button onClick={onClick} icon={<InfoIcon/>} className={s.aboutButton}>
+const AboutButton = ({ onClick }: Props) => (
+  <Button onClick={onClick} icon={<InfoIcon />} className={s.aboutButton}>
     About the app and services
-  </Button>;
+  </Button>
+);
 
 export default AboutButton;

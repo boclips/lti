@@ -3,8 +3,8 @@ import AxiosService from '../axios/AxiosService';
 
 class BoclipsAnalytics {
   public trackVideoInteraction = (
-    video: { id: String; links: { logInteraction?: Link } },
-    interactionType: String,
+    video: { id: string; links: { logInteraction?: Link } },
+    interactionType: string,
   ): Promise<void> => {
     const link = video.links.logInteraction;
 

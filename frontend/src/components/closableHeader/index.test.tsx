@@ -1,6 +1,9 @@
 import React from 'react';
 import {
-  fireEvent, getByLabelText, render, screen 
+  fireEvent,
+  getByLabelText,
+  render,
+  screen,
 } from '@testing-library/react';
 
 import ClosableHeader from './index';
@@ -9,7 +12,9 @@ import { configureMockAxiosService } from '../../testSupport/configureMockAxiosS
 
 describe('ClosableHeader', () => {
   it('displays correct header', async () => {
-    render(<ClosableHeader title="my closable header" handleSubmit={jest.fn()} />);
+    render(
+      <ClosableHeader title="my closable header" handleSubmit={jest.fn()} />,
+    );
 
     expect(await screen.findByTestId('closable-header')).toBeInTheDocument();
     expect(await screen.getByText('my closable header')).toBeInTheDocument();
@@ -30,7 +35,9 @@ describe('ClosableHeader', () => {
     MockApi.deepLinkingResponse(vanillaInstance, 'data', 'id', [], 'i am jwt');
 
     const mockSubmit = jest.fn();
-    render(<ClosableHeader title="my closable header" handleSubmit={mockSubmit} />);
+    render(
+      <ClosableHeader title="my closable header" handleSubmit={mockSubmit} />,
+    );
     const closeIcon = await screen.findByTestId('close-icon');
     expect(closeIcon).toBeInTheDocument();
 

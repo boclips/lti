@@ -1,8 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import c from 'classnames';
-import {
-  Col, Layout, List, Row
-} from 'antd';
+import { Col, Layout, List, Row } from 'antd';
 import { Video } from '@boclips-ui/video';
 import { VideoCardsPlaceholder } from '@boclips-ui/video-card-placeholder';
 import SearchBar from '@boclips-ui/search-bar';
@@ -29,7 +27,6 @@ interface Props {
   ) => React.ReactNode;
   collapsibleFilters?: boolean;
   closableHeader?: boolean;
-  aboutSliderVisible?: boolean;
   useFullWidth?: boolean;
 }
 
@@ -64,14 +61,17 @@ const LtiView = ({
     [],
   );
 
-  const onSearch = (query?: string, page: number = 0) => {
-    if ((query && searchQuery !== query) || page !== searchPageNumber) {
-      setSearchQuery(query);
-      setPageNumber(page!!);
-      setLoading(true);
-      setCurrentPage(1);
-    }
-  };
+  const onSearch = useCallback(
+    (query?: string, page = 0) => {
+      if ((query && searchQuery !== query) || page !== searchPageNumber) {
+        setSearchQuery(query);
+        setPageNumber(page!);
+        setLoading(true);
+        setCurrentPage(1);
+      }
+    },
+    [searchPageNumber, searchQuery],
+  );
 
   const handleSearchResults = (searchResults: ExtendedClientVideo<Video>) => {
     setFacets(searchResults.facets);
@@ -86,7 +86,7 @@ const LtiView = ({
     setCurrentPage(1);
   };
 
-  const search = () => {
+  const search = useCallback(() => {
     videoServicePromise.then((videoService) => {
       videoService
         .searchVideos({
@@ -103,18 +103,26 @@ const LtiView = ({
           handleSearchResults(videosResponse);
         });
     });
-  };
-
-  const getCurrentUser = () => {
-    videoServicePromise
-      .then((client) => client.getCurrentUser())
-      .then((it) => setCurrentUser(it))
-      .catch(() => setCurrentUser(null));
-  };
+  }, [
+    filters?.ageRanges,
+    filters?.duration,
+    filters?.source,
+    filters?.subjects,
+    searchPageNumber,
+    searchQuery,
+    videoServicePromise,
+  ]);
 
   useEffect(() => {
+    const getCurrentUser = () => {
+      videoServicePromise
+        .then((client) => client.getCurrentUser())
+        .then((it) => setCurrentUser(it))
+        .catch(() => setCurrentUser(null));
+    };
+
     getCurrentUser();
-  }, []);
+  }, [videoServicePromise]);
 
   useEffect(() => {
     if (currentUser) {
@@ -136,23 +144,26 @@ const LtiView = ({
       setLoading(true);
       search();
     }
-  }, [searchQuery, searchPageNumber, filters]);
+  }, [searchQuery, searchPageNumber, filters, search]);
 
-  const convertToArray = (array) =>
-    array.reduce(
-      (filter, element) =>
-        filter.concat(
-          Array.isArray(element) ? convertToArray(element) : element,
-        ),
-      [],
-    );
+  const convertToArray = useCallback(
+    (array) =>
+      array.reduce(
+        (filter, element) =>
+          filter.concat(
+            Array.isArray(element) ? convertToArray(element) : element,
+          ),
+        [],
+      ),
+    [],
+  );
 
   useEffect(() => {
     if (filters) {
       const filterValues = Object.values(filters);
       setActiveFilterCount(convertToArray(filterValues).length);
     }
-  }, [filters]);
+  }, [convertToArray, filters]);
 
   const scrollToTop = () => {
     window.scrollTo(0, 0);
@@ -160,72 +171,82 @@ const LtiView = ({
 
   const showFiltersButton = collapsibleFilters && videos.length > 0;
 
-  const renderVideoList = () =>
-    useMemo(
-      () =>
-        !loading && videos.length === 0 && !!searchQuery ? (
-          <NoResults
-            searchQuery={searchQuery}
-            filtersApplied={activeFilterCount > 0}
-          />
-        ) : (
-          <Col
-            sm={{ span: 24 }}
-            md={useFullWidth ? { span: 24 } : { span: 16, offset: 4 }}
-          >
-            {videos.length > 0 && (
-              <section
-                className={c(s.numberOfResults, { [s.center]: !useFullWidth })}
-              >
-                <span>
-                  {`${
-                    totalVideoElements > 500 ? '500+' : totalVideoElements
-                  } result${videos.length > 1 ? 's' : ''} found:`}
-                </span>
-              </section>
-            )}
-            <div
-              className={c(s.listWrapper, {
-                [s.fullItemWidth]: useFullWidth,
-                [s.normalItemWidth]: !useFullWidth,
-              })}
+  const renderVideoList = useMemo(
+    () =>
+      !loading && videos.length === 0 && !!searchQuery ? (
+        <NoResults
+          searchQuery={searchQuery}
+          filtersApplied={activeFilterCount > 0}
+        />
+      ) : (
+        <Col
+          sm={{ span: 24 }}
+          md={useFullWidth ? { span: 24 } : { span: 16, offset: 4 }}
+        >
+          {videos.length > 0 && (
+            <section
+              className={c(s.numberOfResults, { [s.center]: !useFullWidth })}
             >
-              {loading ? (
-                <VideoCardsPlaceholder />
-              ) : (
-                <List
-                  itemLayout="vertical"
-                  size="large"
-                  locale={{ emptyText: <EmptyList theme="lti" /> }}
-                  pagination={{
-                    total: totalVideoElements,
-                    pageSize: 10,
-                    className: c(s.pagination, {
-                      [s.paginationEmpty]: !videos.length,
-                    }),
-                    showSizeChanger: false,
-                    onChange: (page) => {
-                      scrollToTop();
-                      onSearch(searchQuery, page - 1);
-                      setCurrentPage(page);
-                    },
-                    current: currentPage,
-                  }}
-                  dataSource={videos}
-                  loading={{
-                    wrapperClassName: s.spinner,
-                    spinning: loading,
-                  }}
-                  renderItem={(video: Video) =>
-                    renderVideoCard(video, searchQuery!!, showVideoCardV3)
-                  }
-                />
-              )}
-            </div>
-          </Col>
-        ),
-      [videos, loading],
-    );
+              <span>
+                {`${
+                  totalVideoElements > 500 ? '500+' : totalVideoElements
+                } result${videos.length > 1 ? 's' : ''} found:`}
+              </span>
+            </section>
+          )}
+          <div
+            className={c(s.listWrapper, {
+              [s.fullItemWidth]: useFullWidth,
+              [s.normalItemWidth]: !useFullWidth,
+            })}
+          >
+            {loading ? (
+              <VideoCardsPlaceholder />
+            ) : (
+              <List
+                itemLayout="vertical"
+                size="large"
+                locale={{ emptyText: <EmptyList theme="lti" /> }}
+                pagination={{
+                  total: totalVideoElements,
+                  pageSize: 10,
+                  className: c(s.pagination, {
+                    [s.paginationEmpty]: !videos.length,
+                  }),
+                  showSizeChanger: false,
+                  onChange: (page) => {
+                    scrollToTop();
+                    onSearch(searchQuery, page - 1);
+                    setCurrentPage(page);
+                  },
+                  current: currentPage,
+                }}
+                dataSource={videos}
+                loading={{
+                  wrapperClassName: s.spinner,
+                  spinning: loading,
+                }}
+                renderItem={(video: Video) =>
+                  renderVideoCard(video, searchQuery!, showVideoCardV3)
+                }
+              />
+            )}
+          </div>
+        </Col>
+      ),
+    [
+      loading,
+      videos,
+      searchQuery,
+      activeFilterCount,
+      useFullWidth,
+      totalVideoElements,
+      currentPage,
+      onSearch,
+      renderVideoCard,
+      showVideoCardV3,
+    ],
+  );
 
   return (
     <>
@@ -309,7 +330,7 @@ const LtiView = ({
           [s.fullWidth]: useFullWidth,
         })}
       >
-        <Row>{renderVideoList()}</Row>
+        <Row>{renderVideoList}</Row>
       </Layout.Content>
     </>
   );

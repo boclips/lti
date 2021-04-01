@@ -3,7 +3,10 @@ import { SelectOption } from '@boclips-ui/select-option';
 import SelectFilter, { DropdownAligment } from '@boclips-ui/select';
 import c from 'classnames';
 import { Button } from 'antd';
-import { Facet, VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
+import {
+  Facet,
+  VideoFacets,
+} from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 import s from './style.module.less';
 import DurationConverter from './converters/DurationConverter';
 import AppliedFiltersPanel from '../appliedFiltersPanel';
@@ -26,25 +29,25 @@ const FilterPanel = ({ facets, onApply, hidePanel }: Props) => {
     if (durationFilter || (durationFilter && durationFilter!.length === 0)) {
       onApply({ duration: durationFilter });
     }
-  }, [durationFilter]);
+  }, [durationFilter, onApply]);
 
   useEffect(() => {
     if (subjectFilter || (subjectFilter && subjectFilter!.length === 0)) {
       onApply({ subjects: subjectFilter });
     }
-  }, [subjectFilter]);
+  }, [onApply, subjectFilter]);
 
   useEffect(() => {
     if (sourceFilter || (sourceFilter && sourceFilter!.length === 0)) {
       onApply({ source: sourceFilter });
     }
-  }, [sourceFilter]);
+  }, [onApply, sourceFilter]);
 
   useEffect(() => {
     if (ageRangeFilter || (ageRangeFilter && ageRangeFilter!.length === 0)) {
       onApply({ ageRanges: ageRangeFilter });
     }
-  }, [ageRangeFilter]);
+  }, [ageRangeFilter, onApply]);
 
   const onClear = () => {
     setFilterTouched(false);
@@ -60,30 +63,29 @@ const FilterPanel = ({ facets, onApply, hidePanel }: Props) => {
     });
   };
 
-  const convertToSelectOptions = (
-    rawFacets: Facet[] = [],
-  ): SelectOption[] =>
+  const convertToSelectOptions = (rawFacets: Facet[] = []): SelectOption[] =>
     rawFacets.map((facet) => ({
       id: facet.id || '',
       label: facet.name || '',
       count: facet.hits,
     })) || [];
 
-  const ageRangeOptions: SelectOption[] = facets?.ageRanges?.map((facet) => ({
-    id: facet.id,
-    label: facet.name === '16-99' ? '16+' : facet.name.replace('-', ' - '),
-    count: facet.hits,
-  }),
-  ) || [];
+  const ageRangeOptions: SelectOption[] =
+    facets?.ageRanges?.map((facet) => ({
+      id: facet.id,
+      label: facet.name === '16-99' ? '16+' : facet.name.replace('-', ' - '),
+      count: facet.hits,
+    })) || [];
 
-  const subjectOptions: SelectOption[] = facets?.subjects?.map((facet) => ({
-    id: facet.id,
-    label: facet.name,
-    count: facet.hits,
-  })
-  ) || [];
+  const subjectOptions: SelectOption[] =
+    facets?.subjects?.map((facet) => ({
+      id: facet.id,
+      label: facet.name,
+      count: facet.hits,
+    })) || [];
 
   const durationOptions: SelectOption[] = DurationConverter.toSelectOptions(
+    // eslint-disable-next-line
     facets?.durations!,
   );
 
