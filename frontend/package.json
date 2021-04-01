@@ -79,7 +79,7 @@
     "ts-import-plugin": "1.6.6",
     "ts-jest": "26.0.0",
     "ts-loader": "7.0.5",
-    "urijs": "1.19.4",
+    "urijs": "1.19.6",
     "webpack": "4.43.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "3.11.0",
