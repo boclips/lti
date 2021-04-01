@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { Video } from '@boclips-ui/video';
 import ProviderBadge from '@boclips-ui/provider-badge';
 import { VideoCardV2 } from '@boclips-ui/video-card-v2';
@@ -10,7 +10,7 @@ import s from './VideoCardWrapper.module.less';
 interface Props {
   video: Video;
   query: string;
-  actions: ReactElement[];
+  actions?: any;
   showVideoCardV3: boolean;
 }
 
@@ -21,7 +21,7 @@ const VideoCardWrapper = ({
   showVideoCardV3,
 }: Props) => (
   <div
-    style={{ marginBottom: '4px' }}
+    style={{ marginBottom: showVideoCardV3 ? '24px' : '4px' }}
     className={c({
       [s.videoCard]: !showVideoCardV3,
       [s.videoCardV3]: showVideoCardV3,
@@ -29,6 +29,7 @@ const VideoCardWrapper = ({
   >
     {showVideoCardV3 ? (
       <VideoCardV3
+        duration={video.playback.duration.format('mm:ss')}
         title={video.title}
         key={video.id}
         video={video}
