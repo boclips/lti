@@ -7,6 +7,8 @@ import SearchBar from '@boclips-ui/search-bar';
 import NoResults from '@boclips-ui/no-results';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 import { User } from 'boclips-api-client/dist/sub-clients/organisations/model/User';
+import { Channel } from 'boclips-api-client/dist/sub-clients/channels/model/Channel';
+import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subject';
 import ApiClient from '../../service/client/ApiClient';
 import { AppConstants } from '../../types/AppConstants';
 import VideoService, {
@@ -37,6 +39,8 @@ const LtiView = ({
   useFullWidth,
 }: Props) => {
   const [videos, setVideos] = useState<Video[]>([]);
+  const [channelsList, setChannelsList] = useState<Channel[]>([]);
+  const [subjectsList, setSubjectsList] = useState<Subject[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>();
   const [searchPageNumber, setPageNumber] = useState<number>(0);
@@ -121,8 +125,22 @@ const LtiView = ({
         .catch(() => setCurrentUser(null));
     };
 
+    const getSubjects = () => {
+      videoServicePromise
+        .then((client) => client.getSubjects())
+        .then((subjects) => setSubjectsList(subjects));
+    };
+
+    const getChannels = () => {
+      videoServicePromise
+        .then((client) => client.getChannels())
+        .then((channels) => setChannelsList(channels));
+    };
+
     getCurrentUser();
-  }, [videoServicePromise]);
+    getChannels();
+    getSubjects();
+  }, [videoServicePromise, setChannelsList, setSubjectsList]);
 
   useEffect(() => {
     if (currentUser) {
@@ -314,6 +332,8 @@ const LtiView = ({
                 }
               >
                 <FilterPanel
+                  channelsList={channelsList}
+                  subjectsList={subjectsList}
                   facets={facets}
                   onApply={setSingleFilter}
                   hidePanel={!filtersVisible}

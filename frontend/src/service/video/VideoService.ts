@@ -7,6 +7,7 @@ import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/Vi
 import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subject';
 import { Channel } from 'boclips-api-client/dist/sub-clients/channels/model/Channel';
 import { User } from 'boclips-api-client/dist/sub-clients/organisations/model/User';
+import { Projection } from 'boclips-api-client/dist/sub-clients/common/model/Projection';
 import convertApiClientVideo from './convertVideoFromApi';
 
 export interface ExtendedClientVideo<T> extends Pageable<T> {
@@ -36,7 +37,7 @@ class VideoService {
   }
 
   public getChannels(): Promise<Channel[]> {
-    return this.client.channels.getAll();
+    return this.client.channels.getAll(Projection.LIST);
   }
 
   public getCurrentUser(): Promise<User | null> {

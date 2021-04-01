@@ -1,6 +1,7 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { FacetsFactory } from 'boclips-api-client/dist/test-support/FacetsFactory';
+import { ChannelFactory } from 'boclips-api-client/dist/test-support';
+import { SubjectFactory } from 'boclips-api-client/dist/test-support/SubjectsFactory';
 import AppliedFiltersPanel from './index';
 
 describe('Applied filters panel', () => {
@@ -17,17 +18,12 @@ describe('Applied filters panel', () => {
         setSourceFilter={jest.fn()}
         setDurationFilter={jest.fn()}
         setAgeRangeFilter={jest.fn()}
-        facets={FacetsFactory.sample({
-          subjects: [
-            {
-              id: 'subject-id',
-              hits: 25,
-              name: 'history subject',
-            },
-            { id: 'subject-2', hits: 25, name: 'subject 2' },
-          ],
-          channels: [{ id: 'bbc-id', hits: 25, name: 'BBC' }],
-        })}
+        subjectsList={[
+          ChannelFactory.sample({ id: 'bbc-id', name: 'history subject' }),
+        ]}
+        channelsList={[
+          SubjectFactory.sample({ id: 'subject-id', name: 'BBC' }),
+        ]}
       />,
     );
 
@@ -54,20 +50,14 @@ describe('Applied filters panel', () => {
         setSourceFilter={sourceFilterMock}
         setDurationFilter={durationFilterMock}
         setAgeRangeFilter={ageFilterMock}
-        facets={FacetsFactory.sample({
-          subjects: [
-            { id: 'subject-1', hits: 25, name: 'subject 1' },
-            { id: 'subject-2', hits: 25, name: 'subject 2' },
-          ],
-          channels: [
-            { id: 'bbc-id', hits: 25, name: 'BBC' },
-            {
-              id: 'nature-channel-id',
-              hits: 2,
-              name: 'nature channel',
-            },
-          ],
-        })}
+        subjectsList={[
+          ChannelFactory.sample({ id: 'bbc-id' }),
+          ChannelFactory.sample({ id: 'nature-channel-id' }),
+        ]}
+        channelsList={[
+          SubjectFactory.sample({ id: 'subject-1' }),
+          SubjectFactory.sample({ id: 'subject-2' }),
+        ]}
       />,
     );
 
@@ -105,9 +95,8 @@ describe('Applied filters panel', () => {
         setSourceFilter={jest.fn()}
         setDurationFilter={jest.fn()}
         setAgeRangeFilter={jest.fn()}
-        facets={FacetsFactory.sample({
-          channels: [{ id: 'bbc-id', hits: 25, name: 'BBC' }],
-        })}
+        channelsList={[]}
+        subjectsList={[]}
       />,
     );
 

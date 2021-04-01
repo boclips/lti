@@ -1,5 +1,6 @@
 import React from 'react';
-import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
+import { Channel } from 'boclips-api-client/dist/sub-clients/channels/model/Channel';
+import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subject';
 import { Filters } from '../../types/filters';
 import DurationConverter from '../filterPanel/converters/DurationConverter';
 import FilterBadgeFactory from './FilterBadgeFactory';
@@ -11,7 +12,8 @@ interface AppliedFiltersPanelProps {
   setDurationFilter: (filter: string[]) => void;
   setSourceFilter: (filter: string[]) => void;
   setSubjectFilter: (filter: string[]) => void;
-  facets: VideoFacets | undefined;
+  subjectsList: Channel[];
+  channelsList: Subject[];
 }
 
 const AppliedFiltersPanel = ({
@@ -20,7 +22,8 @@ const AppliedFiltersPanel = ({
   setDurationFilter,
   setSourceFilter,
   setSubjectFilter,
-  facets,
+  channelsList,
+  subjectsList,
 }: AppliedFiltersPanelProps) => {
   const AgeBadgeOptions = ageRanges?.map((filter) => ({
     displayValue: filter,
@@ -33,7 +36,7 @@ const AppliedFiltersPanel = ({
   }));
 
   const sourceBadgeOptions = source?.map((selectedChannelId) => {
-    const facet = facets!.channels!.find(
+    const facet = subjectsList.find(
       (channel) => channel.id === selectedChannelId,
     );
     return {
@@ -43,7 +46,7 @@ const AppliedFiltersPanel = ({
   });
 
   const subjectBadgeOptions = subjects?.map((subjectId) => {
-    const facet = facets!.subjects!.find((subject) => subject.id === subjectId);
+    const facet = channelsList.find((subject) => subject.id === subjectId);
     return {
       displayValue: facet!.name,
       key: facet!.id,
@@ -101,5 +104,4 @@ const AppliedFiltersPanel = ({
     </div>
   );
 };
-
 export default AppliedFiltersPanel;

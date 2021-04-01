@@ -1,6 +1,8 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { FacetsFactory } from 'boclips-api-client/dist/test-support/FacetsFactory';
+import { SubjectFactory } from 'boclips-api-client/dist/test-support/SubjectsFactory';
+import { ChannelFactory } from 'boclips-api-client/dist/test-support';
 import FilterPanel from './index';
 
 const testFacets = FacetsFactory.sample({
@@ -57,9 +59,38 @@ const testFacets = FacetsFactory.sample({
   ],
 });
 
+const subjects = [
+  SubjectFactory.sample({
+    id: '5cb499c9fd5beb428189454d',
+    name: 'subject1',
+  }),
+  SubjectFactory.sample({
+    id: '5cb499c9fd5beb428189454c',
+    name: 'subject2',
+  }),
+];
+
+const channels = [
+  ChannelFactory.sample({
+    id: 'biology-channel-id',
+    name: 'biology channel',
+  }),
+  ChannelFactory.sample({
+    id: 'history-channel-id',
+    name: 'history channel',
+  }),
+];
+
 describe('Filter Panel', () => {
   it('shows subject filters with options from API', async () => {
-    render(<FilterPanel facets={testFacets} onApply={jest.fn()} />);
+    render(
+      <FilterPanel
+        channelsList={channels}
+        subjectsList={subjects}
+        facets={testFacets}
+        onApply={jest.fn()}
+      />,
+    );
 
     const subjectSelector = screen.getByText('Subject');
     expect(subjectSelector).toBeVisible();
@@ -73,7 +104,14 @@ describe('Filter Panel', () => {
   });
 
   it('shows sources filters with options from API', async () => {
-    render(<FilterPanel facets={testFacets} onApply={jest.fn()} />);
+    render(
+      <FilterPanel
+        channelsList={channels}
+        subjectsList={subjects}
+        facets={testFacets}
+        onApply={jest.fn()}
+      />,
+    );
 
     const sourceSelector = screen.getByText('Source');
     expect(sourceSelector).toBeVisible();
@@ -87,7 +125,14 @@ describe('Filter Panel', () => {
   });
 
   it('shows duration filters', async () => {
-    render(<FilterPanel facets={testFacets} onApply={jest.fn()} />);
+    render(
+      <FilterPanel
+        channelsList={channels}
+        subjectsList={subjects}
+        facets={testFacets}
+        onApply={jest.fn()}
+      />,
+    );
 
     const sourceSelector = screen.getByText('Duration');
     expect(sourceSelector).toBeVisible();
@@ -105,7 +150,14 @@ describe('Filter Panel', () => {
 
   it('clear all clears the filters', async () => {
     const onApply = jest.fn();
-    render(<FilterPanel facets={testFacets} onApply={onApply} />);
+    render(
+      <FilterPanel
+        channelsList={channels}
+        subjectsList={subjects}
+        facets={testFacets}
+        onApply={onApply}
+      />,
+    );
 
     const sourceSelector = screen.getByText('Duration');
     expect(sourceSelector).toBeVisible();
@@ -132,7 +184,14 @@ describe('Filter Panel', () => {
   });
 
   it('Filters applied panel only shows when filters are selected', () => {
-    render(<FilterPanel facets={testFacets} onApply={jest.fn()} />);
+    render(
+      <FilterPanel
+        channelsList={channels}
+        subjectsList={subjects}
+        facets={testFacets}
+        onApply={jest.fn()}
+      />,
+    );
 
     const sourceSelector = screen.getByText('Duration');
 
@@ -159,7 +218,14 @@ describe('Filter Panel', () => {
   });
 
   it('When filters are removed from applied filters the count shows correct number', async () => {
-    render(<FilterPanel facets={testFacets} onApply={jest.fn()} />);
+    render(
+      <FilterPanel
+        channelsList={channels}
+        subjectsList={subjects}
+        facets={testFacets}
+        onApply={jest.fn()}
+      />,
+    );
 
     const sourceSelector = screen.getByText('Duration');
     expect(sourceSelector).toBeVisible();
@@ -183,7 +249,14 @@ describe('Filter Panel', () => {
     expect(screen.queryByTestId('count-wrapper')?.innerHTML).toEqual('2');
   });
   it('shows age range filters', async () => {
-    render(<FilterPanel facets={testFacets} onApply={jest.fn()} />);
+    render(
+      <FilterPanel
+        channelsList={channels}
+        subjectsList={subjects}
+        facets={testFacets}
+        onApply={jest.fn()}
+      />,
+    );
 
     const ageRangeSelector = screen.getByText('Age');
     expect(ageRangeSelector).toBeVisible();

@@ -7,6 +7,8 @@ import {
   Facet,
   VideoFacets,
 } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
+import { Channel } from 'boclips-api-client/dist/sub-clients/channels/model/Channel';
+import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subject';
 import s from './style.module.less';
 import DurationConverter from './converters/DurationConverter';
 import AppliedFiltersPanel from '../appliedFiltersPanel';
@@ -16,9 +18,17 @@ interface Props {
   facets?: VideoFacets;
   onApply: (filters: Filters) => void;
   hidePanel?: boolean;
+  channelsList: Channel[];
+  subjectsList: Subject[];
 }
 
-const FilterPanel = ({ facets, onApply, hidePanel }: Props) => {
+const FilterPanel = ({
+  facets,
+  onApply,
+  hidePanel,
+  channelsList,
+  subjectsList,
+}: Props) => {
   const [ageRangeFilter, setAgeRangeFilter] = useState<string[]>();
   const [durationFilter, setDurationFilter] = useState<string[]>();
   const [subjectFilter, setSubjectFilter] = useState<string[]>();
@@ -150,11 +160,12 @@ const FilterPanel = ({ facets, onApply, hidePanel }: Props) => {
         </div>
         {filterTouched && (
           <AppliedFiltersPanel
+            subjectsList={channelsList}
+            channelsList={subjectsList}
             setSubjectFilter={setSubjectFilter}
             setSourceFilter={setSourceFilter}
             setAgeRangeFilter={setAgeRangeFilter}
             setDurationFilter={setDurationFilter}
-            facets={facets}
             appliedFilters={{
               ageRanges: ageRangeFilter,
               duration: durationFilter,
