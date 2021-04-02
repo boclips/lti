@@ -219,7 +219,9 @@ const LtiView = ({
             })}
           >
             {loading ? (
-              <VideoCardsPlaceholder />
+              <div style={{ marginTop: '24px' }}>
+                <VideoCardsPlaceholder />
+              </div>
             ) : (
               <List
                 itemLayout="vertical"
