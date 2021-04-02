@@ -1,6 +1,6 @@
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const tsImportPluginFactory = require('ts-import-plugin');
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const srcPath = path.resolve(__dirname, '../src');
 const distPath = path.resolve(__dirname, '../dist');
@@ -63,9 +63,7 @@ module.exports = {
         test: /^((?!\.module).)*less$/,
         use: [
           MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-          },
+          'css-loader',
           {
             loader: 'less-loader',
             options: {
@@ -79,15 +77,13 @@ module.exports = {
       {
         test: /\.module.less$/,
         use: [
-          {
-            loader: 'style-loader',
-          },
+          'style-loader',
           {
             loader: 'css-loader',
             options: {
-              sourceMap: true,
               modules: {
-                localIdentName: '[name]__[local]--[hash:base64:5]',
+                localIdentContext: __dirname,
+                localIdentName: '[local]--[hash:base64:5]',
                 mode: 'local',
               },
             },
@@ -105,20 +101,12 @@ module.exports = {
       {
         test: /.svg$/i,
         exclude: /node_modules/,
-        oneOf: [
-          {
-            loader: ['file-loader', 'image-webpack-loader'],
-            resourceQuery: /inline/,
+        loader: 'svg-react-loader',
+        options: {
+          props: {
+            role: 'img',
           },
-          {
-            loader: 'svg-react-loader',
-            options: {
-              props: {
-                role: 'img',
-              },
-            },
-          },
-        ],
+        },
       },
       {
         test: /\.(gif|png|jpe?g)$/i,
@@ -131,5 +119,10 @@ module.exports = {
       },
     ],
   },
-  plugins: [new MiniCssExtractPlugin({ filename: '[name]-[hash:20].css' })],
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: '[name].[fullhash:5].css',
+      chunkFilename: '[name].[chunkhash:5].chunk.css',
+    }),
+  ]
 };
