@@ -42,10 +42,9 @@ const VideoCardWrapper = ({
         video={video}
         topBadge={
           <div>
-            <ProviderBadge
-              isLicensed={video?.playback?.type === 'STREAM'}
-              key="provider-badge"
-            />
+            {video?.playback?.type === 'YOUTUBE' ? (
+              <ProviderBadge key="provider-badge" />
+            ) : null}
           </div>
         }
         actions={actions}

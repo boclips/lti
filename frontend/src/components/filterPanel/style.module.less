@@ -14,7 +14,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    height:32px;
+    height: 32px;
 
     .filtersTitle {
       font-weight: bolder;
@@ -26,7 +26,7 @@
       padding: 0;
       font-weight: bold;
       font-size: 14px;
-      color: #346FB6;
+      color: #346fb6;
 
       &:hover {
         background: none;
@@ -38,5 +38,8 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    :global .ant-select-selector {
+      border: none !important;
+    }
   }
 }
