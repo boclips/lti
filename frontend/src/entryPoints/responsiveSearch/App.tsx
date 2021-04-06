@@ -1,8 +1,14 @@
 import { hot } from 'react-hot-loader/root';
-import React, { ReactElement } from 'react';
-import AxiosWrapper from '../../service/axios/AxiosWrapper';
+import React from 'react';
 import ResponsiveSearchView from '../../views/responsiveSearchView';
+import { BoclipsClientProvider } from '../../hooks/useBoclipsClient';
 
-const App = (): ReactElement => <ResponsiveSearchView />;
+const App = ({ apiClient }) => {
+  return (
+    <BoclipsClientProvider client={apiClient}>
+      <ResponsiveSearchView />
+    </BoclipsClientProvider>
+  );
+};
 
-export default hot(AxiosWrapper(App));
+export default hot(App);
