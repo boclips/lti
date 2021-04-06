@@ -173,7 +173,7 @@ describe('Filter Panel', () => {
 
     fireEvent.click(screen.getByText('CLEAR ALL'));
 
-    waitFor(() => {
+    await waitFor(() => {
       expect(onApply).toBeCalledWith({
         ageRanges: [],
         source: [],
@@ -183,7 +183,7 @@ describe('Filter Panel', () => {
     });
   });
 
-  it('Filters applied panel only shows when filters are selected', () => {
+  it('Filters applied panel only shows when filters are selected', async () => {
     render(
       <FilterPanel
         channelsList={channels}
@@ -210,7 +210,7 @@ describe('Filter Panel', () => {
     const removeElements = screen.getAllByTestId(/-remove-button/);
     removeElements.map((element) => fireEvent.click(element));
 
-    waitFor(() => {
+    await waitFor(() => {
       expect(screen.queryByText('Filters applied')).not.toBeInTheDocument();
       expect(screen.getAllByText('0m - 2m').length).toEqual(1);
       expect(screen.getAllByText('2m - 5m').length).toEqual(1);
@@ -246,10 +246,13 @@ describe('Filter Panel', () => {
 
     fireEvent.click(removeElements[0]);
 
-    expect(screen.queryByTestId('count-wrapper')?.innerHTML).toEqual('2');
+    await waitFor(() => {
+      expect(screen.queryByTestId('count-wrapper')?.innerHTML).toEqual('2');
+    });
   });
+
   it('shows age range filters', async () => {
-    render(
+    const wrapper = render(
       <FilterPanel
         channelsList={channels}
         subjectsList={subjects}
@@ -258,12 +261,11 @@ describe('Filter Panel', () => {
       />,
     );
 
-    const ageRangeSelector = screen.getByText('Age');
-    expect(ageRangeSelector).toBeVisible();
+    expect(wrapper.getByText('Age')).toBeVisible();
 
-    fireEvent.mouseDown(ageRangeSelector);
+    fireEvent.mouseDown(wrapper.getByText('Age'));
 
-    expect(screen.getByTitle('3 - 5'));
-    expect(screen.findByText('APPLY'));
+    expect(await wrapper.findByText('3 - 5')).toBeInTheDocument();
+    expect(await wrapper.findByText('APPLY')).toBeInTheDocument();
   });
 });

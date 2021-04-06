@@ -43,18 +43,21 @@ describe('Search view', () => {
     fireEvent.change(searchTextInput, { target: { value: 'cats' } });
     expect(await appComponent.findByDisplayValue('cats')).toBeInTheDocument();
 
-    const searchButton = appComponent.getByText('Search').closest('button');
-    fireEvent.click(searchButton!);
+    const searchButton = appComponent.getByText('Search');
+    fireEvent.click(searchButton);
     expect(await appComponent.findByText('FILTER BY:')).toBeInTheDocument();
 
     expect(
       await appComponent.findByText('1 result found:'),
     ).toBeInTheDocument();
 
-    const optionsPassed = mocked(PlayerFactory.get).mock.calls[0][1];
-    expect(optionsPassed!.analytics!.metadata).toEqual(
-      expect.objectContaining({ query: 'cats' }),
-    );
+    await waitFor(() => {
+      const optionsPassed = mocked(PlayerFactory.get).mock.calls[0][1];
+
+      expect(optionsPassed!.analytics!.metadata).toEqual(
+        expect.objectContaining({ query: 'cats' }),
+      );
+    });
   });
 
   it('loads the video card with the correct badges', async () => {
