@@ -1,20 +1,145 @@
-import React, { useEffect } from 'react';
-import { useBoclipsClient } from '../../hooks/useBoclipsClient';
-import useFeatureFlags from '../../hooks/useFeatureFlags';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import s from './style.module.less';
+import { Video } from '@boclips-ui/video';
+import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
+import VideoService, {
+  ExtendedClientVideo,
+} from '../../service/video/VideoService';
+import NoResults from '../../components/noResults';
+
+import { useBoclipsClient } from '../../hooks/useBoclipsClient';
+import Header from '../../components/header';
+import SearchResults from '../../components/searchResults';
+import SearchResultsSummary from '../../components/searchResultsSummary';
 
 const ResponsiveSearchView = () => {
-  const client = useBoclipsClient();
-  const featureFlags = useFeatureFlags();
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchPageNumber, setPageNumber] = useState<number>(0);
+  const [totalVideoElements, setTotalVideoElements] = useState<number>(0);
+  const [facets, setFacets] = useState<VideoFacets>();
+  const [singleFilter, setSingleFilter] = useState<any>(null);
+  const [filters, setFilters] = useState<any>(null);
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [activeFilterCount, setActiveFilterCount] = useState<number>(0);
+
+  const apiClient = useBoclipsClient();
+  const videoService = useMemo(() => new VideoService(apiClient), [apiClient]);
+
+  const onSearch = useCallback(
+    (query: string, page = 0) => {
+      if ((query && searchQuery !== query) || page !== searchPageNumber) {
+        setSearchQuery(query);
+        setPageNumber(page!);
+        setLoading(true);
+        setCurrentPage(1);
+      }
+    },
+    [searchPageNumber, searchQuery],
+  );
+
+  const handleSearchResults = (searchResults: ExtendedClientVideo<Video>) => {
+    setFacets(searchResults.facets);
+    setTotalVideoElements(searchResults.pageSpec.totalElements);
+    setVideos(searchResults.page);
+    setLoading(false);
+  };
+
+  const handleFilterAdded = (addedFilter) => {
+    setFilters((prevState) => ({ ...prevState, ...addedFilter }));
+    setPageNumber(0);
+    setCurrentPage(1);
+  };
+
+  const search = useCallback(() => {
+    videoService
+      .searchVideos({
+        query: searchQuery,
+        page: searchPageNumber,
+        size: 10,
+        age_range: filters?.ageRanges,
+        duration: filters?.duration,
+        subject: filters?.subjects,
+        channel: filters?.source,
+        include_channel_facets: true,
+      })
+      .then((videosResponse) => {
+        handleSearchResults(videosResponse);
+      });
+  }, [
+    filters?.ageRanges,
+    filters?.duration,
+    filters?.source,
+    filters?.subjects,
+    searchPageNumber,
+    searchQuery,
+    videoService,
+  ]);
 
   useEffect(() => {
-    client.subjects.getAll();
-  }, [client.subjects]);
+    if (singleFilter) {
+      handleFilterAdded(singleFilter);
+    }
+  }, [singleFilter]);
+
+  useEffect(() => {
+    if (searchQuery || searchPageNumber || filters) {
+      setLoading(true);
+      search();
+    }
+  }, [searchQuery, searchPageNumber, filters, search]);
+
+  const convertToArray = useCallback(
+    (array) =>
+      array.reduce(
+        (filter, element) =>
+          filter.concat(
+            Array.isArray(element) ? convertToArray(element) : element,
+          ),
+        [],
+      ),
+    [],
+  );
+
+  useEffect(() => {
+    if (filters) {
+      const filterValues = Object.values(filters);
+      setActiveFilterCount(convertToArray(filterValues).length);
+    }
+  }, [convertToArray, filters]);
 
   return (
     <div className={`${s.grid} ${s.container}`}>
-      <div className={s.header}>123</div>
-      <div className={s.body}></div>
+      <Header
+        onSearch={onSearch}
+        facets={facets}
+        setSingleFilter={setSingleFilter}
+      />
+
+      {!loading && videos.length === 0 && !!searchQuery ? (
+        <NoResults
+          searchQuery={searchQuery}
+          filtersApplied={activeFilterCount > 0}
+        />
+      ) : (
+        <>
+          <SearchResultsSummary
+            results={videos.length}
+            totalVideoElements={totalVideoElements}
+          />
+          <SearchResults
+            currentPage={currentPage}
+            onSearch={onSearch}
+            setCurrentPage={setCurrentPage}
+            results={videos}
+            searchQuery={searchQuery}
+            totalVideoElements={totalVideoElements}
+            loading={loading}
+          />
+        </>
+      )}
     </div>
   );
 };

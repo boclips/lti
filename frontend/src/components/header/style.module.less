@@ -1,0 +1,87 @@
+@import '~@boclips-ui/styles/src/breakpoints';
+@import '~@boclips-ui/styles/src/publishersColours';
+
+.header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  position: relative;
+
+  .searchBarWrapper {
+    flex: 1;
+    margin-right: 0.25rem;
+    --PublishersMaxWidth: unset;
+  }
+
+  .filterButtonWrapper {
+    flex: 0;
+    --bo-ui-button-svg-height: 21px;
+    --bo-ui-button-svg-width: 21px;
+  }
+}
+
+.mobileHeader {
+  display: flex;
+  flex-direction: row;
+}
+
+@media screen and (min-width: @screen-sm) {
+  .header {
+    grid-column: 1 / 25;
+    grid-row: 1 / 1;
+
+    .filtersWrapper {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: @white;
+      padding: 1.5rem 1rem;
+      z-index: 9;
+      overflow: scroll;
+
+      .mobileHeader {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        font-size: 1.25rem;
+        color: @blue-800;
+        line-height: 1.5rem;
+        font-weight: 500;
+
+        .backButton {
+          display: flex;
+          align-items: center;
+          width: 24px;
+          height: 24px;
+          position: absolute;
+          left: 0;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: @screen-md) {
+  .header {
+    grid-column: 1 / 25;
+  }
+}
+
+@media screen and (min-width: @screen-lg) {
+  .header {
+    grid-column: 4 / 22;
+
+    .filters {
+      flex-basis: 100%;
+    }
+  }
+}
+
+@media screen and (min-width: @screen-xl) {
+  .header {
+    grid-column: 4 / 22;
+  }
+}
