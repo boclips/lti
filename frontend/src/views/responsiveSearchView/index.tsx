@@ -26,6 +26,7 @@ const ResponsiveSearchView = () => {
   const [activeFilterCount, setActiveFilterCount] = useState<number>(0);
 
   const apiClient = useBoclipsClient();
+
   const videoService = useMemo(() => new VideoService(apiClient), [apiClient]);
 
   const onSearch = useCallback(

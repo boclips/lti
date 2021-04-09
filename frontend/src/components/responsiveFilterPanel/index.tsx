@@ -171,6 +171,7 @@ const ResponsiveFilterPanel = ({ facets, onApply }: Props) => {
           dropdownAlignment={DropdownAligment.RIGHT}
         />
       </div>
+
       <AppliedFiltersPanel
         subjectsList={channelsList}
         channelsList={subjectsList}
