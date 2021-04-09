@@ -8,22 +8,24 @@ import s from './style.module.less';
 
 interface AppliedFiltersPanelProps {
   appliedFilters: Filters;
-  setAgeRangeFilter: (filter: string[]) => void;
-  setDurationFilter: (filter: string[]) => void;
-  setSourceFilter: (filter: string[]) => void;
-  setSubjectFilter: (filter: string[]) => void;
   subjectsList: Channel[];
   channelsList: Subject[];
+  setSubjectFilter: (any) => void;
+  setSourceFilter: (any) => void;
+  setAgeRangeFilter: (any) => void;
+  setDurationFilter: (any) => void;
+  setFilter: (filter: string[]) => void;
 }
 
 const AppliedFiltersPanel = ({
   appliedFilters: { ageRanges, source, duration, subjects },
-  setAgeRangeFilter,
-  setDurationFilter,
-  setSourceFilter,
-  setSubjectFilter,
+  setFilter,
   channelsList,
   subjectsList,
+  setSubjectFilter,
+  setSourceFilter,
+  setAgeRangeFilter,
+  setDurationFilter,
 }: AppliedFiltersPanelProps) => {
   const AgeBadgeOptions = ageRanges?.map((filter) => ({
     displayValue: filter,
@@ -63,24 +65,28 @@ const AppliedFiltersPanel = ({
 
   const appliedFilterBadges = () => {
     const ageBadges = FilterBadgeFactory.produce({
+      filterName: 'ageRanges',
       badgeType: 'Age',
       badges: AgeBadgeOptions || [],
       updateFilters: setAgeRangeFilter,
     });
 
     const durationBadges = FilterBadgeFactory.produce({
+      filterName: 'duration',
       badgeType: 'Duration',
       badges: durationBadgeOptions || [],
       updateFilters: setDurationFilter,
     });
 
     const subjectBadges = FilterBadgeFactory.produce({
+      filterName: 'subjects',
       badgeType: 'Subject',
       badges: subjectBadgeOptions || [],
       updateFilters: setSubjectFilter,
     });
 
     const sourcesBadges = FilterBadgeFactory.produce({
+      filterName: 'source',
       badgeType: 'Source',
       badges: sourceBadgeOptions || [],
       updateFilters: setSourceFilter,

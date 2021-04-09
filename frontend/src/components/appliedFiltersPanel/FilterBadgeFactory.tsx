@@ -9,11 +9,12 @@ export interface BadgeOption {
 interface BadgeProps {
   badgeType: string;
   badges: (BadgeOption | undefined)[];
-  updateFilters: (values: string[]) => void;
+  updateFilters: (any) => void;
+  filterName: string;
 }
 
 class FilterBadgeFactory {
-  static produce({ badgeType, badges, updateFilters }: BadgeProps) {
+  static produce({ badgeType, badges, updateFilters, filterName }: BadgeProps) {
     const onClick = (clickedValue: string) => {
       const filters = badges.map((b) => b!.key);
       updateFilters(filters?.filter((item) => item !== clickedValue));

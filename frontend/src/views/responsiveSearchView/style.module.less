@@ -24,7 +24,10 @@ body {
     grid-template-columns: repeat(24, 1fr);
     grid-column-gap: 0.5rem;
     grid-row-gap: 1rem;
-    grid-template-rows: minmax(48px, max-content) minmax(0px, 24px) minmax(0, max-content);
+    grid-template-rows: minmax(48px, max-content) minmax(0px, 24px) minmax(
+        0,
+        max-content
+      );
   }
 
   .container {
@@ -36,7 +39,10 @@ body {
   .grid {
     grid-template-columns: repeat(24, 1fr);
     grid-column-gap: 0.5rem;
-    grid-template-rows: 48px max-content;
+    grid-template-rows: minmax(48px, max-content) minmax(0px, 24px) minmax(
+        0,
+        max-content
+      );
   }
 }
 
@@ -44,7 +50,10 @@ body {
   .grid {
     grid-template-columns: repeat(24, 1fr);
     grid-column-gap: 1rem;
-    grid-template-rows: 48px max-content;
+    grid-template-rows: minmax(48px, max-content) minmax(0px, 24px) minmax(
+        0,
+        max-content
+      );
   }
 
   .container {
@@ -56,6 +65,9 @@ body {
   .grid {
     grid-template-columns: repeat(24, 1fr);
     grid-column-gap: 1rem;
-    grid-template-rows: 48px max-content;
+    grid-template-rows: minmax(48px, max-content) minmax(0px, 24px) minmax(
+        0,
+        max-content
+      );
   }
 }

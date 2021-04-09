@@ -48,6 +48,7 @@ const ResponsiveSearchView = () => {
   };
 
   const handleFilterAdded = (addedFilter) => {
+    console.log(addedFilter);
     setFilters((prevState) => ({ ...prevState, ...addedFilter }));
     setPageNumber(0);
     setCurrentPage(1);
@@ -69,6 +70,7 @@ const ResponsiveSearchView = () => {
         handleSearchResults(videosResponse);
       });
   }, [
+    filters,
     filters?.ageRanges,
     filters?.duration,
     filters?.source,
@@ -116,6 +118,7 @@ const ResponsiveSearchView = () => {
         onSearch={onSearch}
         facets={facets}
         setSingleFilter={setSingleFilter}
+        filters={filters}
       />
 
       {!loading && videos.length === 0 && !!searchQuery ? (

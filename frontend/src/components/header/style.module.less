@@ -73,9 +73,24 @@
 @media screen and (min-width: @screen-lg) {
   .header {
     grid-column: 4 / 22;
+    height: auto;
 
     .filters {
       flex-basis: 100%;
+    }
+
+    .filtersWrapper {
+      flex-basis: 100%;
+      position: relative;
+      height: auto;
+      background-color: @white;
+      z-index: 9;
+      padding: 0;
+      overflow: unset;
+
+      .mobileHeader {
+        display: none;
+      }
     }
   }
 }
