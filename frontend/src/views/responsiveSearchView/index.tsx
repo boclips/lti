@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import s from './style.module.less';
 import { Video } from '@boclips-ui/video';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
+import s from './style.module.less';
 import VideoService, {
   ExtendedClientVideo,
 } from '../../service/video/VideoService';
@@ -11,16 +11,16 @@ import { useBoclipsClient } from '../../hooks/useBoclipsClient';
 import Header from '../../components/header';
 import SearchResults from '../../components/searchResults';
 import SearchResultsSummary from '../../components/searchResultsSummary';
+import { useFilters } from '../../hooks/useFilters';
 
 const ResponsiveSearchView = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [searchPageNumber, setPageNumber] = useState<number>(0);
+  const [searchPageNumber, setSearchPageNumber] = useState<number>(0);
   const [totalVideoElements, setTotalVideoElements] = useState<number>(0);
   const [facets, setFacets] = useState<VideoFacets>();
-  const [singleFilter, setSingleFilter] = useState<any>(null);
-  const [filters, setFilters] = useState<any>(null);
+  const { filters } = useFilters();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [activeFilterCount, setActiveFilterCount] = useState<number>(0);
@@ -33,7 +33,7 @@ const ResponsiveSearchView = () => {
     (query: string, page = 0) => {
       if ((query && searchQuery !== query) || page !== searchPageNumber) {
         setSearchQuery(query);
-        setPageNumber(page!);
+        setSearchPageNumber(page!);
         setLoading(true);
         setCurrentPage(1);
       }
@@ -48,12 +48,10 @@ const ResponsiveSearchView = () => {
     setLoading(false);
   };
 
-  const handleFilterAdded = (addedFilter) => {
-    console.log(addedFilter);
-    setFilters((prevState) => ({ ...prevState, ...addedFilter }));
-    setPageNumber(0);
+  useEffect(() => {
+    setSearchPageNumber(0);
     setCurrentPage(1);
-  };
+  }, [filters, searchQuery]);
 
   const search = useCallback(() => {
     videoService
@@ -70,22 +68,7 @@ const ResponsiveSearchView = () => {
       .then((videosResponse) => {
         handleSearchResults(videosResponse);
       });
-  }, [
-    filters,
-    filters?.ageRanges,
-    filters?.duration,
-    filters?.source,
-    filters?.subjects,
-    searchPageNumber,
-    searchQuery,
-    videoService,
-  ]);
-
-  useEffect(() => {
-    if (singleFilter) {
-      handleFilterAdded(singleFilter);
-    }
-  }, [singleFilter]);
+  }, [filters, searchPageNumber, searchQuery, videoService]);
 
   useEffect(() => {
     if (searchQuery || searchPageNumber || filters) {
@@ -115,12 +98,7 @@ const ResponsiveSearchView = () => {
 
   return (
     <div className={`${s.grid} ${s.container}`}>
-      <Header
-        onSearch={onSearch}
-        facets={facets}
-        setSingleFilter={setSingleFilter}
-        filters={filters}
-      />
+      <Header onSearch={onSearch} facets={facets} />
 
       {!loading && videos.length === 0 && !!searchQuery ? (
         <NoResults

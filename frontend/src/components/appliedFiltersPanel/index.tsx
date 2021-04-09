@@ -1,32 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Channel } from 'boclips-api-client/dist/sub-clients/channels/model/Channel';
 import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subject';
-import { Filters } from '../../types/filters';
 import DurationConverter from '../filterPanel/converters/DurationConverter';
 import FilterBadgeFactory from './FilterBadgeFactory';
 import s from './style.module.less';
+import { useBoclipsClient } from '../../hooks/useBoclipsClient';
+import { useFilters } from '../../hooks/useFilters';
 
-interface AppliedFiltersPanelProps {
-  appliedFilters: Filters;
-  subjectsList: Channel[];
-  channelsList: Subject[];
-  setSubjectFilter: (any) => void;
-  setSourceFilter: (any) => void;
-  setAgeRangeFilter: (any) => void;
-  setDurationFilter: (any) => void;
-  setFilter: (filter: string[]) => void;
-}
+const AppliedFiltersPanel = () => {
+  const apiClient = useBoclipsClient();
+  const [channelsList, setChannelsList] = useState<Channel[]>([]);
+  const [subjectsList, setSubjectsList] = useState<Subject[]>([]);
+  const { filters, setFilters } = useFilters();
+  const { source, subjects, ageRanges, duration } = filters;
+  useEffect(() => {
+    apiClient.subjects
+      .getAll()
+      .then((subjectsApi) => setSubjectsList(subjectsApi));
 
-const AppliedFiltersPanel = ({
-  appliedFilters: { ageRanges, source, duration, subjects },
-  setFilter,
-  channelsList,
-  subjectsList,
-  setSubjectFilter,
-  setSourceFilter,
-  setAgeRangeFilter,
-  setDurationFilter,
-}: AppliedFiltersPanelProps) => {
+    apiClient.channels
+      .getAll()
+      .then((channelsApi) => setChannelsList(channelsApi));
+  }, [setChannelsList, setSubjectsList, apiClient]);
+
   const AgeBadgeOptions = ageRanges?.map((filter) => ({
     displayValue: filter,
     key: filter,
@@ -38,7 +34,7 @@ const AppliedFiltersPanel = ({
   }));
 
   const sourceBadgeOptions = source?.map((selectedChannelId) => {
-    const facet = subjectsList.find(
+    const facet = channelsList.find(
       (channel) => channel.id === selectedChannelId,
     );
     return {
@@ -48,7 +44,7 @@ const AppliedFiltersPanel = ({
   });
 
   const subjectBadgeOptions = subjects?.map((subjectId) => {
-    const facet = channelsList.find((subject) => subject.id === subjectId);
+    const facet = subjectsList.find((subject) => subject.id === subjectId);
     return {
       displayValue: facet!.name,
       key: facet!.id,
@@ -68,28 +64,28 @@ const AppliedFiltersPanel = ({
       filterName: 'ageRanges',
       badgeType: 'Age',
       badges: AgeBadgeOptions || [],
-      updateFilters: setAgeRangeFilter,
+      updateFilters: (f) => setFilters({ ...filters, ageRanges: f }),
     });
 
     const durationBadges = FilterBadgeFactory.produce({
       filterName: 'duration',
       badgeType: 'Duration',
       badges: durationBadgeOptions || [],
-      updateFilters: setDurationFilter,
+      updateFilters: (f) => setFilters({ ...filters, duration: f }),
     });
 
     const subjectBadges = FilterBadgeFactory.produce({
       filterName: 'subjects',
       badgeType: 'Subject',
       badges: subjectBadgeOptions || [],
-      updateFilters: setSubjectFilter,
+      updateFilters: (f) => setFilters({ ...filters, subjects: f }),
     });
 
     const sourcesBadges = FilterBadgeFactory.produce({
       filterName: 'source',
       badgeType: 'Source',
       badges: sourceBadgeOptions || [],
-      updateFilters: setSourceFilter,
+      updateFilters: (f) => setFilters({ ...filters, source: f }),
     });
 
     return [

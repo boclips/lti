@@ -1,79 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { SelectOption } from '@boclips-ui/select-option';
-import SelectFilter, { DropdownAligment } from '@boclips-ui/select/src';
+import SelectFilter, { DropdownAligment } from '@boclips-ui/select';
 import {
   Facet,
   VideoFacets,
 } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
-import { Channel } from 'boclips-api-client/dist/sub-clients/channels/model/Channel';
-import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subject';
+import { useMediaBreakPoint } from '@boclips-ui/use-media-breakpoints';
 import s from './style.module.less';
 import DurationConverter from './converters/DurationConverter';
-import { Filters } from '../../types/filters';
-import { useMediaBreakPoint } from '@boclips-ui/use-media-breakpoints';
-import AppliedFiltersPanel from '../appliedFiltersPanel';
-import { useBoclipsClient } from '../../hooks/useBoclipsClient';
+import { useFilters } from '../../hooks/useFilters';
 
 const MOBILE_BREAKPOINT = 'mobile';
 
 interface Props {
   facets?: VideoFacets;
-  onApply: (filters: Filters) => void;
-  hidePanel?: boolean;
-  channelsList: Channel[];
-  subjectsList: Subject[];
+  // hidePanel?: boolean;
+  // channelsList: Channel[];
+  // subjectsList: Subject[];
 }
 
-const ResponsiveFilterPanel = ({ facets, onApply }: Props) => {
-  const [channelsList, setChannelsList] = useState<Channel[]>([]);
-  const [subjectsList, setSubjectsList] = useState<Subject[]>([]);
-  const [ageRangeFilter, setAgeRangeFilter] = useState<string[]>();
-  const [durationFilter, setDurationFilter] = useState<string[]>();
-  const [subjectFilter, setSubjectFilter] = useState<string[]>();
-  const [sourceFilter, setSourceFilter] = useState<string[]>();
+const ResponsiveFilterPanel = ({ facets }: Props) => {
   // const [filterTouched, setFilterTouched] = useState<boolean>(false);
   const breakpoints = useMediaBreakPoint();
   const mobileView = breakpoints.type === MOBILE_BREAKPOINT;
-
-  const apiClient = useBoclipsClient();
-
-  useEffect(() => {
-    apiClient.subjects.getAll().then((subjects) => setSubjectsList(subjects));
-
-    apiClient.channels.getAll().then((channels) => setChannelsList(channels));
-  }, [setChannelsList, setSubjectsList, apiClient]);
-
-  useEffect(() => {
-    if (durationFilter || (durationFilter && durationFilter!.length === 0)) {
-      onApply({
-        duration: durationFilter,
-      });
-    }
-  }, [durationFilter, onApply]);
-
-  useEffect(() => {
-    if (subjectFilter || (subjectFilter && subjectFilter!.length === 0)) {
-      onApply({
-        subjects: subjectFilter,
-      });
-    }
-  }, [subjectFilter, onApply]);
-
-  useEffect(() => {
-    if (sourceFilter || (sourceFilter && sourceFilter!.length === 0)) {
-      onApply({
-        source: sourceFilter,
-      });
-    }
-  }, [sourceFilter, onApply]);
-
-  useEffect(() => {
-    if (ageRangeFilter || (ageRangeFilter && ageRangeFilter!.length === 0)) {
-      onApply({
-        ageRanges: ageRangeFilter,
-      });
-    }
-  }, [ageRangeFilter, onApply]);
+  const { filters, setFilters } = useFilters();
 
   // const onClear = () => {
   //   setSubjectFilter([]);
@@ -121,20 +71,25 @@ const ResponsiveFilterPanel = ({ facets, onApply }: Props) => {
   return (
     <>
       <div className={s.filtersHeader}>
-        {/*<span className={s.filtersTitle}>FILTER BY:</span>*/}
-        {/*{filterTouched && (*/}
-        {/*  <Button className={s.clearAll} onClick={onClear} type="text">*/}
-        {/*    CLEAR ALL*/}
-        {/*  </Button>*/}
-        {/*)}*/}
+        {/* <span className={s.filtersTitle}>FILTER BY:</span> */}
+        {/* {filterTouched && ( */}
+        {/*  <Button className={s.clearAll} onClick={onClear} type="text"> */}
+        {/*    CLEAR ALL */}
+        {/*  </Button> */}
+        {/* )} */}
       </div>
       <div className={s.selectFilters}>
         <SelectFilter
           relativePositionFilters={mobileView}
           options={ageRangeOptions}
           title="Age"
-          updatedSelected={ageRangeFilter}
-          onApply={setAgeRangeFilter}
+          updatedSelected={filters.ageRanges}
+          onApply={(ageRanges) =>
+            setFilters({
+              ...filters,
+              ageRanges,
+            })
+          }
           // touched={setFilterTouched}
           showFacets
         />
@@ -142,8 +97,13 @@ const ResponsiveFilterPanel = ({ facets, onApply }: Props) => {
           relativePositionFilters={mobileView}
           options={durationOptions}
           title="Duration"
-          updatedSelected={durationFilter}
-          onApply={setDurationFilter}
+          updatedSelected={filters.duration}
+          onApply={(duration) =>
+            setFilters({
+              ...filters,
+              duration,
+            })
+          }
           // touched={setFilterTouched}
           showFacets
         />
@@ -151,8 +111,13 @@ const ResponsiveFilterPanel = ({ facets, onApply }: Props) => {
           relativePositionFilters={mobileView}
           options={subjectOptions}
           title="Subject"
-          onApply={setSubjectFilter}
-          updatedSelected={subjectFilter}
+          updatedSelected={filters.subjects}
+          onApply={(subjects) =>
+            setFilters({
+              ...filters,
+              subjects,
+            })
+          }
           searchPlaceholder="Search for subject"
           allowSearch
           // touched={setFilterTouched}
@@ -162,8 +127,13 @@ const ResponsiveFilterPanel = ({ facets, onApply }: Props) => {
           relativePositionFilters={mobileView}
           options={sourceOptions}
           title="Source"
-          onApply={setSourceFilter}
-          updatedSelected={sourceFilter}
+          updatedSelected={filters.source}
+          onApply={(source) =>
+            setFilters({
+              ...filters,
+              source,
+            })
+          }
           searchPlaceholder="Search for source"
           allowSearch
           // touched={setFilterTouched}
@@ -171,21 +141,6 @@ const ResponsiveFilterPanel = ({ facets, onApply }: Props) => {
           dropdownAlignment={DropdownAligment.RIGHT}
         />
       </div>
-
-      <AppliedFiltersPanel
-        subjectsList={channelsList}
-        channelsList={subjectsList}
-        setSubjectFilter={setSubjectFilter}
-        setSourceFilter={setSourceFilter}
-        setAgeRangeFilter={setAgeRangeFilter}
-        setDurationFilter={setDurationFilter}
-        appliedFilters={{
-          ageRanges: ageRangeFilter,
-          duration: durationFilter,
-          subjects: subjectFilter,
-          source: sourceFilter,
-        }}
-      />
     </>
   );
 };

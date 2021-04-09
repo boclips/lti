@@ -1,15 +1,12 @@
-import s from './style.module.less';
 import SearchBar from '@boclips-ui/search-bar';
 import Button from '@boclips-ui/button';
-import FilterSVG from '../../resources/images/filter-icon.svg';
-import ArrowBackSVG from '../../resources/images/arrow-back.svg';
 import React, { useEffect, useState } from 'react';
 import { useMediaBreakPoint } from '@boclips-ui/use-media-breakpoints';
-import ResponsiveFilterPanel from '../responsiveFilterPanel';
-import { useBoclipsClient } from '../../hooks/useBoclipsClient';
-import { Channel } from 'boclips-api-client/dist/sub-clients/channels/model/Channel';
-import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subject';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
+import ResponsiveFilterPanel from '../responsiveFilterPanel';
+import ArrowBackSVG from '../../resources/images/arrow-back.svg';
+import FilterSVG from '../../resources/images/filter-icon.svg';
+import s from './style.module.less';
 import AppliedFiltersPanel from '../appliedFiltersPanel';
 
 export const DESKTOP_BREAKPOINT = 'desktop';
@@ -17,11 +14,9 @@ export const DESKTOP_BREAKPOINT = 'desktop';
 interface Props {
   onSearch: (query: string, page: number) => void;
   facets?: VideoFacets;
-  filters: { [key: string]: string[] };
-  setSingleFilter: any;
 }
 
-const Header = ({ onSearch, facets, setSingleFilter, filters }: Props) => {
+const Header = ({ onSearch, facets }: Props) => {
   const [showFilters, setShowFilters] = useState<boolean>(false);
 
   const breakpoints = useMediaBreakPoint();
@@ -65,10 +60,11 @@ const Header = ({ onSearch, facets, setSingleFilter, filters }: Props) => {
             <div> Filters</div>
           </div>
           <div className={s.filters}>
-            <ResponsiveFilterPanel facets={facets} onApply={setSingleFilter} />
+            <ResponsiveFilterPanel facets={facets} />
           </div>
         </div>
       )}
+      <AppliedFiltersPanel />
     </div>
   );
 };
