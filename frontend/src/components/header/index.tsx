@@ -9,7 +9,6 @@ import FilterSVG from '../../resources/images/filter-icon.svg';
 import s from './style.module.less';
 
 export const DESKTOP_BREAKPOINT = 'desktop';
-export const MOBILE_BREAKPOINT = 'mobile';
 
 interface Props {
   onSearch: (query: string, page: number) => void;
@@ -21,7 +20,6 @@ const Header = ({ onSearch, facets }: Props) => {
 
   const breakpoints = useMediaBreakPoint();
   const desktopView = breakpoints.type === DESKTOP_BREAKPOINT;
-  const mobileView = breakpoints.type === MOBILE_BREAKPOINT;
 
   useEffect(() => {
     if (showFilters && !desktopView) {
@@ -29,7 +27,7 @@ const Header = ({ onSearch, facets }: Props) => {
     } else {
       document.body.style.overflow = 'auto';
     }
-  }, [mobileView, desktopView, showFilters]);
+  }, [desktopView, showFilters]);
 
   return (
     <div className={s.header}>
@@ -44,9 +42,9 @@ const Header = ({ onSearch, facets }: Props) => {
           }}
           type="outline"
           icon={<FilterSVG />}
-          iconOnly={mobileView}
-          text={mobileView ? undefined : 'Filters'}
-          width={mobileView ? '48px' : 'auto'}
+          iconOnly={!desktopView}
+          text={desktopView ? 'Filters' : undefined}
+          width={desktopView ? 'auto' : '48px'}
           height="100%"
           disabled={facets === undefined}
         />
