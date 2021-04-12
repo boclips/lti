@@ -2,7 +2,7 @@ import React from 'react';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { render } from '@testing-library/react';
-import AxiosWrapper from './AxiosWrapper';
+import { AxiosWrapper } from './AxiosWrapper';
 
 describe('axioswrapper', () => {
   it('renders the provided component when session is not timed out', () => {

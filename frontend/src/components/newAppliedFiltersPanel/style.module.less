@@ -1,0 +1,36 @@
+@import '~@boclips-ui/styles/src/publishersColours';
+@import '~@boclips-ui/styles/src/breakpoints';
+
+.filtersAppliedWrapper {
+  --bo-ui-badge-border: 2px solid @blue-700;
+  --bo-ui-badge-padding-x: 8px;
+  --bo-ui-badge-padding-y: 4px;
+  --bo-ui-badge-background-color: @white;
+  --bo-ui-badge-height: 32px;
+  --bo-ui-badge-border-radius: 4px;
+  --bo-ui-badge-value: @gray-900;
+  --bo-ui-badge-svg-height: 10px;
+
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  flex-basis: 100%;
+  grid-row: 2 / 2;
+
+  @media screen and (min-width: @screen-sm) {
+    grid-column: 1 / 25;
+  }
+
+  @media screen and (min-width: @screen-md) {
+    grid-column: 1 / 25;
+  }
+
+  @media screen and (min-width: @screen-lg) {
+    grid-column: 4 / 22;
+  }
+
+  @media screen and (min-width: @screen-xl) {
+    grid-column: 4 / 22;
+  }
+}

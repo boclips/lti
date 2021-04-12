@@ -1,0 +1,57 @@
+@import '~@boclips-ui/styles/src/breakpoints';
+@import '~@boclips-ui/styles/src/publishersColours';
+
+body {
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(24, 1fr);
+  grid-template-rows:
+    minmax(48px, max-content) minmax(0, max-content) minmax(0px, 24px)
+    minmax(0, max-content);
+}
+
+.container {
+  max-width: 1680px;
+  height: 100vh;
+  font-family: 'Rubik', Heebo, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+:global .ant-list-items {
+  padding: 0 !important;
+}
+
+@media screen and (min-width: @screen-sm) {
+  .grid {
+    grid-column-gap: 0.5rem;
+    grid-row-gap: 1rem;
+  }
+
+  .container {
+    margin: 1.5rem 1rem 0 1rem;
+  }
+}
+
+@media screen and (min-width: @screen-md) {
+  .grid {
+    grid-column-gap: 0.5rem;
+  }
+}
+
+@media screen and (min-width: @screen-lg) {
+  .grid {
+    grid-column-gap: 1rem;
+  }
+
+  .container {
+    margin: 1.5rem auto 0 auto;
+  }
+}
+
+@media screen and (min-width: @screen-xl) {
+  .grid {
+    grid-column-gap: 1rem;
+  }
+}

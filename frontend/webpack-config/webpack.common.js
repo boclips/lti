@@ -12,6 +12,10 @@ module.exports = {
       srcPath,
       'entryPoints/searchAndEmbed/index.tsx',
     ),
+    responsiveSearch: path.resolve(
+      srcPath,
+      'entryPoints/responsiveSearch/index.tsx',
+    ),
   },
   output: {
     path: distPath,

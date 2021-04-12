@@ -1,37 +1,41 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#000000" />
-  <meta
-    name="description"
-    content="Boclips makes accessing the best educational videos simple, seamless, and safe"
-  />
-  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-  <title>Boclips LTI</title>
-  <link
-  href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;500;700&display=swap"
-  rel="stylesheet"
-  />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap"
-    rel="stylesheet"
-  />
-</head>
-<body>
-<script th:if="${initialiseDevelopmentSession}">
-  fetch('[[${developmentSessionUrl}]]', {method: "POST"})
-</script>
-<script>
-  window.Environment = {
-    LTI_BASE_URL: '[[${ltiBaseUrl}]]',
-    API_BASE_URL: '[[${apiBaseUrl}]]',
-    USER_ID: '[[${userId}]]'
-  };
-</script>
-<noscript>You need to enable JavaScript to run this app.</noscript>
-<div id="root"></div>
-</body>
+  <html lang="en">
+    <head>
+      <meta charset="utf-8" />
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1 user-scalable=0"
+      />
+      <meta name="theme-color" content="#000000" />
+      <meta
+        name="description"
+        content="Boclips makes accessing the best educational videos simple, seamless, and safe"
+      />
+      <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+      <title>Boclips LTI</title>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;500;700&display=swap"
+        rel="stylesheet"
+      />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap"
+        rel="stylesheet"
+      />
+    </head>
+    <body>
+      <script th:if="${initialiseDevelopmentSession}">
+        fetch('[[${developmentSessionUrl}]]', { method: 'POST' });
+      </script>
+      <script>
+        window.Environment = {
+          LTI_BASE_URL: '[[${ltiBaseUrl}]]',
+          API_BASE_URL: '[[${apiBaseUrl}]]',
+          USER_ID: '[[${userId}]]',
+        };
+      </script>
+      <noscript>You need to enable JavaScript to run this app.</noscript>
+      <div id="root"></div>
+    </body>
+  </html>
 </html>

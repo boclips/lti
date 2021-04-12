@@ -1,0 +1,29 @@
+@import '~@boclips-ui/styles/src/breakpoints';
+
+@media screen and (min-width: @screen-sm) {
+  .selectFilters {
+    & > div {
+      margin: 1rem 0;
+    }
+  }
+  .filtersTitle {
+    display: none;
+  }
+}
+
+//@media screen and (min-width: @screen-md) {
+//}
+
+@media screen and (min-width: @screen-lg) {
+  .selectFilters {
+    display: flex;
+    & > div {
+      width: 25%;
+      margin: 1.5rem 0.5rem 0.5rem 0;
+      flex-grow: 1;
+    }
+  }
+}
+
+//@media screen and (min-width: @screen-xl) {
+//}
