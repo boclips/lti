@@ -88,8 +88,8 @@ describe('Applied filters panel', () => {
     await fireEvent.click(sourceBadge!);
 
     expect(filterMock).toHaveBeenCalledTimes(1);
-    expect(filterMock).toEqual(
-      expect.not.objectContaining({
+    expect(filterMock).toHaveBeenCalledWith(
+      expect.objectContaining({
         source: ['nature-channel-id'],
       }),
     );
@@ -98,7 +98,7 @@ describe('Applied filters panel', () => {
     await fireEvent.click(ageBadge!);
     expect(filterMock).toHaveBeenCalledTimes(2);
     expect(filterMock).toHaveBeenCalledWith(
-      expect.not.objectContaining({
+      expect.objectContaining({
         ageRanges: ['7-9'],
       }),
     );
@@ -107,7 +107,7 @@ describe('Applied filters panel', () => {
     await fireEvent.click(durationBadge!);
     expect(filterMock).toHaveBeenCalledTimes(3);
     expect(filterMock).toHaveBeenCalledWith(
-      expect.not.objectContaining({
+      expect.objectContaining({
         duration: ['PT2M-PT5M'],
       }),
     );
@@ -116,7 +116,7 @@ describe('Applied filters panel', () => {
     await fireEvent.click(subjectBadge!);
     expect(filterMock).toHaveBeenCalledTimes(4);
     expect(filterMock).toHaveBeenCalledWith(
-      expect.not.objectContaining({
+      expect.objectContaining({
         subjects: ['subject-2'],
       }),
     );
