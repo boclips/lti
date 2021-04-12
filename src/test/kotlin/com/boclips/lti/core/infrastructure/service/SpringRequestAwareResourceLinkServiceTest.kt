@@ -1,5 +1,6 @@
 package com.boclips.lti.core.infrastructure.service
 
+import com.boclips.lti.core.infrastructure.model.SearchType
 import com.boclips.lti.testsupport.factories.CollectionFactory
 import com.boclips.lti.testsupport.factories.DeepLinkingMessageFactory
 import com.boclips.lti.testsupport.factories.VideoFactory
@@ -91,7 +92,7 @@ class SpringRequestAwareResourceLinkServiceTest {
     inner class SearchResponseLink {
         @Test
         fun `returns a search response url with copy link feature params set to true`() {
-            val searchLink = resourceLinkService.getSearchVideoLink(showCopyLink = true)
+            val searchLink = resourceLinkService.getSearchVideoLink(showCopyLink = true, SearchType.SEARCH)
             assertThat(searchLink).hasParameter(
                 "embeddable_video_url",
                 "http://localhost/embeddable-videos/%7Bid%7D?with=params"
@@ -101,7 +102,7 @@ class SpringRequestAwareResourceLinkServiceTest {
 
         @Test
         fun `returns a search response url with copy link feature params set to false`() {
-            val searchLink = resourceLinkService.getSearchVideoLink(showCopyLink = false)
+            val searchLink = resourceLinkService.getSearchVideoLink(showCopyLink = false, SearchType.SEARCH)
             assertThat(searchLink).hasParameter(
                 "embeddable_video_url",
                 "http://localhost/embeddable-videos/%7Bid%7D?with=params"

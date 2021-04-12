@@ -92,6 +92,46 @@ class FrontendControllerIntegrationTest : AbstractSpringIntegrationTest() {
     }
 
     @Test
+    fun `passes frontend url and user id to the responsive search view`() {
+
+        val session = LtiTestSessionFactory.authenticated(
+            integrationId = "blah",
+            sessionAttributes = mapOf("boclipsUserId" to "user-123")
+        )
+
+        mvc.perform(get("/responsive-search").session(session as MockHttpSession))
+            .andExpect(status().isOk)
+            .andExpect(view().name("responsive-search"))
+            .andExpect(
+                model().attribute(
+                    "ltiBaseUrl",
+                    "http://localhost:${ApiAccessTokenProviderTest.API_SERVER_PORT}"
+                )
+            )
+            .andExpect(
+                model().attribute(
+                    "apiBaseUrl",
+                    "http://api.base.url"
+                )
+            ).andExpect(
+                model().attribute(
+                    "initialiseDevelopmentSession",
+                    false
+                )
+            ).andExpect(
+                model().attribute(
+                    "developmentSessionUrl",
+                    ""
+                )
+            ).andExpect(
+                model().attribute(
+                    "userId",
+                    "user-123"
+                )
+            )
+    }
+
+    @Test
     fun `is allowed to retrieve static js anc css resources`() {
         // These assets are compiled and copied into resources/static at build time
         mvc.perform(get("/main.js"))

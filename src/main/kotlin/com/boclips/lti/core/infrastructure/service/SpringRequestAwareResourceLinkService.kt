@@ -3,6 +3,7 @@ package com.boclips.lti.core.infrastructure.service
 import com.boclips.lti.core.domain.model.Collection
 import com.boclips.lti.core.domain.model.Video
 import com.boclips.lti.core.domain.service.ResourceLinkService
+import com.boclips.lti.core.infrastructure.model.SearchType
 import com.boclips.lti.v1p3.domain.model.DeepLinkingMessage
 import java.net.URL
 
@@ -79,14 +80,20 @@ class SpringRequestAwareResourceLinkService(
         )
     }
 
-    override fun getSearchVideoLink(showCopyLink: Boolean): URL {
+    override fun getSearchVideoLink(showCopyLink: Boolean, searchType: SearchType): URL {
         val requestUrlBuilder = uriComponentsBuilderFactory.getInstance()
         val embeddableVideoUrl = requestUrlBuilder.cloneBuilder()
             .replacePath("embeddable-videos/{id}")
             .toUriString()
+
+        val path = when (searchType) {
+            SearchType.SEARCH -> "/search"
+            SearchType.RESPONSIVE_SEARCH -> "/responsive-search"
+        }
+
         return requestUrlBuilder
             .replaceQuery(null)
-            .replacePath("/search")
+            .replacePath(path)
             .queryParam("embeddable_video_url", embeddableVideoUrl)
             .queryParam("show_copy_link", showCopyLink.toString())
             .build()

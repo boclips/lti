@@ -30,6 +30,23 @@ class FrontendController(
         )
     }
 
+    @GetMapping("/responsive-search")
+    fun getResponsiveSearch(session: HttpSession): ModelAndView {
+        /*
+         * responsive-search here points to responsive-search.html in the front end repo
+         * Gradle will compile frontend files and move them /resources/static in the jar at build time
+         */
+        return ModelAndView(
+            "responsive-search", mapOf(
+                "ltiBaseUrl" to frontendProperties.ltiBaseUrl,
+                "userId" to session.getBoclipsUserId(),
+                "apiBaseUrl" to frontendProperties.apiBaseUrl,
+                "initialiseDevelopmentSession" to devSupportProperties.initialiseDevelopmentSession,
+                "developmentSessionUrl" to devSupportProperties.developmentSessionUrl
+            )
+        )
+    }
+
     @GetMapping("/search-and-embed")
     fun getSearchAndEmbed(session: HttpSession): ModelAndView {
         /*
