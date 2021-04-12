@@ -79,14 +79,17 @@ class SpringRequestAwareResourceLinkService(
         )
     }
 
-    override fun getSearchVideoLink(showCopyLink: Boolean): URL {
+    override fun getSearchVideoLink(showCopyLink: Boolean, searchType: String): URL {
         val requestUrlBuilder = uriComponentsBuilderFactory.getInstance()
         val embeddableVideoUrl = requestUrlBuilder.cloneBuilder()
             .replacePath("embeddable-videos/{id}")
             .toUriString()
+
+
+
         return requestUrlBuilder
             .replaceQuery(null)
-            .replacePath("/search")
+            .replacePath("/responsive-search")
             .queryParam("embeddable_video_url", embeddableVideoUrl)
             .queryParam("show_copy_link", showCopyLink.toString())
             .build()
