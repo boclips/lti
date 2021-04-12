@@ -1,11 +1,10 @@
 package com.boclips.lti.v1p3.domain.service
 
 import com.boclips.lti.core.domain.service.ResourceLinkService
+import com.boclips.lti.core.infrastructure.model.SearchType
 import com.boclips.lti.core.infrastructure.service.UsersClientFactory
 import com.boclips.lti.v1p3.domain.model.ResourceLinkMessage
 import com.boclips.lti.v1p3.domain.model.getIntegrationId
-import com.boclips.lti.v1p3.domain.model.setIntegrationId
-import com.boclips.lti.v1p3.domain.repository.PlatformRepository
 import java.net.URL
 import javax.servlet.http.HttpSession
 
@@ -16,7 +15,10 @@ class HandleResourceLinkMessage(
     operator fun invoke(message: ResourceLinkMessage, session: HttpSession): URL {
         return if (message.requestedResource.isSearchResourceRequest()) {
             val showCopyLink = isCopyResourceLinkFeatureAvailable(session.getIntegrationId())
-            linkService.getSearchVideoLink(showCopyLink)
+            linkService.getSearchVideoLink(
+                showCopyLink = showCopyLink,
+                searchType = message.requestedResource.getSearchType()
+            )
         } else {
             message.requestedResource
         }
@@ -30,3 +32,5 @@ class HandleResourceLinkMessage(
 }
 
 fun URL.isSearchResourceRequest() = this.toString().endsWith("search")
+
+fun URL.getSearchType() = if (this.toString().endsWith("responsive-search")) SearchType.RESPONSIVE_SEARCH else SearchType.SEARCH
