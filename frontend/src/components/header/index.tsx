@@ -34,7 +34,7 @@ const Header = ({ onSearch, facets }: Props) => {
   return (
     <div className={s.header}>
       <div className={s.searchBarWrapper}>
-        <SearchBar theme="publishers" onSearch={onSearch} />
+        <SearchBar onSearch={onSearch} />
       </div>
       <div className={s.filterButtonWrapper}>
         <Button
@@ -47,7 +47,7 @@ const Header = ({ onSearch, facets }: Props) => {
           iconOnly={mobileView}
           text={mobileView ? undefined : 'Filters'}
           width={mobileView ? '48px' : 'auto'}
-          height="100%"
+          height="48px"
           disabled={facets === undefined}
         />
       </div>

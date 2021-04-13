@@ -3,7 +3,7 @@ import c from 'classnames';
 import { Col, Layout, List, Row } from 'antd';
 import { Video } from '@boclips-ui/video';
 import VideoCardsPlaceholder from '@boclips-ui/video-card-placeholder';
-import SearchBar from '@boclips-ui/search-bar';
+import SearchBar from '@boclips-ui/search-bar-legacy';
 import NoResults from '@boclips-ui/no-results';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 import { User } from 'boclips-api-client/dist/sub-clients/organisations/model/User';
