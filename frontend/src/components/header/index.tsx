@@ -10,6 +10,7 @@ import s from './style.module.less';
 
 export const DESKTOP_BREAKPOINT = 'desktop';
 export const MOBILE_BREAKPOINT = 'mobile';
+export const TABLET_BREAKPOINT = 'tablet';
 
 interface Props {
   onSearch: (query: string, page: number) => void;
@@ -19,9 +20,10 @@ interface Props {
 const Header = ({ onSearch, facets }: Props) => {
   const [showFilters, setShowFilters] = useState<boolean>(false);
 
-  const breakpoints = useMediaBreakPoint();
-  const desktopView = breakpoints.type === DESKTOP_BREAKPOINT;
-  const mobileView = breakpoints.type === MOBILE_BREAKPOINT;
+  const currentBreakpoint = useMediaBreakPoint();
+  const desktopView = currentBreakpoint.type === DESKTOP_BREAKPOINT;
+  const mobileView = currentBreakpoint.type === MOBILE_BREAKPOINT;
+  const tabletView = currentBreakpoint.type === TABLET_BREAKPOINT;
 
   useEffect(() => {
     if (showFilters && !desktopView) {
@@ -34,10 +36,14 @@ const Header = ({ onSearch, facets }: Props) => {
   return (
     <div className={s.header}>
       <div className={s.searchBarWrapper}>
-        <SearchBar onSearch={onSearch} />
+        <SearchBar
+          onSearch={onSearch}
+          iconOnlyButton={tabletView || mobileView}
+        />
       </div>
       <div className={s.filterButtonWrapper}>
         <Button
+          aria-label="filter"
           dataQa="filter-button"
           onClick={() => {
             setShowFilters(!showFilters);

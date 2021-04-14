@@ -5,6 +5,7 @@ import Adapter from 'enzyme-adapter-react-16';
 import 'jest-enzyme';
 import { ApiBoclipsClient, TestSupport } from 'boclips-api-client';
 import axios from 'axios';
+import setViewPortWidth from './src/testSupport/setViewPortWidth';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -49,5 +50,7 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: jest.fn(),
   })),
 });
+
+setViewPortWidth(1440);
 
 configure({ testIdAttribute: 'data-qa' });
