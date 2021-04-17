@@ -29,6 +29,13 @@ Running the app locally with the `local` Spring profile activated:
 ```
 $ ./gradlew bootRunLocal
 ```
+or
+
+```
+$ ./gradlew bRL
+```
+
+When executing a task in the commandline, you don’t have to specify full task name. A camelCase task name can be run by abbreviating each word.
 
 #### Selecting a dev server
 
