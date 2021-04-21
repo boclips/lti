@@ -6,6 +6,7 @@ import VideoCardsPlaceholder from '@boclips-ui/video-card-placeholder';
 import EmptyList from '../EmptyList';
 import getPlayer from '../../Player/getPlayer';
 import s from './style.module.less';
+import { ResponsiveEmbedVideoButton } from '../responsiveEmbedVideoButton/responsiveEmbedVideoButton';
 
 interface Props {
   onSearch: (query: string, page: number) => void;
@@ -59,6 +60,12 @@ const SearchResults = ({
                 key={video.id}
                 video={video}
                 videoPlayer={getPlayer(searchQuery!, video)}
+                actions={[
+                  <ResponsiveEmbedVideoButton
+                    video={video}
+                    onSubmit={(form) => form?.submit()}
+                  />,
+                ]}
               />
             </div>
           )}
