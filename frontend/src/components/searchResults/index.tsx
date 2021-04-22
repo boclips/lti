@@ -3,10 +3,14 @@ import React from 'react';
 import { Video } from '@boclips-ui/video';
 import { VideoCardV3 } from '@boclips-ui/video-card-v3';
 import VideoCardsPlaceholder from '@boclips-ui/video-card-placeholder';
+import c from 'classnames';
+import { useMediaBreakPoint } from '@boclips-ui/use-media-breakpoints';
 import EmptyList from '../EmptyList';
 import getPlayer from '../../Player/getPlayer';
 import s from './style.module.less';
 import { ResponsiveEmbedVideoButton } from '../responsiveEmbedVideoButton/responsiveEmbedVideoButton';
+import { MOBILE_BREAKPOINT } from '../header';
+import { PaginationButtons } from '../responsivePagination';
 
 interface Props {
   onSearch: (query: string, page: number) => void;
@@ -31,6 +35,9 @@ const SearchResults = ({
     window.scrollTo(0, 0);
   };
 
+  const currentBreakpoint = useMediaBreakPoint();
+  const mobileView = currentBreakpoint.type === MOBILE_BREAKPOINT;
+
   return (
     <div className={s.body}>
       {loading ? (
@@ -42,6 +49,9 @@ const SearchResults = ({
           locale={{ emptyText: <EmptyList theme="lti" /> }}
           pagination={{
             total: totalVideoElements,
+            className: c(s.pagination, {
+              [s.paginationEmpty]: !results.length,
+            }),
             pageSize: 10,
             showSizeChanger: false,
             onChange: (page) => {
@@ -50,6 +60,14 @@ const SearchResults = ({
               setCurrentPage(page);
             },
             current: currentPage,
+            itemRender: (current, type, _originalElement) =>
+              PaginationButtons(
+                current,
+                type,
+                _originalElement,
+                mobileView,
+                currentPage,
+              ),
           }}
           dataSource={results}
           renderItem={(video: Video) => (
