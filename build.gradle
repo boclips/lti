@@ -26,7 +26,7 @@ plugins {
 }
 
 ext {
-  springSessionVersion = 'Dragonfruit-SR2'
+  springSessionVersion = 'Dragonfruit-SR3'
 }
 
 apply plugin: 'kotlin'
