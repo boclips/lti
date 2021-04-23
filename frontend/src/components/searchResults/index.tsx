@@ -5,12 +5,12 @@ import { VideoCardV3 } from '@boclips-ui/video-card-v3';
 import VideoCardsPlaceholder from '@boclips-ui/video-card-placeholder';
 import c from 'classnames';
 import { useMediaBreakPoint } from '@boclips-ui/use-media-breakpoints';
-import EmptyList from '../EmptyList';
 import getPlayer from '../../Player/getPlayer';
 import s from './style.module.less';
 import { ResponsiveEmbedVideoButton } from '../responsiveEmbedVideoButton/responsiveEmbedVideoButton';
 import { MOBILE_BREAKPOINT } from '../header';
 import { PaginationButtons } from '../responsivePagination';
+import HappyGuySVG from '../../resources/images/happy-guy.svg';
 
 interface Props {
   onSearch: (query: string, page: number) => void;
@@ -46,7 +46,13 @@ const SearchResults = ({
         <List
           itemLayout="vertical"
           size="large"
-          locale={{ emptyText: <EmptyList theme="lti" /> }}
+          locale={{
+            emptyText: (
+              <div className={s.empty}>
+                <HappyGuySVG />
+              </div>
+            ),
+          }}
           pagination={{
             total: totalVideoElements,
             className: c(s.pagination, {
