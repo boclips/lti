@@ -22,7 +22,6 @@ describe('Search and embed view', () => {
   });
 
   it('loads the video card with the correct badges', async () => {
-    const appComponent = render(<App />);
     const apiClient = await fakeApiClient;
     apiClient.videos.insertVideo(
       VideoFactory.sample({
@@ -41,12 +40,11 @@ describe('Search and embed view', () => {
         ],
       }),
     );
-
     apiClient.subjects.insertSubject(SubjectFactory.sample({ name: 'Design' }));
 
-    const searchTextInput = appComponent.getByPlaceholderText(
-      'Search for videos...',
-    );
+    const appComponent = render(<App apiClient={apiClient} />);
+
+    const searchTextInput = appComponent.getByPlaceholderText('Search...');
     fireEvent.change(searchTextInput, { target: { value: 'goats' } });
 
     const searchButton = appComponent.getByText('Search').closest('button');

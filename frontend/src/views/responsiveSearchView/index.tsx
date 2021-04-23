@@ -14,7 +14,13 @@ import SearchResultsSummary from '../../components/searchResultsSummary';
 import { useFilters } from '../../hooks/useFilters';
 import AppliedFiltersPanel from '../../components/newAppliedFiltersPanel';
 
-const ResponsiveSearchView = () => {
+interface ResponsiveSearchViewProps {
+  renderVideoCard: (video: Video, query: string) => React.ReactNode;
+}
+
+const ResponsiveSearchView = ({
+  renderVideoCard,
+}: ResponsiveSearchViewProps) => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -122,6 +128,7 @@ const ResponsiveSearchView = () => {
             searchQuery={searchQuery}
             totalVideoElements={totalVideoElements}
             loading={loading}
+            renderVideoCard={renderVideoCard}
           />
         </>
       )}

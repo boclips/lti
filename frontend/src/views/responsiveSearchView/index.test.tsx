@@ -8,6 +8,7 @@ import ResponsiveSearchView from './index';
 import { configureMockAxiosService } from '../../testSupport/configureMockAxiosService';
 import { BoclipsClientProvider } from '../../hooks/useBoclipsClient';
 import { FiltersProvider } from '../../hooks/useFilters';
+import { renderResponsiveBaseVideoCard } from '../../entryPoints/responsiveSearch/App';
 
 describe('LTI test', () => {
   beforeEach(() => {
@@ -18,7 +19,9 @@ describe('LTI test', () => {
     return render(
       <BoclipsClientProvider client={apiClient}>
         <FiltersProvider>
-          <ResponsiveSearchView />
+          <ResponsiveSearchView
+            renderVideoCard={renderResponsiveBaseVideoCard}
+          />
         </FiltersProvider>
       </BoclipsClientProvider>,
     );

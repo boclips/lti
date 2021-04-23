@@ -1,13 +1,10 @@
 import { List } from 'antd';
 import React from 'react';
 import { Video } from '@boclips-ui/video';
-import { VideoCardV3 } from '@boclips-ui/video-card-v3';
 import VideoCardsPlaceholder from '@boclips-ui/video-card-placeholder';
 import c from 'classnames';
 import { useMediaBreakPoint } from '@boclips-ui/use-media-breakpoints';
-import getPlayer from '../../Player/getPlayer';
 import s from './style.module.less';
-import { ResponsiveEmbedVideoButton } from '../responsiveEmbedVideoButton/responsiveEmbedVideoButton';
 import { MOBILE_BREAKPOINT } from '../header';
 import { PaginationButtons } from '../responsivePagination';
 import HappyGuySVG from '../../resources/images/happy-guy.svg';
@@ -20,6 +17,7 @@ interface Props {
   totalVideoElements: number;
   currentPage: number;
   loading: boolean;
+  renderVideoCard: (video: Video, query: string) => React.ReactNode;
 }
 
 const SearchResults = ({
@@ -30,6 +28,7 @@ const SearchResults = ({
   totalVideoElements,
   currentPage,
   loading,
+  renderVideoCard,
 }: Props) => {
   const scrollToTop = () => {
     window.scrollTo(0, 0);
@@ -77,20 +76,8 @@ const SearchResults = ({
           }}
           dataSource={results}
           renderItem={(video: Video) => (
-            <div className={s.videoCardWrapper}>
-              <VideoCardV3
-                duration={video.playback.duration.format('mm:ss')}
-                title={video.title}
-                key={video.id}
-                video={video}
-                videoPlayer={getPlayer(searchQuery!, video)}
-                actions={[
-                  <ResponsiveEmbedVideoButton
-                    video={video}
-                    onSubmit={(form) => form?.submit()}
-                  />,
-                ]}
-              />
+            <div className={s.videoCardWrapper} key={video.id}>
+              {renderVideoCard(video, searchQuery!)}
             </div>
           )}
         />

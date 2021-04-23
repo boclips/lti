@@ -6,13 +6,20 @@ import ResponsiveSearchView from '../../views/responsiveSearchView';
 import { BoclipsClientProvider } from '../../hooks/useBoclipsClient';
 import { FiltersProvider } from '../../hooks/useFilters';
 import getPlayer from '../../Player/getPlayer';
+import { ResponsiveEmbedVideoButton } from '../../components/responsiveEmbedVideoButton/responsiveEmbedVideoButton';
 
-export const renderResponsiveBaseVideoCard = (video: Video, query: string) => (
+const renderVideoCard = (video: Video, query: string) => (
   <VideoCardV3
     duration={video.playback.duration.format('mm:ss')}
     title={video.title}
     video={video}
     videoPlayer={getPlayer(query!, video)}
+    actions={[
+      <ResponsiveEmbedVideoButton
+        video={video}
+        onSubmit={(form) => form?.submit()}
+      />,
+    ]}
   />
 );
 
@@ -20,7 +27,7 @@ const App = ({ apiClient }) => {
   return (
     <BoclipsClientProvider client={apiClient}>
       <FiltersProvider>
-        <ResponsiveSearchView renderVideoCard={renderResponsiveBaseVideoCard} />
+        <ResponsiveSearchView renderVideoCard={renderVideoCard} />
       </FiltersProvider>
     </BoclipsClientProvider>
   );
