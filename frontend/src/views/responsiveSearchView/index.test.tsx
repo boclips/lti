@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react';
 import { VideoFactory } from 'boclips-api-client/dist/test-support/VideosFactory';
 import { FakeBoclipsClient } from 'boclips-api-client/dist/test-support';
 import { fireEvent } from '@testing-library/dom';
-import { UserFactory } from 'boclips-api-client/dist/test-support/UserFactory';
 import { FacetsFactory } from 'boclips-api-client/dist/test-support/FacetsFactory';
 import ResponsiveSearchView from './index';
 import { configureMockAxiosService } from '../../testSupport/configureMockAxiosService';
@@ -41,19 +40,6 @@ describe('LTI test', () => {
     await fireEvent.mouseDown(component.getByText(filterType));
     await fireEvent.click(component.getByTitle(filterSelection));
   };
-
-  it('displays empty render with welcome message', async () => {
-    const apiClient = new FakeBoclipsClient();
-    apiClient.users.insertCurrentUser(UserFactory.sample());
-
-    renderWrapper(apiClient);
-
-    expect(
-      await screen.findByText(
-        'Use the search on top to discover inspiring videos',
-      ),
-    ).toBeInTheDocument();
-  });
 
   it('shows rendered videos on search', async () => {
     const apiClient = new FakeBoclipsClient();

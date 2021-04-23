@@ -5,8 +5,8 @@
   margin-bottom: 1.5rem;
 }
 
-.empty{
-  display:flex;
+.empty {
+  display: flex;
   justify-content: center;
   align-items: center;
 }
@@ -45,16 +45,16 @@
   }
 }
 
-.paginationEmpty{
+.paginationEmpty {
   display: none;
 }
 
-.pagination{
-  padding:0px;
+.pagination {
+  padding: 0px;
   list-style-type: none;
   display: flex;
   flex-direction: row;
-  margin-top:24px;
+  margin-top: 24px;
   justify-content: center;
 
   :global(.ant-pagination-item) {
@@ -67,19 +67,19 @@
 
   :global(.ant-pagination-item-active) {
     .paginationButton {
-      background-color:@blue-800 !important;
+      background-color: @blue-800 !important;
       border: none !important;
 
       .copy {
         color: white;
       }
 
-      .mobileNavigationButton{
-        width:42px;
+      .mobileNavigationButton {
+        width: 42px;
       }
     }
   }
-  :global(.ant-pagination-item):focus{
-    outline:none
+  :global(.ant-pagination-item):focus {
+    outline: none;
   }
 }
