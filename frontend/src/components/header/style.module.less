@@ -14,9 +14,14 @@
   }
 
   .filterButtonWrapper {
+    z-index: 99;
     flex: 0;
     --bo-ui-button-svg-height: 21px;
     --bo-ui-button-svg-width: 21px;
+    &.activeButton {
+      --bo-ui-button-outline-background-color: @blue-400;
+      --bo-ui-button-outline-border: 2px solid @blue-800;
+    }
   }
 }
 
@@ -25,10 +30,39 @@
   flex-direction: row;
 }
 
+.filtersWrapper {
+  display: block;
+}
+
+.hideFilters {
+  display: none;
+}
+
+.numberOfFilters {
+  height: 20px;
+  width: 20px;
+  border-radius: 100%;
+  background: @blue-400;
+  color: @blue-800;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.activeButton {
+  background: @blue-400;
+}
+
 @media screen and (min-width: @screen-sm) {
   .header {
     grid-column: 1 / 25;
     grid-row: 1 / 1;
+    .numberOfFilters {
+      position: absolute;
+      top: 7px;
+      right: 8px;
+    }
 
     .filtersWrapper {
       position: fixed;
@@ -37,8 +71,8 @@
       bottom: 0;
       left: 0;
       background-color: @white;
-      padding: 1.5rem 1rem;
-      z-index: 9;
+      padding: 1.5rem 1rem 0 1rem;
+      z-index: 99;
       overflow: scroll;
 
       .mobileHeader {
@@ -74,6 +108,13 @@
   .header {
     grid-column: 4 / 22;
     height: auto;
+
+    .numberOfFilters {
+      position: relative;
+      top: 0;
+      left: 0;
+      margin-left: 4px;
+    }
 
     .filters {
       flex-basis: 100%;

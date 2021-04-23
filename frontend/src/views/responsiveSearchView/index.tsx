@@ -72,11 +72,11 @@ const ResponsiveSearchView = () => {
   }, [filters, searchPageNumber, searchQuery, videoService]);
 
   useEffect(() => {
-    if (searchQuery || searchPageNumber || filters) {
+    if (searchQuery || searchPageNumber) {
       setLoading(true);
       search();
     }
-  }, [searchQuery, searchPageNumber, filters, search]);
+  }, [searchQuery, searchPageNumber, search]);
 
   const convertToArray = useCallback(
     (array) =>

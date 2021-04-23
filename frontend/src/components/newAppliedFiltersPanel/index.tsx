@@ -11,7 +11,7 @@ const AppliedFiltersPanel = () => {
   const apiClient = useBoclipsClient();
   const [channelsList, setChannelsList] = useState<Channel[]>([]);
   const [subjectsList, setSubjectsList] = useState<Subject[]>([]);
-  const { filters, setFilters } = useFilters();
+  const { filters, setFilters, clearFilters } = useFilters();
   const { source, subjects, ageRanges, duration } = filters;
 
   useEffect(() => {
@@ -57,6 +57,16 @@ const AppliedFiltersPanel = () => {
       };
     });
 
+  const clearAll = (
+    <div
+      role="presentation"
+      onClick={() => clearFilters()}
+      className={s.clearAll}
+    >
+      Clear All
+    </div>
+  );
+
   const appliedFilterBadges = () => {
     const ageBadges = FilterBadgeFactory.produce({
       badgeType: 'Age',
@@ -82,18 +92,19 @@ const AppliedFiltersPanel = () => {
       updateFilters: (f) => setFilters({ ...filters, source: f }),
     });
 
-    return [
+    const badges = [
       ...ageBadges,
       ...durationBadges,
       ...subjectBadges,
       ...sourcesBadges,
     ];
+
+    if (badges.length > 1) {
+      badges.push(clearAll);
+    }
+
+    return [...badges];
   };
-  return (
-    <div className={s.filtersAppliedWrapper}>
-      {/* <div className={s.filtersAppliedText}>Filters applied:</div> */}
-      {appliedFilterBadges()}
-    </div>
-  );
+  return <div className={s.filtersAppliedWrapper}>{appliedFilterBadges()}</div>;
 };
 export default AppliedFiltersPanel;

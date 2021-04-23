@@ -1,6 +1,5 @@
-// @ts-nocheck
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { VideoFactory } from 'boclips-api-client/dist/test-support/VideosFactory';
 import { FakeBoclipsClient } from 'boclips-api-client/dist/test-support';
 import { fireEvent } from '@testing-library/dom';
@@ -41,12 +40,7 @@ describe('LTI test', () => {
   ) => {
     await fireEvent.mouseDown(component.getByText(filterType));
     await fireEvent.click(component.getByTitle(filterSelection));
-    await fireEvent.click(component.getByText('APPLY'));
   };
-
-  // const removeFilters = (component: any) => {
-  //   fireEvent.click(component.getByText('CLEAR ALL'));
-  // };
 
   it('displays empty render with welcome message', async () => {
     const apiClient = new FakeBoclipsClient();
@@ -132,52 +126,4 @@ describe('LTI test', () => {
     expect(await screen.findByText('Try more general words')).toBeVisible();
     expect(screen.queryByText('FILTER BY:')).toBeNull();
   });
-
-  // it(
-  //   'when searching with filters produces no results then filters are removed,' +
-  //     ' the filter panel disappears and no results view changes',
-  //   async () => {
-  //     const apiClient = new FakeBoclipsClient();
-  //
-  //     apiClient.videos.insertVideo(
-  //       VideoFactory.sample({ id: '123', title: 'Hi' }),
-  //     );
-  //
-  //     apiClient.videos.setFacets(
-  //       FacetsFactory.sample({
-  //         ageRanges: [
-  //           {
-  //             name: '3-5',
-  //             id: '3-5',
-  //             hits: 1,
-  //           },
-  //         ],
-  //       }),
-  //     );
-  //
-  //     renderWrapper(apiClient);
-  //
-  //     searchFor('Hi');
-  //
-  //     await fireEvent.click(await screen.findByTestId('filter-button'));
-  //
-  //     filterResults(screen, 'Age', '3 - 5');
-  //
-  //     // expect(await screen.findByText('CLEAR ALL')).toBeVisible();
-  //
-  //     searchFor('definitely not a search query :( ');
-  //
-  //     expect(
-  //       await screen.findByText(
-  //         /Try again using different keywords or change the filters/,
-  //       ),
-  //     ).toBeVisible();
-  //
-  //     removeFilters(screen);
-  //
-  //     expect(await screen.findByText(/Check your spelling/)).toBeVisible();
-  //
-  //     // expect(await screen.queryByText('FILTER BY:')).not.toBeInTheDocument();
-  //   },
-  // );
 });

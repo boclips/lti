@@ -47,6 +47,73 @@ describe('Applied filters panel', () => {
     });
   });
 
+  it('shows clear all if more than 2 badges are applies', async () => {
+    const fakeApiClient = new FakeBoclipsClient();
+
+    fakeApiClient.subjects.insertSubject(
+      SubjectFactory.sample({ id: 'subject-id', name: 'history subject' }),
+    );
+
+    fakeApiClient.channels.insertFixture(
+      ChannelFactory.sample({ id: 'bbc-id', name: 'history channel' }),
+    );
+
+    const defaultFilters = {
+      filters: {
+        ageRanges: ['4-6'],
+        duration: ['PT0S-PT2M'],
+        subjects: ['subject-id'],
+        source: ['bbc-id'],
+      },
+    };
+
+    render(
+      <BoclipsClientProvider client={fakeApiClient}>
+        <FiltersProvider defaultValue={defaultFilters}>
+          <AppliedFiltersPanel />
+        </FiltersProvider>
+      </BoclipsClientProvider>,
+    );
+
+    expect(screen.getByText('Clear All')).toBeInTheDocument();
+  });
+
+  it('clears all filters when Clear All button is clicked', async () => {
+    const fakeApiClient = new FakeBoclipsClient();
+
+    fakeApiClient.subjects.insertSubject(
+      SubjectFactory.sample({ id: 'subject-id', name: 'history subject' }),
+    );
+
+    fakeApiClient.channels.insertFixture(
+      ChannelFactory.sample({ id: 'bbc-id', name: 'history channel' }),
+    );
+
+    const mockClearFilters = jest.fn();
+
+    const defaultFilters = {
+      filters: {
+        ageRanges: ['4-6'],
+        duration: ['PT0S-PT2M'],
+        subjects: ['subject-id'],
+        source: ['bbc-id'],
+      },
+      clearFilters: mockClearFilters,
+    };
+
+    render(
+      <BoclipsClientProvider client={fakeApiClient}>
+        <FiltersProvider defaultValue={defaultFilters}>
+          <AppliedFiltersPanel />
+        </FiltersProvider>
+      </BoclipsClientProvider>,
+    );
+
+    fireEvent.click(screen.getByText('Clear All'));
+
+    expect(mockClearFilters).toBeCalledTimes(1);
+  });
+
   it('calls correct set method when removing a badge', async () => {
     const fakeApiClient = new FakeBoclipsClient();
     const filterMock = jest.fn();

@@ -1,5 +1,7 @@
 import React from 'react';
 import FilterBadge from '@boclips-ui/filter-badge';
+import CloseBadgeIcon from '../../resources/images/filter-badge-close-icon.svg';
+import s from './style.module.less';
 
 export interface BadgeOption {
   displayValue: string;
@@ -26,6 +28,11 @@ class FilterBadgeFactory {
             key={badge.key}
             id={badge.key}
             value={badge.displayValue}
+            closeIcon={
+              <span className={s.filtersBadgeCloseWrapper}>
+                <CloseBadgeIcon />
+              </span>
+            }
             onClick={onClick}
           />
         ),

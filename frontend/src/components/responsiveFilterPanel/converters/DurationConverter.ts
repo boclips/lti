@@ -6,7 +6,7 @@ import dayjs from '../../../types/dayjs';
 export default class DurationConverter {
   static toSelectOptions(durationFacets: Facet[]): SelectOption[] {
     return durationFacets
-      .map((facet) => ({
+      ?.map((facet) => ({
         id: facet.id,
         label: this.getLabelFromIso(facet.id),
         count: this.extractFacetHits(facet.hits),

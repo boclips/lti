@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { SelectOption } from '@boclips-ui/select-option';
-import SelectFilter, { DropdownAligment } from '@boclips-ui/select';
+import SelectFilter, { DropdownAligment } from '@boclips-ui/select-legacy';
 import c from 'classnames';
 import { Button } from 'antd';
 import {
