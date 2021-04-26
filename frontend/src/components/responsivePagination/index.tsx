@@ -73,7 +73,7 @@ export const PaginationButtons = (
   if (type === 'next') {
     return (
       <CustomPaginationButton largeButton={!mobileView}>
-        {!mobileView && <span className={s.copy}>Prev</span>}
+        {!mobileView && <span className={s.copy}>Next</span>}
         <Chevron />
       </CustomPaginationButton>
     );
