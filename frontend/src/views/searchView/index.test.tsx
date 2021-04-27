@@ -127,6 +127,10 @@ describe('LTI test', () => {
     fakeApiClient.videos.insertVideo(
       VideoFactory.sample({ id: '123', title: 'Hi' }),
     );
+
+    fakeApiClient.users.insertCurrentUser(
+      UserFactory.sample({ features: { LTI_AGE_FILTER: true } }),
+    );
     fakeApiClient.videos.setFacets(
       FacetsFactory.sample({
         ageRanges: [
@@ -259,4 +263,91 @@ describe('LTI test', () => {
       expect(await view.queryByText('FILTER BY:')).not.toBeInTheDocument();
     },
   );
+
+  it('displays age filter for users with the feature enabled', async () => {
+    const fakeApiClient = (await new ApiClient(
+      'https://api.example.com',
+    ).getClient()) as FakeBoclipsClient;
+
+    fakeApiClient.videos.insertVideo(
+      VideoFactory.sample({ id: '123', title: 'Hi' }),
+    );
+
+    fakeApiClient.users.insertCurrentUser(
+      UserFactory.sample({ features: { LTI_AGE_FILTER: true } }),
+    );
+    fakeApiClient.videos.setFacets(
+      FacetsFactory.sample({
+        ageRanges: [
+          {
+            name: '3-5',
+            id: '3-5',
+            hits: 1,
+          },
+        ],
+      }),
+    );
+
+    const view = render(
+      <LtiView
+        renderVideoCard={(video: Video) => <div>Hello, video {video.id}</div>}
+      />,
+    );
+
+    searchFor('Hi');
+    expect(await view.findByText('FILTER BY:')).toBeInTheDocument();
+
+    filterResults(view, 'Age', '3 - 5');
+
+    expect(await view.findByText('CLEAR ALL')).toBeVisible();
+
+    searchFor('definitely not a search query :( ');
+
+    expect(
+      await view.findByText(
+        /Try again using different keywords or change the filters/,
+      ),
+    ).toBeVisible();
+
+    removeFilters(view);
+
+    expect(await view.findByText(/Check your spelling/)).toBeVisible();
+
+    expect(await view.queryByText('FILTER BY:')).not.toBeInTheDocument();
+  });
+
+  it('does not display age filter for users with the feature disabled', async () => {
+    const fakeApiClient = (await new ApiClient(
+      'https://api.example.com',
+    ).getClient()) as FakeBoclipsClient;
+
+    fakeApiClient.videos.insertVideo(
+      VideoFactory.sample({ id: '123', title: 'Hi' }),
+    );
+    fakeApiClient.videos.setFacets(
+      FacetsFactory.sample({
+        ageRanges: [
+          {
+            name: '3-5',
+            id: '3-5',
+            hits: 1,
+          },
+        ],
+      }),
+    );
+
+    fakeApiClient.users.insertCurrentUser(
+      UserFactory.sample({ features: { LTI_AGE_FILTER: false } }),
+    );
+
+    const view = render(
+      <LtiView
+        renderVideoCard={(video: Video) => <div>Hello, video {video.id}</div>}
+      />,
+    );
+
+    searchFor('Hi');
+    expect(await view.findByText('FILTER BY:')).toBeInTheDocument();
+    expect(await view.queryByText('Age')).not.toBeInTheDocument();
+  });
 });

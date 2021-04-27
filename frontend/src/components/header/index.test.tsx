@@ -1,11 +1,17 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { FakeBoclipsClient } from 'boclips-api-client/dist/test-support';
 import Header from './index';
 import setViewPortWidth from '../../testSupport/setViewPortWidth';
+import { BoclipsClientProvider } from '../../hooks/useBoclipsClient';
 
 describe('Header', () => {
   it('should render header with search', () => {
-    render(<Header onSearch={() => null} />);
+    render(
+      <BoclipsClientProvider client={new FakeBoclipsClient()}>
+        <Header onSearch={() => null} />
+      </BoclipsClientProvider>,
+    );
 
     expect(screen.getByPlaceholderText('Search...')).toBeInTheDocument();
   });
@@ -32,7 +38,11 @@ describe('Header', () => {
   ].forEach((viewport) => {
     it(`should display correct search button for ${viewport.viewportName} view`, () => {
       setViewPortWidth(viewport.width);
-      render(<Header onSearch={() => null} />);
+      render(
+        <BoclipsClientProvider client={new FakeBoclipsClient()}>
+          <Header onSearch={() => null} />
+        </BoclipsClientProvider>,
+      );
 
       const searchButton = screen.getByRole('button', { name: 'search' });
       expect(searchButton).toBeInTheDocument();

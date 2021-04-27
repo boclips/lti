@@ -1,7 +1,10 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { FacetsFactory } from 'boclips-api-client/dist/test-support/FacetsFactory';
+import { FakeBoclipsClient } from 'boclips-api-client/dist/test-support';
+import { UserFactory } from 'boclips-api-client/dist/test-support/UserFactory';
 import FilterPanel from './index';
+import { BoclipsClientProvider } from '../../hooks/useBoclipsClient';
 
 const testFacets = FacetsFactory.sample({
   durations: [
@@ -59,7 +62,11 @@ const testFacets = FacetsFactory.sample({
 
 describe('Filter Panel', () => {
   it('shows subject filters with options from API', async () => {
-    render(<FilterPanel facets={testFacets} setShowFilters={jest.fn()} />);
+    render(
+      <BoclipsClientProvider client={new FakeBoclipsClient()}>
+        <FilterPanel facets={testFacets} setShowFilters={jest.fn()} />
+      </BoclipsClientProvider>,
+    );
 
     const subjectSelector = screen.getByText('Subject');
     expect(subjectSelector).toBeVisible();
@@ -71,7 +78,11 @@ describe('Filter Panel', () => {
   });
 
   it('shows sources filters with options from API', async () => {
-    render(<FilterPanel facets={testFacets} setShowFilters={jest.fn()} />);
+    render(
+      <BoclipsClientProvider client={new FakeBoclipsClient()}>
+        <FilterPanel facets={testFacets} setShowFilters={jest.fn()} />
+      </BoclipsClientProvider>,
+    );
 
     const sourceSelector = screen.getByText('Source');
     expect(sourceSelector).toBeVisible();
@@ -83,7 +94,11 @@ describe('Filter Panel', () => {
   });
 
   it('shows duration filters', async () => {
-    render(<FilterPanel facets={testFacets} setShowFilters={jest.fn()} />);
+    render(
+      <BoclipsClientProvider client={new FakeBoclipsClient()}>
+        <FilterPanel facets={testFacets} setShowFilters={jest.fn()} />
+      </BoclipsClientProvider>,
+    );
 
     const sourceSelector = screen.getByText('Duration');
     expect(sourceSelector).toBeVisible();
@@ -98,14 +113,34 @@ describe('Filter Panel', () => {
   });
 
   it('shows age range filters', async () => {
+    const fakeBoclipsClient = new FakeBoclipsClient();
+    fakeBoclipsClient.users.insertCurrentUser(
+      UserFactory.sample({ features: { LTI_AGE_FILTER: true } }),
+    );
     const wrapper = render(
-      <FilterPanel facets={testFacets} setShowFilters={jest.fn()} />,
+      <BoclipsClientProvider client={fakeBoclipsClient}>
+        <FilterPanel facets={testFacets} setShowFilters={jest.fn()} />
+      </BoclipsClientProvider>,
     );
 
-    expect(wrapper.getByText('Age')).toBeVisible();
+    expect(await wrapper.findByText('Age')).toBeVisible();
 
     fireEvent.mouseDown(wrapper.getByText('Age'));
 
     expect(await wrapper.findByText('3 - 5')).toBeInTheDocument();
+  });
+
+  it('does not show age range filters if feature is disabled', async () => {
+    const fakeClient = new FakeBoclipsClient();
+    fakeClient.users.insertCurrentUser(
+      UserFactory.sample({ features: { LTI_AGE_FILTER: undefined } }),
+    );
+    const wrapper = render(
+      <BoclipsClientProvider client={fakeClient}>
+        <FilterPanel facets={testFacets} setShowFilters={jest.fn()} />
+      </BoclipsClientProvider>,
+    );
+
+    expect(await wrapper.queryByText('Age')).toBeNull();
   });
 });

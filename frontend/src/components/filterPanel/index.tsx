@@ -20,6 +20,7 @@ interface Props {
   hidePanel?: boolean;
   channelsList: Channel[];
   subjectsList: Subject[];
+  hideAgeFilter?: boolean;
 }
 
 const FilterPanel = ({
@@ -28,6 +29,7 @@ const FilterPanel = ({
   hidePanel,
   channelsList,
   subjectsList,
+  hideAgeFilter,
 }: Props) => {
   const [ageRangeFilter, setAgeRangeFilter] = useState<string[]>();
   const [durationFilter, setDurationFilter] = useState<string[]>();
@@ -120,14 +122,16 @@ const FilterPanel = ({
           )}
         </div>
         <div className={s.filtersWrapper}>
-          <SelectFilter
-            options={ageRangeOptions}
-            title="Age"
-            updatedSelected={ageRangeFilter}
-            onApply={setAgeRangeFilter}
-            touched={setFilterTouched}
-            showFacets
-          />
+          {!hideAgeFilter && (
+            <SelectFilter
+              options={ageRangeOptions}
+              title="Age"
+              updatedSelected={ageRangeFilter}
+              onApply={setAgeRangeFilter}
+              touched={setFilterTouched}
+              showFacets
+            />
+          )}
           <SelectFilter
             options={durationOptions}
             title="Duration"

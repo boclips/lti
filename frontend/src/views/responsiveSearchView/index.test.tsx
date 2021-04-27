@@ -4,6 +4,7 @@ import { VideoFactory } from 'boclips-api-client/dist/test-support/VideosFactory
 import { FakeBoclipsClient } from 'boclips-api-client/dist/test-support';
 import { fireEvent } from '@testing-library/dom';
 import { FacetsFactory } from 'boclips-api-client/dist/test-support/FacetsFactory';
+import { UserFactory } from 'boclips-api-client/dist/test-support/UserFactory';
 import ResponsiveSearchView from './index';
 import { configureMockAxiosService } from '../../testSupport/configureMockAxiosService';
 import { BoclipsClientProvider } from '../../hooks/useBoclipsClient';
@@ -66,6 +67,10 @@ describe('LTI test', () => {
 
     apiClient.videos.insertVideo(
       VideoFactory.sample({ id: '123', title: 'Hello' }),
+    );
+
+    apiClient.users.insertCurrentUser(
+      UserFactory.sample({ features: { LTI_AGE_FILTER: true } }),
     );
 
     apiClient.videos.setFacets(

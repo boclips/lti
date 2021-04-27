@@ -11,6 +11,7 @@ import s from './style.module.less';
 import DurationConverter from './converters/DurationConverter';
 import { useFilters } from '../../hooks/useFilters';
 import InputPrefixIcon from '../../resources/images/search-icon.svg';
+import useFeatureFlags from '../../hooks/useFeatureFlags';
 
 const MOBILE_BREAKPOINT = 'mobile';
 const TABLET_BREAKPOINT = 'tablet';
@@ -62,22 +63,26 @@ const ResponsiveFilterPanel = ({
     facets?.channels,
   );
 
+  const showAgeFilter = useFeatureFlags()?.LTI_AGE_FILTER;
+
   return (
     <>
       <div className={s.selectFilters}>
-        <SelectFilter
-          relativePositionFilters={relativePositionFilters}
-          options={ageRangeOptions}
-          title="Age"
-          updatedSelected={filters.ageRanges}
-          onApply={(ageRanges) =>
-            setFilters({
-              ...filters,
-              ageRanges,
-            })
-          }
-          showFacets
-        />
+        {showAgeFilter && (
+          <SelectFilter
+            relativePositionFilters={relativePositionFilters}
+            options={ageRangeOptions}
+            title="Age"
+            updatedSelected={filters.ageRanges}
+            onApply={(ageRanges) =>
+              setFilters({
+                ...filters,
+                ageRanges,
+              })
+            }
+            showFacets
+          />
+        )}
         <SelectFilter
           relativePositionFilters={relativePositionFilters}
           options={durationOptions}

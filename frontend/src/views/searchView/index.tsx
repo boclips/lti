@@ -56,6 +56,7 @@ const LtiView = ({
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [showSlsTerms, setShowSlsTerms] = useState<boolean>(false);
   const [showVideoCardV3, setShowVideoCardV3] = useState<boolean>(false);
+  const [hideAgeFilter, setHideAgeFilter] = useState<boolean>(false);
 
   const videoServicePromise = useMemo(
     () =>
@@ -148,6 +149,7 @@ const LtiView = ({
       setShowVideoCardV3(
         currentUser.features?.LTI_RESPONSIVE_VIDEO_CARD || false,
       );
+      setHideAgeFilter(!currentUser.features?.LTI_AGE_FILTER || false);
     }
   }, [currentUser]);
 
@@ -339,6 +341,7 @@ const LtiView = ({
                   facets={facets}
                   onApply={setSingleFilter}
                   hidePanel={!filtersVisible}
+                  hideAgeFilter={hideAgeFilter}
                 />
               </div>
             )}
