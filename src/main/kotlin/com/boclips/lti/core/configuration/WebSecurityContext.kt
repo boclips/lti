@@ -38,6 +38,7 @@ class WebSecurityContext : HttpSecurityConfigurer {
             .antMatchers(HttpMethod.GET, "/collections/*").permitAll()
             .antMatchers(HttpMethod.GET, "/search").permitAll()
             .antMatchers(HttpMethod.GET, "/search-and-embed").permitAll()
+            .antMatchers(HttpMethod.GET, "/responsive-search-and-embed").permitAll()
             .antMatchers(HttpMethod.GET, "/responsive-search").permitAll()
             .antMatchers(HttpMethod.GET, "/embeddable-videos/*").permitAll()
             .antMatchers(HttpMethod.GET, "/auth/token").permitAll()

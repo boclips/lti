@@ -16,7 +16,7 @@ class HandleDeepLinkingMessageIntegrationTest : AbstractSpringIntegrationTest() 
         val message = DeepLinkingMessageFactory.sample(issuer = URL(issuer))
 
         val returnedUrl = handleDeepLinkingMessage(message)
-        val deepLinkingURl = resourceLinkService.getDeepLinkingLink(message)
+        val deepLinkingURl = resourceLinkService.getDeepLinkingLinkWithUrlQuery(message)
 
         assertThat(returnedUrl).isEqualTo(deepLinkingURl)
     }

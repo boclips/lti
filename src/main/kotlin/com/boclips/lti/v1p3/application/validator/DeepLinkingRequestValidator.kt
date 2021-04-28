@@ -8,9 +8,9 @@ import com.boclips.lti.v1p3.domain.model.getTargetLinkUri
 import javax.servlet.http.HttpSession
 
 class DeepLinkingRequestValidator(private val resourceLinkService: ResourceLinkService) {
-    fun assertIsValid(token: DecodedJwtToken, session: HttpSession, state: String) {
+    fun assertIsValid(token: DecodedJwtToken, session: HttpSession, state: String, targetUri: String?) {
         assertContainsValidClaims(token, session, state)
-        assertStateMapsToDeepLinkingRequest(session, state)
+        assertStateMapsToDeepLinkingRequest(session, state, targetUri)
     }
 
     private fun assertContainsValidClaims(token: DecodedJwtToken, session: HttpSession, state: String) {
@@ -27,9 +27,10 @@ class DeepLinkingRequestValidator(private val resourceLinkService: ResourceLinkS
 
     private fun assertStateMapsToDeepLinkingRequest(
         session: HttpSession,
-        state: String
+        state: String,
+        targetUri: String?
     ) {
-        if (session.getTargetLinkUri(state) != resourceLinkService.getDeepLinkingLink().toString())
+        if (session.getTargetLinkUri(state) != resourceLinkService.getBaseDeepLinkingLink(targetUri).toString())
             throw TargetLinkUriMismatchException()
     }
 }

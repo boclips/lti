@@ -46,20 +46,29 @@ class SpringRequestAwareResourceLinkService(
         )
     }
 
-    override fun getDeepLinkingLink(message: DeepLinkingMessage?): URL {
-        return URL(
-            uriComponentsBuilderFactory.getInstance()
-                .replacePath("/search-and-embed")
-                .replaceQuery(null)
-                .apply {
-                    if (message != null) {
-                        queryParam("deep_link_return_url", message.returnUrl.toString())
-                        queryParam("deployment_id", message.deploymentId)
-                        message.data?.let { queryParam("data", it) }
-                    }
-                }
-                .toUriString()
-        )
+    override fun getBaseDeepLinkingLink(targetUri: String?): URL {
+        val path = resolvePathFromTargetUri(targetUri)
+        val rawUrl = uriComponentsBuilderFactory.getInstance()
+            .replacePath(path)
+            .replaceQuery(null)
+            .toUriString()
+        return URL(rawUrl)
+    }
+
+    override fun getDeepLinkingLinkWithUrlQuery(message: DeepLinkingMessage): URL {
+        val path = resolvePathFromTargetUri(message.targetUri)
+
+        val rawUrl = uriComponentsBuilderFactory.getInstance()
+            .replacePath(path)
+            .replaceQuery(null)
+            .queryParam("deep_link_return_url", message.returnUrl.toString())
+            .queryParam("deployment_id", message.deploymentId)
+            .apply {
+                    message.data?.let { queryParam("data", it) }
+            }
+            .toUriString()
+
+        return URL(rawUrl)
     }
 
     override fun getAccessTokenLink(): URL {
@@ -99,5 +108,13 @@ class SpringRequestAwareResourceLinkService(
             .build()
             .toUri()
             .toURL()
+    }
+
+    private fun resolvePathFromTargetUri(targetUri: String?): String {
+        return if (targetUri?.contains(Regex("responsive-search-and-embed")) == true) {
+            "/responsive-search-and-embed"
+        } else {
+            "/search-and-embed"
+        }
     }
 }

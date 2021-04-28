@@ -15,6 +15,18 @@ import org.springframework.mock.web.MockHttpSession
 import java.util.UUID
 
 class DeepLinkingRequestValidatorTest : AbstractSpringIntegrationTest() {
+
+    @Autowired
+    private lateinit var validator: DeepLinkingRequestValidator
+
+    private val session = MockHttpSession()
+    private val state = UUID.randomUUID().toString()
+
+    @BeforeEach
+    fun mapStateToDeepLinkUrl() {
+        session.mapStateToTargetLinkUri(state, resourceLinkService.getBaseDeepLinkingLink("http://something/search-and-embed").toString())
+    }
+
     @Test
     fun `does not throw when given a valid token mapped to state`() {
         val token = DecodedJwtTokenFactory.sample(
@@ -26,7 +38,7 @@ class DeepLinkingRequestValidatorTest : AbstractSpringIntegrationTest() {
         )
 
         assertDoesNotThrow {
-            validator.assertIsValid(token, session, state)
+            validator.assertIsValid(token, session, state, "http://something/search-and-embed")
         }
     }
 
@@ -36,7 +48,7 @@ class DeepLinkingRequestValidatorTest : AbstractSpringIntegrationTest() {
         fun `throws when deep linking settings are not provided`() {
             val token = DecodedJwtTokenFactory.sample(deepLinkingSettingsClaim = null)
 
-            assertThatThrownBy { validator.assertIsValid(token, session, state) }
+            assertThatThrownBy { validator.assertIsValid(token, session, state, "http://something/search-and-embed") }
                 .isInstanceOf(LtiMessageClaimValidationException::class.java)
                 .asString().contains("deep_linking_settings")
         }
@@ -47,7 +59,7 @@ class DeepLinkingRequestValidatorTest : AbstractSpringIntegrationTest() {
                 deepLinkingSettingsClaim = DecodedJwtTokenFactory.sampleDeepLinkingSettingsClaim(deepLinkReturnUrl = null)
             )
 
-            assertThatThrownBy { validator.assertIsValid(token, session, state) }
+            assertThatThrownBy { validator.assertIsValid(token, session, state, "http://something/search-and-embed") }
                 .isInstanceOf(LtiMessageClaimValidationException::class.java)
                 .asString().contains("deep_link_return_url")
         }
@@ -58,7 +70,7 @@ class DeepLinkingRequestValidatorTest : AbstractSpringIntegrationTest() {
                 deepLinkingSettingsClaim = DecodedJwtTokenFactory.sampleDeepLinkingSettingsClaim(deepLinkReturnUrl = "trolling you, trolling me")
             )
 
-            assertThatThrownBy { validator.assertIsValid(token, session, state) }
+            assertThatThrownBy { validator.assertIsValid(token, session, state, "http://something/search-and-embed") }
                 .isInstanceOf(LtiMessageClaimValidationException::class.java)
                 .asString().contains("deep_link_return_url")
         }
@@ -69,7 +81,7 @@ class DeepLinkingRequestValidatorTest : AbstractSpringIntegrationTest() {
                 deepLinkingSettingsClaim = DecodedJwtTokenFactory.sampleDeepLinkingSettingsClaim(acceptTypes = null)
             )
 
-            assertThatThrownBy { validator.assertIsValid(token, session, state) }
+            assertThatThrownBy { validator.assertIsValid(token, session, state, "http://something/search-and-embed") }
                 .isInstanceOf(LtiMessageClaimValidationException::class.java)
                 .asString().contains("accept_types")
         }
@@ -85,7 +97,7 @@ class DeepLinkingRequestValidatorTest : AbstractSpringIntegrationTest() {
                 )
             )
 
-            assertThatThrownBy { validator.assertIsValid(token, session, state) }
+            assertThatThrownBy { validator.assertIsValid(token, session, state, "http://something/search-and-embed") }
                 .isInstanceOf(LtiMessageClaimValidationException::class.java)
                 .asString().contains("accept_types")
         }
@@ -96,7 +108,7 @@ class DeepLinkingRequestValidatorTest : AbstractSpringIntegrationTest() {
                 deepLinkingSettingsClaim = DecodedJwtTokenFactory.sampleDeepLinkingSettingsClaim(acceptPresentationDocumentTargets = null)
             )
 
-            assertThatThrownBy { validator.assertIsValid(token, session, state) }
+            assertThatThrownBy { validator.assertIsValid(token, session, state, "http://something/search-and-embed") }
                 .isInstanceOf(LtiMessageClaimValidationException::class.java)
                 .asString().contains("accept_presentation_document_targets")
         }
@@ -116,19 +128,8 @@ class DeepLinkingRequestValidatorTest : AbstractSpringIntegrationTest() {
 
             session.mapStateToTargetLinkUri(state, "gibberish")
 
-            assertThatThrownBy { validator.assertIsValid(token, session, state) }
+            assertThatThrownBy { validator.assertIsValid(token, session, state, "http://something/search-and-embed") }
                 .isInstanceOf(TargetLinkUriMismatchException::class.java)
         }
-    }
-
-    @Autowired
-    private lateinit var validator: DeepLinkingRequestValidator
-
-    private val session = MockHttpSession()
-    private val state = UUID.randomUUID().toString()
-
-    @BeforeEach
-    fun mapStateToDeepLinkUrl() {
-        session.mapStateToTargetLinkUri(state, resourceLinkService.getDeepLinkingLink().toString())
     }
 }

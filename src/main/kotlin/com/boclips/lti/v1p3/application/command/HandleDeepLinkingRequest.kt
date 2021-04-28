@@ -12,8 +12,7 @@ class HandleDeepLinkingRequest(
     private val handleDeepLinkingMessage: HandleDeepLinkingMessage
 ) {
     operator fun invoke(idToken: DecodedJwtToken, session: HttpSession, state: String): URL {
-        validator.assertIsValid(idToken, session, state)
-
+        validator.assertIsValid(idToken, session, state, idToken.targetLinkUriClaim)
         return handleDeepLinkingMessage(message = MessageConverter.toDeepLinkingMessage(idToken))
     }
 }

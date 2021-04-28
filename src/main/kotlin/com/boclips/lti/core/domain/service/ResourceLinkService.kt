@@ -11,7 +11,8 @@ interface ResourceLinkService {
     fun getEmbeddableVideoLink(video: Video): URL
     fun getCollectionLink(collection: Collection): URL
     fun getCollectionsLink(): URL
-    fun getDeepLinkingLink(message: DeepLinkingMessage? = null): URL
+    fun getBaseDeepLinkingLink(targetUri: String?): URL
+    fun getDeepLinkingLinkWithUrlQuery(message: DeepLinkingMessage): URL
     fun getAccessTokenLink(): URL
     fun getOnePointThreeAuthResponseLink(): URL
     fun getSearchVideoLink(showCopyLink: Boolean, searchType: SearchType): URL

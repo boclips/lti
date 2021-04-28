@@ -13,6 +13,18 @@ import org.springframework.mock.web.MockHttpSession
 import java.util.UUID
 
 class HandleDeepLinkingRequestIntegrationTest : AbstractSpringIntegrationTest() {
+
+    private val session = MockHttpSession()
+    private val state = UUID.randomUUID().toString()
+
+    @Autowired
+    private lateinit var handleDeepLinkingRequest: HandleDeepLinkingRequest
+
+    @BeforeEach
+    fun mapStateToDeepLinkUrl() {
+        session.mapStateToTargetLinkUri(state, resourceLinkService.getBaseDeepLinkingLink("http://something/search-and-embed").toString())
+    }
+
     @Test
     fun `throws when given a token with invalid claims`() {
         val invalidToken = DecodedJwtTokenFactory.sample(deepLinkingSettingsClaim = null)
@@ -30,15 +42,4 @@ class HandleDeepLinkingRequestIntegrationTest : AbstractSpringIntegrationTest() 
 
         assertDoesNotThrow { handleDeepLinkingRequest(validDeepLinkingToken, session, state) }
     }
-
-    private val session = MockHttpSession()
-    private val state = UUID.randomUUID().toString()
-
-    @BeforeEach
-    fun mapStateToDeepLinkUrl() {
-        session.mapStateToTargetLinkUri(state, resourceLinkService.getDeepLinkingLink().toString())
-    }
-
-    @Autowired
-    private lateinit var handleDeepLinkingRequest: HandleDeepLinkingRequest
 }

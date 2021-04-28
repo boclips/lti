@@ -179,7 +179,7 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
             val session = LtiTestSessionFactory.unauthenticated(
                 sessionAttributes = mapOf(
                     SessionKeys.statesToTargetLinkUris to mapOf(
-                        state to resourceLinkService.getDeepLinkingLink().toString()
+                        state to resourceLinkService.getBaseDeepLinkingLink("http://something/search-and-embed").toString()
                     )
                 )
             )

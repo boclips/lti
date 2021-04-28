@@ -9,14 +9,16 @@ object DeepLinkingMessageFactory {
         returnUrl: URL = URL("https://returnurl.com"),
         deploymentId: String = "deployment-id",
         data: String? = "data",
-        subject: String? = "user-123"
+        subject: String? = "user-123",
+        targetUri: String? = "http://a-target-url/search-and-embed"
     ): DeepLinkingMessage {
         return DeepLinkingMessage(
             issuer = issuer,
             returnUrl = returnUrl,
             deploymentId = deploymentId,
             data = data,
-            subject = subject
+            subject = subject,
+            targetUri = targetUri
         )
     }
 }
