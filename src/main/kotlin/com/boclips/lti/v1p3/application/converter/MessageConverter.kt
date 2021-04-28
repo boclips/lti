@@ -17,6 +17,7 @@ object MessageConverter {
         returnUrl = URL(token.deepLinkingSettingsClaim!!.deepLinkReturnUrl),
         data = token.deepLinkingSettingsClaim.data,
         subject = token.subjectClaim,
-        deploymentId = token.deploymentIdClaim!!
+        deploymentId = token.deploymentIdClaim!!,
+        targetUri = token.targetLinkUriClaim
     )
 }

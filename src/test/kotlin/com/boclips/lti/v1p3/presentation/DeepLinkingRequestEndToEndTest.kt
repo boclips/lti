@@ -31,7 +31,7 @@ class DeepLinkingRequestEndToEndTest : AbstractSpringIntegrationTest() {
     ) {
         val issuer = "https://a-learning-platform.com"
         val clientId = "test-client-id"
-        val deepLinkingUrl = resourceLinkService.getDeepLinkingLink().toString()
+        val deepLinkingUrl = resourceLinkService.getBaseDeepLinkingLink("http://something/search-and-embed").toString()
 
         val tokenSigningSetup = setupTokenSigning(server, uri)
 

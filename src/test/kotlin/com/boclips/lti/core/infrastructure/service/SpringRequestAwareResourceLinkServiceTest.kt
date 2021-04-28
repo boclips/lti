@@ -17,6 +17,17 @@ import java.net.URL
 
 @ExtendWith(MockitoExtension::class)
 class SpringRequestAwareResourceLinkServiceTest {
+
+    private lateinit var resourceLinkService: SpringRequestAwareResourceLinkService
+
+    @BeforeEach
+    fun setupRequestContext(@Mock uriComponentsBuilderFactory: UriComponentsBuilderFactory) {
+        whenever(uriComponentsBuilderFactory.getInstance()).thenReturn(
+            UriComponentsBuilder.fromHttpUrl("http://localhost/something?with=params")
+        )
+        resourceLinkService = SpringRequestAwareResourceLinkService(uriComponentsBuilderFactory)
+    }
+
     @Test
     fun `returns a collections link`() {
         val collectionsLink = resourceLinkService.getCollectionsLink()
@@ -48,7 +59,7 @@ class SpringRequestAwareResourceLinkServiceTest {
     inner class DeepLinking {
         @Test
         fun `returns a deep linking link with query params when given a message`() {
-            val deepLinkingLink = resourceLinkService.getDeepLinkingLink(
+            val deepLinkingLink = resourceLinkService.getDeepLinkingLinkWithUrlQuery(
                 message = DeepLinkingMessageFactory.sample(
                     returnUrl = URL("https://returnurl.com"),
                     data = "data",
@@ -63,26 +74,41 @@ class SpringRequestAwareResourceLinkServiceTest {
         }
 
         @Test
-        fun `does not preserve unexpected query parameters`() {
-            val deepLinkingLink = resourceLinkService.getDeepLinkingLink(
-                message = DeepLinkingMessageFactory.sample(data = null)
+        fun `returns a deep linking link to responsive-search-and-embed view with query params when given a message`() {
+            val deepLinkingLink = resourceLinkService.getDeepLinkingLinkWithUrlQuery(
+                message = DeepLinkingMessageFactory.sample(
+                    returnUrl = URL("https://returnurl.com"),
+                    data = "data",
+                    deploymentId = "id",
+                    targetUri = "https://host/responsive-search-and-embed"
+                )
             )
+
+            assertThat(deepLinkingLink.toString()).startsWith("http://localhost/responsive-search-and-embed")
+            assertThat(deepLinkingLink).hasParameter("deep_link_return_url", "https://returnurl.com")
+            assertThat(deepLinkingLink).hasParameter("data", "data")
+            assertThat(deepLinkingLink).hasParameter("deployment_id", "id")
+        }
+
+        @Test
+        fun `does not preserve unexpected query parameters`() {
+            val deepLinkingLink = resourceLinkService.getBaseDeepLinkingLink(null)
 
             assertThat(deepLinkingLink).hasNoParameter("with")
         }
 
         @Test
         fun `does not add data parameter if no data is given`() {
-            val deepLinkingLink = resourceLinkService.getDeepLinkingLink(
-                message = DeepLinkingMessageFactory.sample(data = null)
-            )
+            val deepLinkingLink = resourceLinkService.getBaseDeepLinkingLink(null)
 
             assertThat(deepLinkingLink).hasNoParameter("data")
         }
 
         @Test
-        fun `returns a vanilla deep link url when not given a message`() {
-            val deepLinkingLink = resourceLinkService.getDeepLinkingLink()
+        fun `returns a deep link url with no query part for search and embed flow`() {
+            val deepLinkingLink = resourceLinkService.getBaseDeepLinkingLink(
+                "http://something/search-and-embed"
+            )
 
             assertThat(deepLinkingLink.toString()).startsWith("http://localhost/search-and-embed")
         }
@@ -121,15 +147,5 @@ class SpringRequestAwareResourceLinkServiceTest {
     fun `returns an LTI 1 3 authentication response link`() {
         val authResponseLink = resourceLinkService.getOnePointThreeAuthResponseLink()
         assertThat(authResponseLink.toString()).isEqualTo("http://localhost/v1p3/authentication-response")
-    }
-
-    private lateinit var resourceLinkService: SpringRequestAwareResourceLinkService
-
-    @BeforeEach
-    fun setupRequestContext(@Mock uriComponentsBuilderFactory: UriComponentsBuilderFactory) {
-        whenever(uriComponentsBuilderFactory.getInstance()).thenReturn(
-            UriComponentsBuilder.fromHttpUrl("http://localhost/something?with=params")
-        )
-        resourceLinkService = SpringRequestAwareResourceLinkService(uriComponentsBuilderFactory)
     }
 }
