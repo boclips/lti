@@ -76,15 +76,30 @@
     <cve>CVE-2020-15824</cve>
   </suppress>
 
-  <suppress>
-    <notes><![CDATA[
-   file name: keycloak-adapter-core-11.0.3.jar
-   ]]></notes>
-    <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-.*$</packageUrl>
-    <cve>CVE-2020-10776</cve>
-    <cve>CVE-2020-14366</cve>
-    <cve>CVE-2020-14389</cve>
-    <cve>CVE-2020-1728</cve>
+  <suppress until="2021-06-01">
+    <notes><![CDATA[ file name: keycloak-core-12.0.3.jar]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-core@.*$</packageUrl>
+    <cve>CVE-2020-14359</cve>
+  </suppress>
+  <suppress until="2021-06-01">
+    <notes><![CDATA[ file name: keycloak-adapter-spi-12.0.3.jar]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-adapter\-spi@.*$</packageUrl>
+    <cve>CVE-2020-14359</cve>
+  </suppress>
+  <suppress until="2021-06-01">
+    <notes><![CDATA[ file name: keycloak-common-12.0.3.jar]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-common@.*$</packageUrl>
+    <cve>CVE-2020-14359</cve>
+  </suppress>
+  <suppress until="2021-06-01">
+    <notes><![CDATA[ file name: keycloak-spring-security-adapter-12.0.3.jar]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-spring\-security\-adapter@.*$</packageUrl>
+    <cve>CVE-2020-14359</cve>
+  </suppress>
+  <suppress until="2021-06-01">
+    <notes><![CDATA[ file name: keycloak-adapter-core-12.0.3.jar]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.keycloak/keycloak\-adapter\-core@.*$</packageUrl>
+    <cve>CVE-2020-14359</cve>
   </suppress>
 
 </suppressions>
