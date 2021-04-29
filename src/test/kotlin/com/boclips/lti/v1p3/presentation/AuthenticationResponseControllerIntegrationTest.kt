@@ -432,7 +432,7 @@ class AuthenticationResponseControllerIntegrationTest : AbstractSpringIntegratio
                 integrationId = issuer,
                 sessionAttributes = mapOf(
                     SessionKeys.statesToTargetLinkUris to mapOf(state to resource),
-                    "userId" to "user-123"
+                    com.boclips.lti.core.application.model.SessionKeys.boclipsUserId to "user-123"
                 )
             )
 

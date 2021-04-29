@@ -13,7 +13,7 @@ class AccessTokenController(
     private val apiAccessTokenProvider: ApiAccessTokenProvider,
     private val assertHasValidSession: AssertHasValidSession
 ) {
-    @CrossOrigin(origins = ["*"], allowCredentials = "true")
+    @CrossOrigin(originPatterns = ["*"], allowCredentials = "true")
     @GetMapping("/auth/token")
     fun getToken(session: HttpSession): String {
         assertHasValidSession(session)

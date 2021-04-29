@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession
 class DevelopmentSupportController(private val devSupportProperties: DevSupportProperties) {
     companion object : KLogging()
 
-    @CrossOrigin(origins = ["*"], allowCredentials = "true")
+    @CrossOrigin(originPatterns = ["*"], allowCredentials = "true")
     @PostMapping("/initialise-session")
     fun handleLtiLaunchRequest(
         request: HttpServletRequest,
