@@ -7,24 +7,19 @@ import { mocked } from 'ts-jest/utils';
 import { SubjectFactory } from 'boclips-api-client/dist/test-support/SubjectsFactory';
 import { AttachmentFactory } from 'boclips-api-client/dist/test-support/AttachmentsFactory';
 import App from './App';
-import ApiClient from '../../service/client/ApiClient';
 import { configureMockAxiosService } from '../../testSupport/configureMockAxiosService';
 
 jest.mock('boclips-player');
 
 describe('Search view', () => {
-  let fakeApiClient: Promise<FakeBoclipsClient>;
-
   beforeAll(() => {
     configureMockAxiosService();
-
-    fakeApiClient = new ApiClient(
-      'https://api.example.com',
-    ).getClient() as Promise<FakeBoclipsClient>;
   });
 
   it('renders search bar', () => {
-    const appComponent = render(<App />);
+    const apiClient = new FakeBoclipsClient();
+
+    const appComponent = render(<App apiClient={apiClient} />);
     waitFor(() => {
       expect(
         appComponent.getByPlaceholderText(/search for videos/i),
@@ -33,9 +28,11 @@ describe('Search view', () => {
   });
 
   it("search query is added to the player's AnalyticsOptions so it can be sent with events", async () => {
-    const appComponent = render(<App />);
-    const videosClient = (await fakeApiClient).videos;
-    videosClient.insertVideo(VideoFactory.sample({ id: '1', title: 'cats 1' }));
+    const apiClient = new FakeBoclipsClient();
+    const appComponent = render(<App apiClient={apiClient} />);
+    apiClient.videos.insertVideo(
+      VideoFactory.sample({ id: '1', title: 'cats 1' }),
+    );
 
     const searchTextInput = appComponent.getByPlaceholderText(
       'Search for videos...',
@@ -61,9 +58,9 @@ describe('Search view', () => {
   });
 
   it('loads the video card with the correct badges', async () => {
-    const appComponent = render(<App />);
-    const videosClient = (await fakeApiClient).videos;
-    videosClient.insertVideo(
+    const fakeApiClient = new FakeBoclipsClient();
+    const appComponent = render(<App apiClient={fakeApiClient} />);
+    fakeApiClient.videos.insertVideo(
       VideoFactory.sample({
         id: '1',
         title: 'goats',

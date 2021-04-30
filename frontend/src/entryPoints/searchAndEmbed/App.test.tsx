@@ -5,26 +5,22 @@ import { VideoFactory } from 'boclips-api-client/dist/test-support/VideosFactory
 import { SubjectFactory } from 'boclips-api-client/dist/test-support/SubjectsFactory';
 import { AttachmentFactory } from 'boclips-api-client/dist/test-support/AttachmentsFactory';
 import App from './App';
-import ApiClient from '../../service/client/ApiClient';
 import { configureMockAxiosService } from '../../testSupport/configureMockAxiosService';
 
 jest.mock('boclips-player');
 
 describe('Search and embed view', () => {
-  let fakeApiClient: Promise<FakeBoclipsClient>;
+  let fakeApiClient: FakeBoclipsClient;
 
   beforeAll(() => {
     configureMockAxiosService();
 
-    fakeApiClient = new ApiClient(
-      'https://api.example1.com',
-    ).getClient() as Promise<FakeBoclipsClient>;
+    fakeApiClient = new FakeBoclipsClient();
   });
 
   it('loads the video card with the correct badges', async () => {
-    const appComponent = render(<App />);
-    const apiClient = await fakeApiClient;
-    apiClient.videos.insertVideo(
+    const appComponent = render(<App apiClient={fakeApiClient} />);
+    fakeApiClient.videos.insertVideo(
       VideoFactory.sample({
         id: '1',
         title: 'goats',
@@ -42,7 +38,9 @@ describe('Search and embed view', () => {
       }),
     );
 
-    apiClient.subjects.insertSubject(SubjectFactory.sample({ name: 'Design' }));
+    fakeApiClient.subjects.insertSubject(
+      SubjectFactory.sample({ name: 'Design' }),
+    );
 
     const searchTextInput = appComponent.getByPlaceholderText(
       'Search for videos...',

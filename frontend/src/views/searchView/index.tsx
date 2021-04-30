@@ -9,8 +9,7 @@ import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/Vi
 import { User } from 'boclips-api-client/dist/sub-clients/organisations/model/User';
 import { Channel } from 'boclips-api-client/dist/sub-clients/channels/model/Channel';
 import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subject';
-import ApiClient from '../../service/client/ApiClient';
-import { AppConstants } from '../../types/AppConstants';
+import { BoclipsClient } from 'boclips-api-client';
 import VideoService, {
   ExtendedClientVideo,
 } from '../../service/video/VideoService';
@@ -30,6 +29,7 @@ interface Props {
   collapsibleFilters?: boolean;
   closableHeader?: boolean;
   useFullWidth?: boolean;
+  apiClient: BoclipsClient;
 }
 
 const LtiView = ({
@@ -37,6 +37,7 @@ const LtiView = ({
   collapsibleFilters,
   closableHeader,
   useFullWidth,
+  apiClient,
 }: Props) => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [channelsList, setChannelsList] = useState<Channel[]>([]);
@@ -58,13 +59,7 @@ const LtiView = ({
   const [showVideoCardV3, setShowVideoCardV3] = useState<boolean>(false);
   const [hideAgeFilter, setHideAgeFilter] = useState<boolean>(false);
 
-  const videoServicePromise = useMemo(
-    () =>
-      new ApiClient(AppConstants.API_BASE_URL)
-        .getClient()
-        .then((client) => new VideoService(client)),
-    [],
-  );
+  const videoService = useMemo(() => new VideoService(apiClient), []);
 
   const onSearch = useCallback(
     (query?: string, page = 0) => {
@@ -92,22 +87,20 @@ const LtiView = ({
   };
 
   const search = useCallback(() => {
-    videoServicePromise.then((videoService) => {
-      videoService
-        .searchVideos({
-          query: searchQuery,
-          page: searchPageNumber,
-          size: 10,
-          age_range: filters?.ageRanges,
-          duration: filters?.duration,
-          subject: filters?.subjects,
-          channel: filters?.source,
-          include_channel_facets: true,
-        })
-        .then((videosResponse) => {
-          handleSearchResults(videosResponse);
-        });
-    });
+    videoService
+      .searchVideos({
+        query: searchQuery,
+        page: searchPageNumber,
+        size: 10,
+        age_range: filters?.ageRanges,
+        duration: filters?.duration,
+        subject: filters?.subjects,
+        channel: filters?.source,
+        include_channel_facets: true,
+      })
+      .then((videosResponse) => {
+        handleSearchResults(videosResponse);
+      });
   }, [
     filters?.ageRanges,
     filters?.duration,
@@ -115,33 +108,29 @@ const LtiView = ({
     filters?.subjects,
     searchPageNumber,
     searchQuery,
-    videoServicePromise,
+    videoService,
   ]);
 
   useEffect(() => {
     const getCurrentUser = () => {
-      videoServicePromise
-        .then((client) => client.getCurrentUser())
+      videoService
+        .getCurrentUser()
         .then((it) => setCurrentUser(it))
         .catch(() => setCurrentUser(null));
     };
 
     const getSubjects = () => {
-      videoServicePromise
-        .then((client) => client.getSubjects())
-        .then((subjects) => setSubjectsList(subjects));
+      videoService.getSubjects().then((subjects) => setSubjectsList(subjects));
     };
 
     const getChannels = () => {
-      videoServicePromise
-        .then((client) => client.getChannels())
-        .then((channels) => setChannelsList(channels));
+      videoService.getChannels().then((channels) => setChannelsList(channels));
     };
 
     getCurrentUser();
     getChannels();
     getSubjects();
-  }, [videoServicePromise, setChannelsList, setSubjectsList]);
+  }, [videoService, setChannelsList, setSubjectsList]);
 
   useEffect(() => {
     if (currentUser) {

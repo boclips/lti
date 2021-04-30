@@ -7,7 +7,6 @@ import { FakeBoclipsClient } from 'boclips-api-client/dist/test-support';
 import { fireEvent } from '@testing-library/dom';
 import { UserFactory } from 'boclips-api-client/dist/test-support/UserFactory';
 import { FacetsFactory } from 'boclips-api-client/dist/test-support/FacetsFactory';
-import ApiClient from '../../service/client/ApiClient';
 import LtiView from './index';
 import { configureMockAxiosService } from '../../testSupport/configureMockAxiosService';
 
@@ -38,13 +37,13 @@ describe('LTI test', () => {
   };
 
   it('displays empty render with welcome message', async () => {
-    const fakeApiClient = (await new ApiClient(
-      'https://api.example.com',
-    ).getClient()) as FakeBoclipsClient;
+    const fakeApiClient = new FakeBoclipsClient();
 
     fakeApiClient.users.insertCurrentUser(UserFactory.sample());
 
-    render(<LtiView renderVideoCard={() => <div />} />);
+    render(
+      <LtiView apiClient={fakeApiClient} renderVideoCard={() => <div />} />,
+    );
 
     expect(
       await screen.findByText(
@@ -54,9 +53,7 @@ describe('LTI test', () => {
   });
 
   it('displays SLS terms if user has that feature turned on', async () => {
-    const fakeApiClient = (await new ApiClient(
-      'https://api.example.com',
-    ).getClient()) as FakeBoclipsClient;
+    const fakeApiClient = new FakeBoclipsClient();
 
     fakeApiClient.users.insertCurrentUser(
       UserFactory.sample({
@@ -64,7 +61,9 @@ describe('LTI test', () => {
       }),
     );
 
-    render(<LtiView renderVideoCard={() => <div />} />);
+    render(
+      <LtiView apiClient={fakeApiClient} renderVideoCard={() => <div />} />,
+    );
 
     const aboutButton = await screen.findByText('About the app and services');
 
@@ -74,17 +73,16 @@ describe('LTI test', () => {
   });
 
   it("doesn't show SLS terms if user should not see it", async () => {
-    const fakeApiClient = (await new ApiClient(
-      'https://api.example.com',
-    ).getClient()) as FakeBoclipsClient;
-
+    const fakeApiClient = new FakeBoclipsClient();
     fakeApiClient.users.insertCurrentUser(
       UserFactory.sample({
         features: {},
       }),
     );
 
-    render(<LtiView renderVideoCard={() => <div />} />);
+    render(
+      <LtiView apiClient={fakeApiClient} renderVideoCard={() => <div />} />,
+    );
 
     await waitFor(() => {
       expect(screen.queryByText('About the app and services')).toBeNull();
@@ -92,9 +90,7 @@ describe('LTI test', () => {
   });
 
   it('uses provided function to render videos on search', async () => {
-    const fakeApiClient = (await new ApiClient(
-      'https://api.example.com',
-    ).getClient()) as FakeBoclipsClient;
+    const fakeApiClient = new FakeBoclipsClient();
 
     fakeApiClient.videos.insertVideo(
       VideoFactory.sample({ id: '123', title: 'Hi' }),
@@ -105,6 +101,7 @@ describe('LTI test', () => {
 
     render(
       <LtiView
+        apiClient={fakeApiClient}
         renderVideoCard={(video: Video) => <div>Hello, video {video.id}</div>}
       />,
     );
@@ -120,9 +117,7 @@ describe('LTI test', () => {
   });
 
   it('show filter panel when no results found but filters were applied', async () => {
-    const fakeApiClient = (await new ApiClient(
-      'https://api.example.com',
-    ).getClient()) as FakeBoclipsClient;
+    const fakeApiClient = new FakeBoclipsClient();
 
     fakeApiClient.videos.insertVideo(
       VideoFactory.sample({ id: '123', title: 'Hi' }),
@@ -145,6 +140,7 @@ describe('LTI test', () => {
 
     const view = render(
       <LtiView
+        apiClient={fakeApiClient}
         renderVideoCard={(video: Video) => <div>Hello, video {video.id}</div>}
       />,
     );
@@ -165,8 +161,11 @@ describe('LTI test', () => {
   });
 
   it('does not show filter panel when no results found & no filters were applied', async () => {
+    const fakeApiClient = new FakeBoclipsClient();
+
     const view = render(
       <LtiView
+        apiClient={fakeApiClient}
         renderVideoCard={(video: Video) => <div>Hello, video {video.id}</div>}
       />,
     );
@@ -186,9 +185,7 @@ describe('LTI test', () => {
   });
 
   it('clicking filters button toggles buttons label', async () => {
-    const fakeApiClient = (await new ApiClient(
-      'https://api.example.com',
-    ).getClient()) as FakeBoclipsClient;
+    const fakeApiClient = new FakeBoclipsClient();
 
     fakeApiClient.videos.insertVideo(
       VideoFactory.sample({ id: '123', title: 'Hi' }),
@@ -196,6 +193,7 @@ describe('LTI test', () => {
 
     render(
       <LtiView
+        apiClient={fakeApiClient}
         collapsibleFilters
         renderVideoCard={(video: Video) => <div>Hello, video {video.id}</div>}
       />,
@@ -211,71 +209,16 @@ describe('LTI test', () => {
     expect(screen.queryByText('SHOW FILTERS')).toBeNull();
   });
 
-  it(
-    'when searching with filters produces no results then filters are removed,' +
-      ' the filter panel disappears and no results view changes',
-    async () => {
-      const fakeApiClient = (await new ApiClient(
-        'https://api.example.com',
-      ).getClient()) as FakeBoclipsClient;
-
-      fakeApiClient.videos.insertVideo(
-        VideoFactory.sample({ id: '123', title: 'Hi' }),
-      );
-
-      fakeApiClient.videos.setFacets(
-        FacetsFactory.sample({
-          ageRanges: [
-            {
-              name: '3-5',
-              id: '3-5',
-              hits: 1,
-            },
-          ],
-        }),
-      );
-
-      const view = render(
-        <LtiView
-          renderVideoCard={(video: Video) => <div>Hello, video {video.id}</div>}
-        />,
-      );
-
-      searchFor('Hi');
-      expect(await view.findByText('FILTER BY:')).toBeInTheDocument();
-
-      filterResults(view, 'Age', '3 - 5');
-
-      expect(await view.findByText('CLEAR ALL')).toBeVisible();
-
-      searchFor('definitely not a search query :( ');
-
-      expect(
-        await view.findByText(
-          /Try again using different keywords or change the filters/,
-        ),
-      ).toBeVisible();
-
-      removeFilters(view);
-
-      expect(await view.findByText(/Check your spelling/)).toBeVisible();
-
-      expect(await view.queryByText('FILTER BY:')).not.toBeInTheDocument();
-    },
-  );
-
-  it('displays age filter for users with the feature enabled', async () => {
-    const fakeApiClient = (await new ApiClient(
-      'https://api.example.com',
-    ).getClient()) as FakeBoclipsClient;
+  it('when searching with filters produces no results then filters are removed, the filter panel disappears and no results view changes', async () => {
+    const fakeApiClient = new FakeBoclipsClient();
 
     fakeApiClient.videos.insertVideo(
       VideoFactory.sample({ id: '123', title: 'Hi' }),
     );
-
     fakeApiClient.users.insertCurrentUser(
       UserFactory.sample({ features: { LTI_AGE_FILTER: true } }),
     );
+
     fakeApiClient.videos.setFacets(
       FacetsFactory.sample({
         ageRanges: [
@@ -290,6 +233,7 @@ describe('LTI test', () => {
 
     const view = render(
       <LtiView
+        apiClient={fakeApiClient}
         renderVideoCard={(video: Video) => <div>Hello, video {video.id}</div>}
       />,
     );
@@ -316,10 +260,59 @@ describe('LTI test', () => {
     expect(await view.queryByText('FILTER BY:')).not.toBeInTheDocument();
   });
 
+  it('displays age filter for users with the feature enabled', async () => {
+    const fakeApiClient = new FakeBoclipsClient();
+
+    fakeApiClient.videos.insertVideo(
+      VideoFactory.sample({ id: '123', title: 'Hi' }),
+    );
+
+    fakeApiClient.users.insertCurrentUser(
+      UserFactory.sample({ features: { LTI_AGE_FILTER: true } }),
+    );
+    fakeApiClient.videos.setFacets(
+      FacetsFactory.sample({
+        ageRanges: [
+          {
+            name: '3-5',
+            id: '3-5',
+            hits: 1,
+          },
+        ],
+      }),
+    );
+
+    const view = render(
+      <LtiView
+        apiClient={fakeApiClient}
+        renderVideoCard={(video: Video) => <div>Hello, video {video.id}</div>}
+      />,
+    );
+
+    searchFor('Hi');
+    expect(await view.findByText('FILTER BY:')).toBeInTheDocument();
+
+    await filterResults(view, 'Age', '3 - 5');
+
+    expect(await view.findByText('CLEAR ALL')).toBeVisible();
+
+    searchFor('definitely not a search query :( ');
+
+    expect(
+      await view.findByText(
+        /Try again using different keywords or change the filters/,
+      ),
+    ).toBeVisible();
+
+    removeFilters(view);
+
+    expect(await view.findByText(/Check your spelling/)).toBeVisible();
+
+    expect(await view.queryByText('FILTER BY:')).not.toBeInTheDocument();
+  });
+
   it('does not display age filter for users with the feature disabled', async () => {
-    const fakeApiClient = (await new ApiClient(
-      'https://api.example.com',
-    ).getClient()) as FakeBoclipsClient;
+    const fakeApiClient = new FakeBoclipsClient();
 
     fakeApiClient.videos.insertVideo(
       VideoFactory.sample({ id: '123', title: 'Hi' }),
@@ -342,6 +335,7 @@ describe('LTI test', () => {
 
     const view = render(
       <LtiView
+        apiClient={fakeApiClient}
         renderVideoCard={(video: Video) => <div>Hello, video {video.id}</div>}
       />,
     );

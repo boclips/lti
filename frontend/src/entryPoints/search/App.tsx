@@ -1,6 +1,7 @@
 import { hot } from 'react-hot-loader/root';
 import React, { ReactElement } from 'react';
 import { Video } from '@boclips-ui/video';
+import { BoclipsClient } from 'boclips-api-client';
 import SearchView from '../../views/searchView';
 import '../../index.less';
 import { AxiosWrapper } from '../../service/axios/AxiosWrapper';
@@ -27,7 +28,11 @@ const renderVideoCard = (
   );
 };
 
-const App = (): ReactElement => (
-  <SearchView renderVideoCard={renderVideoCard} />
+interface Props {
+  apiClient: BoclipsClient;
+}
+
+const App = ({ apiClient }: Props): ReactElement => (
+  <SearchView apiClient={apiClient} renderVideoCard={renderVideoCard} />
 );
 export default hot(AxiosWrapper(App));

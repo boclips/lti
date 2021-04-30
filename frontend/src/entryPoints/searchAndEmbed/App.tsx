@@ -21,13 +21,16 @@ const renderVideoCard = (
   />
 );
 
-const App = () => (
-  <SearchView
-    collapsibleFilters
-    renderVideoCard={renderVideoCard}
-    closableHeader
-    useFullWidth
-  />
-);
+const App = ({ apiClient }) => {
+  return (
+    <SearchView
+      apiClient={apiClient}
+      collapsibleFilters
+      renderVideoCard={renderVideoCard}
+      closableHeader
+      useFullWidth
+    />
+  );
+};
 
 export default AxiosWrapper(App);
