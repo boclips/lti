@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "webpack serve --config webpack-config/webpack.dev.js --hot",
+    "fake": "webpack serve --config webpack-config/webpack.fake.js --hot",
+    "cypress": "webpack serve --config webpack-config/webpack.fake.js --hot && npx cypress open",
     "build": "webpack --config webpack-config/webpack.prod.js",
     "lint": "eslint './src/**/*.{js,ts,tsx}' --color",
     "lint:fix": "npm run lint -- --fix",
