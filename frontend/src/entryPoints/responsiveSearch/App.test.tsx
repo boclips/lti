@@ -1,7 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { FakeBoclipsClient } from 'boclips-api-client/dist/test-support';
-
 import App from './App';
 import { configureMockAxiosService } from '../../testSupport/configureMockAxiosService';
 
@@ -10,7 +9,7 @@ jest.mock('boclips-player');
 describe('Search view', () => {
   let apiClient: FakeBoclipsClient;
 
-  beforeAll(() => {
+  beforeEach(() => {
     configureMockAxiosService();
 
     apiClient = new FakeBoclipsClient();
@@ -20,5 +19,12 @@ describe('Search view', () => {
     const wrapper = render(<App apiClient={apiClient} />);
 
     expect(wrapper.getByText('Search')).toBeInTheDocument();
+  });
+
+  it('sends a PageRender event when mounting', () => {
+    render(<App apiClient={apiClient} />);
+
+    const events = apiClient.events.getEvents();
+    expect(events.length).toEqual(1);
   });
 });

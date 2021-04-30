@@ -44,7 +44,7 @@
     "axios-mock-adapter": "1.19.0",
     "babel-jest": "26.6.3",
     "babel-loader": "8.2.2",
-    "boclips-api-client": "^33.5.0",
+    "boclips-api-client": "^34.1.0",
     "boclips-player": "^6.4.0",
     "boclips-player-react": "1.2.4",
     "classnames": "2.3.1",

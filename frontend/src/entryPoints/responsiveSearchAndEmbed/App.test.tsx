@@ -5,25 +5,21 @@ import { VideoFactory } from 'boclips-api-client/dist/test-support/VideosFactory
 import { SubjectFactory } from 'boclips-api-client/dist/test-support/SubjectsFactory';
 import { AttachmentFactory } from 'boclips-api-client/dist/test-support/AttachmentsFactory';
 import App from './App';
-import ApiClient from '../../service/client/ApiClient';
 import { configureMockAxiosService } from '../../testSupport/configureMockAxiosService';
 
 jest.mock('boclips-player');
 
 describe('Search and embed view', () => {
-  let fakeApiClient: Promise<FakeBoclipsClient>;
+  let fakeApiClient: FakeBoclipsClient;
 
-  beforeAll(() => {
+  beforeEach(() => {
     configureMockAxiosService();
 
-    fakeApiClient = new ApiClient(
-      'https://api.example1.com',
-    ).getClient() as Promise<FakeBoclipsClient>;
+    fakeApiClient = new FakeBoclipsClient();
   });
 
   it('loads the video card with the correct badges', async () => {
-    const apiClient = await fakeApiClient;
-    apiClient.videos.insertVideo(
+    fakeApiClient.videos.insertVideo(
       VideoFactory.sample({
         id: '1',
         title: 'goats',
@@ -40,9 +36,11 @@ describe('Search and embed view', () => {
         ],
       }),
     );
-    apiClient.subjects.insertSubject(SubjectFactory.sample({ name: 'Design' }));
+    fakeApiClient.subjects.insertSubject(
+      SubjectFactory.sample({ name: 'Design' }),
+    );
 
-    const appComponent = render(<App apiClient={apiClient} />);
+    const appComponent = render(<App apiClient={fakeApiClient} />);
 
     const searchTextInput = appComponent.getByPlaceholderText('Search...');
     fireEvent.change(searchTextInput, { target: { value: 'goats' } });
@@ -60,5 +58,12 @@ describe('Search and embed view', () => {
     expect(
       await appComponent.queryByTestId('attachment-badge'),
     ).not.toBeInTheDocument();
+  });
+
+  it('sends a PageRender event when mounting', () => {
+    render(<App apiClient={fakeApiClient} />);
+
+    const events = fakeApiClient.events.getEvents();
+    expect(events.length).toEqual(1);
   });
 });
