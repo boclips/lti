@@ -32,7 +32,12 @@ interface Props {
   apiClient: BoclipsClient;
 }
 
-const App = ({ apiClient }: Props): ReactElement => (
-  <SearchView apiClient={apiClient} renderVideoCard={renderVideoCard} />
-);
+const App = ({ apiClient }: Props): ReactElement => {
+  React.useEffect(() => {
+    apiClient.events.trackPageRendered({ url: window.location.href });
+  }, [apiClient]);
+
+  return <SearchView apiClient={apiClient} renderVideoCard={renderVideoCard} />;
+};
+
 export default hot(AxiosWrapper(App));

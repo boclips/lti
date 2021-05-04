@@ -16,6 +16,15 @@ describe('Search view', () => {
     configureMockAxiosService();
   });
 
+  it('sends a PageRender event when mounting', () => {
+    const apiClient = new FakeBoclipsClient();
+
+    render(<App apiClient={apiClient} />);
+
+    const events = apiClient.events.getEvents();
+    expect(events.length).toEqual(1);
+  });
+
   it('renders search bar', () => {
     const apiClient = new FakeBoclipsClient();
 

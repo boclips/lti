@@ -12,10 +12,17 @@ jest.mock('boclips-player');
 describe('Search and embed view', () => {
   let fakeApiClient: FakeBoclipsClient;
 
-  beforeAll(() => {
+  beforeEach(() => {
     configureMockAxiosService();
 
     fakeApiClient = new FakeBoclipsClient();
+  });
+
+  it('sends a PageRender event when mounting', () => {
+    render(<App apiClient={fakeApiClient} />);
+
+    const events = fakeApiClient.events.getEvents();
+    expect(events.length).toEqual(1);
   });
 
   it('loads the video card with the correct badges', async () => {

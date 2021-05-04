@@ -22,6 +22,10 @@ const renderVideoCard = (
 );
 
 const App = ({ apiClient }) => {
+  React.useEffect(() => {
+    apiClient.events.trackPageRendered({ url: window.location.href });
+  }, [apiClient]);
+
   return (
     <SearchView
       apiClient={apiClient}
