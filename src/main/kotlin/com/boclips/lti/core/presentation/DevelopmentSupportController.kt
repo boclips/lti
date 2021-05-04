@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession
 
 @RestController
 @RequestMapping("/dev-support")
-@Profile(value = ["local", "test"])
+@Profile(value = ["local", "test", "fake"])
 class DevelopmentSupportController(private val devSupportProperties: DevSupportProperties) {
     companion object : KLogging()
 

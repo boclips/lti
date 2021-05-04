@@ -1,7 +1,8 @@
 context("LTI search", () => {
-  const endpoint = "http://localhost:9000/search-and-embed.html";
+  const endpoint = "http://localhost:9000/search.html";
 
-  it("has a homepage", () => {
+  it("can filter search results", () => {
+
     cy.visit(`${endpoint}`);
     cy.wait(1000);
     cy.get('[data-qa="search-input"]').type("Minute");
@@ -9,12 +10,17 @@ context("LTI search", () => {
       .contains("Search")
       .click();
     cy.wait(1000);
-    cy.get('button:contains("+")')
-      .first()
-      .click();
     cy.get("[data-boclips-player-initialised=true]").should("be.visible");
     cy.get("[data-boclips-player-initialised=true] button").should(
       "be.visible"
     );
+
+    cy.get('[data-qa="video-card-wrapper"]').should((videoCard) => {
+      expect(videoCard.length).to.equal(2);
+    });
+
+    cy.get('[data-qa="video-card-wrapper"]').should((videoCard) => {
+      expect(videoCard.length).to.equal(1);
+    });
   });
 });

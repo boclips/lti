@@ -43,25 +43,25 @@ module.exports = merge(common, {
     new HtmlWebpackPlugin({
       chunks: ['search'],
       filename: 'search.html',
-      template: path.resolve(srcPath, 'index-dev.html'),
+      template: path.resolve(srcPath, 'index-fake.html'),
       ga: googleAnalyticsId,
     }),
     new HtmlWebpackPlugin({
       chunks: ['searchAndEmbed'],
       filename: 'search-and-embed.html',
-      template: path.resolve(srcPath, 'index-dev.html'),
+      template: path.resolve(srcPath, 'index-fake.html'),
       ga: googleAnalyticsId,
     }),
     new HtmlWebpackPlugin({
       chunks: ['responsiveSearch'],
       filename: 'responsive-search.html',
-      template: path.resolve(srcPath, 'index-dev.html'),
+      template: path.resolve(srcPath, 'index-fake.html'),
       ga: googleAnalyticsId,
     }),
     new HtmlWebpackPlugin({
       chunks: ['responsiveSearchAndEmbed'],
       filename: 'responsive-search-and-embed.html',
-      template: path.resolve(srcPath, 'index-dev.html'),
+      template: path.resolve(srcPath, 'index-fake.html'),
       ga: googleAnalyticsId,
     })
   ],
