@@ -37,9 +37,15 @@ class InitiateLoginController(
         targetLinkUri: String?,
         @RequestParam("lti_message_hint")
         ltiMessageHint: String?,
+        @RequestParam("client_id")
+        clientId: String?,
         session: HttpSession
     ): String {
         logger.info { "LTI 1.3 Login Initiation Request from $issuer for $targetLinkUri" }
+
+        clientId?.let {
+            logger.info { "client_id sent by requester: $clientId from issuer: $issuer" }
+        }
 
         val authenticationRequestUrl = assembleLoginRequestUrl(
             issuer = issuer!!,
