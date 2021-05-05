@@ -12,8 +12,8 @@ interface AppliedFiltersPanelProps {
   setDurationFilter: (filter: string[]) => void;
   setSourceFilter: (filter: string[]) => void;
   setSubjectFilter: (filter: string[]) => void;
-  subjectsList: Channel[];
-  channelsList: Subject[];
+  channels: Channel[];
+  allSubjects: Subject[];
 }
 
 const AppliedFiltersPanel = ({
@@ -22,8 +22,8 @@ const AppliedFiltersPanel = ({
   setDurationFilter,
   setSourceFilter,
   setSubjectFilter,
-  channelsList,
-  subjectsList,
+  allSubjects,
+  channels,
 }: AppliedFiltersPanelProps) => {
   const AgeBadgeOptions = ageRanges?.map((filter) => ({
     displayValue: filter,
@@ -36,9 +36,7 @@ const AppliedFiltersPanel = ({
   }));
 
   const sourceBadgeOptions = source?.map((selectedChannelId) => {
-    const facet = subjectsList.find(
-      (channel) => channel.id === selectedChannelId,
-    );
+    const facet = channels.find((channel) => channel.id === selectedChannelId);
     return {
       displayValue: facet!.name,
       key: facet!.id,
@@ -46,7 +44,7 @@ const AppliedFiltersPanel = ({
   });
 
   const subjectBadgeOptions = subjects?.map((subjectId) => {
-    const facet = channelsList.find((subject) => subject.id === subjectId);
+    const facet = allSubjects.find((subject) => subject.id === subjectId);
     return {
       displayValue: facet!.name,
       key: facet!.id,

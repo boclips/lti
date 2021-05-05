@@ -5,10 +5,14 @@
   "main": "index.js",
   "scripts": {
     "dev": "webpack serve --config webpack-config/webpack.dev.js --hot",
+    "fake": "webpack serve --config webpack-config/webpack.fake.js --hot",
+    "cypress-run": "./node_modules/.bin/cypress run",
     "build": "webpack --config webpack-config/webpack.prod.js",
     "lint": "eslint './src/**/*.{js,ts,tsx}' --color",
     "lint:fix": "npm run lint -- --fix",
-    "test": "jest --forceExit"
+    "test": "jest --forceExit",
+    "start-server": "npm run fake",
+    "cypress": "start-server-and-test start-server http://localhost:9000/search.html cypress-run"
   },
   "author": "",
   "license": "ISC",
@@ -104,6 +108,7 @@
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.2.1",
+    "start-server-and-test": "^1.12.1",
     "typescript": "^4.2.4"
   }
 }

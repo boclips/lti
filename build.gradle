@@ -112,12 +112,17 @@ npm_run_build {
 }
 npm_run_build.dependsOn npm_ci
 
+npm_run_cypress {
+  workingDir = file(frontendDir)
+}
+npm_run_cypress.dependsOn npm_run_build
+
 task copyFrontendOutput(type: Copy) {
   from npm_run_build.outputs
   into "$buildDir/resources/main/static"
 }
 bootJar.dependsOn copyFrontendOutput
-copyFrontendOutput.dependsOn npm_run_build
+copyFrontendOutput.dependsOn npm_run_cypress
 
 task cleanFrontendOutput(type: Delete) {
   delete "$frontendDir/dist"

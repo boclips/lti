@@ -164,8 +164,8 @@ const FilterPanel = ({
         </div>
         {filterTouched && (
           <AppliedFiltersPanel
-            subjectsList={channelsList}
-            channelsList={subjectsList}
+            channels={channelsList}
+            allSubjects={subjectsList}
             setSubjectFilter={setSubjectFilter}
             setSourceFilter={setSourceFilter}
             setAgeRangeFilter={setAgeRangeFilter}

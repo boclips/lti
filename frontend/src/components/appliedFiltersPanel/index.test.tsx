@@ -18,12 +18,10 @@ describe('Applied filters panel', () => {
         setSourceFilter={jest.fn()}
         setDurationFilter={jest.fn()}
         setAgeRangeFilter={jest.fn()}
-        subjectsList={[
+        channels={[
           ChannelFactory.sample({ id: 'bbc-id', name: 'history subject' }),
         ]}
-        channelsList={[
-          SubjectFactory.sample({ id: 'subject-id', name: 'BBC' }),
-        ]}
+        allSubjects={[SubjectFactory.sample({ id: 'subject-id', name: 'BBC' })]}
       />,
     );
 
@@ -50,11 +48,11 @@ describe('Applied filters panel', () => {
         setSourceFilter={sourceFilterMock}
         setDurationFilter={durationFilterMock}
         setAgeRangeFilter={ageFilterMock}
-        subjectsList={[
+        channels={[
           ChannelFactory.sample({ id: 'bbc-id' }),
           ChannelFactory.sample({ id: 'nature-channel-id' }),
         ]}
-        channelsList={[
+        allSubjects={[
           SubjectFactory.sample({ id: 'subject-1' }),
           SubjectFactory.sample({ id: 'subject-2' }),
         ]}
@@ -95,8 +93,8 @@ describe('Applied filters panel', () => {
         setSourceFilter={jest.fn()}
         setDurationFilter={jest.fn()}
         setAgeRangeFilter={jest.fn()}
-        channelsList={[]}
-        subjectsList={[]}
+        allSubjects={[]}
+        channels={[]}
       />,
     );
 
