@@ -53,6 +53,7 @@ const Header = ({ onSearch, facets }: Props) => {
       <div className={s.searchBarWrapper}>
         <SearchBar
           onSearch={handleSearch}
+          placeholder="Search for videos"
           iconOnlyButton={tabletView || mobileView}
         />
       </div>

@@ -42,7 +42,9 @@ describe('Search and embed view', () => {
 
     const appComponent = render(<App apiClient={fakeApiClient} />);
 
-    const searchTextInput = appComponent.getByPlaceholderText('Search...');
+    const searchTextInput = appComponent.getByPlaceholderText(
+      'Search for videos',
+    );
     fireEvent.change(searchTextInput, { target: { value: 'goats' } });
 
     const searchButton = appComponent.getByText('Search').closest('button');

@@ -13,7 +13,9 @@ describe('Header', () => {
       </BoclipsClientProvider>,
     );
 
-    expect(screen.getByPlaceholderText('Search...')).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText('Search for videos'),
+    ).toBeInTheDocument();
   });
 
   [
