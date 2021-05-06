@@ -5,5 +5,9 @@ set -ex
 git pull -r
 
 ./gradlew clean build
+(
+cd frontend
+npm run cypress
+)
 
 git push

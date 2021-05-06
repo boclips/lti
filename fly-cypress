@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+cwd="$(cd "$(dirname "$0")" && pwd)"
+dir=$(mktemp -d -t fly-cypress-lti.XXXXX)
+
+tidy () {
+    rm -rf "$dir"
+}
+
+trap tidy EXIT
+
+fly --target ci execute \
+    --input source="$cwd" \
+    --config "$cwd/pipeline/cypress.yaml"

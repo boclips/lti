@@ -1,0 +1,37 @@
+---
+platform: linux
+
+image_resource:
+  type: registry-image
+  source:
+    repository: java
+    tag: '8'
+
+inputs:
+- name: source
+- name: version
+
+outputs:
+  - name: dist
+
+caches:
+  - path: .gradle
+  - path: source/dependency-check-cache
+
+run:
+  path: sh
+  args:
+  - -c
+  - |-
+    set -eu
+
+    export GRADLE_USER_HOME=".gradle"
+
+    version=$(cat version/tag)
+
+    (
+    cd source
+    ./gradlew -Pversion="$version" clean build --rerun-tasks
+    )
+
+    cp -a source/* dist/

@@ -1,0 +1,24 @@
+---
+platform: linux
+
+image_resource:
+  type: registry-image
+  source:
+    repository: cypress/browsers
+    tag: 'node12.19.0-chrome86-ff82'
+
+inputs:
+- name: source
+
+caches:
+- path: ../../../root/.cache
+- path: ../../../root/.npm
+
+run:
+  dir: source/frontend
+  path: sh
+  args:
+  - -c
+  - |-
+    npm ci
+    npm run cypress
