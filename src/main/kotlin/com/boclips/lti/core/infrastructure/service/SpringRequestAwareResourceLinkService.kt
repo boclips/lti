@@ -3,7 +3,6 @@ package com.boclips.lti.core.infrastructure.service
 import com.boclips.lti.core.domain.model.Collection
 import com.boclips.lti.core.domain.model.Video
 import com.boclips.lti.core.domain.service.ResourceLinkService
-import com.boclips.lti.core.infrastructure.model.SearchType
 import com.boclips.lti.v1p3.domain.model.DeepLinkingMessage
 import java.net.URL
 
@@ -47,24 +46,21 @@ class SpringRequestAwareResourceLinkService(
     }
 
     override fun getBaseDeepLinkingLink(targetUri: String?): URL {
-        val path = resolvePathFromTargetUri(targetUri)
         val rawUrl = uriComponentsBuilderFactory.getInstance()
-            .replacePath(path)
+            .replacePath("/search-and-embed")
             .replaceQuery(null)
             .toUriString()
         return URL(rawUrl)
     }
 
     override fun getDeepLinkingLinkWithUrlQuery(message: DeepLinkingMessage): URL {
-        val path = resolvePathFromTargetUri(message.targetUri)
-
         val rawUrl = uriComponentsBuilderFactory.getInstance()
-            .replacePath(path)
+            .replacePath("/search-and-embed")
             .replaceQuery(null)
             .queryParam("deep_link_return_url", message.returnUrl.toString())
             .queryParam("deployment_id", message.deploymentId)
             .apply {
-                    message.data?.let { queryParam("data", it) }
+                message.data?.let { queryParam("data", it) }
             }
             .toUriString()
 
@@ -89,32 +85,19 @@ class SpringRequestAwareResourceLinkService(
         )
     }
 
-    override fun getSearchVideoLink(showCopyLink: Boolean, searchType: SearchType): URL {
+    override fun getSearchVideoLink(showCopyLink: Boolean): URL {
         val requestUrlBuilder = uriComponentsBuilderFactory.getInstance()
         val embeddableVideoUrl = requestUrlBuilder.cloneBuilder()
             .replacePath("embeddable-videos/{id}")
             .toUriString()
 
-        val path = when (searchType) {
-            SearchType.SEARCH -> "/search"
-            SearchType.RESPONSIVE_SEARCH -> "/responsive-search"
-        }
-
         return requestUrlBuilder
             .replaceQuery(null)
-            .replacePath(path)
+            .replacePath("/search")
             .queryParam("embeddable_video_url", embeddableVideoUrl)
             .queryParam("show_copy_link", showCopyLink.toString())
             .build()
             .toUri()
             .toURL()
-    }
-
-    private fun resolvePathFromTargetUri(targetUri: String?): String {
-        return if (targetUri?.contains(Regex("responsive-search-and-embed")) == true) {
-            "/responsive-search-and-embed"
-        } else {
-            "/search-and-embed"
-        }
     }
 }

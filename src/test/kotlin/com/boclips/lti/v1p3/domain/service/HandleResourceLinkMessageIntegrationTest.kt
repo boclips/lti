@@ -60,27 +60,6 @@ class HandleResourceLinkMessageIntegrationTest : AbstractSpringIntegrationTest()
     }
 
     @Test
-    fun `handles responsive search`() {
-        val issuer = URL("https://platform.com/")
-        val resource = URL("https://this-is.requested/responsive-search")
-        mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer.toString()))
-        val session = LtiTestSessionFactory.authenticated(integrationId = issuer.toString())
-        val userClient: UsersClientFake = getUsersClient(issuer)
-        userClient.setLoggedInUser(userClient.add(UserResourceFactory.sample()))
-
-        val url = handleResourceLinkMessage(
-            message = MessageFactory.sampleResourceLinkMessage(
-                issuer = issuer,
-                requestedResource = resource
-            ),
-            session = session
-        )
-
-        assertThat(url.path).isEqualTo("/responsive-search")
-        assertThat(url).hasParameter("embeddable_video_url", "http://localhost/embeddable-videos/%7Bid%7D")
-    }
-
-    @Test
     fun `correctly defaults when no explicit value provided`() {
         val issuer = URL("https://platform.com/")
         val resource = URL("https://this-is.requested/search")

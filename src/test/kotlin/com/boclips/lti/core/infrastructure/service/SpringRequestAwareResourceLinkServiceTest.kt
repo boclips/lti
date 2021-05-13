@@ -1,6 +1,5 @@
 package com.boclips.lti.core.infrastructure.service
 
-import com.boclips.lti.core.infrastructure.model.SearchType
 import com.boclips.lti.testsupport.factories.CollectionFactory
 import com.boclips.lti.testsupport.factories.DeepLinkingMessageFactory
 import com.boclips.lti.testsupport.factories.VideoFactory
@@ -74,23 +73,6 @@ class SpringRequestAwareResourceLinkServiceTest {
         }
 
         @Test
-        fun `returns a deep linking link to responsive-search-and-embed view with query params when given a message`() {
-            val deepLinkingLink = resourceLinkService.getDeepLinkingLinkWithUrlQuery(
-                message = DeepLinkingMessageFactory.sample(
-                    returnUrl = URL("https://returnurl.com"),
-                    data = "data",
-                    deploymentId = "id",
-                    targetUri = "https://host/responsive-search-and-embed"
-                )
-            )
-
-            assertThat(deepLinkingLink.toString()).startsWith("http://localhost/responsive-search-and-embed")
-            assertThat(deepLinkingLink).hasParameter("deep_link_return_url", "https://returnurl.com")
-            assertThat(deepLinkingLink).hasParameter("data", "data")
-            assertThat(deepLinkingLink).hasParameter("deployment_id", "id")
-        }
-
-        @Test
         fun `does not preserve unexpected query parameters`() {
             val deepLinkingLink = resourceLinkService.getBaseDeepLinkingLink(null)
 
@@ -118,7 +100,7 @@ class SpringRequestAwareResourceLinkServiceTest {
     inner class SearchResponseLink {
         @Test
         fun `returns a search response url with copy link feature params set to true`() {
-            val searchLink = resourceLinkService.getSearchVideoLink(showCopyLink = true, SearchType.SEARCH)
+            val searchLink = resourceLinkService.getSearchVideoLink(showCopyLink = true)
             assertThat(searchLink).hasParameter(
                 "embeddable_video_url",
                 "http://localhost/embeddable-videos/%7Bid%7D?with=params"
@@ -128,7 +110,7 @@ class SpringRequestAwareResourceLinkServiceTest {
 
         @Test
         fun `returns a search response url with copy link feature params set to false`() {
-            val searchLink = resourceLinkService.getSearchVideoLink(showCopyLink = false, SearchType.SEARCH)
+            val searchLink = resourceLinkService.getSearchVideoLink(showCopyLink = false)
             assertThat(searchLink).hasParameter(
                 "embeddable_video_url",
                 "http://localhost/embeddable-videos/%7Bid%7D?with=params"
