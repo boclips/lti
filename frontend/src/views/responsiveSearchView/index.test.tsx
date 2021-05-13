@@ -9,7 +9,7 @@ import ResponsiveSearchView from './index';
 import { configureMockAxiosService } from '../../testSupport/configureMockAxiosService';
 import { BoclipsClientProvider } from '../../hooks/useBoclipsClient';
 import { FiltersProvider } from '../../hooks/useFilters';
-import { renderResponsiveBaseVideoCard } from '../../entryPoints/responsiveSearch/App';
+import { renderResponsiveBaseVideoCard } from '../../entryPoints/search/App';
 
 describe('LTI test', () => {
   beforeEach(() => {

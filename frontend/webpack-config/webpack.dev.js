@@ -36,18 +36,6 @@ module.exports = merge(common, {
       filename: 'search-and-embed.html',
       template: path.resolve(srcPath, 'index-dev.html'),
       ga: googleAnalyticsId,
-    }),
-    new HtmlWebpackPlugin({
-      chunks: ['responsiveSearch'],
-      filename: 'responsive-search.html',
-      template: path.resolve(srcPath, 'index-dev.html'),
-      ga: googleAnalyticsId,
-    }),
-    new HtmlWebpackPlugin({
-      chunks: ['responsiveSearchAndEmbed'],
-      filename: 'responsive-search-and-embed.html',
-      template: path.resolve(srcPath, 'index-dev.html'),
-      ga: googleAnalyticsId,
     })
   ],
 });

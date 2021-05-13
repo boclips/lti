@@ -1,5 +1,5 @@
-import ReactDOM from 'react-dom';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { ApiBoclipsClient } from 'boclips-api-client';
 import App from './App';
 import AxiosService from '../../service/axios/AxiosService';

@@ -1,40 +1,45 @@
+import { hot } from 'react-hot-loader/root';
 import React from 'react';
-import '../../index.less';
+import { VideoCardV3 } from '@boclips-ui/video-card-v3';
 import { Video } from '@boclips-ui/video';
-import SearchView from '../../views/searchView';
-import EmbedVideoButton from '../../components/embedVideoButton/EmbedVideoButton';
-import { AxiosWrapper } from '../../service/axios/AxiosWrapper';
-import VideoCardWrapper from '../../components/videoCard/VideoCardWrapper';
+import { BoclipsClient } from 'boclips-api-client';
+import ResponsiveSearchView from '../../views/responsiveSearchView';
+import { BoclipsClientProvider } from '../../hooks/useBoclipsClient';
+import { FiltersProvider } from '../../hooks/useFilters';
+import getPlayer from '../../Player/getPlayer';
+import { ResponsiveEmbedVideoButton } from '../../components/responsiveEmbedVideoButton/responsiveEmbedVideoButton';
 
-const renderVideoCard = (
-  video: Video,
-  query: string,
-  showVideoCardV3: boolean,
-) => (
-  <VideoCardWrapper
+const renderVideoCard = (video: Video, query: string) => (
+  <VideoCardV3
+    duration={video.playback.duration.format('mm:ss')}
+    title={video.title}
     video={video}
-    query={query}
+    videoPlayer={getPlayer(query!, video)}
     actions={[
-      <EmbedVideoButton video={video} onSubmit={(form) => form?.submit()} />,
+      <ResponsiveEmbedVideoButton
+        video={video}
+        onSubmit={(form) => form?.submit()}
+      />,
     ]}
-    showVideoCardV3={showVideoCardV3}
   />
 );
 
-const App = ({ apiClient }) => {
+interface Props {
+  apiClient: BoclipsClient;
+}
+
+const App = ({ apiClient }: Props) => {
   React.useEffect(() => {
     apiClient.events.trackPageRendered({ url: window.location.href });
   }, [apiClient]);
 
   return (
-    <SearchView
-      apiClient={apiClient}
-      collapsibleFilters
-      renderVideoCard={renderVideoCard}
-      closableHeader
-      useFullWidth
-    />
+    <BoclipsClientProvider client={apiClient}>
+      <FiltersProvider>
+        <ResponsiveSearchView renderVideoCard={renderVideoCard} />
+      </FiltersProvider>
+    </BoclipsClientProvider>
   );
 };
 
-export default AxiosWrapper(App);
+export default hot(App);

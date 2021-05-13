@@ -18,15 +18,7 @@ describe('Search and embed view', () => {
     fakeApiClient = new FakeBoclipsClient();
   });
 
-  it('sends a PageRender event when mounting', () => {
-    render(<App apiClient={fakeApiClient} />);
-
-    const events = fakeApiClient.events.getEvents();
-    expect(events.length).toEqual(1);
-  });
-
   it('loads the video card with the correct badges', async () => {
-    const appComponent = render(<App apiClient={fakeApiClient} />);
     fakeApiClient.videos.insertVideo(
       VideoFactory.sample({
         id: '1',
@@ -44,13 +36,14 @@ describe('Search and embed view', () => {
         ],
       }),
     );
-
     fakeApiClient.subjects.insertSubject(
       SubjectFactory.sample({ name: 'Design' }),
     );
 
+    const appComponent = render(<App apiClient={fakeApiClient} />);
+
     const searchTextInput = appComponent.getByPlaceholderText(
-      'Search for videos...',
+      'Search for videos',
     );
     fireEvent.change(searchTextInput, { target: { value: 'goats' } });
 
@@ -67,5 +60,12 @@ describe('Search and embed view', () => {
     expect(
       await appComponent.queryByTestId('attachment-badge'),
     ).not.toBeInTheDocument();
+  });
+
+  it('sends a PageRender event when mounting', () => {
+    render(<App apiClient={fakeApiClient} />);
+
+    const events = fakeApiClient.events.getEvents();
+    expect(events.length).toEqual(1);
   });
 });

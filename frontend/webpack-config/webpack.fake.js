@@ -20,15 +20,7 @@ module.exports = merge(common, {
     searchAndEmbed: path.resolve(
       srcPath,
       'entryPoints/fake/search-and-embed-fake.tsx',
-    ),
-    responsiveSearch: path.resolve(
-      srcPath,
-      'entryPoints/fake/responsive-search-fake.tsx',
-    ),
-    responsiveSearchAndEmbed: path.resolve(
-      srcPath,
-      'entryPoints/fake/responsive-search-and-embed-fake.tsx',
-    ),
+    )
   },
   mode: 'development',
   devtool: 'eval-source-map',
@@ -49,18 +41,6 @@ module.exports = merge(common, {
     new HtmlWebpackPlugin({
       chunks: ['searchAndEmbed'],
       filename: 'search-and-embed.html',
-      template: path.resolve(srcPath, 'index-fake.html'),
-      ga: googleAnalyticsId,
-    }),
-    new HtmlWebpackPlugin({
-      chunks: ['responsiveSearch'],
-      filename: 'responsive-search.html',
-      template: path.resolve(srcPath, 'index-fake.html'),
-      ga: googleAnalyticsId,
-    }),
-    new HtmlWebpackPlugin({
-      chunks: ['responsiveSearchAndEmbed'],
-      filename: 'responsive-search-and-embed.html',
       template: path.resolve(srcPath, 'index-fake.html'),
       ga: googleAnalyticsId,
     })

@@ -1,43 +1,38 @@
 import { hot } from 'react-hot-loader/root';
-import React, { ReactElement } from 'react';
+import React from 'react';
+import { VideoCardV3 } from '@boclips-ui/video-card-v3';
 import { Video } from '@boclips-ui/video';
 import { BoclipsClient } from 'boclips-api-client';
-import SearchView from '../../views/searchView';
-import '../../index.less';
-import { AxiosWrapper } from '../../service/axios/AxiosWrapper';
-import VideoCardWrapper from '../../components/videoCard/VideoCardWrapper';
-import CopyVideoLinkButtonFactory from '../../components/copyVideoLinkButton/CopyVideoLinkButtonFactory';
+import ResponsiveSearchView from '../../views/responsiveSearchView';
+import { BoclipsClientProvider } from '../../hooks/useBoclipsClient';
+import { FiltersProvider } from '../../hooks/useFilters';
+import getPlayer from '../../Player/getPlayer';
 
-const renderVideoCard = (
-  video: Video,
-  query: string,
-  showVideoCardV3: boolean,
-) => {
-  const getVideoActionButtons = () => {
-    const copyLinkButton = CopyVideoLinkButtonFactory.getButton(video);
-    return copyLinkButton ? [copyLinkButton] : [];
-  };
-
-  return (
-    <VideoCardWrapper
-      video={video}
-      query={query}
-      actions={getVideoActionButtons()}
-      showVideoCardV3={showVideoCardV3}
-    />
-  );
-};
+export const renderResponsiveBaseVideoCard = (video: Video, query: string) => (
+  <VideoCardV3
+    duration={video.playback.duration.format('mm:ss')}
+    title={video.title}
+    video={video}
+    videoPlayer={getPlayer(query!, video)}
+  />
+);
 
 interface Props {
   apiClient: BoclipsClient;
 }
 
-const App = ({ apiClient }: Props): ReactElement => {
+const App = ({ apiClient }: Props) => {
   React.useEffect(() => {
     apiClient.events.trackPageRendered({ url: window.location.href });
   }, [apiClient]);
 
-  return <SearchView apiClient={apiClient} renderVideoCard={renderVideoCard} />;
+  return (
+    <BoclipsClientProvider client={apiClient}>
+      <FiltersProvider>
+        <ResponsiveSearchView renderVideoCard={renderResponsiveBaseVideoCard} />
+      </FiltersProvider>
+    </BoclipsClientProvider>
+  );
 };
 
-export default hot(AxiosWrapper(App));
+export default hot(App);
