@@ -11,11 +11,6 @@ class HandleResourceLinkRequest(private val handleResourceLinkMessage: HandleRes
     operator fun invoke(idToken: DecodedJwtToken, session: HttpSession, state: String): URL {
         ResourceLinkRequestValidator.assertIsValid(token = idToken, state = state, session = session)
 
-        return handleResourceLinkMessage(
-            message = MessageConverter.toResourceLinkMessage(
-                idToken
-            ),
-            session = session
-        )
+        return handleResourceLinkMessage(message = MessageConverter.toResourceLinkMessage(idToken))
     }
 }

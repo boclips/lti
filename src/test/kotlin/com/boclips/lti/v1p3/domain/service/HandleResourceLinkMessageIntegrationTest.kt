@@ -1,7 +1,6 @@
 package com.boclips.lti.v1p3.domain.service
 
 import com.boclips.lti.testsupport.AbstractSpringIntegrationTest
-import com.boclips.lti.testsupport.factories.LtiTestSessionFactory
 import com.boclips.lti.testsupport.factories.MessageFactory
 import com.boclips.lti.testsupport.factories.PlatformDocumentFactory
 import com.boclips.users.api.factories.UserResourceFactory
@@ -17,14 +16,12 @@ class HandleResourceLinkMessageIntegrationTest : AbstractSpringIntegrationTest()
         val issuer = URL("https://platform.com/")
         val resource = URL("https://this-is.requested/alright")
         mongoPlatformDocumentRepository.insert(PlatformDocumentFactory.sample(issuer = issuer.toString()))
-        val session = LtiTestSessionFactory.authenticated(integrationId = issuer.toString())
 
         val url = handleResourceLinkMessage(
             message = MessageFactory.sampleResourceLinkMessage(
                 issuer = issuer,
                 requestedResource = resource
-            ),
-            session = session
+            )
         )
 
         assertThat(url).isEqualTo(resource)
@@ -38,25 +35,19 @@ class HandleResourceLinkMessageIntegrationTest : AbstractSpringIntegrationTest()
         val userClient: UsersClientFake = getUsersClient(issuer)
         val user = UserResourceFactory.sample(
             id = "1",
-            firstName = "Baptiste",
-            features = mapOf(
-                "LTI_COPY_RESOURCE_LINK" to true
-            )
+            firstName = "Baptiste"
         )
         userClient.add(user)
         userClient.setLoggedInUser(user)
-        val session = LtiTestSessionFactory.authenticated(integrationId = issuer.toString())
 
         val url = handleResourceLinkMessage(
             message = MessageFactory.sampleResourceLinkMessage(
                 issuer = issuer,
                 requestedResource = resource
-            ),
-            session = session
+            )
         )
 
         assertThat(url).hasParameter("embeddable_video_url", "http://localhost/embeddable-videos/%7Bid%7D")
-        assertThat(url).hasParameter("show_copy_link", "true")
     }
 
     @Test
@@ -71,17 +62,14 @@ class HandleResourceLinkMessageIntegrationTest : AbstractSpringIntegrationTest()
         )
         userClient.add(user)
         userClient.setLoggedInUser(user)
-        val session = LtiTestSessionFactory.authenticated(integrationId = issuer.toString())
         val url = handleResourceLinkMessage(
             message = MessageFactory.sampleResourceLinkMessage(
                 issuer = issuer,
                 requestedResource = resource
-            ),
-            session = session
+            )
         )
 
         assertThat(url).hasParameter("embeddable_video_url", "http://localhost/embeddable-videos/%7Bid%7D")
-        assertThat(url).hasParameter("show_copy_link", "false")
     }
 
     @Test
@@ -92,25 +80,19 @@ class HandleResourceLinkMessageIntegrationTest : AbstractSpringIntegrationTest()
         val userClient: UsersClientFake = getUsersClient(issuer)
         val user = UserResourceFactory.sample(
             id = "1",
-            firstName = "Baptiste",
-            features = mapOf(
-                "LTI_COPY_RESOURCE_LINK" to false
-            )
+            firstName = "Baptiste"
         )
         userClient.add(user)
         userClient.setLoggedInUser(user)
-        val session = LtiTestSessionFactory.authenticated(integrationId = issuer.toString())
 
         val url = handleResourceLinkMessage(
             message = MessageFactory.sampleResourceLinkMessage(
                 issuer = issuer,
                 requestedResource = resource
-            ),
-            session = session
+            )
         )
 
         assertThat(url).hasParameter("embeddable_video_url", "http://localhost/embeddable-videos/%7Bid%7D")
-        assertThat(url).hasParameter("show_copy_link", "false")
     }
 
     private fun getUsersClient(issuer: URL) = usersClientFactory.getClient(issuer.toString()) as UsersClientFake

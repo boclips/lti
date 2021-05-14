@@ -14,5 +14,5 @@ interface ResourceLinkService {
     fun getDeepLinkingLinkWithUrlQuery(message: DeepLinkingMessage): URL
     fun getAccessTokenLink(): URL
     fun getOnePointThreeAuthResponseLink(): URL
-    fun getSearchVideoLink(showCopyLink: Boolean): URL
+    fun getSearchVideoLink(): URL
 }
