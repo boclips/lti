@@ -6,7 +6,7 @@ import c from 'classnames';
 import { useMediaBreakPoint } from '@boclips-ui/use-media-breakpoints';
 import s from './style.module.less';
 import { MOBILE_BREAKPOINT } from '../header';
-import { PaginationButtons } from '../responsivePagination';
+import { PaginationButtons } from '../pagination';
 import HappyGuySVG from '../../resources/images/happy-guy.svg';
 
 interface Props {

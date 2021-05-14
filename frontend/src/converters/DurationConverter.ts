@@ -1,12 +1,12 @@
 import { SelectOption } from '@boclips-ui/select-option';
 import { Facet } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
-import Range from '../../../types/range';
-import dayjs from '../../../types/dayjs';
+import Range from '../types/range';
+import dayjs from '../types/dayjs';
 
 export default class DurationConverter {
   static toSelectOptions(durationFacets: Facet[]): SelectOption[] {
     return durationFacets
-      ?.map((facet) => ({
+      .map((facet) => ({
         id: facet.id,
         label: this.getLabelFromIso(facet.id),
         count: this.extractFacetHits(facet.hits),

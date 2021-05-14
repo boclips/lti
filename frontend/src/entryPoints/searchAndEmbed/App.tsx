@@ -7,7 +7,7 @@ import ResponsiveSearchView from '../../views/responsiveSearchView';
 import { BoclipsClientProvider } from '../../hooks/useBoclipsClient';
 import { FiltersProvider } from '../../hooks/useFilters';
 import getPlayer from '../../Player/getPlayer';
-import { ResponsiveEmbedVideoButton } from '../../components/responsiveEmbedVideoButton/responsiveEmbedVideoButton';
+import { EmbedVideoButton } from '../../components/embedVideoButton/embedVideoButton';
 
 const renderVideoCard = (video: Video, query: string) => (
   <VideoCardV3
@@ -16,10 +16,7 @@ const renderVideoCard = (video: Video, query: string) => (
     video={video}
     videoPlayer={getPlayer(query!, video)}
     actions={[
-      <ResponsiveEmbedVideoButton
-        video={video}
-        onSubmit={(form) => form?.submit()}
-      />,
+      <EmbedVideoButton video={video} onSubmit={(form) => form?.submit()} />,
     ]}
   />
 );

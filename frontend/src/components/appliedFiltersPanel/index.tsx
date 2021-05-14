@@ -1,30 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Channel } from 'boclips-api-client/dist/sub-clients/channels/model/Channel';
 import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subject';
-import { Filters } from '../../types/filters';
-import DurationConverter from '../filterPanel/converters/DurationConverter';
+import DurationConverter from '../../converters/DurationConverter';
 import FilterBadgeFactory from './FilterBadgeFactory';
 import s from './style.module.less';
+import { useBoclipsClient } from '../../hooks/useBoclipsClient';
+import { useFilters } from '../../hooks/useFilters';
 
-interface AppliedFiltersPanelProps {
-  appliedFilters: Filters;
-  setAgeRangeFilter: (filter: string[]) => void;
-  setDurationFilter: (filter: string[]) => void;
-  setSourceFilter: (filter: string[]) => void;
-  setSubjectFilter: (filter: string[]) => void;
-  channels: Channel[];
-  allSubjects: Subject[];
-}
+const AppliedFiltersPanel = () => {
+  const apiClient = useBoclipsClient();
+  const [channelsList, setChannelsList] = useState<Channel[]>([]);
+  const [subjectsList, setSubjectsList] = useState<Subject[]>([]);
+  const { filters, setFilters, clearFilters } = useFilters();
+  const { source, subjects, ageRanges, duration } = filters;
 
-const AppliedFiltersPanel = ({
-  appliedFilters: { ageRanges, source, duration, subjects },
-  setAgeRangeFilter,
-  setDurationFilter,
-  setSourceFilter,
-  setSubjectFilter,
-  allSubjects,
-  channels,
-}: AppliedFiltersPanelProps) => {
+  useEffect(() => {
+    apiClient.subjects
+      .getAll()
+      .then((subjectsApi) => setSubjectsList(subjectsApi));
+
+    apiClient.channels
+      .getAll()
+      .then((channelsApi) => setChannelsList(channelsApi));
+  }, [setChannelsList, setSubjectsList, apiClient]);
+
   const AgeBadgeOptions = ageRanges?.map((filter) => ({
     displayValue: filter,
     key: filter,
@@ -35,71 +34,77 @@ const AppliedFiltersPanel = ({
     key: durationISO,
   }));
 
-  const sourceBadgeOptions = source?.map((selectedChannelId) => {
-    const facet = channels.find((channel) => channel.id === selectedChannelId);
-    return {
-      displayValue: facet!.name,
-      key: facet!.id,
-    };
-  });
+  const sourceBadgeOptions =
+    channelsList.length > 0 &&
+    source?.map((selectedChannelId) => {
+      const facet = channelsList.find(
+        (channel) => channel.id === selectedChannelId,
+      );
 
-  const subjectBadgeOptions = subjects?.map((subjectId) => {
-    const facet = allSubjects.find((subject) => subject.id === subjectId);
-    return {
-      displayValue: facet!.name,
-      key: facet!.id,
-    };
-  });
+      return {
+        displayValue: facet!.name,
+        key: facet!.id,
+      };
+    });
 
-  const isAnyFilterApplied = () =>
-    Boolean(
-      subjects?.length ||
-        ageRanges?.length ||
-        source?.length ||
-        duration?.length,
-    );
+  const subjectBadgeOptions =
+    subjectsList.length > 0 &&
+    subjects?.map((subjectId) => {
+      const facet = subjectsList.find((subject) => subject.id === subjectId);
+      return {
+        displayValue: facet!.name,
+        key: facet!.id,
+      };
+    });
+
+  const clearAll = (
+    <div
+      role="presentation"
+      onClick={() => clearFilters()}
+      className={s.clearAll}
+    >
+      Clear All
+    </div>
+  );
 
   const appliedFilterBadges = () => {
     const ageBadges = FilterBadgeFactory.produce({
       badgeType: 'Age',
       badges: AgeBadgeOptions || [],
-      updateFilters: setAgeRangeFilter,
+      updateFilters: (f) => setFilters({ ...filters, ageRanges: f }),
     });
 
     const durationBadges = FilterBadgeFactory.produce({
-      badgeType: 'Duration',
+      badgeType: 'Duration' || [],
       badges: durationBadgeOptions || [],
-      updateFilters: setDurationFilter,
+      updateFilters: (f) => setFilters({ ...filters, duration: f }),
     });
 
     const subjectBadges = FilterBadgeFactory.produce({
       badgeType: 'Subject',
       badges: subjectBadgeOptions || [],
-      updateFilters: setSubjectFilter,
+      updateFilters: (f) => setFilters({ ...filters, subjects: f }),
     });
 
     const sourcesBadges = FilterBadgeFactory.produce({
       badgeType: 'Source',
       badges: sourceBadgeOptions || [],
-      updateFilters: setSourceFilter,
+      updateFilters: (f) => setFilters({ ...filters, source: f }),
     });
 
-    return [
+    const badges = [
       ...ageBadges,
       ...durationBadges,
       ...subjectBadges,
       ...sourcesBadges,
     ];
+
+    if (badges.length > 1) {
+      badges.push(clearAll);
+    }
+
+    return [...badges];
   };
-  return (
-    <div>
-      {isAnyFilterApplied() && (
-        <span className={s.filtersAppliedWrapper}>
-          <div className={s.filtersAppliedText}>Filters applied:</div>
-          {appliedFilterBadges()}
-        </span>
-      )}
-    </div>
-  );
+  return <div className={s.filtersAppliedWrapper}>{appliedFilterBadges()}</div>;
 };
 export default AppliedFiltersPanel;

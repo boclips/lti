@@ -1,10 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Video } from '@boclips-ui/video';
 import Button from '@boclips-ui/button';
+import { useMediaBreakPoint } from '@boclips-ui/use-media-breakpoints';
 import ContentSelectionService from '../../service/contentSelection/ContentSelectionService';
 import DeepLinkingParameterService from '../../service/deepLinking/DeepLinkingParameterService';
 import s from './style.module.less';
 import AnalyticsFactory from '../../service/analytics/AnalyticsFactory';
+import {
+  DESKTOP_BREAKPOINT,
+  MOBILE_BREAKPOINT,
+  TABLET_BREAKPOINT,
+} from '../header';
+import Embed from '../../resources/images/embed.svg';
 
 const contentSelectionService = new ContentSelectionService();
 
@@ -13,9 +20,14 @@ interface Props {
   onSubmit: (form: HTMLFormElement | null) => void;
 }
 
-const EmbedVideoButton = ({ video, onSubmit }: Props) => {
+export const EmbedVideoButton = ({ video, onSubmit }: Props) => {
   const [jwt, setJwt] = useState<string | undefined>(undefined);
   const formRef = useRef<HTMLFormElement>(null);
+
+  const currentBreakpoint = useMediaBreakPoint();
+  const desktopView = currentBreakpoint.type === DESKTOP_BREAKPOINT;
+  const mobileView = currentBreakpoint.type === MOBILE_BREAKPOINT;
+  const tabletView = currentBreakpoint.type === TABLET_BREAKPOINT;
 
   useEffect(() => {
     if (formRef.current) {
@@ -38,9 +50,32 @@ const EmbedVideoButton = ({ video, onSubmit }: Props) => {
       .then((jwtResponse) => setJwt(jwtResponse));
   };
 
+  const getButtonWidth = (): string => {
+    switch (true) {
+      case mobileView:
+        return '72px';
+        break;
+      case tabletView:
+        return '98px';
+        break;
+      case desktopView:
+        return '154px';
+        break;
+      default:
+        return '72px';
+    }
+  };
+
   return (
     <div className={s.buttonWrapper}>
-      <Button width="72px" height="42px" onClick={handleEmbed} text="+" />
+      <Button
+        width={getButtonWidth()}
+        height="42px"
+        onClick={handleEmbed}
+        icon={<Embed />}
+        text="Add"
+        iconOnly={mobileView}
+      />
       {jwt && (
         <form
           ref={formRef}
@@ -54,5 +89,3 @@ const EmbedVideoButton = ({ video, onSubmit }: Props) => {
     </div>
   );
 };
-
-export default EmbedVideoButton;

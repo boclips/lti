@@ -12,7 +12,7 @@ import Header from '../../components/header';
 import SearchResults from '../../components/searchResults';
 import SearchResultsSummary from '../../components/searchResultsSummary';
 import { useFilters } from '../../hooks/useFilters';
-import AppliedFiltersPanel from '../../components/newAppliedFiltersPanel';
+import AppliedFiltersPanel from '../../components/appliedFiltersPanel';
 
 interface ResponsiveSearchViewProps {
   renderVideoCard: (video: Video, query: string) => React.ReactNode;

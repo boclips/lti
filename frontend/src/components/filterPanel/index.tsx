@@ -1,86 +1,44 @@
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, ReactElement, SetStateAction } from 'react';
 import { SelectOption } from '@boclips-ui/select-option';
-import SelectFilter, { DropdownAligment } from '@boclips-ui/select-legacy';
-import c from 'classnames';
-import { Button } from 'antd';
+import SelectFilter, { DropdownAligment } from '@boclips-ui/select';
 import {
   Facet,
   VideoFacets,
 } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
-import { Channel } from 'boclips-api-client/dist/sub-clients/channels/model/Channel';
-import { Subject } from 'boclips-api-client/dist/sub-clients/subjects/model/Subject';
+import { useMediaBreakPoint } from '@boclips-ui/use-media-breakpoints';
+import Button from '@boclips-ui/button';
 import s from './style.module.less';
 import DurationConverter from './converters/DurationConverter';
-import AppliedFiltersPanel from '../appliedFiltersPanel';
-import { Filters } from '../../types/filters';
+import { useFilters } from '../../hooks/useFilters';
+import InputPrefixIcon from '../../resources/images/search-icon.svg';
+import useFeatureFlags from '../../hooks/useFeatureFlags';
+
+const MOBILE_BREAKPOINT = 'mobile';
+const TABLET_BREAKPOINT = 'tablet';
 
 interface Props {
   facets?: VideoFacets;
-  onApply: (filters: Filters) => void;
-  hidePanel?: boolean;
-  channelsList: Channel[];
-  subjectsList: Subject[];
-  hideAgeFilter?: boolean;
+  setShowFilters: Dispatch<SetStateAction<boolean>>;
 }
 
-const FilterPanel = ({
+const convertToSelectOptions = (rawFacets: Facet[] = []): SelectOption[] =>
+  rawFacets?.map((facet) => ({
+    id: facet.id || '',
+    label: facet.name || '',
+    count: facet.hits,
+  })) || [];
+
+const ResponsiveFilterPanel = ({
   facets,
-  onApply,
-  hidePanel,
-  channelsList,
-  subjectsList,
-  hideAgeFilter,
-}: Props) => {
-  const [ageRangeFilter, setAgeRangeFilter] = useState<string[]>();
-  const [durationFilter, setDurationFilter] = useState<string[]>();
-  const [subjectFilter, setSubjectFilter] = useState<string[]>();
-  const [sourceFilter, setSourceFilter] = useState<string[]>();
-  const [filterTouched, setFilterTouched] = useState<boolean>(false);
+  setShowFilters,
+}: Props): ReactElement => {
+  const breakpoints = useMediaBreakPoint();
+  const mobileView = breakpoints.type === MOBILE_BREAKPOINT;
+  const tabletView = breakpoints.type === TABLET_BREAKPOINT;
 
-  useEffect(() => {
-    if (durationFilter || (durationFilter && durationFilter!.length === 0)) {
-      onApply({ duration: durationFilter });
-    }
-  }, [durationFilter, onApply]);
+  const relativePositionFilters = mobileView || tabletView;
 
-  useEffect(() => {
-    if (subjectFilter || (subjectFilter && subjectFilter!.length === 0)) {
-      onApply({ subjects: subjectFilter });
-    }
-  }, [onApply, subjectFilter]);
-
-  useEffect(() => {
-    if (sourceFilter || (sourceFilter && sourceFilter!.length === 0)) {
-      onApply({ source: sourceFilter });
-    }
-  }, [onApply, sourceFilter]);
-
-  useEffect(() => {
-    if (ageRangeFilter || (ageRangeFilter && ageRangeFilter!.length === 0)) {
-      onApply({ ageRanges: ageRangeFilter });
-    }
-  }, [ageRangeFilter, onApply]);
-
-  const onClear = () => {
-    setFilterTouched(false);
-    setSubjectFilter([]);
-    setDurationFilter([]);
-    setAgeRangeFilter([]);
-    setSourceFilter([]);
-    onApply({
-      ageRanges: [],
-      source: [],
-      subjects: [],
-      duration: [],
-    });
-  };
-
-  const convertToSelectOptions = (rawFacets: Facet[] = []): SelectOption[] =>
-    rawFacets.map((facet) => ({
-      id: facet.id || '',
-      label: facet.name || '',
-      count: facet.hits,
-    })) || [];
+  const { filters, setFilters, areFiltersApplied, clearFilters } = useFilters();
 
   const ageRangeOptions: SelectOption[] =
     facets?.ageRanges?.map((facet) => ({
@@ -105,82 +63,86 @@ const FilterPanel = ({
     facets?.channels,
   );
 
+  const showAgeFilter = useFeatureFlags()?.LTI_AGE_FILTER;
+
   return (
     <>
-      <div
-        className={c({
-          [s.filters]: true,
-          [s.hideFilters]: hidePanel,
-        })}
-      >
-        <div className={s.filtersHeader}>
-          <span className={s.filtersTitle}>FILTER BY:</span>
-          {filterTouched && (
-            <Button className={s.clearAll} onClick={onClear} type="text">
-              CLEAR ALL
-            </Button>
-          )}
-        </div>
-        <div className={s.filtersWrapper}>
-          {!hideAgeFilter && (
-            <SelectFilter
-              options={ageRangeOptions}
-              title="Age"
-              updatedSelected={ageRangeFilter}
-              onApply={setAgeRangeFilter}
-              touched={setFilterTouched}
-              showFacets
-            />
-          )}
+      <div className={s.selectFilters}>
+        {showAgeFilter && (
           <SelectFilter
-            options={durationOptions}
-            title="Duration"
-            updatedSelected={durationFilter}
-            onApply={setDurationFilter}
-            touched={setFilterTouched}
+            relativePositionFilters={relativePositionFilters}
+            options={ageRangeOptions}
+            title="Age"
+            updatedSelected={filters.ageRanges}
+            onApply={(ageRanges) =>
+              setFilters({
+                ...filters,
+                ageRanges,
+              })
+            }
             showFacets
-          />
-          <SelectFilter
-            options={subjectOptions}
-            title="Subject"
-            onApply={setSubjectFilter}
-            updatedSelected={subjectFilter}
-            searchPlaceholder="Search for subject"
-            allowSearch
-            touched={setFilterTouched}
-            showFacets
-          />
-          <SelectFilter
-            options={sourceOptions}
-            title="Source"
-            onApply={setSourceFilter}
-            updatedSelected={sourceFilter}
-            searchPlaceholder="Search for source"
-            allowSearch
-            touched={setFilterTouched}
-            showFacets
-            dropdownAlignment={DropdownAligment.RIGHT}
-          />
-        </div>
-        {filterTouched && (
-          <AppliedFiltersPanel
-            channels={channelsList}
-            allSubjects={subjectsList}
-            setSubjectFilter={setSubjectFilter}
-            setSourceFilter={setSourceFilter}
-            setAgeRangeFilter={setAgeRangeFilter}
-            setDurationFilter={setDurationFilter}
-            appliedFilters={{
-              ageRanges: ageRangeFilter,
-              duration: durationFilter,
-              subjects: subjectFilter,
-              source: sourceFilter,
-            }}
           />
         )}
+        <SelectFilter
+          relativePositionFilters={relativePositionFilters}
+          options={durationOptions}
+          title="Duration"
+          updatedSelected={filters.duration}
+          onApply={(duration) =>
+            setFilters({
+              ...filters,
+              duration,
+            })
+          }
+          showFacets
+        />
+        <SelectFilter
+          relativePositionFilters={relativePositionFilters}
+          options={subjectOptions}
+          title="Subject"
+          updatedSelected={filters.subjects}
+          onApply={(subjects) =>
+            setFilters({
+              ...filters,
+              subjects,
+            })
+          }
+          searchPlaceholder="Search..."
+          allowSearch
+          showFacets
+          inputPrefixIcon={<InputPrefixIcon />}
+        />
+        <SelectFilter
+          relativePositionFilters={relativePositionFilters}
+          options={sourceOptions}
+          title="Source"
+          updatedSelected={filters.source}
+          onApply={(source) =>
+            setFilters({
+              ...filters,
+              source,
+            })
+          }
+          searchPlaceholder="Search..."
+          allowSearch
+          showFacets
+          dropdownAlignment={DropdownAligment.RIGHT}
+          inputPrefixIcon={<InputPrefixIcon />}
+        />
       </div>
+      {areFiltersApplied && (
+        <div className={s.buttonsWrapper}>
+          <Button
+            type="outline"
+            text="Clear filters"
+            onClick={() => clearFilters()}
+          />
+
+          <Button text="Apply" onClick={() => setShowFilters(false)} />
+        </div>
+      )}
     </>
   );
 };
 
-export default FilterPanel;
+export default ResponsiveFilterPanel;

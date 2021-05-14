@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useMediaBreakPoint } from '@boclips-ui/use-media-breakpoints';
 import { VideoFacets } from 'boclips-api-client/dist/sub-clients/videos/model/VideoFacets';
 import c from 'classnames';
-import ResponsiveFilterPanel from '../responsiveFilterPanel';
+import ResponsiveFilterPanel from '../filterPanel';
 import ArrowBackSVG from '../../resources/images/arrow-back.svg';
 import FilterSVG from '../../resources/images/filter-icon.svg';
 import s from './style.module.less';

@@ -1,9 +1,10 @@
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { FacetsFactory } from 'boclips-api-client/dist/test-support/FacetsFactory';
-import { SubjectFactory } from 'boclips-api-client/dist/test-support/SubjectsFactory';
-import { ChannelFactory } from 'boclips-api-client/dist/test-support';
+import { FakeBoclipsClient } from 'boclips-api-client/dist/test-support';
+import { UserFactory } from 'boclips-api-client/dist/test-support/UserFactory';
 import FilterPanel from './index';
+import { BoclipsClientProvider } from '../../hooks/useBoclipsClient';
 
 const testFacets = FacetsFactory.sample({
   durations: [
@@ -59,37 +60,12 @@ const testFacets = FacetsFactory.sample({
   ],
 });
 
-const subjects = [
-  SubjectFactory.sample({
-    id: '5cb499c9fd5beb428189454d',
-    name: 'subject1',
-  }),
-  SubjectFactory.sample({
-    id: '5cb499c9fd5beb428189454c',
-    name: 'subject2',
-  }),
-];
-
-const channels = [
-  ChannelFactory.sample({
-    id: 'biology-channel-id',
-    name: 'biology channel',
-  }),
-  ChannelFactory.sample({
-    id: 'history-channel-id',
-    name: 'history channel',
-  }),
-];
-
 describe('Filter Panel', () => {
   it('shows subject filters with options from API', async () => {
     render(
-      <FilterPanel
-        channelsList={channels}
-        subjectsList={subjects}
-        facets={testFacets}
-        onApply={jest.fn()}
-      />,
+      <BoclipsClientProvider client={new FakeBoclipsClient()}>
+        <FilterPanel facets={testFacets} setShowFilters={jest.fn()} />
+      </BoclipsClientProvider>,
     );
 
     const subjectSelector = screen.getByText('Subject');
@@ -97,20 +73,15 @@ describe('Filter Panel', () => {
 
     fireEvent.mouseDown(subjectSelector);
 
-    await waitFor(() => {
-      expect(screen.getByText('subject1'));
-      expect(screen.getByText('subject2'));
-    });
+    expect(screen.getByText('subject1'));
+    expect(screen.getByText('subject2'));
   });
 
   it('shows sources filters with options from API', async () => {
     render(
-      <FilterPanel
-        channelsList={channels}
-        subjectsList={subjects}
-        facets={testFacets}
-        onApply={jest.fn()}
-      />,
+      <BoclipsClientProvider client={new FakeBoclipsClient()}>
+        <FilterPanel facets={testFacets} setShowFilters={jest.fn()} />
+      </BoclipsClientProvider>,
     );
 
     const sourceSelector = screen.getByText('Source');
@@ -118,20 +89,15 @@ describe('Filter Panel', () => {
 
     fireEvent.mouseDown(sourceSelector);
 
-    await waitFor(() => {
-      expect(screen.getByTitle('biology channel'));
-      expect(screen.getByTitle('history channel'));
-    });
+    expect(screen.getByTitle('biology channel'));
+    expect(screen.getByTitle('history channel'));
   });
 
   it('shows duration filters', async () => {
     render(
-      <FilterPanel
-        channelsList={channels}
-        subjectsList={subjects}
-        facets={testFacets}
-        onApply={jest.fn()}
-      />,
+      <BoclipsClientProvider client={new FakeBoclipsClient()}>
+        <FilterPanel facets={testFacets} setShowFilters={jest.fn()} />
+      </BoclipsClientProvider>,
     );
 
     const sourceSelector = screen.getByText('Duration');
@@ -139,133 +105,42 @@ describe('Filter Panel', () => {
 
     fireEvent.mouseDown(sourceSelector);
 
-    await waitFor(() => {
-      expect(screen.getByTitle('0m - 2m'));
-      expect(screen.getByTitle('2m - 5m'));
-      expect(screen.getByTitle('5m - 10m'));
-      expect(screen.getByTitle('10m - 20m'));
-      expect(screen.getByTitle('> 20m'));
-    });
+    expect(screen.getByTitle('0m - 2m'));
+    expect(screen.getByTitle('2m - 5m'));
+    expect(screen.getByTitle('5m - 10m'));
+    expect(screen.getByTitle('10m - 20m'));
+    expect(screen.getByTitle('> 20m'));
   });
-
-  it('clear all clears the filters', async () => {
-    const onApply = jest.fn();
-    render(
-      <FilterPanel
-        channelsList={channels}
-        subjectsList={subjects}
-        facets={testFacets}
-        onApply={onApply}
-      />,
-    );
-
-    const sourceSelector = screen.getByText('Duration');
-    expect(sourceSelector).toBeVisible();
-
-    fireEvent.mouseDown(sourceSelector);
-
-    fireEvent.click(screen.getByTitle('0m - 2m'));
-    fireEvent.click(screen.getByTitle('2m - 5m'));
-
-    fireEvent.click(screen.getByText('APPLY'));
-
-    expect(screen.getByText('CLEAR ALL')).toBeInTheDocument();
-
-    fireEvent.click(screen.getByText('CLEAR ALL'));
-
-    await waitFor(() => {
-      expect(onApply).toBeCalledWith({
-        ageRanges: [],
-        source: [],
-        subjects: [],
-        duration: [],
-      });
-    });
-  });
-
-  // it('Filters applied panel only shows when filters are selected', async () => {
-  //   render(
-  //     <FilterPanel
-  //       channelsList={channels}
-  //       subjectsList={subjects}
-  //       facets={testFacets}
-  //       onApply={jest.fn()}
-  //     />,
-  //   );
-  //
-  //   const sourceSelector = screen.getByText('Duration');
-  //
-  //   fireEvent.mouseDown(sourceSelector);
-  //
-  //   fireEvent.click(screen.getByTitle('0m - 2m'));
-  //   fireEvent.click(screen.getByTitle('2m - 5m'));
-  //
-  //   fireEvent.click(screen.getByText('APPLY'));
-  //
-  //   expect(screen.queryByText('Filters applied:')).toBeInTheDocument();
-  //   expect(screen.getAllByText('0m - 2m').length).toEqual(2);
-  //   expect(screen.getAllByText('2m - 5m').length).toEqual(2);
-  //   expect(screen.getAllByText('10m - 20m').length).toEqual(1);
-  //
-  //   const removeElements = screen.getAllByTestId(/-remove-button/);
-  //   removeElements.map((element) => fireEvent.click(element));
-  //
-  //   await waitFor(() => {
-  //     expect(screen.queryByText('Filters applied')).not.toBeInTheDocument();
-  //     expect(screen.getAllByText('0m - 2m').length).toEqual(1);
-  //     expect(screen.getAllByText('2m - 5m').length).toEqual(1);
-  //   });
-  // });
-  //
-  // it('When filters are removed from applied filters the count shows correct number', async () => {
-  //   render(
-  //     <FilterPanel
-  //       channelsList={channels}
-  //       subjectsList={subjects}
-  //       facets={testFacets}
-  //       onApply={jest.fn()}
-  //     />,
-  //   );
-  //
-  //   const sourceSelector = screen.getByText('Duration');
-  //   expect(sourceSelector).toBeVisible();
-  //
-  //   fireEvent.mouseDown(sourceSelector);
-  //
-  //   fireEvent.click(screen.getByTitle('0m - 2m'));
-  //   fireEvent.click(screen.getByTitle('2m - 5m'));
-  //   fireEvent.click(screen.getByTitle('10m - 20m'));
-  //
-  //   fireEvent.click(screen.getByText('APPLY'));
-  //
-  //   const removeElements = screen.getAllByTestId(/-remove-button/);
-  //
-  //   await waitFor(() => {
-  //     expect(screen.queryByTestId('count-wrapper')?.innerHTML).toEqual('3');
-  //   });
-  //
-  //   fireEvent.click(removeElements[0]);
-  //
-  //   await waitFor(() => {
-  //     expect(screen.queryByTestId('count-wrapper')?.innerHTML).toEqual('2');
-  //   });
-  // });
 
   it('shows age range filters', async () => {
+    const fakeBoclipsClient = new FakeBoclipsClient();
+    fakeBoclipsClient.users.insertCurrentUser(
+      UserFactory.sample({ features: { LTI_AGE_FILTER: true } }),
+    );
     const wrapper = render(
-      <FilterPanel
-        channelsList={channels}
-        subjectsList={subjects}
-        facets={testFacets}
-        onApply={jest.fn()}
-      />,
+      <BoclipsClientProvider client={fakeBoclipsClient}>
+        <FilterPanel facets={testFacets} setShowFilters={jest.fn()} />
+      </BoclipsClientProvider>,
     );
 
-    expect(wrapper.getByText('Age')).toBeVisible();
+    expect(await wrapper.findByText('Age')).toBeVisible();
 
     fireEvent.mouseDown(wrapper.getByText('Age'));
 
     expect(await wrapper.findByText('3 - 5')).toBeInTheDocument();
-    expect(await wrapper.findByText('APPLY')).toBeInTheDocument();
+  });
+
+  it('does not show age range filters if feature is disabled', async () => {
+    const fakeClient = new FakeBoclipsClient();
+    fakeClient.users.insertCurrentUser(
+      UserFactory.sample({ features: { LTI_AGE_FILTER: undefined } }),
+    );
+    const wrapper = render(
+      <BoclipsClientProvider client={fakeClient}>
+        <FilterPanel facets={testFacets} setShowFilters={jest.fn()} />
+      </BoclipsClientProvider>,
+    );
+
+    expect(await wrapper.queryByText('Age')).toBeNull();
   });
 });
