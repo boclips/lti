@@ -10,4 +10,5 @@ dependency-check-cache
 security-report
 frontend/.bitmap
 frontend/.bit/*
+frontend/cypress/videos/*
 
