@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import { FakeBoclipsClient } from 'boclips-api-client/dist/test-support';
 import { VideoFactory } from 'boclips-api-client/dist/test-support/VideosFactory';
 import { SubjectFactory } from 'boclips-api-client/dist/test-support/SubjectsFactory';
@@ -65,7 +65,9 @@ describe('Search and embed view', () => {
   it('sends a PageRender event when mounting', () => {
     render(<App apiClient={fakeApiClient} />);
 
-    const events = fakeApiClient.events.getEvents();
-    expect(events.length).toEqual(1);
+    waitFor(() => {
+      const events = fakeApiClient.events.getEvents();
+      expect(events.length).toEqual(1);
+    });
   });
 });

@@ -37,7 +37,7 @@ class VideoService {
   }
 
   public getChannels(): Promise<Channel[]> {
-    return this.client.channels.getAll(Projection.LIST);
+    return this.client.channels.getAll({ projection: Projection.LIST });
   }
 
   public getCurrentUser(): Promise<User | null> {
