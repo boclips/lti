@@ -24,9 +24,12 @@ describe('Search view', () => {
   it('sends a PageRender event when mounting', async () => {
     render(<App apiClient={apiClient} />);
 
-    await waitFor(() => {
-      const events = apiClient.events.getEvents();
-      expect(events.length).toEqual(1);
-    });
+    await waitFor(
+      () => {
+        const events = apiClient.events.getEvents();
+        expect(events.length).toEqual(1);
+      },
+      { timeout: 1500 },
+    );
   });
 });

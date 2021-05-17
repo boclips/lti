@@ -62,12 +62,15 @@ describe('Search and embed view', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('sends a PageRender event when mounting', () => {
+  it('sends a PageRender event when mounting', async () => {
     render(<App apiClient={fakeApiClient} />);
 
-    waitFor(() => {
-      const events = fakeApiClient.events.getEvents();
-      expect(events.length).toEqual(1);
-    });
+    await waitFor(
+      () => {
+        const events = fakeApiClient.events.getEvents();
+        expect(events.length).toEqual(1);
+      },
+      { timeout: 1500 },
+    );
   });
 });
