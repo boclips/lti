@@ -62,6 +62,38 @@ describe('Search and embed view', () => {
     ).not.toBeInTheDocument();
   });
 
+  it(`doesn't display age range badges when user has feature disabled`, async () => {
+    fakeApiClient.videos.insertVideo(
+      VideoFactory.sample({
+        id: '1',
+        title: 'goats',
+        subjects: [SubjectFactory.sample({ name: 'Design' })],
+        ageRange: {
+          min: 3,
+          max: 5,
+        },
+      }),
+    );
+    fakeApiClient.subjects.insertSubject(
+      SubjectFactory.sample({ name: 'Design' }),
+    );
+
+    fakeApiClient.users.setCurrentUserFeatures({ LTI_AGE_FILTER: false });
+
+    const appComponent = render(<App apiClient={fakeApiClient} />);
+
+    const searchTextInput = appComponent.getByPlaceholderText(
+      'Search for videos',
+    );
+    fireEvent.change(searchTextInput, { target: { value: 'goats' } });
+
+    const searchButton = appComponent.getByText('Search').closest('button');
+    fireEvent.click(searchButton!);
+
+    expect(await appComponent.findByText('Design')).toBeVisible();
+    expect(await appComponent.queryByText('Ages 3-5')).toBeNull();
+  });
+
   it('sends a PageRender event when mounting', async () => {
     render(<App apiClient={fakeApiClient} />);
 

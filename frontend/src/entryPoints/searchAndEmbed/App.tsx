@@ -1,6 +1,6 @@
 import { hot } from 'react-hot-loader/root';
 import React from 'react';
-import { VideoCardV3 } from '@boclips-ui/video-card-v3';
+import VideoCardV3 from '@boclips-ui/video-card-v3';
 import { Video } from '@boclips-ui/video';
 import { BoclipsClient } from 'boclips-api-client';
 import { useMediaBreakPoint } from '@boclips-ui/use-media-breakpoints';

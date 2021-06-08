@@ -13,6 +13,7 @@ import SearchResults from '../../components/searchResults';
 import SearchResultsSummary from '../../components/searchResultsSummary';
 import { useFilters } from '../../hooks/useFilters';
 import AppliedFiltersPanel from '../../components/appliedFiltersPanel';
+import useFeatureFlags from '../../hooks/useFeatureFlags';
 
 interface ResponsiveSearchViewProps {
   renderVideoCard: (video: Video, query: string) => React.ReactNode;
@@ -28,6 +29,7 @@ const ResponsiveSearchView = ({
   const [totalVideoElements, setTotalVideoElements] = useState<number>(0);
   const [facets, setFacets] = useState<VideoFacets>();
   const { filters } = useFilters();
+  const showAgeRanges = useFeatureFlags()?.LTI_AGE_FILTER;
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [activeFilterCount, setActiveFilterCount] = useState<number>(0);
@@ -51,7 +53,16 @@ const ResponsiveSearchView = ({
   const handleSearchResults = (searchResults: ExtendedClientVideo<Video>) => {
     setFacets(searchResults.facets);
     setTotalVideoElements(searchResults.pageSpec.totalElements);
-    setVideos(searchResults.page);
+    if (!showAgeRanges) {
+      setVideos(
+        searchResults.page.map((video) => ({
+          ...video,
+          ageRange: undefined,
+        })),
+      );
+    } else {
+      setVideos(searchResults.page);
+    }
   };
 
   useEffect(() => {
