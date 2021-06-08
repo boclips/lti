@@ -2,7 +2,8 @@ import React from 'react';
 import { Video } from '@boclips-ui/video';
 import ProviderBadge from '@boclips-ui/provider-badge';
 import { VideoCardV2 } from '@boclips-ui/video-card-v2';
-import VideoCardV3 from '@boclips-ui/video-card-v3';
+// @ts-ignore
+import { VideoCardV3 } from '@boclips-ui/video-card-v3';
 import c from 'classnames';
 import getPlayer from '../../Player/getPlayer';
 import s from './VideoCardWrapper.module.less';

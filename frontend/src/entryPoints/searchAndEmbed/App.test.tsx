@@ -4,6 +4,7 @@ import { FakeBoclipsClient } from 'boclips-api-client/dist/test-support';
 import { VideoFactory } from 'boclips-api-client/dist/test-support/VideosFactory';
 import { SubjectFactory } from 'boclips-api-client/dist/test-support/SubjectsFactory';
 import { AttachmentFactory } from 'boclips-api-client/dist/test-support/AttachmentsFactory';
+import { UserFactory } from 'boclips-api-client/dist/test-support/UserFactory';
 import App from './App';
 import { configureMockAxiosService } from '../../testSupport/configureMockAxiosService';
 
@@ -38,6 +39,9 @@ describe('Search and embed view', () => {
     );
     fakeApiClient.subjects.insertSubject(
       SubjectFactory.sample({ name: 'Design' }),
+    );
+    fakeApiClient.users.insertCurrentUser(
+      UserFactory.sample({ features: { LTI_AGE_FILTER: true } }),
     );
 
     const appComponent = render(<App apiClient={fakeApiClient} />);
@@ -78,6 +82,9 @@ describe('Search and embed view', () => {
       SubjectFactory.sample({ name: 'Design' }),
     );
 
+    fakeApiClient.users.insertCurrentUser(
+      UserFactory.sample({ features: { LTI_AGE_FILTER: false } }),
+    );
     fakeApiClient.users.setCurrentUserFeatures({ LTI_AGE_FILTER: false });
 
     const appComponent = render(<App apiClient={fakeApiClient} />);
@@ -91,7 +98,7 @@ describe('Search and embed view', () => {
     fireEvent.click(searchButton!);
 
     expect(await appComponent.findByText('Design')).toBeVisible();
-    expect(await appComponent.queryByText('Ages 3-5')).toBeNull();
+    expect(appComponent.queryByText('Ages 3-5')).toBeNull();
   });
 
   it('sends a PageRender event when mounting', async () => {

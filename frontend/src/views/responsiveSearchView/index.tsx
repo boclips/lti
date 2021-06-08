@@ -29,7 +29,7 @@ const ResponsiveSearchView = ({
   const [totalVideoElements, setTotalVideoElements] = useState<number>(0);
   const [facets, setFacets] = useState<VideoFacets>();
   const { filters } = useFilters();
-  const showAgeRanges = useFeatureFlags()?.LTI_AGE_FILTER;
+  const hideAgeRanges = useFeatureFlags()?.LTI_AGE_FILTER === false;
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [activeFilterCount, setActiveFilterCount] = useState<number>(0);
@@ -53,7 +53,7 @@ const ResponsiveSearchView = ({
   const handleSearchResults = (searchResults: ExtendedClientVideo<Video>) => {
     setFacets(searchResults.facets);
     setTotalVideoElements(searchResults.pageSpec.totalElements);
-    if (!showAgeRanges) {
+    if (hideAgeRanges) {
       setVideos(
         searchResults.page.map((video) => ({
           ...video,
@@ -86,7 +86,7 @@ const ResponsiveSearchView = ({
         handleSearchResults(videosResponse);
       })
       .finally(() => setLoading(false));
-  }, [filters, searchPageNumber, searchQuery, videoService]);
+  }, [filters, searchPageNumber, searchQuery, videoService, hideAgeRanges]);
 
   useEffect(() => {
     if (searchQuery || searchPageNumber) {
