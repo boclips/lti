@@ -22,7 +22,7 @@
     "@boclips-ui/age-range": "^1.0.14",
     "@boclips-ui/button": "^2.2.0",
     "@boclips-ui/filter-badge": "^2.1.0",
-    "@boclips-ui/link": "^1.0.15",
+    "@boclips-ui/link": "^1.0.16",
     "@boclips-ui/no-results": "^1.0.30",
     "@boclips-ui/provider-badge": "^2.1.0",
     "@boclips-ui/search-bar": "2.1.0",
