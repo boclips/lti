@@ -2,8 +2,8 @@ package com.boclips.lti.testsupport
 
 import de.flapdoodle.embed.mongo.MongodProcess
 import de.flapdoodle.embed.mongo.MongodStarter
-import de.flapdoodle.embed.mongo.config.MongoCmdOptionsBuilder
-import de.flapdoodle.embed.mongo.config.MongodConfigBuilder
+import de.flapdoodle.embed.mongo.config.MongoCmdOptions
+import de.flapdoodle.embed.mongo.config.MongodConfig
 import de.flapdoodle.embed.mongo.config.Net
 import de.flapdoodle.embed.mongo.distribution.Version
 import de.flapdoodle.embed.process.runtime.Network
@@ -18,9 +18,9 @@ object TestMongoProcess {
 
         KLogging().logger.info { "Booting up MongoDB ${Version.Main.V3_6} on $host:$port" }
 
-        val mongoConfig = MongodConfigBuilder()
+        val mongoConfig = MongodConfig.builder()
             .version(Version.Main.V3_6)
-            .cmdOptions(MongoCmdOptionsBuilder().useStorageEngine("ephemeralForTest").build())
+            .cmdOptions(MongoCmdOptions.builder().storageEngine("ephemeralForTest").build())
             .net(Net(host, port, Network.localhostIsIPv6()))
             .build()
 
