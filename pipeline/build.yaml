@@ -16,7 +16,10 @@ outputs:
 
 caches:
 - path: source/.gradle
-- path: ../../../root/.cache
+
+params:
+  CYPRESS_INSTALL_BINARY: 0
+  GRADLE_USER_HOME: .gradle
 
 run:
   path: sh
@@ -24,8 +27,6 @@ run:
   - -c
   - |-
     set -eu
-
-    export GRADLE_USER_HOME=".gradle"
 
     version=$(cat version/tag)
 
