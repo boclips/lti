@@ -12,11 +12,10 @@ inputs:
 - name: version
 
 outputs:
-  - name: dist
+- name: dist
 
 caches:
-  - path: .gradle
-  - path: source/dependency-check-cache
+- path: source/.gradle
 
 run:
   path: sh
