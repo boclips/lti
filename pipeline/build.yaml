@@ -16,6 +16,7 @@ outputs:
 
 caches:
 - path: source/.gradle
+- path: ../../../root/.cache
 
 run:
   path: sh
