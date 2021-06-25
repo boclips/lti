@@ -2,7 +2,7 @@ import org.springframework.boot.gradle.tasks.run.BootRun
 
 buildscript {
   ext {
-    kotlinVersion = '1.4.32'
+    kotlinVersion = '1.5.10'
     springBootVersion = '2.4.5'
     junitVersion = "5.3.1"
     feignClientVersion = '10.7.0'
@@ -143,7 +143,7 @@ dependencies {
   implementation 'org.jetbrains.kotlin:kotlin-reflect'
   implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3-native-mt'
 
-  implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.12.2'
+  implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.12.3'
 
   implementation 'io.github.microutils:kotlin-logging:2.0.6'
 
@@ -157,7 +157,7 @@ dependencies {
   implementation "org.imsglobal:basiclti-util:1.2.0"
 
   implementation 'com.github.boclips:boclips-spring-security:0.632.0'
-  implementation 'com.github.boclips:boclips-spring-web:0.510.0'
+  implementation 'com.github.boclips:boclips-spring-web:0.558.0'
   implementation 'com.github.boclips:videos:v766'
   implementation "io.github.openfeign:feign-core:${feignClientVersion}"
   implementation "io.github.openfeign:feign-okhttp:${feignClientVersion}"
